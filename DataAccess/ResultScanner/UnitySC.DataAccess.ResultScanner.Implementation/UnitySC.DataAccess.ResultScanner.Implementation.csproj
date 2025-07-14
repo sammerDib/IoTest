@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{18098B1A-7CC3-40A8-8425-7F70D674557D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.DataAccess.ResultScanner.Implementation</RootNamespace>
+    <AssemblyName>UnitySC.DataAccess.ResultScanner.Implementation</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PathComposer.cs" />
+    <Compile Include="ResultPrio.cs" />
+    <Compile Include="ResultPrioAcq.cs" />
+    <Compile Include="ResultScanner.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Format\UnitySC.Shared.Format.Base\UnitySC.Shared.Format.Base.csproj">
+      <Project>{9c64dc4b-5dfb-4e28-8c2e-c5907b6d729f}</Project>
+      <Name>UnitySC.Shared.Format.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Format\UnitySC.Shared.Format.Factory\UnitySC.Shared.Format.Factory.csproj">
+      <Project>{8297566a-e410-457a-a985-52b294c49cd5}</Project>
+      <Name>UnitySC.Shared.Format.Factory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.DataAccess.Service.Implementation\UnitySC.DataAccess.Service.Implementation.csproj">
+      <Project>{A3DF38D3-4AE1-449C-AB16-712D748C500D}</Project>
+      <Name>UnitySC.DataAccess.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5C0A-4F7E-A355-8D03680B3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.DataAccess.Base\UnitySC.DataAccess.Base.csproj">
+      <Project>{7276B4FB-2D72-47D6-903E-7B8D3B929C92}</Project>
+      <Name>UnitySC.DataAccess.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.DataAccess.SQL\UnitySC.DataAccess.SQL.csproj">
+      <Project>{32D1BED3-ABDE-49B3-B0B0-F32EFD48195C}</Project>
+      <Name>UnitySC.DataAccess.SQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.DataAccess.ResultScanner.Interface\UnitySC.DataAccess.ResultScanner.Interface.csproj">
+      <Project>{0450AE32-08A4-4F1C-BA85-00C7042A65FD}</Project>
+      <Name>UnitySC.DataAccess.ResultScanner.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

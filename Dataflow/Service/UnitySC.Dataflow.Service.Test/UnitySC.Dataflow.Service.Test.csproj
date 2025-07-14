@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CFE5049B-DECA-4FE3-B09F-C9C41133101D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.Dataflow.Service.Test</RootNamespace>
+    <AssemblyName>UnitySC.Dataflow.Service.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="DatacollectionTest.cs" />
+    <Compile Include="FakeDFConfiguration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Moq">
+      <Version>4.20.72</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestAdapter">
+      <Version>3.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>3.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="XMLDiffPatch">
+      <Version>1.0.8.28</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5C0A-4F7E-A355-8D03680B3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\PM\ANALYSE\DataCollectionConverters\Samsung\UnitySC.DataCollectionConverter.ANA.SG\UnitySC.DataCollectionConverter.ANA.SG.csproj">
+      <Project>{be85f75b-aabe-47d3-9066-0784f9fff81a}</Project>
+      <Name>UnitySC.DataCollectionConverter.ANA.SG</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.PM.Service.Interface\UnitySC.Shared.Dataflow.PM.Service.Interface.csproj">
+      <Project>{2F5F6FB2-6DFC-4FAC-891E-3BA88F3B7A33}</Project>
+      <Name>UnitySC.Shared.Dataflow.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj">
+      <Project>{097A017C-AB63-42BD-987B-6BC537EE36F2}</Project>
+      <Name>UnitySC.Shared.Dataflow.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj">
+      <Project>{468DB3CC-73CB-46B8-94F2-5829D24AF3AA}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\Service\UnitySC.Shared.TC.Shared.Service.Interface\UnitySC.Shared.TC.Shared.Service.Interface.csproj">
+      <Project>{33001885-19D0-466E-88A9-5024983E8397}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{5256D984-4871-4D6A-9CAF-CE8F45A51A70}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Implementation\UnitySC.Shared.TC.Shared.Operations.Implementation.csproj">
+      <Project>{A4277C28-D526-4801-A4BF-A21106FC07A0}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Interface\UnitySC.Shared.TC.Shared.Operations.Interface.csproj">
+      <Project>{B5FB9569-4BCF-435A-8C3D-1A051C47F24D}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79F7E968-C5FD-4307-9127-C9C96691E505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.FDC.Interface\UnitySC.Shared.FDC.Interface.csproj">
+      <Project>{8A288ABB-F8C5-40B3-ABEC-051409043B7F}</Project>
+      <Name>UnitySC.Shared.FDC.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.FDC\UnitySC.Shared.FDC.csproj">
+      <Project>{3F3CC7E4-7DE0-40B8-8C4F-096B5F1E0CDA}</Project>
+      <Name>UnitySC.Shared.FDC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ADC\AS300Like\ADCCommon\UnitySC.ADCAS300Like.Common.csproj">
+      <Project>{946EB8CB-20F1-4219-9361-35C0E7D60EB3}</Project>
+      <Name>UnitySC.ADCAS300Like.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TC\UnitySC.Dataflow.TC\UnitySC.Dataflow.Manager.csproj">
+      <Project>{F2708651-A140-4430-A5B6-07565D8586C9}</Project>
+      <Name>UnitySC.Dataflow.Manager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.Dataflow.Configuration\UnitySC.Dataflow.Configuration.csproj">
+      <Project>{74E8D68F-EE2C-49CE-B915-5FB10386580B}</Project>
+      <Name>UnitySC.Dataflow.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.Dataflow.Operations.Implementation\UnitySC.Dataflow.Operations.Implementation.csproj">
+      <Project>{9405EB97-9D7D-4485-B635-170BC96DECC4}</Project>
+      <Name>UnitySC.Dataflow.Operations.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.dataflow.Service.Implementation\UnitySC.Dataflow.Service.Implementation.csproj">
+      <Project>{2DE2C2CA-EF60-44D4-B476-923B6132AD56}</Project>
+      <Name>UnitySC.Dataflow.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.dataflow.Service.Interface\UnitySC.Dataflow.Service.Interface.csproj">
+      <Project>{629DB6A1-8A0E-40A5-B1B4-E2F5017D2672}</Project>
+      <Name>UnitySC.Dataflow.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AnaDC_TargetTest_SecsVariableList.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DFServerConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

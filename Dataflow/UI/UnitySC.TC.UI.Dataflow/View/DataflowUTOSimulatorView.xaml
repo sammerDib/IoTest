@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="UnitySC.TC.UI.Dataflow.View.DataflowUTOSimulatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.TC.UI.Dataflow.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                  <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="Vertical">
+        <TextBlock Text="UTO" Margin="3" FontSize="14" />
+        <Button Content="Get all matching recipes" Command="{Binding DFARecipeCommand}" HorizontalAlignment="Left" Margin="3"/>
+        <ListBox ItemsSource="{Binding DFCollection}" SelectedItem="{Binding DFRecipeSelected}" HorizontalAlignment="Left" Margin="3">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock>
+                            <Run Foreground="Green">Id = </Run>
+                            <Run Text="{Binding Id}"/>
+                            <Run Foreground="Green"> Name = </Run>
+                            <Run Text="{Binding Name}"/>
+                            <Run Foreground="Green"> IdGuid = </Run>
+                            <Run Text="{Binding IdGuid}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Start Recipe DF" Command="{Binding StartRecipeDFCommand}" HorizontalAlignment="Left" Margin="3"/>
+        <ListBox ItemsSource="{Binding PMItems}" HorizontalAlignment="Left" Margin="3"/>
+
+        
+        <Separator></Separator>
+        
+        <Button Content="Start job wafer" Command="{Binding StartJobCommand}" HorizontalAlignment="Left" Margin="3"/>
+
+        <Separator></Separator>
+
+        <Button Content="Start Recipe Request" Command="{Binding StartRecipeRequestCommand}" HorizontalAlignment="Left" Margin="3"/>
+
+        <Separator></Separator>
+
+        <Button Content="RecipeStarted" ToolTip="le PM a bien demarré la recette" Command="{Binding RecipeStartedCmd}" HorizontalAlignment="Left" Margin="3"/>
+
+        <Separator></Separator>
+
+        <Button Content="Abort selected Recipe" Background="Gray" Command="{Binding AbortRecipeCmd}" HorizontalAlignment="Left" Margin="3"/>
+
+        <Separator></Separator>
+
+        <Button Content="Init" Background="Orange" Command="{Binding InitializeCmd}" HorizontalAlignment="Left" Margin="3"/>
+
+    </StackPanel>
+</UserControl>

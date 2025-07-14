@@ -1,0 +1,168 @@
+﻿<UserControl x:Class="ResultsRegisterSimulator.MainRegisterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+             md:DialogServiceViews.IsRegistered="True"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:local="clr-namespace:ResultsRegisterSimulator"
+             d:DataContext="{d:DesignInstance local:MainRegisterVM}"           
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <ScrollViewer HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <WrapPanel Name="wrapmain" IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBooleanConverter}}">
+                    <GroupBox Header="Register Parameters Inputs" MaxWidth="600">
+                        <WrapPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Grid.Row="0" Grid.Column="0" Content="Job Name" />
+                                <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding JobName}" Width="120" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Grid.Row="0" Grid.Column="0" Content="Lot Name" />
+                                <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding LotName}" Width="120" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Grid.Row="0" Grid.Column="0" Content="Recipe Name" />
+                                <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding RecipeName}" Width="100" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Grid.Row="0" Grid.Column="0" Content="Wafer OCR Base Name" />
+                                <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding WaferBaseName}" Width="200" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Grid.Row="0" Grid.Column="0" Content="Product Type" />
+                                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Products}" SelectedItem ="{Binding SelectedProduct}" Margin="5">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <Label Grid.Row="0" Grid.Column="0" Content="Run Iter (out)" />
+                                <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding RunIter}" MinWidth="20" VerticalAlignment="Center" IsReadOnly="True" />
+                            </StackPanel>
+                            <Button Visibility="Visible"  Content="Generate Metro Result file " Command="{Binding ExecGenerateResFileCommand}" MinHeight="5" MinWidth="5"></Button>
+                        </WrapPanel>
+                    </GroupBox>
+                    <GroupBox Header="Tools" Margin="5" MinWidth="150">
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <ListView x:Name="listTools" ItemsSource="{Binding Tools}"  SelectionMode="Single" SelectedItem="{Binding SelectedTool}" BorderThickness="0">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <RadioButton GroupName="gTools" Content="{Binding Name}" GotFocus="RadioButton_GotFocus">
+                                            <RadioButton.Style>
+                                                <Style TargetType="RadioButton">
+                                                    <Setter Property="IsChecked" Value="False" />
+                                                    <Setter Property="FontWeight" Value= "Normal" />
+                                                    <Setter Property="Margin" Value= "0,4" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem }}, Mode=TwoWay}"
+                                                            Value="True">
+                                                            <Setter Property="IsChecked" Value="True" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </RadioButton.Style>
+                                        </RadioButton>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Chambers" Margin="5" MinWidth="25">
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <ListBox Name="ListBoxChambers" ItemsSource="{Binding SelectedTool.Chambers}" BorderThickness="0">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}" Margin="5" IsChecked="{Binding IsUsed, Mode=TwoWay}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </GroupBox>
+                    <WrapPanel Name="wrapResult">
+                        <ListBox Name="ListBoxChResults" ItemsSource="{Binding SelectedTool.Chambers}" BorderThickness="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="5">
+
+                                        <GroupBox Header="{Binding ResName}" Margin="5" Visibility="{Binding IsUsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <StackPanel Orientation="Vertical" Margin="5">
+                                                <ListBox ItemsSource="{Binding ListResults}" BorderThickness="0">
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="0">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <CheckBox Grid.Column="0" Content="{Binding Label}" IsChecked="{Binding IsUsed}" Margin="5"></CheckBox>
+                                                                <xctk:IntegerUpDown Grid.Column="1" 
+                                                                                Value="{Binding IdxMax, UpdateSourceTrigger=LostFocus}"
+                                                                                Visibility ="{Binding IsMultiResult, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                                                Minimum="0" Maximum="5" Increment="1"
+                                                                                HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                                                                                ShowButtonSpinner="true" Height="20" Width="50" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                                <Separator Height="5" Name="Separator1" Width="Auto" />
+                                                <StackPanel Orientation="Horizontal" Margin="2">
+                                                    <CheckBox Content="Register Acquisition Maps" IsChecked="{Binding IsRegAcqVisible, Mode=TwoWay}" Margin="5"></CheckBox>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </GroupBox>
+
+                                        <GroupBox Header="{Binding ResNameAcq}" Margin="5" Visibility="{Binding IsAcqUsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <local:ChamberAcquisitionView DataContext="{Binding ChamberAcqVM}"/>
+                                        </GroupBox>
+                                    </StackPanel>
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </WrapPanel>
+
+                    <GroupBox Header="Advanced Params" Margin="5">
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <Label Content="Nb Wafer by lot :" VerticalContentAlignment="Center" Margin="5" />
+                                <xctk:IntegerUpDown Value="{Binding NbWaferByFoup, UpdateSourceTrigger=LostFocus}"  Minimum="1" Maximum="25" Increment="1" VerticalContentAlignment="Center" ShowButtonSpinner="true" Height="25" Width="80" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <CheckBox Content="Random Slot" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsRandomSlot}" Margin="5"></CheckBox>
+                                <CheckBox Content="Random State" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsRandomState}" Margin="5"></CheckBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <Label Content="Simu Time Process (ms): " VerticalContentAlignment="Center" Margin="5" />
+                                <xctk:IntegerUpDown Value="{Binding SimuTimeProcessms, UpdateSourceTrigger=LostFocus}" VerticalContentAlignment="Center" ShowButtonSpinner="true" Height="25"  Width="87" Increment="100" Minimum="0" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <CheckBox Content="" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsRandomExtra}" Margin="5,10,0,0"></CheckBox>
+                                <Label Content="Random +/- Time (ms): " VerticalContentAlignment="Center" Margin="5" />
+                                <xctk:IntegerUpDown Value="{Binding ExtraTimeProcessms, UpdateSourceTrigger=LostFocus}" VerticalContentAlignment="Center" ShowButtonSpinner="true" Height="25"  Width="70" Increment="100" Minimum="100" />
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <Button Content="Launch Register" Command="{Binding ExecCommand}" MinHeight="30" MinWidth="80"></Button>
+                </WrapPanel>
+                <Grid Grid.Row="1" Margin="15,5" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Name="pbStatus" />
+                    <TextBlock Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="Register Result in progress. Please wait ..."  VerticalAlignment="Center" HorizontalAlignment="Center" />
+    </Grid>
+</UserControl>

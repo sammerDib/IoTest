@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{219DB1BA-63D6-4B19-98D8-82F410AFFA60}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.ADCAS300Like.Service</RootNamespace>
+    <AssemblyName>UnitySC.ADCAS300Like.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ADCConnectionManager.cs" />
+    <Compile Include="ADCInterfaces\IADC.cs" />
+    <Compile Include="ADCInterfaces\IADCCB.cs" />
+    <Compile Include="ADCObject\CADCObject.cs" />
+    <Compile Include="ADCObject\CADCObject_Serialization_Generic.cs" />
+    <Compile Include="ADCResult\CADCResults.cs" />
+    <Compile Include="ADCResult\CADCResultsList.cs" />
+    <Compile Include="ADCResult\CADCResultsList_FVN1.cs" />
+    <Compile Include="ADCResult\CADCResultsList_FVN2.cs" />
+    <Compile Include="CADCCallBack.cs" />
+    <Compile Include="CADCObjectList.cs" />
+    <Compile Include="CADCService.cs" />
+    <Compile Include="CCommandList.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketClient\CSocketClientServer.cs" />
+    <Compile Include="SocketClient\CSocketClient_Serialization.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\DataCollection\UnitySC.Shared.DataCollectionConverter\UnitySC.Shared.DataCollectionConverter.csproj">
+      <Project>{f8ef0af6-9151-4a13-b7aa-56cd7f664647}</Project>
+      <Name>UnitySC.Shared.DataCollectionConverter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj">
+      <Project>{097A017C-AB63-42BD-987B-6BC537EE36F2}</Project>
+      <Name>UnitySC.Shared.Dataflow.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\Service\UnitySC.Shared.TC.Shared.Service.Interface\UnitySC.Shared.TC.Shared.Service.Interface.csproj">
+      <Project>{33001885-19D0-466E-88A9-5024983E8397}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{5256d984-4871-4d6a-9caf-ce8f45a51a70}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Interface\UnitySC.Shared.TC.Shared.Operations.Interface.csproj">
+      <Project>{B5FB9569-4BCF-435A-8C3D-1A051C47F24D}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79F7E968-C5FD-4307-9127-C9C96691E505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Service\UnitySC.Dataflow.Configuration\UnitySC.Dataflow.Configuration.csproj">
+      <Project>{74E8D68F-EE2C-49CE-B915-5FB10386580B}</Project>
+      <Name>UnitySC.Dataflow.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Service\UnitySC.dataflow.Service.Interface\UnitySC.Dataflow.Service.Interface.csproj">
+      <Project>{629DB6A1-8A0E-40A5-B1B4-E2F5017D2672}</Project>
+      <Name>UnitySC.Dataflow.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADCCommon\UnitySC.ADCAS300Like.Common.csproj">
+      <Project>{946EB8CB-20F1-4219-9361-35C0E7D60EB3}</Project>
+      <Name>UnitySC.ADCAS300Like.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

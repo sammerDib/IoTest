@@ -1,0 +1,258 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Net.Sockets;
+using System.Net;
+using System.Threading;
+using System.Windows.Forms;
+using System.Diagnostics;
+using Common.SocketObject;
+using Common.SocketMessage;
+using Common.EException;
+
+namespace Common.SocketObject
+{
+    public enum enumStatus
+    {
+         stUnknown=0,
+         stNotInitialized,
+         stReadyToStart,
+         stProcessing,
+         stProcessComplete,
+         stError
+    };    
+
+    public class CSocketServerSerialization<T> where T:CBaseMessage, new()
+    {
+        const int TIMEOUT_SENDMSG = 45; // 45 Secondes
+        public const String ALTA_MSG_BEGIN = "ALTAMSGBEGIN";
+        public const String ALTA_MSG_END = "ALTAMSGEND";
+  
+        CSocketClientServer m_SocketServer;
+        OnSocketLog m_SocketLog;
+        OnDataExchange m_OnDataRead;
+        OnDataExchange m_OnDataSent;
+        OnDataExchange m_OnMessageReceived;
+        OnServerConnectedDisconnected m_pOnServerDisconnected;
+        OnClientConnectedDisconnected m_pOnClientDisconnected;
+        OnClientConnectedDisconnected m_pOnClientConnected;
+        
+        String m_LastMsg="";
+        String m_ServerName;
+        short m_PortNum;
+        enumConnection m_ServerType;
+        AutoResetEvent m_evtDataReceivedSending;
+        bool m_bSendEventAck=false;
+        String m_Response="";
+        Object m_SynchroMsgReceived = new Object();
+        T m_MsgReceived;
+        enumSerializationType m_SerializationType;
+
+        public CSocketServerSerialization(enumConnection pServerType, String ServerName, short PortNum, OnSocketLog pEventLog, OnClientConnectedDisconnected pOnClientConnected, OnClientConnectedDisconnected pOnClientDisconnected, OnServerConnectedDisconnected pOnServerDisconnected, OnDataExchange pOnMessageReceived, enumSerializationType pSerializationType)
+        {
+            m_SocketLog = pEventLog;
+            m_ServerName = ServerName;
+            m_ServerType = pServerType;
+            m_PortNum = PortNum;
+            m_pOnServerDisconnected = pOnServerDisconnected;
+            m_pOnClientDisconnected = pOnClientDisconnected;
+            m_pOnClientConnected = pOnClientConnected;
+            m_OnDataRead = new OnDataExchange(OnDataRead);
+            m_OnDataSent = new OnDataExchange(OnDataSent);
+            m_OnMessageReceived = pOnMessageReceived;
+            m_evtDataReceivedSending = new AutoResetEvent(false);
+            m_SerializationType = pSerializationType;
+
+            // Define client name according to server type
+            //switch (m_ServerType)
+            //{
+            //    case enumConnection.CONNECT_GRAB_DARKFIELD: m_ClientName = "[Darkfield client]"; break;
+            //    case enumConnection.CONNECT_GRAB_BRIGHTFIELD1: m_ClientName = "[BrightField1 client]"; break;
+            //    case enumConnection.CONNECT_GRAB_BRIGHTFIELD2: m_ClientName = "[BrightField2 client]"; break;
+            //    case enumConnection.CONNECT_GRAB_BRIGHTFIELD3: m_ClientName = "[BrightField3 client]"; break;
+            //    case enumConnection.CONNECT_GRAB_BRIGHTFIELD4: m_ClientName = "[BrightField4 client]"; break;
+            //    case enumConnection.CONNECT_PSD: m_ClientName = "[PSD client]"; break;
+            //    case enumConnection.CONNECT_GRAB_REVIEW: m_ClientName = "[Review client]"; break;
+            //    case enumConnection.CONNECT_PMEDGE: m_ClientName = "[PMEdge client]"; break;
+            //    case enumConnection.CONNECT_GRAB_EDGE: m_ClientName = "[PMEdge client]"; break;
+            //    case enumConnection.CONNECT_PMLS: m_ClientName = "[PMLightSpeed client]"; break;
+            //    default: m_ClientName = "[Unknown client]"; break;
+            //}
+            m_SocketServer = new CSocketClientServer(m_ServerType, true, m_ServerName, m_PortNum, m_ServerName, m_SocketLog, m_OnDataRead, m_OnDataSent, m_pOnClientConnected, m_pOnClientDisconnected, m_pOnServerDisconnected, false);
+            m_SocketServer.ListenNetwork(m_PortNum);
+
+        }
+
+        public Boolean IsConnected 
+        { 
+            get {
+                    try
+                    {
+                        return m_SocketServer.IsConnected;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                } 
+        }
+
+        public bool IsListening
+        {
+            get { return m_SocketServer.IsListening ; }
+        }
+        public String ServerName { get { return m_ServerName; } }
+        
+        public enumConnection ServerType
+        {
+            get { return m_ServerType; }
+        }
+
+        public String LastMsg
+        {
+            get { return m_LastMsg; }
+            set { m_LastMsg = value; }
+        }
+               
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------
+        // Echange Question/Reponse
+        public int SendMsg(T pMsgObj)
+        {
+            String lData = String.Empty;
+            switch (m_SerializationType)
+            {
+                case enumSerializationType.stCBaseMessage:
+                    lData = Win32Tools.SerializeCBaseMessage((CBaseMessage)pMsgObj);
+                    break;
+                case enumSerializationType.stCBaseMessageBrightfield:
+                    CBaseMessageBrightField lMsgBF = pMsgObj as CBaseMessageBrightField;
+                    lData = Win32Tools.SerializeCBaseMessageBrightField(lMsgBF);
+                    break;
+                default:
+                case enumSerializationType.stNature:
+                    lData = Win32Tools.Serialize(pMsgObj);
+                    break;
+            }
+            lData = ALTA_MSG_BEGIN + lData + ALTA_MSG_END;
+            if (m_SocketServer != null)
+            {
+                if (m_ServerType != enumConnection.CONNECT_MANUALREVIEW)
+                    m_SocketLog.Invoke(m_ServerType, " [SEND] " + pMsgObj.MessageLog, "");
+                m_SocketServer.SendData(lData);
+            }
+            return ETCPException.NO_ERROR;
+        }
+        
+
+        public int SendMsg(T MsgSent, out T MsgReceived)
+        {
+            m_bSendEventAck = true;
+            SendMsg(MsgSent);
+            DateTime StartSend = DateTime.Now;
+            bool bStopTimeOut = false;
+            while (!m_evtDataReceivedSending.WaitOne(100, false))
+            {
+                Application.DoEvents();
+                bStopTimeOut = (((TimeSpan)DateTime.Now.Subtract(StartSend)).TotalSeconds > TIMEOUT_SENDMSG);
+                if (!IsConnected || bStopTimeOut)
+                {
+                    MsgReceived = null;
+                    if (IsConnected) Disconnect();
+                    return ETCPException.NO_TIMEOUT_SOCKET;
+                }
+            }
+            m_bSendEventAck = false;
+            lock (m_SynchroMsgReceived)
+            {
+                MsgReceived = m_MsgReceived;
+                m_MsgReceived = null;
+            }
+            return ETCPException.NO_ERROR;
+        }
+
+        public void OnDataRead(String pData)
+        {
+            lock (m_Response)
+            {
+                
+                if (m_Response != "")
+                    Thread.Sleep(2000);
+
+                m_Response += pData;
+                if (m_Response.Contains(ALTA_MSG_BEGIN))
+                {
+                    int pos = m_Response.IndexOf(ALTA_MSG_BEGIN);
+                    m_Response = m_Response.Substring(pos + ALTA_MSG_BEGIN.Length);
+                    if(m_Response.Contains(ALTA_MSG_END))
+                    {
+                        pos = m_Response.IndexOf(ALTA_MSG_END);
+                        m_Response = m_Response.Substring(0, pos);
+                        OnMessageReceived(m_Response);
+                        m_Response = "";
+                    }                    
+                }
+            }
+        }
+
+        public void OnMessageReceived(String pResponse)
+        {
+            if (m_bSendEventAck)
+            {
+                lock (m_SynchroMsgReceived)
+                {
+                    m_MsgReceived = Win32Tools.DeSerialize<T>(pResponse);
+                    if (m_ServerType != enumConnection.CONNECT_MANUALREVIEW)
+                        m_SocketLog.Invoke(m_ServerType, " [RECV] " + m_MsgReceived.MessageLog, ""); 
+                    m_evtDataReceivedSending.Set();
+                }
+            }
+            else
+            {
+                m_OnMessageReceived.Invoke(pResponse);
+            }
+        }
+        public void OnDataSent(String Data)
+        {
+
+        }        
+
+        public void OnClientDisconnect()
+        {
+            m_SocketServer.ListenNetwork(m_PortNum);
+        }                                                                                      
+
+        public void Disconnect()
+        {
+            try
+            {
+                m_SocketServer.DisconnectClient();
+                m_pOnServerDisconnected.Invoke(m_ServerType);  
+            }
+            catch (ETCPException Ex)
+            {
+                Ex.DisplayError(Ex.ErrorCode);
+            }
+        }
+
+        public void SocketShutdown()
+        {
+            if (m_SocketServer != null)
+            {
+                m_SocketServer.ExitReceiveThread();
+                m_SocketServer.ExitSendThread();
+
+                m_SocketServer.DisconnectServeur();
+            }
+        }
+
+
+        public  void OnClientConnect(IAsyncResult async)
+        {
+            m_SocketServer.OnClientConnect(async);
+        }
+
+        
+    }
+}
+

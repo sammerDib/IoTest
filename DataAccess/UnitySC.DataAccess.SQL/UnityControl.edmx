@@ -1,0 +1,2492 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="UnityControlModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Chamber">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ToolId" Type="int" Nullable="false" />
+          <Property Name="PhysicalConfigurationId" Type="int" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="ActorType" Type="int" Nullable="false" />
+          <Property Name="ChamberKey" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ConfigurationData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Contents" Type="nvarchar(max)" />
+          <Property Name="IsExternal" Type="bit" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Modified" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" />
+          <Property Name="CreatorUserId" Type="int" Nullable="false" />
+          <Property Name="MD5" Type="binary" MaxLength="15" />
+          <Property Name="Version" Type="int" Nullable="false" />
+          <Property Name="ModifiedByUserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ConfigurationHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConfigurationId" Type="int" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Contents" Type="nvarchar(max)" />
+          <Property Name="Version" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DatabaseVersion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Version" Type="varchar" MaxLength="50" />
+          <Property Name="Date" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="Dataflow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KeyForAllVersion" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="Created" Type="datetime2" Precision="7" />
+          <Property Name="CreatorUserId" Type="int" Nullable="false" />
+          <Property Name="XmlContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Version" Type="int" Nullable="false" />
+          <Property Name="CreatorTool" Type="int" Nullable="false" />
+          <Property Name="StepId" Type="int" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="IsShared" Type="bit" Nullable="false" />
+          <Property Name="IsValidated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GlobalResultSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ResultFormat" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="DataSetting" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="XmlSetting" Type="xml" />
+        </EntityType>
+        <EntityType Name="Input">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="ResultType" />
+          </Key>
+          <Property Name="RecipeId" Type="int" Nullable="false" />
+          <Property Name="ResultType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="LotName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="RecipeName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="RunIter" Type="int" Nullable="false" />
+          <Property Name="ToolId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KlarfBinSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AreaIntervalMax" Type="bigint" Nullable="false" />
+          <Property Name="SquareWidth" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KlarfRoughSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoughBin" Type="int" Nullable="false" />
+          <Property Name="Label" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Color" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Layer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="MaterialId" Type="int" />
+          <Property Name="Thickness" Type="real" Nullable="false" />
+          <Property Name="RefractiveIndex" Type="real" />
+          <Property Name="StepId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActionType" Type="int" />
+          <Property Name="Detail" Type="nvarchar(max)" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="TableType" Type="int" />
+        </EntityType>
+        <EntityType Name="Material">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="XmlContent" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Output">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="ResultType" />
+          </Key>
+          <Property Name="RecipeId" Type="int" Nullable="false" />
+          <Property Name="ResultType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="WaferCategoryId" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductConfiguration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="ChamberId" Type="int" Nullable="false" />
+          <Property Name="ConfigurationId" Type="int" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KeyForAllVersion" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StepId" Type="int" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="ActorType" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CreatorUserId" Type="int" Nullable="false" />
+          <Property Name="CreatorChamberId" Type="int" Nullable="false" />
+          <Property Name="XmlContent" Type="nvarchar(max)" />
+          <Property Name="Version" Type="int" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="IsShared" Type="bit" Nullable="false" />
+          <Property Name="IsTemplate" Type="bit" Nullable="false" />
+          <Property Name="IsValidated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeDataflowMap">
+          <Key>
+            <PropertyRef Name="RecipeKey" />
+            <PropertyRef Name="DataflowKey" />
+          </Key>
+          <Property Name="RecipeKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DataflowKey" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Created" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CreatorUserId" Type="int" Nullable="false" />
+          <Property Name="RecipeID" Type="int" />
+          <Property Name="Version" Type="int" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+          <Property Name="MD5" Type="varchar(max)" />
+          <Property Name="FileType" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="RecipeResultType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Result">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WaferResultId" Type="bigint" Nullable="false" />
+          <Property Name="ChamberId" Type="int" Nullable="false" />
+          <Property Name="RecipeId" Type="int" Nullable="false" />
+          <Property Name="ActorType" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResultAcq">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WaferResultId" Type="bigint" Nullable="false" />
+          <Property Name="ChamberId" Type="int" Nullable="false" />
+          <Property Name="RecipeId" Type="int" Nullable="false" />
+          <Property Name="ActorType" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="PathName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResultAcqItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResultAcqId" Type="bigint" Nullable="false" />
+          <Property Name="ResultType" Type="int" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Idx" Type="smallint" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="InternalState" Type="int" Nullable="false" />
+          <Property Name="Tag" Type="int" />
+        </EntityType>
+        <EntityType Name="ResultItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResultId" Type="bigint" Nullable="false" />
+          <Property Name="ResultType" Type="int" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Idx" Type="smallint" Nullable="false" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="InternalState" Type="int" Nullable="false" />
+          <Property Name="Tag" Type="int" />
+        </EntityType>
+        <EntityType Name="ResultItemValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ResultItemId" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Value" Type="float" Nullable="false" />
+          <Property Name="UnitType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Step">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="XmlContent" Type="nvarchar(max)" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecipeId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tool">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ToolKey" Type="int" Nullable="false" />
+          <Property Name="ToolCategory" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ToolId" Type="int" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vid">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Label" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WaferCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="XmlContent" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WaferResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobId" Type="int" Nullable="false" />
+          <Property Name="SlotId" Type="int" Nullable="false" />
+          <Property Name="WaferName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Chamber_Configuration">
+          <End Role="ConfigurationData" Type="Self.ConfigurationData" Multiplicity="0..1" />
+          <End Role="Chamber" Type="Self.Chamber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigurationData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chamber">
+              <PropertyRef Name="PhysicalConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chamber_Tool">
+          <End Role="Tool" Type="Self.Tool" Multiplicity="1" />
+          <End Role="Chamber" Type="Self.Chamber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chamber">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConfigurationHistory_Configuration">
+          <End Role="ConfigurationData" Type="Self.ConfigurationData" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ConfigurationHistory" Type="Self.ConfigurationHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigurationData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConfigurationHistory">
+              <PropertyRef Name="ConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConfigurationHistory_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="ConfigurationHistory" Type="Self.ConfigurationHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConfigurationHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dataflow_Step">
+          <End Role="Step" Type="Self.Step" Multiplicity="1" />
+          <End Role="Dataflow" Type="Self.Dataflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Step">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dataflow">
+              <PropertyRef Name="StepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dataflow_Tool">
+          <End Role="Tool" Type="Self.Tool" Multiplicity="1" />
+          <End Role="Dataflow" Type="Self.Dataflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dataflow">
+              <PropertyRef Name="CreatorTool" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dataflow_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Dataflow" Type="Self.Dataflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dataflow">
+              <PropertyRef Name="CreatorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Input_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="Input" Type="Self.Input" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Input">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Job_Tool">
+          <End Role="Tool" Type="Self.Tool" Multiplicity="1" />
+          <End Role="Job" Type="Self.Job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Job">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Layer_Material1">
+          <End Role="Material" Type="Self.Material" Multiplicity="0..1" />
+          <End Role="Layer" Type="Self.Layer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Material">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Layer">
+              <PropertyRef Name="MaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Layer_Step">
+          <End Role="Step" Type="Self.Step" Multiplicity="1" />
+          <End Role="Layer" Type="Self.Layer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Step">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Layer">
+              <PropertyRef Name="StepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Log_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Log" Type="Self.Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Log">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Output_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="Output" Type="Self.Output" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Output">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_WaferCategory">
+          <End Role="WaferCategory" Type="Self.WaferCategory" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WaferCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="WaferCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfiguration_Chamber">
+          <End Role="Chamber" Type="Self.Chamber" Multiplicity="1" />
+          <End Role="ProductConfiguration" Type="Self.ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="ChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfiguration_Configuration">
+          <End Role="ConfigurationData" Type="Self.ConfigurationData" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProductConfiguration" Type="Self.ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigurationData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="ConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfiguration_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProductConfiguration" Type="Self.ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Chamber">
+          <End Role="Chamber" Type="Self.Chamber" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CreatorChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Step">
+          <End Role="Step" Type="Self.Step" Multiplicity="0..1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Step">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="StepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CreatorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFile_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="0..1" />
+          <End Role="RecipeFile" Type="Self.RecipeFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeFile">
+              <PropertyRef Name="RecipeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFile_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="RecipeFile" Type="Self.RecipeFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeFile">
+              <PropertyRef Name="CreatorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Result_Chamber">
+          <End Role="Chamber" Type="Self.Chamber" Multiplicity="1" />
+          <End Role="Result" Type="Self.Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="ChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Result_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="Result" Type="Self.Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Result_WaferResult">
+          <End Role="WaferResult" Type="Self.WaferResult" Multiplicity="1" />
+          <End Role="Result" Type="Self.Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WaferResult">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="WaferResultId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcq_Chamber">
+          <End Role="Chamber" Type="Self.Chamber" Multiplicity="1" />
+          <End Role="ResultAcq" Type="Self.ResultAcq" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcq">
+              <PropertyRef Name="ChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcq_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="ResultAcq" Type="Self.ResultAcq" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcq">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcq_WaferResult">
+          <End Role="WaferResult" Type="Self.WaferResult" Multiplicity="1" />
+          <End Role="ResultAcq" Type="Self.ResultAcq" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WaferResult">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcq">
+              <PropertyRef Name="WaferResultId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcqItem_ResultAcq">
+          <End Role="ResultAcq" Type="Self.ResultAcq" Multiplicity="1" />
+          <End Role="ResultAcqItem" Type="Self.ResultAcqItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResultAcq">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcqItem">
+              <PropertyRef Name="ResultAcqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultItem_Result">
+          <End Role="Result" Type="Self.Result" Multiplicity="1" />
+          <End Role="ResultItem" Type="Self.ResultItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Result">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultItem">
+              <PropertyRef Name="ResultId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultValue_ResultItem">
+          <End Role="ResultItem" Type="Self.ResultItem" Multiplicity="1" />
+          <End Role="ResultItemValue" Type="Self.ResultItemValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResultItem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultItemValue">
+              <PropertyRef Name="ResultItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Step_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="Step" Type="Self.Step" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Step">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tag_Recipe">
+          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1" />
+          <End Role="Tag" Type="Self.Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tag">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Tool">
+          <End Role="Tool" Type="Self.Tool" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WaferResult_Job1">
+          <End Role="Job" Type="Self.Job" Multiplicity="1" />
+          <End Role="WaferResult" Type="Self.WaferResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WaferResult">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WaferResult_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="WaferResult" Type="Self.WaferResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WaferResult">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_GetJobResults" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pToolId" Type="int" Mode="In" />
+          <Parameter Name="pStartDate" Type="datetime2" Mode="In" />
+          <Parameter Name="pEndDate" Type="datetime2" Mode="In" />
+          <Parameter Name="pProductId" Type="int" Mode="In" />
+          <Parameter Name="pLotName" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="pRecipeName" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="pActorType" Type="int" Mode="In" />
+          <Parameter Name="pResultState" Type="int" Mode="In" />
+          <Parameter Name="pWaferName" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="pTag" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="UnityControlModelStoreContainer">
+          <EntitySet Name="Chamber" EntityType="Self.Chamber" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConfigurationData" EntityType="Self.ConfigurationData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConfigurationHistory" EntityType="Self.ConfigurationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DatabaseVersion" EntityType="Self.DatabaseVersion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dataflow" EntityType="Self.Dataflow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GlobalResultSettings" EntityType="Self.GlobalResultSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Input" EntityType="Self.Input" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Job" EntityType="Self.Job" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KlarfBinSettings" EntityType="Self.KlarfBinSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KlarfRoughSettings" EntityType="Self.KlarfRoughSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Layer" EntityType="Self.Layer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Material" EntityType="Self.Material" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Output" EntityType="Self.Output" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductConfiguration" EntityType="Self.ProductConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeDataflowMap" EntityType="Self.RecipeDataflowMap" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeFile" EntityType="Self.RecipeFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RecipeResultType" EntityType="Self.RecipeResultType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Result" EntityType="Self.Result" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResultAcq" EntityType="Self.ResultAcq" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResultAcqItem" EntityType="Self.ResultAcqItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResultItem" EntityType="Self.ResultItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResultItemValue" EntityType="Self.ResultItemValue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Step" EntityType="Self.Step" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tool" EntityType="Self.Tool" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vid" EntityType="Self.Vid" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WaferCategory" EntityType="Self.WaferCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WaferResult" EntityType="Self.WaferResult" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Chamber_Configuration" Association="Self.FK_Chamber_Configuration">
+            <End Role="ConfigurationData" EntitySet="ConfigurationData" />
+            <End Role="Chamber" EntitySet="Chamber" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Chamber_Tool" Association="Self.FK_Chamber_Tool">
+            <End Role="Tool" EntitySet="Tool" />
+            <End Role="Chamber" EntitySet="Chamber" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConfigurationHistory_Configuration" Association="Self.FK_ConfigurationHistory_Configuration">
+            <End Role="ConfigurationData" EntitySet="ConfigurationData" />
+            <End Role="ConfigurationHistory" EntitySet="ConfigurationHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConfigurationHistory_User" Association="Self.FK_ConfigurationHistory_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ConfigurationHistory" EntitySet="ConfigurationHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dataflow_Step" Association="Self.FK_Dataflow_Step">
+            <End Role="Step" EntitySet="Step" />
+            <End Role="Dataflow" EntitySet="Dataflow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dataflow_Tool" Association="Self.FK_Dataflow_Tool">
+            <End Role="Tool" EntitySet="Tool" />
+            <End Role="Dataflow" EntitySet="Dataflow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dataflow_User" Association="Self.FK_Dataflow_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Dataflow" EntitySet="Dataflow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Input_Recipe" Association="Self.FK_Input_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Input" EntitySet="Input" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Job_Tool" Association="Self.FK_Job_Tool">
+            <End Role="Tool" EntitySet="Tool" />
+            <End Role="Job" EntitySet="Job" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Layer_Material1" Association="Self.FK_Layer_Material1">
+            <End Role="Material" EntitySet="Material" />
+            <End Role="Layer" EntitySet="Layer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Layer_Step" Association="Self.FK_Layer_Step">
+            <End Role="Step" EntitySet="Step" />
+            <End Role="Layer" EntitySet="Layer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Log_User" Association="Self.FK_Log_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Log" EntitySet="Log" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Output_Recipe" Association="Self.FK_Output_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Output" EntitySet="Output" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_WaferCategory" Association="Self.FK_Product_WaferCategory">
+            <End Role="WaferCategory" EntitySet="WaferCategory" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfiguration_Chamber" Association="Self.FK_ProductConfiguration_Chamber">
+            <End Role="Chamber" EntitySet="Chamber" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfiguration_Configuration" Association="Self.FK_ProductConfiguration_Configuration">
+            <End Role="ConfigurationData" EntitySet="ConfigurationData" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfiguration_Product" Association="Self.FK_ProductConfiguration_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Chamber" Association="Self.FK_Recipe_Chamber">
+            <End Role="Chamber" EntitySet="Chamber" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Step" Association="Self.FK_Recipe_Step">
+            <End Role="Step" EntitySet="Step" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_User" Association="Self.FK_Recipe_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Recipe" EntitySet="Recipe" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFile_Recipe" Association="Self.FK_RecipeFile_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="RecipeFile" EntitySet="RecipeFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFile_User" Association="Self.FK_RecipeFile_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="RecipeFile" EntitySet="RecipeFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Result_Chamber" Association="Self.FK_Result_Chamber">
+            <End Role="Chamber" EntitySet="Chamber" />
+            <End Role="Result" EntitySet="Result" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Result_Recipe" Association="Self.FK_Result_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Result" EntitySet="Result" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Result_WaferResult" Association="Self.FK_Result_WaferResult">
+            <End Role="WaferResult" EntitySet="WaferResult" />
+            <End Role="Result" EntitySet="Result" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcq_Chamber" Association="Self.FK_ResultAcq_Chamber">
+            <End Role="Chamber" EntitySet="Chamber" />
+            <End Role="ResultAcq" EntitySet="ResultAcq" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcq_Recipe" Association="Self.FK_ResultAcq_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="ResultAcq" EntitySet="ResultAcq" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcq_WaferResult" Association="Self.FK_ResultAcq_WaferResult">
+            <End Role="WaferResult" EntitySet="WaferResult" />
+            <End Role="ResultAcq" EntitySet="ResultAcq" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcqItem_ResultAcq" Association="Self.FK_ResultAcqItem_ResultAcq">
+            <End Role="ResultAcq" EntitySet="ResultAcq" />
+            <End Role="ResultAcqItem" EntitySet="ResultAcqItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultItem_Result" Association="Self.FK_ResultItem_Result">
+            <End Role="Result" EntitySet="Result" />
+            <End Role="ResultItem" EntitySet="ResultItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultValue_ResultItem" Association="Self.FK_ResultValue_ResultItem">
+            <End Role="ResultItem" EntitySet="ResultItem" />
+            <End Role="ResultItemValue" EntitySet="ResultItemValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Step_Product" Association="Self.FK_Step_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="Step" EntitySet="Step" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tag_Recipe" Association="Self.FK_Tag_Recipe">
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="Tag" EntitySet="Tag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Tool" Association="Self.FK_User_Tool">
+            <End Role="Tool" EntitySet="Tool" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaferResult_Job1" Association="Self.FK_WaferResult_Job1">
+            <End Role="Job" EntitySet="Job" />
+            <End Role="WaferResult" EntitySet="WaferResult" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaferResult_Product" Association="Self.FK_WaferResult_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="WaferResult" EntitySet="WaferResult" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UnityControlModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="UnityControlEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="sp_GetJobResults">
+            <Parameter Name="pToolId" Mode="In" Type="Int32" />
+            <Parameter Name="pStartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="pEndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="pProductId" Mode="In" Type="Int32" />
+            <Parameter Name="pLotName" Mode="In" Type="String" />
+            <Parameter Name="pRecipeName" Mode="In" Type="String" />
+            <Parameter Name="pActorType" Mode="In" Type="Int32" />
+            <Parameter Name="pWaferState" Mode="In" Type="Int32" />
+            <Parameter Name="pWaferName" Mode="In" Type="String" />
+            <Parameter Name="pNbRows" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="DeleteAllData" />
+          <FunctionImport Name="sp_GetJobResults1">
+            <Parameter Name="pToolId" Mode="In" Type="Int32" />
+            <Parameter Name="pStartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="pEndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="pProductId" Mode="In" Type="Int32" />
+            <Parameter Name="pLotName" Mode="In" Type="String" />
+            <Parameter Name="pRecipeName" Mode="In" Type="String" />
+            <Parameter Name="pActorType" Mode="In" Type="Int32" />
+            <Parameter Name="pResultState" Mode="In" Type="Int32" />
+            <Parameter Name="pWaferName" Mode="In" Type="String" />
+            <Parameter Name="pTag" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Chambers" EntityType="UnityControlModel.Chamber" />
+          <EntitySet Name="ConfigurationDatas" EntityType="UnityControlModel.ConfigurationData" />
+          <EntitySet Name="ConfigurationHistories" EntityType="UnityControlModel.ConfigurationHistory" />
+          <EntitySet Name="DatabaseVersions" EntityType="UnityControlModel.DatabaseVersion" />
+          <EntitySet Name="Dataflows" EntityType="UnityControlModel.Dataflow" />
+          <EntitySet Name="Inputs" EntityType="UnityControlModel.Input" />
+          <EntitySet Name="Jobs" EntityType="UnityControlModel.Job" />
+          <EntitySet Name="Layers" EntityType="UnityControlModel.Layer" />
+          <EntitySet Name="Logs" EntityType="UnityControlModel.Log" />
+          <EntitySet Name="Materials" EntityType="UnityControlModel.Material" />
+          <EntitySet Name="Outputs" EntityType="UnityControlModel.Output" />
+          <EntitySet Name="Products" EntityType="UnityControlModel.Product" />
+          <EntitySet Name="ProductConfigurations" EntityType="UnityControlModel.ProductConfiguration" />
+          <EntitySet Name="Recipes" EntityType="UnityControlModel.Recipe" />
+          <EntitySet Name="RecipeDataflowMaps" EntityType="UnityControlModel.RecipeDataflowMap" />
+          <EntitySet Name="RecipeFiles" EntityType="UnityControlModel.RecipeFile" />
+          <EntitySet Name="RecipeResultTypes" EntityType="UnityControlModel.RecipeResultType" />
+          <EntitySet Name="Results" EntityType="UnityControlModel.Result" />
+          <EntitySet Name="ResultAcqs" EntityType="UnityControlModel.ResultAcq" />
+          <EntitySet Name="ResultAcqItems" EntityType="UnityControlModel.ResultAcqItem" />
+          <EntitySet Name="ResultItems" EntityType="UnityControlModel.ResultItem" />
+          <EntitySet Name="ResultItemValues" EntityType="UnityControlModel.ResultItemValue" />
+          <EntitySet Name="Steps" EntityType="UnityControlModel.Step" />
+          <EntitySet Name="Tags" EntityType="UnityControlModel.Tag" />
+          <EntitySet Name="Tools" EntityType="UnityControlModel.Tool" />
+          <EntitySet Name="Users" EntityType="UnityControlModel.User" />
+          <EntitySet Name="Vids" EntityType="UnityControlModel.Vid" />
+          <EntitySet Name="WaferCategories" EntityType="UnityControlModel.WaferCategory" />
+          <EntitySet Name="WaferResults" EntityType="UnityControlModel.WaferResult" />
+          <AssociationSet Name="FK_Chamber_Configuration" Association="UnityControlModel.FK_Chamber_Configuration">
+            <End Role="ConfigurationData" EntitySet="ConfigurationDatas" />
+            <End Role="Chamber" EntitySet="Chambers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Chamber_Tool" Association="UnityControlModel.FK_Chamber_Tool">
+            <End Role="Tool" EntitySet="Tools" />
+            <End Role="Chamber" EntitySet="Chambers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfiguration_Chamber" Association="UnityControlModel.FK_ProductConfiguration_Chamber">
+            <End Role="Chamber" EntitySet="Chambers" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfigurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Chamber" Association="UnityControlModel.FK_Recipe_Chamber">
+            <End Role="Chamber" EntitySet="Chambers" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Result_Chamber" Association="UnityControlModel.FK_Result_Chamber">
+            <End Role="Chamber" EntitySet="Chambers" />
+            <End Role="Result" EntitySet="Results" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcq_Chamber" Association="UnityControlModel.FK_ResultAcq_Chamber">
+            <End Role="Chamber" EntitySet="Chambers" />
+            <End Role="ResultAcq" EntitySet="ResultAcqs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConfigurationHistory_Configuration" Association="UnityControlModel.FK_ConfigurationHistory_Configuration">
+            <End Role="ConfigurationData" EntitySet="ConfigurationDatas" />
+            <End Role="ConfigurationHistory" EntitySet="ConfigurationHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfiguration_Configuration" Association="UnityControlModel.FK_ProductConfiguration_Configuration">
+            <End Role="ConfigurationData" EntitySet="ConfigurationDatas" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfigurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConfigurationHistory_User" Association="UnityControlModel.FK_ConfigurationHistory_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ConfigurationHistory" EntitySet="ConfigurationHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dataflow_Step" Association="UnityControlModel.FK_Dataflow_Step">
+            <End Role="Step" EntitySet="Steps" />
+            <End Role="Dataflow" EntitySet="Dataflows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dataflow_Tool" Association="UnityControlModel.FK_Dataflow_Tool">
+            <End Role="Tool" EntitySet="Tools" />
+            <End Role="Dataflow" EntitySet="Dataflows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Dataflow_User" Association="UnityControlModel.FK_Dataflow_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Dataflow" EntitySet="Dataflows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Input_Recipe" Association="UnityControlModel.FK_Input_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="Input" EntitySet="Inputs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Job_Tool" Association="UnityControlModel.FK_Job_Tool">
+            <End Role="Tool" EntitySet="Tools" />
+            <End Role="Job" EntitySet="Jobs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaferResult_Job1" Association="UnityControlModel.FK_WaferResult_Job1">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="WaferResult" EntitySet="WaferResults" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Layer_Material1" Association="UnityControlModel.FK_Layer_Material1">
+            <End Role="Material" EntitySet="Materials" />
+            <End Role="Layer" EntitySet="Layers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Layer_Step" Association="UnityControlModel.FK_Layer_Step">
+            <End Role="Step" EntitySet="Steps" />
+            <End Role="Layer" EntitySet="Layers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Log_User" Association="UnityControlModel.FK_Log_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Log" EntitySet="Logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Output_Recipe" Association="UnityControlModel.FK_Output_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="Output" EntitySet="Outputs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_WaferCategory" Association="UnityControlModel.FK_Product_WaferCategory">
+            <End Role="WaferCategory" EntitySet="WaferCategories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductConfiguration_Product" Association="UnityControlModel.FK_ProductConfiguration_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductConfiguration" EntitySet="ProductConfigurations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Step_Product" Association="UnityControlModel.FK_Step_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Step" EntitySet="Steps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WaferResult_Product" Association="UnityControlModel.FK_WaferResult_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="WaferResult" EntitySet="WaferResults" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_Step" Association="UnityControlModel.FK_Recipe_Step">
+            <End Role="Step" EntitySet="Steps" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recipe_User" Association="UnityControlModel.FK_Recipe_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Recipe" EntitySet="Recipes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFile_Recipe" Association="UnityControlModel.FK_RecipeFile_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="RecipeFile" EntitySet="RecipeFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Result_Recipe" Association="UnityControlModel.FK_Result_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="Result" EntitySet="Results" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcq_Recipe" Association="UnityControlModel.FK_ResultAcq_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="ResultAcq" EntitySet="ResultAcqs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tag_Recipe" Association="UnityControlModel.FK_Tag_Recipe">
+            <End Role="Recipe" EntitySet="Recipes" />
+            <End Role="Tag" EntitySet="Tags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RecipeFile_User" Association="UnityControlModel.FK_RecipeFile_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="RecipeFile" EntitySet="RecipeFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Result_WaferResult" Association="UnityControlModel.FK_Result_WaferResult">
+            <End Role="WaferResult" EntitySet="WaferResults" />
+            <End Role="Result" EntitySet="Results" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultItem_Result" Association="UnityControlModel.FK_ResultItem_Result">
+            <End Role="Result" EntitySet="Results" />
+            <End Role="ResultItem" EntitySet="ResultItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcq_WaferResult" Association="UnityControlModel.FK_ResultAcq_WaferResult">
+            <End Role="WaferResult" EntitySet="WaferResults" />
+            <End Role="ResultAcq" EntitySet="ResultAcqs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultAcqItem_ResultAcq" Association="UnityControlModel.FK_ResultAcqItem_ResultAcq">
+            <End Role="ResultAcq" EntitySet="ResultAcqs" />
+            <End Role="ResultAcqItem" EntitySet="ResultAcqItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResultValue_ResultItem" Association="UnityControlModel.FK_ResultValue_ResultItem">
+            <End Role="ResultItem" EntitySet="ResultItems" />
+            <End Role="ResultItemValue" EntitySet="ResultItemValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Tool" Association="UnityControlModel.FK_User_Tool">
+            <End Role="Tool" EntitySet="Tools" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="GlobalResultSettings1" EntityType="UnityControlModel.GlobalResultSettings" />
+          <EntitySet Name="KlarfBinSettings1" EntityType="UnityControlModel.KlarfBinSettings" />
+          <EntitySet Name="KlarfRoughSettings1" EntityType="UnityControlModel.KlarfRoughSettings" />
+          </EntityContainer>
+        <EntityType Name="Chamber">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ToolId" Type="Int32" Nullable="false" />
+          <Property Name="PhysicalConfigurationId" Type="Int32" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <Property Name="ActorType" Type="Int32" Nullable="false" />
+          <Property Name="ChamberKey" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ConfigurationData" Relationship="UnityControlModel.FK_Chamber_Configuration" FromRole="Chamber" ToRole="ConfigurationData" />
+          <NavigationProperty Name="Tool" Relationship="UnityControlModel.FK_Chamber_Tool" FromRole="Chamber" ToRole="Tool" />
+          <NavigationProperty Name="ProductConfigurations" Relationship="UnityControlModel.FK_ProductConfiguration_Chamber" FromRole="Chamber" ToRole="ProductConfiguration" />
+          <NavigationProperty Name="Recipes" Relationship="UnityControlModel.FK_Recipe_Chamber" FromRole="Chamber" ToRole="Recipe" />
+          <NavigationProperty Name="Results" Relationship="UnityControlModel.FK_Result_Chamber" FromRole="Chamber" ToRole="Result" />
+          <NavigationProperty Name="ResultAcqs" Relationship="UnityControlModel.FK_ResultAcq_Chamber" FromRole="Chamber" ToRole="ResultAcq" />
+        </EntityType>
+        <EntityType Name="ConfigurationData">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsExternal" Type="Boolean" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Modified" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="IsArchived" Type="Boolean" />
+          <Property Name="CreatorUserId" Type="Int32" Nullable="false" />
+          <Property Name="MD5" Type="Binary" MaxLength="15" FixedLength="true" />
+          <Property Name="Version" Type="Int32" Nullable="false" />
+          <Property Name="ModifiedByUserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chambers" Relationship="UnityControlModel.FK_Chamber_Configuration" FromRole="ConfigurationData" ToRole="Chamber" />
+          <NavigationProperty Name="ConfigurationHistories" Relationship="UnityControlModel.FK_ConfigurationHistory_Configuration" FromRole="ConfigurationData" ToRole="ConfigurationHistory" />
+          <NavigationProperty Name="ProductConfigurations" Relationship="UnityControlModel.FK_ProductConfiguration_Configuration" FromRole="ConfigurationData" ToRole="ProductConfiguration" />
+        </EntityType>
+        <EntityType Name="ConfigurationHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConfigurationId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ConfigurationData" Relationship="UnityControlModel.FK_ConfigurationHistory_Configuration" FromRole="ConfigurationHistory" ToRole="ConfigurationData" />
+          <NavigationProperty Name="User" Relationship="UnityControlModel.FK_ConfigurationHistory_User" FromRole="ConfigurationHistory" ToRole="User" />
+        </EntityType>
+        <EntityType Name="DatabaseVersion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Version" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Precision="7" />
+        </EntityType>
+        <EntityType Name="Dataflow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KeyForAllVersion" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Precision="7" />
+          <Property Name="CreatorUserId" Type="Int32" Nullable="false" />
+          <Property Name="XmlContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="Int32" Nullable="false" />
+          <Property Name="CreatorTool" Type="Int32" Nullable="false" />
+          <Property Name="StepId" Type="Int32" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <Property Name="IsShared" Type="Boolean" Nullable="false" />
+          <Property Name="IsValidated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Step" Relationship="UnityControlModel.FK_Dataflow_Step" FromRole="Dataflow" ToRole="Step" />
+          <NavigationProperty Name="Tool" Relationship="UnityControlModel.FK_Dataflow_Tool" FromRole="Dataflow" ToRole="Tool" />
+          <NavigationProperty Name="User" Relationship="UnityControlModel.FK_Dataflow_User" FromRole="Dataflow" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Input">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="ResultType" />
+          </Key>
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="ResultType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Recipe" Relationship="UnityControlModel.FK_Input_Recipe" FromRole="Input" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Job">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="LotName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="RecipeName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RunIter" Type="Int32" Nullable="false" />
+          <Property Name="ToolId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Tool" Relationship="UnityControlModel.FK_Job_Tool" FromRole="Job" ToRole="Tool" />
+          <NavigationProperty Name="WaferResults" Relationship="UnityControlModel.FK_WaferResult_Job1" FromRole="Job" ToRole="WaferResult" />
+        </EntityType>
+        <EntityType Name="Layer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MaterialId" Type="Int32" />
+          <Property Name="Thickness" Type="Single" Nullable="false" />
+          <Property Name="RefractiveIndex" Type="Single" />
+          <Property Name="StepId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Material" Relationship="UnityControlModel.FK_Layer_Material1" FromRole="Layer" ToRole="Material" />
+          <NavigationProperty Name="Step" Relationship="UnityControlModel.FK_Layer_Step" FromRole="Layer" ToRole="Step" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActionType" Type="Int32" />
+          <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="TableType" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="UnityControlModel.FK_Log_User" FromRole="Log" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Material">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <Property Name="XmlContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Layers" Relationship="UnityControlModel.FK_Layer_Material1" FromRole="Material" ToRole="Layer" />
+        </EntityType>
+        <EntityType Name="Output">
+          <Key>
+            <PropertyRef Name="RecipeId" />
+            <PropertyRef Name="ResultType" />
+          </Key>
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="ResultType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Recipe" Relationship="UnityControlModel.FK_Output_Recipe" FromRole="Output" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WaferCategoryId" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="WaferCategory" Relationship="UnityControlModel.FK_Product_WaferCategory" FromRole="Product" ToRole="WaferCategory" />
+          <NavigationProperty Name="ProductConfigurations" Relationship="UnityControlModel.FK_ProductConfiguration_Product" FromRole="Product" ToRole="ProductConfiguration" />
+          <NavigationProperty Name="Steps" Relationship="UnityControlModel.FK_Step_Product" FromRole="Product" ToRole="Step" />
+          <NavigationProperty Name="WaferResults" Relationship="UnityControlModel.FK_WaferResult_Product" FromRole="Product" ToRole="WaferResult" />
+        </EntityType>
+        <EntityType Name="ProductConfiguration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="ChamberId" Type="Int32" Nullable="false" />
+          <Property Name="ConfigurationId" Type="Int32" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Chamber" Relationship="UnityControlModel.FK_ProductConfiguration_Chamber" FromRole="ProductConfiguration" ToRole="Chamber" />
+          <NavigationProperty Name="ConfigurationData" Relationship="UnityControlModel.FK_ProductConfiguration_Configuration" FromRole="ProductConfiguration" ToRole="ConfigurationData" />
+          <NavigationProperty Name="Product" Relationship="UnityControlModel.FK_ProductConfiguration_Product" FromRole="ProductConfiguration" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Recipe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KeyForAllVersion" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StepId" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ActorType" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="CreatorUserId" Type="Int32" Nullable="false" />
+          <Property Name="CreatorChamberId" Type="Int32" Nullable="false" />
+          <Property Name="XmlContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="Int32" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <Property Name="IsShared" Type="Boolean" Nullable="false" />
+          <Property Name="IsTemplate" Type="Boolean" Nullable="false" />
+          <Property Name="IsValidated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Chamber" Relationship="UnityControlModel.FK_Recipe_Chamber" FromRole="Recipe" ToRole="Chamber" />
+          <NavigationProperty Name="Inputs" Relationship="UnityControlModel.FK_Input_Recipe" FromRole="Recipe" ToRole="Input" />
+          <NavigationProperty Name="Outputs" Relationship="UnityControlModel.FK_Output_Recipe" FromRole="Recipe" ToRole="Output" />
+          <NavigationProperty Name="Step" Relationship="UnityControlModel.FK_Recipe_Step" FromRole="Recipe" ToRole="Step" />
+          <NavigationProperty Name="User" Relationship="UnityControlModel.FK_Recipe_User" FromRole="Recipe" ToRole="User" />
+          <NavigationProperty Name="RecipeFiles" Relationship="UnityControlModel.FK_RecipeFile_Recipe" FromRole="Recipe" ToRole="RecipeFile" />
+          <NavigationProperty Name="Results" Relationship="UnityControlModel.FK_Result_Recipe" FromRole="Recipe" ToRole="Result" />
+          <NavigationProperty Name="ResultAcqs" Relationship="UnityControlModel.FK_ResultAcq_Recipe" FromRole="Recipe" ToRole="ResultAcq" />
+          <NavigationProperty Name="Tags" Relationship="UnityControlModel.FK_Tag_Recipe" FromRole="Recipe" ToRole="Tag" />
+        </EntityType>
+        <EntityType Name="RecipeDataflowMap">
+          <Key>
+            <PropertyRef Name="RecipeKey" />
+            <PropertyRef Name="DataflowKey" />
+          </Key>
+          <Property Name="RecipeKey" Type="Guid" Nullable="false" />
+          <Property Name="DataflowKey" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecipeFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Created" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="CreatorUserId" Type="Int32" Nullable="false" />
+          <Property Name="RecipeID" Type="Int32" />
+          <Property Name="Version" Type="Int32" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <Property Name="MD5" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="FileType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Recipe" Relationship="UnityControlModel.FK_RecipeFile_Recipe" FromRole="RecipeFile" ToRole="Recipe" />
+          <NavigationProperty Name="User" Relationship="UnityControlModel.FK_RecipeFile_User" FromRole="RecipeFile" ToRole="User" />
+        </EntityType>
+        <EntityType Name="RecipeResultType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Result">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WaferResultId" Type="Int64" Nullable="false" />
+          <Property Name="ChamberId" Type="Int32" Nullable="false" />
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="ActorType" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chamber" Relationship="UnityControlModel.FK_Result_Chamber" FromRole="Result" ToRole="Chamber" />
+          <NavigationProperty Name="Recipe" Relationship="UnityControlModel.FK_Result_Recipe" FromRole="Result" ToRole="Recipe" />
+          <NavigationProperty Name="WaferResult" Relationship="UnityControlModel.FK_Result_WaferResult" FromRole="Result" ToRole="WaferResult" />
+          <NavigationProperty Name="ResultItems" Relationship="UnityControlModel.FK_ResultItem_Result" FromRole="Result" ToRole="ResultItem" />
+        </EntityType>
+        <EntityType Name="ResultAcq">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WaferResultId" Type="Int64" Nullable="false" />
+          <Property Name="ChamberId" Type="Int32" Nullable="false" />
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="ActorType" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="PathName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Chamber" Relationship="UnityControlModel.FK_ResultAcq_Chamber" FromRole="ResultAcq" ToRole="Chamber" />
+          <NavigationProperty Name="Recipe" Relationship="UnityControlModel.FK_ResultAcq_Recipe" FromRole="ResultAcq" ToRole="Recipe" />
+          <NavigationProperty Name="WaferResult" Relationship="UnityControlModel.FK_ResultAcq_WaferResult" FromRole="ResultAcq" ToRole="WaferResult" />
+          <NavigationProperty Name="ResultAcqItems" Relationship="UnityControlModel.FK_ResultAcqItem_ResultAcq" FromRole="ResultAcq" ToRole="ResultAcqItem" />
+        </EntityType>
+        <EntityType Name="ResultAcqItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResultAcqId" Type="Int64" Nullable="false" />
+          <Property Name="ResultType" Type="Int32" Nullable="false" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Idx" Type="Int16" Nullable="false" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <Property Name="InternalState" Type="Int32" Nullable="false" />
+          <Property Name="Tag" Type="Int32" />
+          <NavigationProperty Name="ResultAcq" Relationship="UnityControlModel.FK_ResultAcqItem_ResultAcq" FromRole="ResultAcqItem" ToRole="ResultAcq" />
+        </EntityType>
+        <EntityType Name="ResultItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResultId" Type="Int64" Nullable="false" />
+          <Property Name="ResultType" Type="Int32" Nullable="false" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Idx" Type="Int16" Nullable="false" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <Property Name="InternalState" Type="Int32" Nullable="false" />
+          <Property Name="Tag" Type="Int32" />
+          <NavigationProperty Name="Result" Relationship="UnityControlModel.FK_ResultItem_Result" FromRole="ResultItem" ToRole="Result" />
+          <NavigationProperty Name="ResultItemValues" Relationship="UnityControlModel.FK_ResultValue_ResultItem" FromRole="ResultItem" ToRole="ResultItemValue" />
+        </EntityType>
+        <EntityType Name="ResultItemValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ResultItemId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="Double" Nullable="false" />
+          <Property Name="UnitType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ResultItem" Relationship="UnityControlModel.FK_ResultValue_ResultItem" FromRole="ResultItemValue" ToRole="ResultItem" />
+        </EntityType>
+        <EntityType Name="Step">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="XmlContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Dataflows" Relationship="UnityControlModel.FK_Dataflow_Step" FromRole="Step" ToRole="Dataflow" />
+          <NavigationProperty Name="Layers" Relationship="UnityControlModel.FK_Layer_Step" FromRole="Step" ToRole="Layer" />
+          <NavigationProperty Name="Product" Relationship="UnityControlModel.FK_Step_Product" FromRole="Step" ToRole="Product" />
+          <NavigationProperty Name="Recipes" Relationship="UnityControlModel.FK_Recipe_Step" FromRole="Step" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecipeId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Recipe" Relationship="UnityControlModel.FK_Tag_Recipe" FromRole="Tag" ToRole="Recipe" />
+        </EntityType>
+        <EntityType Name="Tool">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ToolKey" Type="Int32" Nullable="false" />
+          <Property Name="ToolCategory" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Chambers" Relationship="UnityControlModel.FK_Chamber_Tool" FromRole="Tool" ToRole="Chamber" />
+          <NavigationProperty Name="Dataflows" Relationship="UnityControlModel.FK_Dataflow_Tool" FromRole="Tool" ToRole="Dataflow" />
+          <NavigationProperty Name="Jobs" Relationship="UnityControlModel.FK_Job_Tool" FromRole="Tool" ToRole="Job" />
+          <NavigationProperty Name="Users" Relationship="UnityControlModel.FK_User_Tool" FromRole="Tool" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ToolId" Type="Int32" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ConfigurationHistories" Relationship="UnityControlModel.FK_ConfigurationHistory_User" FromRole="User" ToRole="ConfigurationHistory" />
+          <NavigationProperty Name="Dataflows" Relationship="UnityControlModel.FK_Dataflow_User" FromRole="User" ToRole="Dataflow" />
+          <NavigationProperty Name="Logs" Relationship="UnityControlModel.FK_Log_User" FromRole="User" ToRole="Log" />
+          <NavigationProperty Name="Recipes" Relationship="UnityControlModel.FK_Recipe_User" FromRole="User" ToRole="Recipe" />
+          <NavigationProperty Name="RecipeFiles" Relationship="UnityControlModel.FK_RecipeFile_User" FromRole="User" ToRole="RecipeFile" />
+          <NavigationProperty Name="Tool" Relationship="UnityControlModel.FK_User_Tool" FromRole="User" ToRole="Tool" />
+        </EntityType>
+        <EntityType Name="Vid">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Label" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="WaferCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="XmlContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Products" Relationship="UnityControlModel.FK_Product_WaferCategory" FromRole="WaferCategory" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="WaferResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobId" Type="Int32" Nullable="false" />
+          <Property Name="SlotId" Type="Int32" Nullable="false" />
+          <Property Name="WaferName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Job" Relationship="UnityControlModel.FK_WaferResult_Job1" FromRole="WaferResult" ToRole="Job" />
+          <NavigationProperty Name="Product" Relationship="UnityControlModel.FK_WaferResult_Product" FromRole="WaferResult" ToRole="Product" />
+          <NavigationProperty Name="Results" Relationship="UnityControlModel.FK_Result_WaferResult" FromRole="WaferResult" ToRole="Result" />
+          <NavigationProperty Name="ResultAcqs" Relationship="UnityControlModel.FK_ResultAcq_WaferResult" FromRole="WaferResult" ToRole="ResultAcq" />
+        </EntityType>
+        <Association Name="FK_Chamber_Configuration">
+          <End Type="UnityControlModel.ConfigurationData" Role="ConfigurationData" Multiplicity="0..1" />
+          <End Type="UnityControlModel.Chamber" Role="Chamber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigurationData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chamber">
+              <PropertyRef Name="PhysicalConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Chamber_Tool">
+          <End Type="UnityControlModel.Tool" Role="Tool" Multiplicity="1" />
+          <End Type="UnityControlModel.Chamber" Role="Chamber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Chamber">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfiguration_Chamber">
+          <End Type="UnityControlModel.Chamber" Role="Chamber" Multiplicity="1" />
+          <End Type="UnityControlModel.ProductConfiguration" Role="ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="ChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Chamber">
+          <End Type="UnityControlModel.Chamber" Role="Chamber" Multiplicity="1" />
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CreatorChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Result_Chamber">
+          <End Type="UnityControlModel.Chamber" Role="Chamber" Multiplicity="1" />
+          <End Type="UnityControlModel.Result" Role="Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="ChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcq_Chamber">
+          <End Type="UnityControlModel.Chamber" Role="Chamber" Multiplicity="1" />
+          <End Type="UnityControlModel.ResultAcq" Role="ResultAcq" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Chamber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcq">
+              <PropertyRef Name="ChamberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConfigurationHistory_Configuration">
+          <End Type="UnityControlModel.ConfigurationData" Role="ConfigurationData" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="UnityControlModel.ConfigurationHistory" Role="ConfigurationHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigurationData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConfigurationHistory">
+              <PropertyRef Name="ConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfiguration_Configuration">
+          <End Type="UnityControlModel.ConfigurationData" Role="ConfigurationData" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="UnityControlModel.ProductConfiguration" Role="ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfigurationData">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="ConfigurationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConfigurationHistory_User">
+          <End Type="UnityControlModel.User" Role="User" Multiplicity="1" />
+          <End Type="UnityControlModel.ConfigurationHistory" Role="ConfigurationHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ConfigurationHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dataflow_Step">
+          <End Type="UnityControlModel.Step" Role="Step" Multiplicity="1" />
+          <End Type="UnityControlModel.Dataflow" Role="Dataflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Step">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dataflow">
+              <PropertyRef Name="StepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dataflow_Tool">
+          <End Type="UnityControlModel.Tool" Role="Tool" Multiplicity="1" />
+          <End Type="UnityControlModel.Dataflow" Role="Dataflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dataflow">
+              <PropertyRef Name="CreatorTool" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Dataflow_User">
+          <End Type="UnityControlModel.User" Role="User" Multiplicity="1" />
+          <End Type="UnityControlModel.Dataflow" Role="Dataflow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Dataflow">
+              <PropertyRef Name="CreatorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Input_Recipe">
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="UnityControlModel.Input" Role="Input" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Input">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Job_Tool">
+          <End Type="UnityControlModel.Tool" Role="Tool" Multiplicity="1" />
+          <End Type="UnityControlModel.Job" Role="Job" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Job">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WaferResult_Job1">
+          <End Type="UnityControlModel.Job" Role="Job" Multiplicity="1" />
+          <End Type="UnityControlModel.WaferResult" Role="WaferResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WaferResult">
+              <PropertyRef Name="JobId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Layer_Material1">
+          <End Type="UnityControlModel.Material" Role="Material" Multiplicity="0..1" />
+          <End Type="UnityControlModel.Layer" Role="Layer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Material">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Layer">
+              <PropertyRef Name="MaterialId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Layer_Step">
+          <End Type="UnityControlModel.Step" Role="Step" Multiplicity="1" />
+          <End Type="UnityControlModel.Layer" Role="Layer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Step">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Layer">
+              <PropertyRef Name="StepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Log_User">
+          <End Type="UnityControlModel.User" Role="User" Multiplicity="1" />
+          <End Type="UnityControlModel.Log" Role="Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Log">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Output_Recipe">
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="UnityControlModel.Output" Role="Output" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Output">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_WaferCategory">
+          <End Type="UnityControlModel.WaferCategory" Role="WaferCategory" Multiplicity="1" />
+          <End Type="UnityControlModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WaferCategory">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="WaferCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductConfiguration_Product">
+          <End Type="UnityControlModel.Product" Role="Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="UnityControlModel.ProductConfiguration" Role="ProductConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductConfiguration">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Step_Product">
+          <End Type="UnityControlModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="UnityControlModel.Step" Role="Step" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Step">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WaferResult_Product">
+          <End Type="UnityControlModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="UnityControlModel.WaferResult" Role="WaferResult" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WaferResult">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_Step">
+          <End Type="UnityControlModel.Step" Role="Step" Multiplicity="0..1" />
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Step">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="StepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recipe_User">
+          <End Type="UnityControlModel.User" Role="User" Multiplicity="1" />
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recipe">
+              <PropertyRef Name="CreatorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFile_Recipe">
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="0..1" />
+          <End Type="UnityControlModel.RecipeFile" Role="RecipeFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeFile">
+              <PropertyRef Name="RecipeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Result_Recipe">
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="UnityControlModel.Result" Role="Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcq_Recipe">
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="UnityControlModel.ResultAcq" Role="ResultAcq" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcq">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tag_Recipe">
+          <End Type="UnityControlModel.Recipe" Role="Recipe" Multiplicity="1" />
+          <End Type="UnityControlModel.Tag" Role="Tag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Recipe">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tag">
+              <PropertyRef Name="RecipeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RecipeFile_User">
+          <End Type="UnityControlModel.User" Role="User" Multiplicity="1" />
+          <End Type="UnityControlModel.RecipeFile" Role="RecipeFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RecipeFile">
+              <PropertyRef Name="CreatorUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Result_WaferResult">
+          <End Type="UnityControlModel.WaferResult" Role="WaferResult" Multiplicity="1" />
+          <End Type="UnityControlModel.Result" Role="Result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WaferResult">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Result">
+              <PropertyRef Name="WaferResultId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultItem_Result">
+          <End Type="UnityControlModel.Result" Role="Result" Multiplicity="1" />
+          <End Type="UnityControlModel.ResultItem" Role="ResultItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Result">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultItem">
+              <PropertyRef Name="ResultId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcq_WaferResult">
+          <End Type="UnityControlModel.WaferResult" Role="WaferResult" Multiplicity="1" />
+          <End Type="UnityControlModel.ResultAcq" Role="ResultAcq" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WaferResult">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcq">
+              <PropertyRef Name="WaferResultId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultAcqItem_ResultAcq">
+          <End Type="UnityControlModel.ResultAcq" Role="ResultAcq" Multiplicity="1" />
+          <End Type="UnityControlModel.ResultAcqItem" Role="ResultAcqItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResultAcq">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultAcqItem">
+              <PropertyRef Name="ResultAcqId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResultValue_ResultItem">
+          <End Type="UnityControlModel.ResultItem" Role="ResultItem" Multiplicity="1" />
+          <End Type="UnityControlModel.ResultItemValue" Role="ResultItemValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResultItem">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ResultItemValue">
+              <PropertyRef Name="ResultItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Tool">
+          <End Type="UnityControlModel.Tool" Role="Tool" Multiplicity="1" />
+          <End Type="UnityControlModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tool">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="ToolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GlobalResultSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ResultFormat" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DataSetting" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="XmlSetting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="KlarfBinSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AreaIntervalMax" Type="Int64" Nullable="false" />
+          <Property Name="SquareWidth" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KlarfRoughSettings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoughBin" Type="Int32" Nullable="false" />
+          <Property Name="Label" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Color" Type="Int32" Nullable="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="UnityControlModelStoreContainer" CdmEntityContainer="UnityControlEntities">
+          <FunctionImportMapping FunctionImportName="sp_GetJobResults1" FunctionName="UnityControlModel.Store.sp_GetJobResults" />
+          <EntitySetMapping Name="Chambers">
+            <EntityTypeMapping TypeName="UnityControlModel.Chamber">
+              <MappingFragment StoreEntitySet="Chamber">
+                <ScalarProperty Name="ChamberKey" ColumnName="ChamberKey" />
+                <ScalarProperty Name="ActorType" ColumnName="ActorType" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="PhysicalConfigurationId" ColumnName="PhysicalConfigurationId" />
+                <ScalarProperty Name="ToolId" ColumnName="ToolId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConfigurationDatas">
+            <EntityTypeMapping TypeName="UnityControlModel.ConfigurationData">
+              <MappingFragment StoreEntitySet="ConfigurationData">
+                <ScalarProperty Name="ModifiedByUserId" ColumnName="ModifiedByUserId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="MD5" ColumnName="MD5" />
+                <ScalarProperty Name="CreatorUserId" ColumnName="CreatorUserId" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IsExternal" ColumnName="IsExternal" />
+                <ScalarProperty Name="Contents" ColumnName="Contents" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConfigurationHistories">
+            <EntityTypeMapping TypeName="UnityControlModel.ConfigurationHistory">
+              <MappingFragment StoreEntitySet="ConfigurationHistory">
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Contents" ColumnName="Contents" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DatabaseVersions">
+            <EntityTypeMapping TypeName="UnityControlModel.DatabaseVersion">
+              <MappingFragment StoreEntitySet="DatabaseVersion">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Dataflows">
+            <EntityTypeMapping TypeName="UnityControlModel.Dataflow">
+              <MappingFragment StoreEntitySet="Dataflow">
+                <ScalarProperty Name="IsValidated" ColumnName="IsValidated" />
+                <ScalarProperty Name="IsShared" ColumnName="IsShared" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="StepId" ColumnName="StepId" />
+                <ScalarProperty Name="CreatorTool" ColumnName="CreatorTool" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="XmlContent" ColumnName="XmlContent" />
+                <ScalarProperty Name="CreatorUserId" ColumnName="CreatorUserId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="KeyForAllVersion" ColumnName="KeyForAllVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inputs">
+            <EntityTypeMapping TypeName="UnityControlModel.Input">
+              <MappingFragment StoreEntitySet="Input">
+                <ScalarProperty Name="ResultType" ColumnName="ResultType" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Jobs">
+            <EntityTypeMapping TypeName="UnityControlModel.Job">
+              <MappingFragment StoreEntitySet="Job">
+                <ScalarProperty Name="ToolId" ColumnName="ToolId" />
+                <ScalarProperty Name="RunIter" ColumnName="RunIter" />
+                <ScalarProperty Name="RecipeName" ColumnName="RecipeName" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="LotName" ColumnName="LotName" />
+                <ScalarProperty Name="JobName" ColumnName="JobName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Layers">
+            <EntityTypeMapping TypeName="UnityControlModel.Layer">
+              <MappingFragment StoreEntitySet="Layer">
+                <ScalarProperty Name="StepId" ColumnName="StepId" />
+                <ScalarProperty Name="RefractiveIndex" ColumnName="RefractiveIndex" />
+                <ScalarProperty Name="Thickness" ColumnName="Thickness" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="UnityControlModel.Log">
+              <MappingFragment StoreEntitySet="Log">
+                <ScalarProperty Name="TableType" ColumnName="TableType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materials">
+            <EntityTypeMapping TypeName="UnityControlModel.Material">
+              <MappingFragment StoreEntitySet="Material">
+                <ScalarProperty Name="XmlContent" ColumnName="XmlContent" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Outputs">
+            <EntityTypeMapping TypeName="UnityControlModel.Output">
+              <MappingFragment StoreEntitySet="Output">
+                <ScalarProperty Name="ResultType" ColumnName="ResultType" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="UnityControlModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WaferCategoryId" ColumnName="WaferCategoryId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductConfigurations">
+            <EntityTypeMapping TypeName="UnityControlModel.ProductConfiguration">
+              <MappingFragment StoreEntitySet="ProductConfiguration">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="ConfigurationId" ColumnName="ConfigurationId" />
+                <ScalarProperty Name="ChamberId" ColumnName="ChamberId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recipes">
+            <EntityTypeMapping TypeName="UnityControlModel.Recipe">
+              <MappingFragment StoreEntitySet="Recipe">
+                <ScalarProperty Name="IsValidated" ColumnName="IsValidated" />
+                <ScalarProperty Name="IsTemplate" ColumnName="IsTemplate" />
+                <ScalarProperty Name="IsShared" ColumnName="IsShared" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="XmlContent" ColumnName="XmlContent" />
+                <ScalarProperty Name="CreatorChamberId" ColumnName="CreatorChamberId" />
+                <ScalarProperty Name="CreatorUserId" ColumnName="CreatorUserId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="ActorType" ColumnName="ActorType" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="StepId" ColumnName="StepId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="KeyForAllVersion" ColumnName="KeyForAllVersion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeDataflowMaps">
+            <EntityTypeMapping TypeName="UnityControlModel.RecipeDataflowMap">
+              <MappingFragment StoreEntitySet="RecipeDataflowMap">
+                <ScalarProperty Name="DataflowKey" ColumnName="DataflowKey" />
+                <ScalarProperty Name="RecipeKey" ColumnName="RecipeKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeFiles">
+            <EntityTypeMapping TypeName="UnityControlModel.RecipeFile">
+              <MappingFragment StoreEntitySet="RecipeFile">
+                <ScalarProperty Name="FileType" ColumnName="FileType" />
+                <ScalarProperty Name="MD5" ColumnName="MD5" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="RecipeID" ColumnName="RecipeID" />
+                <ScalarProperty Name="CreatorUserId" ColumnName="CreatorUserId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecipeResultTypes">
+            <EntityTypeMapping TypeName="UnityControlModel.RecipeResultType">
+              <MappingFragment StoreEntitySet="RecipeResultType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Results">
+            <EntityTypeMapping TypeName="UnityControlModel.Result">
+              <MappingFragment StoreEntitySet="Result">
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ActorType" ColumnName="ActorType" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="ChamberId" ColumnName="ChamberId" />
+                <ScalarProperty Name="WaferResultId" ColumnName="WaferResultId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResultAcqs">
+            <EntityTypeMapping TypeName="UnityControlModel.ResultAcq">
+              <MappingFragment StoreEntitySet="ResultAcq">
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="PathName" ColumnName="PathName" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ActorType" ColumnName="ActorType" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="ChamberId" ColumnName="ChamberId" />
+                <ScalarProperty Name="WaferResultId" ColumnName="WaferResultId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResultAcqItems">
+            <EntityTypeMapping TypeName="UnityControlModel.ResultAcqItem">
+              <MappingFragment StoreEntitySet="ResultAcqItem">
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="InternalState" ColumnName="InternalState" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Idx" ColumnName="Idx" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ResultType" ColumnName="ResultType" />
+                <ScalarProperty Name="ResultAcqId" ColumnName="ResultAcqId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResultItems">
+            <EntityTypeMapping TypeName="UnityControlModel.ResultItem">
+              <MappingFragment StoreEntitySet="ResultItem">
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="InternalState" ColumnName="InternalState" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Idx" ColumnName="Idx" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ResultType" ColumnName="ResultType" />
+                <ScalarProperty Name="ResultId" ColumnName="ResultId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResultItemValues">
+            <EntityTypeMapping TypeName="UnityControlModel.ResultItemValue">
+              <MappingFragment StoreEntitySet="ResultItemValue">
+                <ScalarProperty Name="UnitType" ColumnName="UnitType" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="ResultItemId" ColumnName="ResultItemId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Steps">
+            <EntityTypeMapping TypeName="UnityControlModel.Step">
+              <MappingFragment StoreEntitySet="Step">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="XmlContent" ColumnName="XmlContent" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tags">
+            <EntityTypeMapping TypeName="UnityControlModel.Tag">
+              <MappingFragment StoreEntitySet="Tag">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RecipeId" ColumnName="RecipeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tools">
+            <EntityTypeMapping TypeName="UnityControlModel.Tool">
+              <MappingFragment StoreEntitySet="Tool">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="ToolCategory" ColumnName="ToolCategory" />
+                <ScalarProperty Name="ToolKey" ColumnName="ToolKey" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="UnityControlModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="ToolId" ColumnName="ToolId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vids">
+            <EntityTypeMapping TypeName="UnityControlModel.Vid">
+              <MappingFragment StoreEntitySet="Vid">
+                <ScalarProperty Name="Label" ColumnName="Label" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WaferCategories">
+            <EntityTypeMapping TypeName="UnityControlModel.WaferCategory">
+              <MappingFragment StoreEntitySet="WaferCategory">
+                <ScalarProperty Name="XmlContent" ColumnName="XmlContent" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WaferResults">
+            <EntityTypeMapping TypeName="UnityControlModel.WaferResult">
+              <MappingFragment StoreEntitySet="WaferResult">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="WaferName" ColumnName="WaferName" />
+                <ScalarProperty Name="SlotId" ColumnName="SlotId" />
+                <ScalarProperty Name="JobId" ColumnName="JobId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GlobalResultSettings1">
+            <EntityTypeMapping TypeName="UnityControlModel.GlobalResultSettings">
+              <MappingFragment StoreEntitySet="GlobalResultSettings">
+                <ScalarProperty Name="XmlSetting" ColumnName="XmlSetting" />
+                <ScalarProperty Name="DataSetting" ColumnName="DataSetting" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ResultFormat" ColumnName="ResultFormat" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KlarfBinSettings1">
+            <EntityTypeMapping TypeName="UnityControlModel.KlarfBinSettings">
+              <MappingFragment StoreEntitySet="KlarfBinSettings">
+                <ScalarProperty Name="SquareWidth" ColumnName="SquareWidth" />
+                <ScalarProperty Name="AreaIntervalMax" ColumnName="AreaIntervalMax" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KlarfRoughSettings1">
+            <EntityTypeMapping TypeName="UnityControlModel.KlarfRoughSettings">
+              <MappingFragment StoreEntitySet="KlarfRoughSettings">
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Label" ColumnName="Label" />
+                <ScalarProperty Name="RoughBin" ColumnName="RoughBin" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
