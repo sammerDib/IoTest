@@ -1,0 +1,150 @@
+﻿<UserControl x:Class="AdcBasicObjects.Rendering.ImageRenderingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:AdcBasicObjects.Rendering"
+			 mc:Ignorable="d" Height="auto" Width="auto"
+             >
+
+    <UserControl.Resources>
+        <Style x:Key="ZoomBoxStyle" TargetType="{x:Type xctk:Zoombox}">
+            <Setter Property="IsAnimated" Value="False" />
+            <Setter Property="IsUsingScrollBars" Value="True" />
+            <Setter Property="RelativeZoomModifiers" Value="Ctrl" />
+            <Setter Property="DragModifiers" Value="Shift" />
+            <Setter Property="ZoomModifiers" Value="Alt" />
+            <Setter Property="ViewStackMode" Value="Disabled"/>
+            <Style.Triggers>
+                <Trigger Property="xctk:Zoombox.AreZoomModifiersActive" Value="True">
+                    <Setter Property="xctk:Zoombox.Cursor" Value="Cross" />
+                </Trigger>
+                <Trigger Property="xctk:Zoombox.AreRelativeZoomModifiersActive" Value="True">
+                    <Setter Property="xctk:Zoombox.Cursor" Value="Cross" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource PanelBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Toolbar -->
+        <Grid Style="{DynamicResource UnityGridStyle}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                <ToolBarTray>
+                    <ToolBar Loaded="ToolBar_Loaded">
+                        <Button Command="{Binding SelectRenderingImagesCommand}" ToolTip="Select input images" Style="{DynamicResource ButtonToolBar}" Visibility="{Binding IsDataloader, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox>
+                                    <ContentControl ContentTemplate="{DynamicResource FilterADCImage}"/>
+                                </Viewbox>
+                                <TextBlock Text="Images" Margin="2,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding FirstImageCommand}" ToolTip="First image" Style="{DynamicResource ButtonToolBar}">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox>
+                                    <ContentControl ContentTemplate="{DynamicResource FirstADCImage}"/>
+                                </Viewbox>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding PreviousImageCommand}" ToolTip="Previous image" Style="{DynamicResource ButtonToolBar}" >
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox>
+                                    <ContentControl ContentTemplate="{DynamicResource PreviousADCImage}"/>
+                                </Viewbox>
+                            </StackPanel>
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+                <xctk:IntegerUpDown ShowButtonSpinner="False" Minimum="0" Text="{Binding ImageIndex, Mode=TwoWay, FallbackValue=0, UpdateSourceTrigger=PropertyChanged}"  MinWidth="30" Margin="2,0,0,0" TextAlignment="Right" Height="20"/>
+                <Label Content="/" Foreground="White" Margin="0"/>
+                <Label Content="{Binding RenderingObjects.Count}" Foreground="White" Margin="0,0,2,0"/>
+                <ToolBarTray>
+                    <ToolBar Loaded="ToolBar_Loaded">
+                        <Button Command="{Binding NextImageCommand}" ToolTip="Next image" Style="{DynamicResource ButtonToolBar}" >
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox>
+                                    <ContentControl ContentTemplate="{DynamicResource NextADCImage}"/>
+                                </Viewbox>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding LastImageCommand}" ToolTip="Last image" Style="{DynamicResource ButtonToolBar}" >
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox>
+                                    <ContentControl ContentTemplate="{DynamicResource LastADCImage}"/>
+                                </Viewbox>
+                            </StackPanel>
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+
+                <Label HorizontalAlignment="Left"  Margin="5,0,5,3"  Content="{Binding FileName}" Foreground="White" Height="25" VerticalAlignment="Center"  />
+            </StackPanel>
+        </Grid>
+
+        <!-- Image -->
+        <!-- imageGrid utilisé pour définir la bonne taille pour la zoomBox-->
+        <Grid Grid.Row="1" x:Name="imageGrid">
+            <xctk:Zoombox x:Name="ZoomBox" Style="{StaticResource ZoomBoxStyle}" Height="{Binding ElementName=imageGrid, Path=ActualHeight}" Width="{Binding ElementName=imageGrid, Path=ActualWidth}"
+                          Loaded="ZoomBox_Loaded">
+                <Grid>
+                    <Image x:Name="Image" Source="{Binding CurrentBitmap}" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           Width="{Binding ImageWidth}" Height="{Binding ImageHeight}"
+                           MouseMove="Image_MouseMove" >
+                        <Image.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Open externally" Command="{Binding OpenExternallyCommand}" />
+                                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}" />
+                                <MenuItem Header="Copy" Command="{Binding CopyToClipboardCommand}" />
+                            </ContextMenu>
+                        </Image.ContextMenu>
+                    </Image>
+                    <local:ClusterCanvas x:Name="RenderingCanvas" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" 
+                                        Clusters="{Binding Clusters}"
+                                        Scale="{Binding Scale, ElementName=ZoomBox}"
+                                        XMin="{Binding XMin}" YMin="{Binding YMin}" XMax="{Binding XMax}" YMax="{Binding YMax}"/>
+
+                </Grid>
+            </xctk:Zoombox>
+        </Grid>
+
+        <!-- Status / Zoom -->
+        <Grid Grid.Row="2" Style="{StaticResource UnityGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox x:Name="StatusTextBox" IsReadOnly="True" HorizontalAlignment="Stretch"/>
+
+            <Menu  Grid.Column="1">
+                <MenuItem
+                        Click="FitContent"
+                        Header="Fit"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Fit the image to the window" 
+                        Margin="8,0,0,0"/>
+                <MenuItem
+                        Click="ZoomOut"
+                        Header="-"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Zoom out from the content" 
+                        Margin="8,0,0,0"/>
+                <MenuItem
+                        Click="ZoomIn"
+                        Header="+"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Zoom in on the content" 
+                        Margin="8,0,0,0"/>
+            </Menu>
+        </Grid>
+    </Grid>
+</UserControl>

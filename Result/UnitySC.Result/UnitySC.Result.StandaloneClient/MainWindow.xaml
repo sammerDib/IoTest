@@ -1,0 +1,437 @@
+﻿<Window
+	x:Class="UnitySC.Result.StandaloneClient.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.DataTree.Controls;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dataTemplateSelectors="clr-namespace:UnitySC.Shared.ResultUI.Common.DataTemplateSelectors;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:extensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+	xmlns:models="clr-namespace:UnitySC.Result.StandaloneClient.Models"
+	xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:standaloneClient="clr-namespace:UnitySC.Result.StandaloneClient"
+	xmlns:viewModel="clr-namespace:UnitySC.Result.StandaloneClient.ViewModel"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	x:Name="Window"
+	Title="{Binding WindowTitle, FallbackValue='UnitySC Results Standalone Client'}"
+	Width="1510"
+	Height="840"
+	MinWidth="965"
+	MinHeight="500"
+	d:DataContext="{d:DesignInstance standaloneClient:MainWindowVM}"
+	md:DialogServiceViews.IsRegistered="True"
+	mc:Ignorable="d">
+	<Grid>
+		<DockPanel>
+
+			<Expander
+				x:Name="ExplorerExpander"
+				Margin="0,0,0,0"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Stretch"
+				DockPanel.Dock="Left"
+				ExpandDirection="Right"
+				IsExpanded="{Binding ExplorerIsExpanded, Mode=TwoWay}">
+				<Expander.Header>
+					<TextBlock
+						Margin="0,20,0,0"
+						RenderTransformOrigin="0.5,0.5"
+						Text="Explorer">
+						<TextBlock.RenderTransform>
+							<RotateTransform Angle="90" />
+						</TextBlock.RenderTransform>
+					</TextBlock>
+				</Expander.Header>
+			</Expander>
+
+			<sharedControls:Navigation DataContext="{Binding FolderEntryVM}">
+				<sharedControls:Navigation.Style>
+					<Style
+						BasedOn="{StaticResource {x:Type sharedControls:Navigation}}"
+						TargetType="{x:Type sharedControls:Navigation}">
+						<Setter Property="Margin" Value="1,0,0,0" />
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type sharedControls:Navigation}">
+									<Grid>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto" />
+											<RowDefinition Height="*" />
+										</Grid.RowDefinitions>
+
+										<!--  Header  -->
+										<DockPanel
+											Background="{StaticResource PanelTitleBackground}"
+											Visibility="{Binding CurrentPage, Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}">
+											<sharedControls:ImageButton
+												Margin="4"
+												HorizontalAlignment="Right"
+												VerticalAlignment="Center"
+												Command="{Binding BackCommand}"
+												DockPanel.Dock="Left"
+												Image="{StaticResource Previous}"
+												Style="{StaticResource TransparentImageButton}" />
+											<!--  Navigation paths  -->
+											<Border
+												Margin="0,0,10,0"
+												VerticalAlignment="Center"
+												DockPanel.Dock="Left">
+												<StackPanel
+													Margin="4,2"
+													Orientation="Horizontal">
+													<TextBlock VerticalAlignment="Center">
+														<Hyperlink
+															Command="{Binding NavigateCommand}"
+															CommandParameter="{x:Null}"
+															IsEnabled="{Binding CurrentPage.CanNavigate}"
+															Style="{StaticResource NavigationHyperLink}">
+															<Run Text="{Binding PageName, Mode=OneWay}" />
+														</Hyperlink>
+													</TextBlock>
+													<ItemsControl
+														VerticalAlignment="Center"
+														ItemsSource="{Binding Pages}">
+														<ItemsControl.ItemsPanel>
+															<ItemsPanelTemplate>
+																<StackPanel Orientation="Horizontal" />
+															</ItemsPanelTemplate>
+														</ItemsControl.ItemsPanel>
+														<ItemsControl.ItemTemplate>
+															<DataTemplate>
+																<StackPanel Orientation="Horizontal">
+																	<Image
+																		x:Name="separator"
+																		Source="{StaticResource NavigationSeparator}"
+																		Style="{StaticResource Icon}" />
+																	<TextBlock VerticalAlignment="Center">
+																		<Hyperlink
+																			Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+																			CommandParameter="{Binding}"
+																			Style="{StaticResource NavigationHyperLink}">
+																			<Run Text="{Binding PageName, Mode=OneWay}" />
+																		</Hyperlink>
+																	</TextBlock>
+																</StackPanel>
+															</DataTemplate>
+														</ItemsControl.ItemTemplate>
+													</ItemsControl>
+												</StackPanel>
+											</Border>
+
+											<Grid
+												x:Name="WaferSelector"
+												Width="200"
+												Margin="0,5"
+												HorizontalAlignment="Center"
+												DockPanel.Dock="Left">
+												<Grid.Style>
+													<Style TargetType="Grid">
+														<Style.Triggers>
+															<DataTrigger Binding="{Binding CurrentPage, Converter={StaticResource DataTypeConverter}}" Value="{x:Type viewModel:SettingVM}">
+																<Setter Property="Visibility" Value="Collapsed" />
+															</DataTrigger>
+														</Style.Triggers>
+													</Style>
+												</Grid.Style>
+
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="Auto" />
+													<ColumnDefinition />
+													<ColumnDefinition Width="Auto" />
+												</Grid.ColumnDefinitions>
+												<sharedControls:ImageButton
+													Width="30"
+													Height="30"
+													Padding="2"
+													Command="{Binding SelectPreviousFileCommand}"
+													ImageGeometry="{StaticResource ArrowLeftGeometry}"
+													ImageGeometryBrush="{StaticResource IconsColor}"
+													Style="{StaticResource LeftImageButton}" />
+												<Border
+													Grid.Column="1"
+													Height="30"
+													BorderBrush="{StaticResource TextboxBorderBrush}"
+													BorderThickness="0,1">
+													<TextBlock
+														Margin="7,0"
+														VerticalAlignment="Center"
+														Text="{Binding CurrentFileNavigation, Mode=OneWay}"
+														TextAlignment="Center" />
+												</Border>
+												<sharedControls:ImageButton
+													Grid.Column="2"
+													Width="30"
+													Height="30"
+													Padding="2"
+													Command="{Binding SelectNextFileCommand}"
+													ImageGeometry="{StaticResource ArrowRightGeometry}"
+													ImageGeometryBrush="{StaticResource IconsColor}"
+													Style="{StaticResource RightImageButton}" />
+											</Grid>
+
+											<Grid
+												VerticalAlignment="Center"
+												DataContext="{Binding CurrentPage}"
+												DockPanel.Dock="Right">
+												<ItemsControl ItemsSource="{Binding MenuItems}">
+													<ItemsControl.ItemsPanel>
+														<ItemsPanelTemplate>
+															<StackPanel Orientation="Horizontal" />
+														</ItemsPanelTemplate>
+													</ItemsControl.ItemsPanel>
+													<ItemsControl.ItemTemplate>
+														<DataTemplate>
+															<sharedControls:ImageButton
+																Margin="4"
+																VerticalAlignment="Center"
+																Command="{Binding ExecuteCommand}"
+																Content="{Binding Content}"
+																Image="{Binding ImageResourceKey, Converter={StaticResource StringToResourceConverter}}"
+																Style="{StaticResource TransparentImageButton}"
+																ToolTip="{Binding Tooltip}"
+																Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+														</DataTemplate>
+													</ItemsControl.ItemTemplate>
+												</ItemsControl>
+											</Grid>
+
+										</DockPanel>
+
+										<!--  Main content : Default dsiplay  -->
+										<ContentControl
+											Grid.Row="1"
+											Content="{TemplateBinding Content}"
+											Visibility="{Binding CurrentPage, Converter={StaticResource InvertedNullToVisibilityConverter}}" />
+
+										<!--  Navigation Content  -->
+										<ContentPresenter
+											Grid.Row="1"
+											Content="{Binding CurrentPage}"
+											Visibility="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type sharedControls:Navigation}}, Converter={StaticResource NullToVisibilityConverter}}" />
+									</Grid>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+						<Style.Triggers>
+							<MultiDataTrigger>
+								<MultiDataTrigger.Conditions>
+									<Condition Binding="{Binding DataContext.ExplorerIsExpanded, ElementName=Window}" Value="True" />
+									<Condition Binding="{Binding CurrentPage, Converter={StaticResource IsNullToBooleanConverter}}" Value="True" />
+								</MultiDataTrigger.Conditions>
+								<Setter Property="Margin" Value="554,0,0,0" />
+							</MultiDataTrigger>
+						</Style.Triggers>
+					</Style>
+				</sharedControls:Navigation.Style>
+				<ContentPresenter
+					Margin="-2,0,0,0"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Content="{Binding}"
+					IsEnabled="true" />
+			</sharedControls:Navigation>
+
+		</DockPanel>
+
+		<Rectangle
+			Fill="Black"
+			MouseDown="BackgroundRect_OnMouseDown"
+			Opacity="0.2">
+			<Rectangle.Style>
+				<Style TargetType="{x:Type Rectangle}">
+					<Setter Property="Visibility" Value="Collapsed" />
+					<Style.Triggers>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding DataContext.ExplorerIsExpanded, ElementName=Window}" Value="True" />
+								<Condition Binding="{Binding FolderEntryVM.CurrentPage, Converter={StaticResource IsNullToBooleanConverter}}" Value="False" />
+							</MultiDataTrigger.Conditions>
+							<Setter Property="Visibility" Value="Visible" />
+						</MultiDataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Rectangle.Style>
+		</Rectangle>
+
+		<Grid
+			Width="600"
+			Margin="0,0,0,0"
+			HorizontalAlignment="Left"
+			Visibility="{Binding ElementName=ExplorerExpander, Path=IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+			<Border
+				Background="{StaticResource WindowBackground}"
+				BorderBrush="{StaticResource ExpanderBorderBrush}"
+				BorderThickness="1"
+				CornerRadius="3">
+				<Border.Effect>
+					<DropShadowEffect
+						BlurRadius="5"
+						Direction="-90"
+						Opacity="0.3"
+						RenderingBias="Performance"
+						ShadowDepth="1"
+						Color="Black" />
+				</Border.Effect>
+			</Border>
+			<controls:DataTree
+				Margin="0,0,1,1"
+				DataSource="{Binding DataTreeSource}"
+				SelectedValue="{Binding SelectedEntry}">
+
+				<controls:DataTree.AdditionalHeaderContent>
+					<StackPanel Orientation="Horizontal">
+						<sharedControls:ImageButton
+							Margin="0,0,10,0"
+							Command="{Binding OpenFolderCommand}"
+							ImageGeometry="{StaticResource FolderGeometry}"
+							ToolTip="Select root folder">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+						<sharedControls:ImageButton
+							Margin="0,0,10,0"
+							Command="{Binding RefreshFolderCommand}"
+							ImageGeometry="{StaticResource RefreshGeometry}"
+							ToolTip="Refresh folder">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+						<sharedControls:ImageButton
+							Margin="0,0,10,0"
+							Command="{Binding CloseExpanderCommand}"
+							ImageGeometry="{StaticResource ArrowLeftGeometry}"
+							ToolTip="Close explorer">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+					</StackPanel>
+				</controls:DataTree.AdditionalHeaderContent>
+
+				<controls:DataTree.BottomAdditionalContent>
+					<StackPanel
+						Margin="10"
+						Orientation="Horizontal">
+						<sharedControls:ImageButton
+							Width="30"
+							Height="30"
+							Margin="0,0,10,0"
+							Command="{Binding SyncSelectedCommand}"
+							ImageGeometry="{StaticResource TargetGeometry}"
+							ToolTip="Sync with Selected Element">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+						<sharedControls:ImageButton
+							Width="30"
+							Height="30"
+							Margin="0,0,10,0"
+							Command="{Binding CollapseAllCommand}"
+							ImageGeometry="M19.589844,2.9960938L15.292969,7.2929688 13,5 13,11 19,11 16.707031,8.7070312 21.003906,4.4101562 19.589844,2.9960938z M5,13L7.2929688,15.292969 2.9960938,19.589844 4.4101562,21.003906 8.7070312,16.707031 11,19 11,13 5,13z"
+							ToolTip="Collapse all folders">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+						<sharedControls:ImageButton
+							Width="30"
+							Height="30"
+							Margin="0,0,409,0"
+							Command="{Binding ExpandAllCommand}"
+							ImageGeometry="M15,3L17.292969,5.2929688 5.2929688,17.292969 3,15 3,21 9,21 6.7070312,18.707031 18.707031,6.7070312 21,9 21,3 15,3z"
+							ToolTip="Expand all folders">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+
+						<sharedControls:ImageButton
+							Width="30"
+							Height="30"
+							HorizontalAlignment="Right"
+							Command="{Binding OpenSettingsPanelCommand}"
+							ImageGeometry="{StaticResource GearSolidGeometry}"
+							ToolTip="Open settings panel">
+							<sharedControls:ImageButton.ImageGeometryBrush>
+								<SolidColorBrush Color="{StaticResource SelectionColor}" />
+							</sharedControls:ImageButton.ImageGeometryBrush>
+						</sharedControls:ImageButton>
+					</StackPanel>
+				</controls:DataTree.BottomAdditionalContent>
+
+
+				<controls:DataTree.ItemTemplateSelector>
+					<dataTemplateSelectors:GenericDataTemplateSelector>
+
+						<DataTemplate DataType="{x:Type models:FolderEntry}">
+							<DockPanel>
+								<Image
+									Height="18"
+									Margin="0,0,7,0"
+									VerticalAlignment="Center"
+									extensions:ImageExt.GeometryBrush="{StaticResource IconsColor}"
+									extensions:ImageExt.SourceGeometry="{StaticResource FolderGeometry}"
+									DockPanel.Dock="Left" />
+								<TextBlock
+									VerticalAlignment="Center"
+									Text="{Binding FolderName}" />
+							</DockPanel>
+
+						</DataTemplate>
+
+						<DataTemplate DataType="{x:Type models:FileEntry}">
+							<DockPanel Background="Transparent">
+								<Border
+									Height="28"
+									Margin="0,0,5,0"
+									Background="{Binding TypeColor}"
+									CornerRadius="14"
+									DockPanel.Dock="Right">
+									<TextBlock
+										Margin="5,0"
+										VerticalAlignment="Center"
+										Foreground="White"
+										Text="{Binding TypeName}" />
+								</Border>
+								<Image
+									Height="18"
+									Margin="0,0,7,0"
+									VerticalAlignment="Center"
+									extensions:ImageExt.GeometryBrush="{StaticResource IconsColor}"
+									extensions:ImageExt.SourceGeometry="{StaticResource FileGeometry}"
+									DockPanel.Dock="Left" />
+								<TextBlock
+									VerticalAlignment="Center"
+									Text="{Binding FileName}" />
+								<DockPanel.InputBindings>
+									<MouseBinding
+										Command="{Binding ElementName=Window, Path=DataContext.OpenFileCommand}"
+										MouseAction="LeftDoubleClick" />
+								</DockPanel.InputBindings>
+							</DockPanel>
+						</DataTemplate>
+
+					</dataTemplateSelectors:GenericDataTemplateSelector>
+				</controls:DataTree.ItemTemplateSelector>
+			</controls:DataTree>
+		</Grid>
+
+		<sharedControls:Notifier
+			Margin="2"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Bottom"
+			DataContext="{Binding Source={x:Static standaloneClient:App.Instance}, Path=NotifierVM}" />
+
+		<xctk:BusyIndicator
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			d:IsHidden="true"
+			BusyContent="Please wait... "
+			IsBusy="{Binding IsUiBusy}" />
+	</Grid>
+</Window>

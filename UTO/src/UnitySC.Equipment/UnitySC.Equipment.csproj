@@ -1,0 +1,238 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>UnitySC.Equipment</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Update="Devices\Controller\Activities\Clear\Clear.sm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Clear.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Activities\Clear\ProcessModuleClearActivity\ProcessModuleClearActivity.sm.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessModuleClearActivity.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Activities\Init\Init.sm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Init.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Activities\LoadToPm\LoadToPm.sm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoadToPm.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Activities\UnloadFromPm\UnloadFromPm.sm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnloadFromPm.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Activities\WaferFlow\AlignerActivity\AlignerActivity.sm.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AlignerActivity.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Activities\WaferFlow\WaferFlow.sm.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WaferFlow.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\OperatingModeSM\ControllerOperatingModeResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControllerOperatingModeResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\OperatingModeSM\ControllerOperatingModeSm.sm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ControllerOperatingModeSm.sm</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Controller.g.cs">
+      <DependentUpon>Controller.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Dataflow\Service\UnitySC.Dataflow.Service.Interface\UnitySC.Dataflow.Service.Interface.csproj" />
+    <ProjectReference Include="..\..\..\Dataflow\UI\UnitySC.TC.UI.Dataflow\UnitySC.TC.UI.Dataflow.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Interface\UnitySC.Shared.TC.PM.Service.Interface.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\Service\UnitySC.Shared.TC.Shared.Service.Interface\UnitySC.Shared.TC.Shared.Service.Interface.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj" />
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj" />
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj" />
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj" />
+    <ProjectReference Include="..\UnitySC.DataFlow.ProcessModules\UnitySC.DataFlow.ProcessModules.csproj" />
+    <ProjectReference Include="..\UnitySC.EFEM.Brooks\UnitySC.EFEM.Brooks.csproj" />
+    <ProjectReference Include="..\UnitySC.EFEM.Rorze\UnitySC.EFEM.Rorze.csproj" />
+    <ProjectReference Include="..\UnitySC.EfemController.ProcessModules\UnitySC.EfemController.ProcessModules.csproj" />
+    <ProjectReference Include="..\UnitySC.Equipment.Abstractions\UnitySC.Equipment.Abstractions.csproj" />
+    <ProjectReference Include="..\UnitySC.Readers.Cognex\UnitySC.Readers.Cognex.csproj" />
+    <ProjectReference Include="..\UnitySC.ToolControl.ProcessModules\UnitySC.ToolControl.ProcessModules.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Devices\Controller\Controller.device">
+      <DependentUpon>IController.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Devices\Controller\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Devices\Controller\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Controller\Resources\en_Controller.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Devices\Controller\Resources\Configuration.xml" />
+    <None Remove="Equipments\Efem_Brooks_1_PM.equipment" />
+    <None Remove="Equipments\Efem_RorzeLegacy_1_PM.equipment" />
+    <None Remove="Equipments\Efem_RorzeLegacy_WotanThor.equipment" />
+    <None Remove="Equipments\Efem_MediumSize_1_PM.equipment" />
+    <Content Include="Equipments\Efem_Brooks_1_PM.equipment">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Equipments\Efem_MediumSize_1_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Equipments\Efem_RorzeLegacy_1_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\Efem_RorzeLegacy_2_PM.equipment" />
+    <Content Include="Equipments\Efem_RorzeLegacy_WotanThor.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Equipments\Efem_RorzeLegacy_2_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\Efem_RorzeLegacy_3_PM.equipment" />
+    <Content Include="Equipments\Efem_RorzeLegacy_3_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\Efem_Slim_1_PM.equipment" />
+    <Content Include="Equipments\Efem_Slim_1_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\Efem_Slim_2_PM.equipment" />
+    <Content Include="Equipments\Efem_Slim_2_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\Efem_Slim_3_PM.equipment" />
+    <Content Include="Equipments\Efem_Slim_3_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\EfemController_RorzeLegacy_1_PM.equipment" />
+    <Content Include="Equipments\EfemController_RorzeLegacy_1_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\EfemController_RorzeLegacy_2_PM.equipment" />
+    <Content Include="Equipments\EfemController_RorzeLegacy_2_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\EfemController_RorzeLegacy_3_PM.equipment" />
+    <Content Include="Equipments\EfemController_RorzeLegacy_3_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\EfemController_Slim_1_PM.equipment" />
+    <Content Include="Equipments\EfemController_Slim_1_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\EfemController_Slim_2_PM.equipment" />
+    <Content Include="Equipments\EfemController_Slim_2_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="Equipments\EfemController_Slim_3_PM.equipment" />
+    <Content Include="Equipments\EfemController_Slim_3_PM.equipment">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Devices\Controller\OperatingModeSM\ControllerOperatingModeResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ControllerOperatingModeResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Devices\Controller\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Devices\Controller\Activities\Clear\Clear.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>Clear.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\Activities\Clear\ProcessModuleClearActivity\ProcessModuleClearActivity.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessModuleClearActivity.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\Activities\Init\Init.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>Init.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\Activities\LoadToPm\LoadToPm.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>LoadToPm.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\Activities\UnloadFromPm\UnloadFromPm.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>UnloadFromPm.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\Activities\WaferFlow\WaferFlow.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>WaferFlow.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities.WaferFlow</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\OperatingModeSM\ControllerOperatingModeSm.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>ControllerOperatingModeSm.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.OperatingModeSM</CustomToolNamespace>
+    </None>
+    <None Update="Devices\Controller\Activities\WaferFlow\AlignerActivity\AlignerActivity.sm">
+      <Generator>AASMFileCodeGenerator</Generator>
+      <LastGenOutput>AlignerActivity.sm.cs</LastGenOutput>
+      <CustomToolNamespace>UnitySC.Equipment.Devices.Controller.Activities.WaferFlow.AlignerActivity</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Connected Services\" />
+  </ItemGroup>
+
+</Project>

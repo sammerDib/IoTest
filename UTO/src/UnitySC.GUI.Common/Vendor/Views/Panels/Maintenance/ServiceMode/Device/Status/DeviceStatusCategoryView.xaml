@@ -1,0 +1,74 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.Device.Status.DeviceStatusCategoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.Device.Status"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:dataTreeControl="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTree.Controls"
+    d:DataContext="{d:DesignInstance local:DeviceStatusCategoryViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+
+        <DataTemplate
+            x:Key="StringTemplate"
+            DataType="{x:Type local:DeviceStatusViewModel}">
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                TextTrimming="CharacterEllipsis"
+                TextWrapping="NoWrap" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="BoolTemplate"
+            DataType="{x:Type local:DeviceStatusViewModel}">
+            <controls:Led IsActivated="{Binding Value}" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="QuantityTemplate"
+            DataType="{x:Type local:DeviceStatusViewModel}">
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, Converter={StaticResource QuantityToStringConverter}}"
+                TextWrapping="Wrap" />
+        </DataTemplate>
+
+        <local:DeviceStatusTemplateSelector
+            x:Key="DeviceStatusTemplateSelector"
+            BoolTemplate="{StaticResource BoolTemplate}"
+            QuantityTemplate="{StaticResource QuantityTemplate}"
+            StringTemplate="{StaticResource StringTemplate}" />
+
+    </UserControl.Resources>
+
+    <dataTreeControl:DataTree
+        DataSource="{Binding DataTreeSource}"
+        DisabledExpanderVisibility="Collapsed">
+        <dataTreeControl:DataTree.ItemTemplate>
+            <DataTemplate DataType="{x:Type local:DeviceStatusViewModel}">
+                <DockPanel
+                    Height="{StaticResource HeaderElementHeight}"
+                    Background="Transparent"
+                    LastChildFill="false"
+                    ToolTip="{Binding MarkDownToolTip}">
+                    <TextBlock
+                        Margin="7,0,10,0"
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Left"
+                        Text="{Binding HumanizedName}" />
+                    <ContentPresenter
+                        Margin="0,0,7,0"
+                        VerticalAlignment="Center"
+                        Content="{Binding}"
+                        ContentTemplateSelector="{StaticResource DeviceStatusTemplateSelector}"
+                        DockPanel.Dock="Right" />
+                </DockPanel>
+            </DataTemplate>
+        </dataTreeControl:DataTree.ItemTemplate>
+    </dataTreeControl:DataTree>
+</UserControl>

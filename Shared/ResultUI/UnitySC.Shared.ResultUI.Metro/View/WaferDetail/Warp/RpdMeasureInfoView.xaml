@@ -1,0 +1,65 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Warp.RpdMeasureInfoView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common"
+    xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:sharedResultUIConverters="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters"
+    xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Common.Converters;assembly=UnitySC.Shared.ResultUI.Common"
+    xmlns:warp="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Warp"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance warp:WarpResultVM, IsDesignTimeCreatable=True}"
+	mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:DoubleToPercentConverter
+                x:Key="DoubleTo2DigitsPercentConverter"
+                Digits="2"
+                ShowPercentSymbol="True" />
+
+            <system:Double x:Key="FontSizeBig">16</system:Double>
+
+            <sharedResultUIConverters:MeasureStateToToleranceDisplayerConverter x:Key="MeasureStateToToleranceDisplayerConverter" />
+
+            <converters:LenghtToStringMultiConverter 
+	            x:Key="LenghtToMicrometerMultiConverter"
+	            NullValue="-"
+	            ShowUnit="True"
+	            Unit="Micrometer" />
+
+            <Style x:Key="TextHeaderInfo" TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{StaticResource LightBrownMeasureInfoBrush}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock Text="{Binding PointSiteType}" Style="{DynamicResource TextHeaderInfo}"/>
+
+        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+            <controls:ToleranceDisplayer
+            Tolerance="{Binding Point.State, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}" />
+            <TextBlock
+                    Margin="10,0,0,0"
+                    FontSize="{StaticResource FontSizeBig}" FontWeight="Bold">
+                    <Run Text="{Binding PointSiteMeasure, Mode=OneWay}" />
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

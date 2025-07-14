@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="UnitySC.Shared.UI.Controls.Notifier"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions"
+             xmlns:local="clr-namespace:UnitySC.Shared.UI.Controls"
+             xmlns:xamlbehaviors="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Height="27" Width="32" x:Name="NotifierBell">
+        <!--<Image HorizontalAlignment="Left" Style="{StaticResource ImageShaking}" Source="{StaticResource BellError}" /> Todo Bell ringing -->
+        <!-- Disabled -->
+        <Image HorizontalAlignment="Left" sharedExtensions:ImageExt.SourceGeometry="{StaticResource BellSolidGeometry}" sharedExtensions:ImageExt.GeometryBrush="LightGray">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentState}" Value="Disabled">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        <!-- Error -->
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Setter Property="IsEnabled" Value="False" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentState}" Value="Error">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="IsEnabled" Value="True" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Image HorizontalAlignment="Left" sharedExtensions:ImageExt.SourceGeometry="{StaticResource BellSolidGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource ImageErrorColor}" Style="{StaticResource ImageShaking}" />
+        </Grid>
+        <!-- Warning  -->
+        <Image HorizontalAlignment="Left" sharedExtensions:ImageExt.SourceGeometry="{StaticResource BellSolidGeometry}" sharedExtensions:ImageExt.GeometryBrush="Orange">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentState}" Value="Warning">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        <!-- Info -->
+        <Image HorizontalAlignment="Left" sharedExtensions:ImageExt.SourceGeometry="{StaticResource BellSolidGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource IconsColor}">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentState}" Value="Information">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="15" Width="15">
+            <Ellipse Fill="{StaticResource ImageErrorColor}" />
+            <Viewbox>
+                <TextBlock TextWrapping="Wrap" Text="{Binding NbUnreadMessages}" HorizontalAlignment="Center" Margin="2" Foreground="White" />
+            </Viewbox>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding NbUnreadMessages}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
+        <Popup
+            PlacementTarget="{Binding ElementName=NotifierBell}"
+            IsOpen="{Binding CurrentMessage, Mode=OneWay, Converter={StaticResource IsNotNullToBooleanConverter}}"
+            AllowsTransparency="True"
+            PopupAnimation="Fade"
+            Placement="Left">
+            <Border Background="White" CornerRadius="2" BorderBrush="{StaticResource PanelBorderColorBrush}" BorderThickness="2" x:Name="border" Margin="1">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="{Binding CurrentMessage.Level, Converter={StaticResource MessageTypeToImageDictionaryConverter}}" Style="{StaticResource Icon}" Margin="2"></Image>
+                    <TextBlock Text="{Binding CurrentMessage.Content}" Margin="2" MinWidth="50" MaxWidth="300" HorizontalAlignment="Left"  TextTrimming="CharacterEllipsis"></TextBlock>
+                </StackPanel>
+            </Border>
+        </Popup>
+        <xamlbehaviors:Interaction.Triggers>
+            <xamlbehaviors:EventTrigger EventName="MouseUp">
+                <xamlbehaviors:InvokeCommandAction Command="{Binding OpenCommand}" CommandParameter="argument" />
+            </xamlbehaviors:EventTrigger>
+        </xamlbehaviors:Interaction.Triggers>
+    </Grid>
+</UserControl>

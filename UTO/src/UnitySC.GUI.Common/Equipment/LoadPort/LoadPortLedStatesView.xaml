@@ -1,0 +1,85 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Equipment.LoadPort.LoadPortLedStatesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.Resources"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions"
+    x:Name="UserControl"
+    d:DesignWidth="550"
+    mc:Ignorable="d">
+    <UniformGrid Columns="{Binding ElementName=UserControl, Path=ColumnNumber}">
+        <controls:PropertyEditor
+            HorizontalAlignment="Left"
+            Orientation="Horizontal"
+            PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_PRESENT}">
+            <controls:Led Margin="7,0,0,0">
+                <controls:Led.Style>
+                    <Style BasedOn="{StaticResource {x:Type controls:Led}}" TargetType="{x:Type controls:Led}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LoadPort.CarrierPresence, ElementName=UserControl}" Value="{x:Static semiDefinitions:CassettePresence.Unknown}">
+                                <Setter Property="IsActivated" Value="True" />
+                                <Setter Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LoadPort.CarrierPresence, ElementName=UserControl}" Value="{x:Static semiDefinitions:CassettePresence.PresentNoPlacement}">
+                                <Setter Property="IsActivated" Value="True" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LoadPort.CarrierPresence, ElementName=UserControl}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}">
+                                <Setter Property="IsActivated" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:Led.Style>
+            </controls:Led>
+        </controls:PropertyEditor>
+        <controls:PropertyEditor
+            Margin="7,0,0,0"
+            HorizontalAlignment="Left"
+            Orientation="Horizontal"
+            PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_PLACED}">
+            <controls:Led Margin="7,0,0,0">
+                <controls:Led.Style>
+                    <Style BasedOn="{StaticResource {x:Type controls:Led}}" TargetType="{x:Type controls:Led}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LoadPort.CarrierPresence, ElementName=UserControl}" Value="{x:Static semiDefinitions:CassettePresence.Unknown}">
+                                <Setter Property="IsActivated" Value="True" />
+                                <Setter Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LoadPort.CarrierPresence, ElementName=UserControl}" Value="{x:Static semiDefinitions:CassettePresence.NoPresentPlacement}">
+                                <Setter Property="IsActivated" Value="True" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding LoadPort.CarrierPresence, ElementName=UserControl}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}">
+                                <Setter Property="IsActivated" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:Led.Style>
+            </controls:Led>
+        </controls:PropertyEditor>
+        <controls:PropertyEditor
+            Margin="0,0,0,0"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal"
+            PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_CLAMPED}"
+            Visibility="{Binding ElementName=UserControl, Path=IsSimplified, Converter={StaticResource TrueToCollapsedConverter}}">
+            <controls:Led Margin="7,0,0,0" IsActivated="{Binding LoadPort.IsClamped, ElementName=UserControl}" />
+        </controls:PropertyEditor>
+        <controls:PropertyEditor
+            HorizontalAlignment="Right"
+            Orientation="Horizontal"
+            PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_DOCKED}"
+            Visibility="{Binding ElementName=UserControl, Path=IsSimplified, Converter={StaticResource TrueToCollapsedConverter}}">
+            <controls:Led Margin="7,0,0,0" IsActivated="{Binding LoadPort.IsDocked, ElementName=UserControl}" />
+        </controls:PropertyEditor>
+        <controls:PropertyEditor
+            HorizontalAlignment="Right"
+            Orientation="Horizontal"
+            PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_OPEN}"
+            Visibility="{Binding ElementName=UserControl, Path=IsSimplified, Converter={StaticResource TrueToCollapsedConverter}}">
+            <controls:Led Margin="7,0,0,0" IsActivated="{Binding LoadPort.IsDoorOpen, ElementName=UserControl}" />
+        </controls:PropertyEditor>
+    </UniformGrid>
+</UserControl>

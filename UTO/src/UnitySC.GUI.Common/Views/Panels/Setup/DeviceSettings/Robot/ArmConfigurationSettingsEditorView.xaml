@@ -1,0 +1,71 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Robot.ArmConfigurationSettingsEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enums="clr-namespace:UnitySC.Equipment.Abstractions.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:local="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Robot"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance local:ArmConfigurationSettingsEditor}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <GroupBox Header="{localize:Static local:RobotSettingsResources.S_SETUP_ROBOT_ARM_CONFIGURATION}">
+        <StackPanel Orientation="Vertical">
+            <controls:PropertyEditor
+                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                Orientation="Horizontal"
+                PropertyName="{localize:Static local:RobotSettingsResources.S_SETUP_ROBOT_ARM_CONFIGURATION_IS_ENABLED}">
+                <CheckBox IsChecked="{Binding IsArmEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+            </controls:PropertyEditor>
+            <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static local:RobotSettingsResources.S_SETUP_ROBOT_ARM_CONFIGURATION_EFFECTOR_TYPE}">
+                <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection {x:Type enums:EffectorType}}" SelectedItem="{Binding EffectorType}" />
+            </controls:PropertyEditor>
+            <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static local:RobotSettingsResources.S_SETUP_ROBOT_ARM_CONFIGURATION_SUPPORTED_SIZES}">
+                <ItemsControl ItemsSource="{markupExtensions:EnumCollection {x:Type semiDefinitions:SampleDimension}}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <controls:Chips
+                                    x:Name="ChipsControl"
+                                    Margin="0,0,10,10"
+                                    Command="{Binding ElementName=UserControl, Path=DataContext.SelectSampleDimensionCommand}"
+                                    CommandParameter="{Binding .}"
+                                    Content="{Binding}">
+                                    <controls:Chips.IsActivated>
+                                        <markupExtensions:FuncBinding BindingToFunc="{Binding ElementName=UserControl, Path=DataContext.SampleDimensionsIsSelectedFunc}" Mode="OneWay">
+                                            <Binding Path="." />
+                                            <Binding ElementName="UserControl" Path="DataContext.SupportedDimensionsChangedFlag" />
+                                        </markupExtensions:FuncBinding>
+                                    </controls:Chips.IsActivated>
+                                    <controls:Chips.Style>
+                                        <Style BasedOn="{StaticResource {x:Type controls:Chips}}" TargetType="{x:Type controls:Chips}">
+                                            <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource EmptyDotIcon}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=ChipsControl, Path=IsActivated}" Value="True">
+                                                    <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource CheckedIcon}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </controls:Chips.Style>
+                                </controls:Chips>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </controls:PropertyEditor>
+        </StackPanel>
+    </GroupBox>
+</UserControl>

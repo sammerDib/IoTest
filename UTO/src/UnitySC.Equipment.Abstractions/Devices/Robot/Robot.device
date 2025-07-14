@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="Robot">
+                  <Types>
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.SampleDimension, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Vendor.Devices.Enums.WaferStatus, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Vendor.Devices.Enums.WaferPresence, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.Robot.Enums.ArmState, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.TransferLocation, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="Agileo.EquipmentModeling.IMaterialLocationContainer, Agileo.EquipmentModeling, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.RobotArm, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <DeviceType Name="Robot" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\Robot\Robot.device|UnitySC.Equipment.Abstractions.Devices.Robot.Robot" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Robot, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="GoToHome" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="GoToLocation" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="destinationDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="GoToTransferLocation" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="location" Type="UnitySC.Equipment.Abstractions.Devices.Robot.TransferLocation" />
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="slot" Type="Byte" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="GoToSpecifiedLocation" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="destinationDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                            <Parameter Name="destinationSlot" Type="Byte" />
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="isPickUpPosition" Type="Boolean" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Pick" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="sourceDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                            <Parameter Name="sourceSlot" Type="Byte" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmReady, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEffectorValid, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Place" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="destinationDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                            <Parameter Name="destinationSlot" Type="Byte" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmReady, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEffectorValid, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Transfer" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="pickArm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="sourceDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                            <Parameter Name="sourceSlot" Type="Byte" />
+                            <Parameter Name="placeArm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="destinationDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                            <Parameter Name="destinationSlot" Type="Byte" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmReady, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEffectorValid, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Swap" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="pickArm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="sourceDevice" Type="UnitySC.Equipment.Abstractions.Devices.Robot.IMaterialLocationContainer" />
+                            <Parameter Name="sourceSlot" Type="Byte" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmReady, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEffectorValid, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="ExtendArm" Type="Void" Timeout="360 s" Category="Movement">
+                          <Parameters>
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                            <Parameter Name="location" Type="UnitySC.Equipment.Abstractions.Devices.Robot.TransferLocation" />
+                            <Parameter Name="slot" Type="Byte" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Clamp" Type="Void" Timeout="60 s">
+                          <Documentation>Secure material on arm so robot can move without loosing it.</Documentation>
+                          <Parameters>
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Unclamp" Type="Void" Timeout="60 s">
+                          <Documentation>Release material on arm so it can be removed by hand.</Documentation>
+                          <Parameters>
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.Robot.RobotArm" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsArmEnabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetMotionSpeed" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="percentage" Type="Ratio" Unit="UnitsNet.Units.RatioUnit.Percent" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Robot.Conditions.IsSpeedValid, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetDateAndTime" Type="Void" Timeout="60 s">
+                          <Documentation>Send current date and time to hardware in order to synchronize logs.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="UpperArmWaferDimension" Type="UnitySC.Equipment.Abstractions.Devices.Robot.SampleDimension">
+                          <Documentation>Upper arm wafer dimension</Documentation>
+                        </Status>
+                        <Status Name="LowerArmWaferDimension" Type="UnitySC.Equipment.Abstractions.Devices.Robot.SampleDimension">
+                          <Documentation>Lower arm wafer dimension</Documentation>
+                        </Status>
+                        <Status Name="UpperArmSimplifiedWaferId" Type="String">
+                          <Documentation>Upper arm simplified wafer ID</Documentation>
+                        </Status>
+                        <Status Name="LowerArmSimplifiedWaferId" Type="String">
+                          <Documentation>Upper arm simplified wafer ID</Documentation>
+                        </Status>
+                        <Status Name="UpperArmWaferStatus" Type="UnitySC.Equipment.Abstractions.Devices.Robot.WaferStatus">
+                          <Documentation>Upper arm wafer status</Documentation>
+                        </Status>
+                        <Status Name="LowerArmWaferStatus" Type="UnitySC.Equipment.Abstractions.Devices.Robot.WaferStatus">
+                          <Documentation>Lower arm wafer status</Documentation>
+                        </Status>
+                        <Status Name="UpperArmWaferPresence" Type="UnitySC.Equipment.Abstractions.Devices.Robot.WaferPresence">
+                          <Documentation>Upper arm wafer presence</Documentation>
+                        </Status>
+                        <Status Name="LowerArmWaferPresence" Type="UnitySC.Equipment.Abstractions.Devices.Robot.WaferPresence">
+                          <Documentation>Lower arm wafer presence</Documentation>
+                        </Status>
+                        <Status Name="UpperArmSubstrateDetectionError" Type="Boolean">
+                          <Documentation>Upper arm substrate detection error</Documentation>
+                        </Status>
+                        <Status Name="LowerArmSubstrateDetectionError" Type="Boolean">
+                          <Documentation>Lower arm substrate detection error</Documentation>
+                        </Status>
+                        <Status Name="UpperArmClamped" Type="Boolean">
+                          <Documentation>Upper arm clamp state</Documentation>
+                        </Status>
+                        <Status Name="LowerArmClamped" Type="Boolean">
+                          <Documentation>Lower arm clamp state</Documentation>
+                        </Status>
+                        <Status Name="UpperArmState" Type="UnitySC.Equipment.Abstractions.Devices.Robot.ArmState" />
+                        <Status Name="LowerArmState" Type="UnitySC.Equipment.Abstractions.Devices.Robot.ArmState" />
+                        <Status Name="Position" Type="UnitySC.Equipment.Abstractions.Devices.Robot.TransferLocation" />
+                        <Status Name="HasBeenInitialized" Type="Boolean" />
+                        <Status Name="Speed" Type="Ratio" Unit="UnitsNet.Units.RatioUnit.Percent" />
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

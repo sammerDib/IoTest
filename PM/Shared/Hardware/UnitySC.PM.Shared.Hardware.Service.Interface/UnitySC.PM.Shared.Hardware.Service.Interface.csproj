@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.Shared.Hardware.Service.Interface</RootNamespace>
+    <AssemblyName>UnitySC.PM.Shared.Hardware.Service.Interface</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Aerotech.Common, Version=3.13.0.107, Culture=neutral, PublicKeyToken=478e72719c32735e">
+      <HintPath>..\..\..\..\Shared\ExternalLibraries\Aerotech\Aerotech.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Aerotech.Ensemble, Version=5.6.0.17, Culture=neutral, PublicKeyToken=478e72719c32735e">
+      <HintPath>..\..\..\..\Shared\ExternalLibraries\Aerotech\Aerotech.Ensemble.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Axes\AxesState.cs" />
+    <Compile Include="Axes\AxisMove.cs" />
+    <Compile Include="Axes\AxisSpeed.cs" />
+    <Compile Include="Axes\Configuration\AxesConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\CNCAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\IoAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\OwisAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\ParallaxAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\PhytronAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\AerotechAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\PiezoAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\ACSAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\RelianceAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\ThorlabsRotationAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\ThorlabsSliderAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\DummyAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\AxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Axis\MotorizedAxisConfig.cs" />
+    <Compile Include="Axes\Configuration\Chuck\OpticalReferenceDefinition.cs" />
+    <Compile Include="Axes\Configuration\Chuck\OverlayReferenceConfiguration.cs" />
+    <Compile Include="Axes\Configuration\AllSpecificAxesConfig.cs" />
+    <Compile Include="Axes\Device\CNCAxis.cs" />
+    <Compile Include="Axes\Device\IMotionAxes.cs" />
+    <Compile Include="Axes\Device\IoAxis.cs" />
+    <Compile Include="Axes\Device\OwisAxis.cs" />
+    <Compile Include="Axes\Device\ParallaxAxis.cs" />
+    <Compile Include="Axes\Device\ThorlabsSliderAxis.cs" />
+    <Compile Include="Axes\Device\PhytronAxis.cs" />
+    <Compile Include="Axes\Device\PiezoAxis.cs" />
+    <Compile Include="Axes\Device\RelianceAxis.cs" />
+    <Compile Include="Axes\Enum\EnumAxes.cs" />
+    <Compile Include="Axes\Enum\ThorlabsStatusCode.cs" />
+    <Compile Include="Axes\Messages\OwisAxisMessages.cs" />
+    <Compile Include="Axes\Messages\ParallaxMessages.cs" />
+    <Compile Include="Axes\Messages\ThorlabsAxisMessages.cs" />
+    <Compile Include="Axes\PMAxisMove.cs" />
+    <Compile Include="Axes\Service\IMotionAxesServiceCallbackProxy.cs" />
+    <Compile Include="Axes\Service\IMotionAxesService.cs" />
+    <Compile Include="Axes\Service\IMotionAxesServiceCallback.cs" />
+    <Compile Include="Camera\Device\MatroxCameraInfo.cs" />
+    <Compile Include="Chamber\Configuration\ANAChamberConfig.cs" />
+    <Compile Include="Chamber\Configuration\ChamberConfig.cs" />
+    <Compile Include="Chamber\IANAChamber.cs" />
+    <Compile Include="Chamber\IPSDChamber.cs" />
+    <Compile Include="Chamber\Configuration\DMTChamberConfig.cs" />
+    <Compile Include="Chamber\Configuration\EMEChamberConfig.cs" />
+    <Compile Include="Chamber\IChamberController.cs" />
+    <Compile Include="Chamber\IChamberFFUControl.cs" />
+    <Compile Include="Chamber\IChamberBasics.cs" />
+    <Compile Include="Chamber\IChamberInterlocks.cs" />
+    <Compile Include="Controller\Axes\Configuration\OwisMotionControllerConfig.cs" />
+    <Compile Include="Controller\Chambers\ICdaPneumaticValve.cs" />
+    <Compile Include="Controller\Chucks\Configuration\EMEChuckControllerConfig.cs" />
+    <Compile Include="Controller\DistanceSensors\Configuration\MicroEpsilonDistanceSensorControllerConfig.cs" />
+    <Compile Include="Controller\Ionizers\Configuration\IonizerKeyenceControllerConfig.cs" />
+    <Compile Include="Controller\Lights\Configuration\EvosensLightControllerConfig.cs" />
+    <Compile Include="DistanceSensor\Configuration\DistanceSensorConfig.cs" />
+    <Compile Include="DistanceSensor\Configuration\MicroEpsilonDistanceSensorConfig.cs" />
+    <Compile Include="DistanceSensor\Messages\Messages.cs" />
+    <Compile Include="FFU\IFfuService.cs" />
+    <Compile Include="FFU\IFfuServiceCallback.cs" />
+    <Compile Include="Ionizer\Configuration\IonizerConfig.cs" />
+    <Compile Include="Ionizer\Configuration\KeyenceIonizerConfig.cs" />
+    <Compile Include="Ionizer\IIonizerService.cs" />
+    <Compile Include="Ionizer\IIonizerServiceCallback.cs" />
+    <Compile Include="Ionizer\Messages\IonizerMessages.cs" />
+    <Compile Include="SpecificPositions.cs" />
+    <Compile Include="SafetySystem\SafetySystem.cs" />
+    <Compile Include="USPChuck\IChuckLoadingPosition.cs" />
+    <Compile Include="USPChuck\IRemovableChuckSizeDetected.cs" />
+    <Compile Include="USPChuck\IUSPChuck.cs" />
+    <Compile Include="USPChuck\IChuckClamp.cs" />
+    <Compile Include="USPChuck\IChuckPinLifts.cs" />
+    <Compile Include="USPChuck\IChuckInitialization.cs" />
+    <Compile Include="USPChuck\IChuckMaterialPresence.cs" />
+    <Compile Include="USPChuck\IChuckAirBearing.cs" />
+    <Compile Include="Controller\Chambers\ISlitDoor.cs" />
+    <Compile Include="Interlock\Interlock.cs" />
+    <Compile Include="Light\Messages\LightSourceMessage.cs" />
+    <Compile Include="Controller\Rfids\Configuration\RfidBisL405ControllerConfig.cs" />
+    <Compile Include="PlcScreen\Messages\SideMessage.cs" />
+    <Compile Include="Controller\FFUs\Configuration\FfuAstrofan612ControllerConfig.cs" />
+    <Compile Include="FFU\Configuration\Astrofan612FfuConfig.cs" />
+    <Compile Include="FFU\Configuration\FfuConfig.cs" />
+    <Compile Include="FFU\Messages\FfuMessages.cs" />
+    <Compile Include="USPChuck\Configuration\ChuckBaseConfig.cs" />
+    <Compile Include="USPChuck\Configuration\DummyUSPChuckConfig.cs" />
+    <Compile Include="USPChuck\Configuration\ISubstrateSlotChuckConfig.cs" />
+    <Compile Include="USPChuck\Configuration\NICouplerChuckConfig.cs" />
+    <Compile Include="USPChuck\Configuration\EMEChuckConfig.cs" />
+    <Compile Include="USPChuck\Configuration\ANAChuckConfig.cs" />
+    <Compile Include="Rfid\Configuration\BisL405RfidConfig.cs" />
+    <Compile Include="Rfid\Configuration\RfidConfig.cs" />
+    <Compile Include="Rfid\Messages\RfidMessages.cs" />
+    <Compile Include="USPChuck\Configuration\USPChuckConfig.cs" />
+    <Compile Include="USPChuck\Configuration\DMTChuckConfig.cs" />
+    <Compile Include="USPChuck\Configuration\SubstrateSlotConfig.cs" />
+    <Compile Include="USPChuck\IUSPChuckService.cs" />
+    <Compile Include="USPChuck\IUSPChuckServiceCallback.cs" />
+    <Compile Include="USPChuck\Messages\USPChuckMessages.cs" />
+    <Compile Include="Controller\Dummy\Configuration\DummyMotionControllerConfig.cs" />
+    <Compile Include="Controller\Chambers\Configuration\EMEChamberControllerConfig.cs" />
+    <Compile Include="Controller\Chambers\Configuration\PSDChamberControllerConfig.cs" />
+    <Compile Include="Chamber\Messages\ChamberMessages.cs" />
+    <Compile Include="USPChuck\ChuckState.cs" />
+    <Compile Include="Controller\Axes\Configuration\WaferClampConfig.cs" />
+    <Compile Include="Axes\Device\ActuatorAxis.cs" />
+    <Compile Include="Axes\Device\IAxes.cs" />
+    <Compile Include="Controller\Axes\Configuration\CNCMotionControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\IoMotionControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\ParallaxMotionControllerConfig.cs" />
+    <Compile Include="Controller\Axes\IAxesController.cs" />
+    <Compile Include="Axes\Device\IAxis.cs" />
+    <Compile Include="Axes\Device\MotorizedAxis.cs" />
+    <Compile Include="Axes\Enum\ErrorCriticity.cs" />
+    <Compile Include="Axes\Enum\Referential.cs" />
+    <Compile Include="Axes\Service\IAxesService.cs" />
+    <Compile Include="Axes\Service\IAxesServiceCallback.cs" />
+    <Compile Include="Axes\Service\IAxesServiceCallbackProxy.cs" />
+    <Compile Include="Controller\Axes\Configuration\ThorlabsMotionControllerConfig.cs" />
+    <Compile Include="Controller\Chucks\Configuration\PSDChuckControllerConfig.cs" />
+    <Compile Include="Controller\Dummy\Configuration\DummyControllerConfig.cs" />
+    <Compile Include="Controller\IOsCoupler\Configuration\IOControllerConfig.cs" />
+    <Compile Include="Controller\Lasers\Configuration\LaserPiano450ControllerConfig.cs" />
+    <Compile Include="Controller\Lights\Configuration\ArduinoLightControllerConfig.cs" />
+    <Compile Include="Controller\Lights\Configuration\LightIdLinkConfig.cs" />
+    <Compile Include="Controller\Plc\Configuration\BeckhoffPlcControllerConfig.cs" />
+    <Compile Include="Controller\Plc\Configuration\CanOverEthercatConfig.cs" />
+    <Compile Include="Controller\Service\IControllerService.cs" />
+    <Compile Include="Controller\Service\IControllerServiceCallback.cs" />
+    <Compile Include="Controller\Shutters\ShutterSh10pilControllerConfig.cs" />
+    <Compile Include="Controller\Spectrometers\Configuration\SpectrometerAvantesControllerConfig.cs" />
+    <Compile Include="DeviceBaseConfig.cs" />
+    <Compile Include="IOComponent\Input.cs" />
+    <Compile Include="IOComponent\IO.cs" />
+    <Compile Include="Controller\Axes\Configuration\MCCControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\AerotechControllerConfig.cs" />
+    <Compile Include="Controller\IOsCoupler\Configuration\NICouplerControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\RCMControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\PIE709ControllerConfig.cs" />
+    <Compile Include="Controller\Chucks\IChuckController.cs" />
+    <Compile Include="USPChuck\Service\IChuckService.cs" />
+    <Compile Include="USPChuck\Service\IChuckServiceCallback.cs" />
+    <Compile Include="USPChuck\Service\IChuckServiceCallbackProxy.cs" />
+    <Compile Include="Controller\Axes\Configuration\ACSControllerConfig.cs" />
+    <Compile Include="Controller\ControllerConfig.cs" />
+    <Compile Include="Controller\OpcGateway\Configuration\OpcControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\PiezoControllerConfig.cs" />
+    <Compile Include="Controller\Axes\Configuration\SMC100ControllerConfig.cs" />
+    <Compile Include="CurvatureDynamics\CurvatureDynamicsCalibrationData.cs" />
+    <Compile Include="DistanceSensor\IDistanceSensorService.cs" />
+    <Compile Include="DistanceSensor\IDistanceSensorServiceCallback.cs" />
+    <Compile Include="Chamber\IChamberServiceCallback.cs" />
+    <Compile Include="Chamber\IChamberService.cs" />
+    <Compile Include="IModuleInformation.cs" />
+    <Compile Include="Controller\Lasers\Configuration\LaserSMD12ControllerConfig.cs" />
+    <Compile Include="Laser\Configuration\LaserConfig.cs" />
+    <Compile Include="Laser\Configuration\SMD12LaserConfig.cs" />
+    <Compile Include="Laser\Configuration\Piano450LaserConfig.cs" />
+    <Compile Include="Laser\ILaserService.cs" />
+    <Compile Include="Laser\ILaserServiceCallback.cs" />
+    <Compile Include="Laser\Messages\Piano450Messages.cs" />
+    <Compile Include="Laser\Messages\SMD12Messages.cs" />
+    <Compile Include="Laser\Products\ILaserSMD12ServiceCallback.cs" />
+    <Compile Include="Laser\Products\ILaserPiano450ServiceCallback.cs" />
+    <Compile Include="Light\Configuration\ACSLightConfig.cs" />
+    <Compile Include="Controller\Lights\Configuration\ACSLightControllerConfig.cs" />
+    <Compile Include="Light\Configuration\ENTTECLightConfig.cs" />
+    <Compile Include="Controller\Lights\Configuration\ENTTECLightControllerConfig.cs" />
+    <Compile Include="Light\Configuration\LightConfig.cs" />
+    <Compile Include="Light\Configuration\LightModuleConfig.cs" />
+    <Compile Include="Light\ILight.cs" />
+    <Compile Include="Light\ILightService.cs" />
+    <Compile Include="Light\Products\ILightServiceCallback.cs" />
+    <Compile Include="Light\Products\ILightServiceCallbackProxy.cs" />
+    <Compile Include="Mppc\IMppcService.cs" />
+    <Compile Include="Mppc\IMppcServiceCallback.cs" />
+    <Compile Include="OpticalPowermeter\IOpticalPowermeterService.cs" />
+    <Compile Include="OpticalPowermeter\IOpticalPowermeterServiceCallback.cs" />
+    <Compile Include="PlcScreen\Configuration\DensitronDM430GNScreenConfig.cs" />
+    <Compile Include="PlcScreen\Configuration\ScreenConfig.cs" />
+    <Compile Include="PlcScreen\Messages\DensitronDisplayModule.cs" />
+    <Compile Include="PlcScreen\Messages\PlcScreenMessages.cs" />
+    <Compile Include="Plc\Configuration\BeckhoffPlcConfig.cs" />
+    <Compile Include="Plc\Configuration\PlcConfig.cs" />
+    <Compile Include="Plc\DigitalIoConsumerConfig.cs" />
+    <Compile Include="IOComponent\Output.cs" />
+    <Compile Include="Plc\Messages\PlcMessages.cs" />
+    <Compile Include="Camera\Device\CameraInfo.cs" />
+    <Compile Include="Camera\Device\CameraInputParams.cs" />
+    <Compile Include="Camera\Service\ICameraService.cs" />
+    <Compile Include="Camera\Service\ICameraServiceCallback.cs" />
+    <Compile Include="Camera\Device\ICameraInputParams.cs" />
+    <Compile Include="Referential\IReferentialService.cs" />
+    <Compile Include="Controller\Screens\Configuration\ScreenDensitronDM430GNControllerConfig.cs" />
+    <Compile Include="ServiceImageWithPosition.cs" />
+    <Compile Include="ServicePoint.cs" />
+    <Compile Include="Shutter\Configuration\Sh10pilShutterConfig.cs" />
+    <Compile Include="Shutter\Configuration\ShutterConfig.cs" />
+    <Compile Include="Shutter\IShutterService.cs" />
+    <Compile Include="Shutter\IShutterServiceCallback.cs" />
+    <Compile Include="Shutter\Messages\ShutterMessages.cs" />
+    <Compile Include="Simulator\IHarwareSimulator.cs" />
+    <Compile Include="Plc\IPlcServiceCallback.cs" />
+    <Compile Include="Plc\IPlcService.cs" />
+    <Compile Include="DeviceState.cs" />
+    <Compile Include="Global\GlobalDevice.cs" />
+    <Compile Include="Global\IGlobalCallback.cs" />
+    <Compile Include="Global\IGlobalDeviceService.cs" />
+    <Compile Include="IDeviceConfiguration.cs" />
+    <Compile Include="IDevice.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sensor3D512\IHardwareSensor3D512.cs" />
+    <Compile Include="Common\ConnectionInfoParams.cs" />
+    <Compile Include="Spectrometer\Configuration\SpectrometerConfig.cs" />
+    <Compile Include="Spectrometer\ISpectroService.cs" />
+    <Compile Include="Spectrometer\ISpectroServiceCallbackProxy.cs" />
+    <Compile Include="Spectrometer\ISpectroServiceCallback.cs" />
+    <Compile Include="Spectrometer\SpectrometerParamBase.cs" />
+    <Compile Include="Spectrometer\SpectroSignal.cs" />
+    <Compile Include="StateChangedEventArgs.cs" />
+    <Compile Include="TimeStampedPosition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Camera\Enum\" />
+    <Folder Include="Chuck\Configuration\" />
+    <Folder Include="DistanceSensor\Products\" />
+    <Folder Include="FDC\" />
+    <Folder Include="Filters\" />
+    <Folder Include="Shutter\Products\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

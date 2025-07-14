@@ -1,0 +1,147 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataTree.DataTreePanelGridView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTree.Controls"
+    xmlns:controls1="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:local="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataTree"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance local:DataTreePanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="800"
+    mc:Ignorable="d">
+
+    <!--
+        Remarks: It is possible to use a GridView in the DataTree control in order to define columns to represent the elements, in the same way as the DataTable.
+
+        /!\ Caution: The performances are lower than when the Control is used in its nominal case.
+        It is advised not to use this way of doing things if you want to display a tree structure with a high number of elements.
+        The tests carried out validate this use up to approximately 1000 elements.
+        This number varies according to the number of elements but also the number of columns and the complexity of the DataTemplates.
+    -->
+
+    <controls:DataTree
+        DataSource="{Binding DataTreeSource}"
+        DockPanel.Dock="Left"
+        SelectedValue="{Binding SelectedValue}">
+
+        <controls:DataTree.GridView>
+            <GridView>
+
+                <dataTables:DataTableColumn DisplayName="{localize:Static local:DataTreeResources.INDEX}" SortKey="Index">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:MyModel}">
+                            <TextBlock
+                                Margin="7,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Index}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="550"
+                    DisplayName="{localize:Static local:DataTreeResources.ITEM}"
+                    SortKey="Name">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:MyModel}">
+                            <DockPanel LastChildFill="False">
+                                <controls:DataTreeExpander />
+                                <controls1:Icon
+                                    x:Name="Icon"
+                                    Margin="0,0,7,0"
+                                    Data="{StaticResource ClosedFolderIcon}" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+
+                                <Button
+                                    x:Name="DeleteButton"
+                                    Margin="0,0,5,0"
+                                    markupExtensions:Icon.Geometry="{StaticResource DeleteIcon}"
+                                    Background="Transparent"
+                                    Command="{Binding ElementName=UserControl, Path=DataContext.DeleteItemCommand}"
+                                    CommandParameter="{Binding}"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                <Button
+                                    x:Name="AddButton"
+                                    Margin="0,0,5,0"
+                                    markupExtensions:Icon.Geometry="{StaticResource AddIcon}"
+                                    Background="Transparent"
+                                    Command="{Binding ElementName=UserControl, Path=DataContext.AddItemCommand}"
+                                    CommandParameter="{Binding}"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                            </DockPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:DataTreeItem}}}" Value="True">
+                                    <Setter TargetName="Icon" Property="Data" Value="{StaticResource OpenFolderIcon}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Children.Count}" Value="0">
+                                    <Setter TargetName="Icon" Property="Data" Value="{StaticResource FileIcon}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:DataTreeItem}}}" Value="False">
+                                    <Setter TargetName="DeleteButton" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="AddButton" Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn DisplayName="{localize:Static local:DataTreeResources.TYPE}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type local:MyModel}">
+                            <Ellipse
+                                x:Name="Ellipse"
+                                Width="8"
+                                Height="8"
+                                Margin="0,0,7,0"
+                                Fill="MediumVioletRed"
+                                Opacity="0.7" />
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Type}" Value="{x:Static local:MyModelType.BType}">
+                                    <Setter TargetName="Ellipse" Property="Fill" Value="MediumAquamarine" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+            </GridView>
+        </controls:DataTree.GridView>
+
+        <controls:DataTree.BottomAdditionalContent>
+            <Border
+                BorderBrush="{DynamicResource ListViewBorderBrush}"
+                BorderThickness="0,1,0,0"
+                DockPanel.Dock="Bottom">
+                <StackPanel
+                    Margin="10"
+                    DataContext="{Binding DataTreeSource}"
+                    Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,0,0"
+                        markupExtensions:Icon.Geometry="{StaticResource TargetLocationIcon}"
+                        Command="{Binding SyncWithSelectedCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <Button
+                        Margin="10,0,0,0"
+                        markupExtensions:Icon.Geometry="{StaticResource CollapseAllIcon}"
+                        Command="{Binding CollapseAllCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <Button
+                        Margin="10,0,0,0"
+                        markupExtensions:Icon.Geometry="{StaticResource ExpandAllIcon}"
+                        Command="{Binding ExpandAllCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                </StackPanel>
+            </Border>
+        </controls:DataTree.BottomAdditionalContent>
+
+    </controls:DataTree>
+</UserControl>

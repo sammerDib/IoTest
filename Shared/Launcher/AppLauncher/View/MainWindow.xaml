@@ -1,0 +1,182 @@
+﻿<Window x:Class="AppLauncher.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AppLauncher.ViewModel"
+        xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+        xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+        xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+        xmlns:local="clr-namespace:AppLauncher" xmlns:localConverters="clr-namespace:AppLauncher.Converters"
+        mc:Ignorable="d"
+        Title="{Binding Path=WindowTitle, RelativeSource={RelativeSource Mode=Self}}" Height="auto"  Width="1200" SizeToContent="Height" MaxHeight="900">
+    <Window.Resources>
+        <Style x:Key="BorderFlashingStyle"  TargetType="Border">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimationUsingKeyFrames BeginTime="0:0:0" Duration="0:00:1.5" Storyboard.TargetProperty="Opacity" RepeatBehavior="Forever"
+                                AutoReverse="True">
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1" />
+                                    <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="0" />
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <DataTemplate x:Key="ApplicationTemplate" DataType="{x:Type vm:LauncherApplicationVM}">
+            <Border BorderBrush="Gray" BorderThickness="2" Background="{StaticResource WindowBackgroundBrush}" CornerRadius="5" Height="Auto" Margin="5,5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="10,5">
+                        <Grid>
+                            <Image Source="{Binding Icon}" Width="32" Height="32" Stretch="Uniform" />
+                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource GearSolidGeometry}" sharedExtensions:ImageExt.GeometryBrush="Black" Style="{StaticResource Icon}" Width="32" Height="32" Visibility="{Binding Icon, Converter={converters:InvertedNullToVisibilityConverter}}" />
+                        </Grid>
+                        <TextBlock  Text="{Binding Config.Name}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
+                        <TextBlock  Text="v"  FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,2,0" Visibility="{Binding Version, Converter={converters:EmptyStringToVisibilityConverter}}" />
+                        <TextBlock  Text="{Binding Version}"  FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="1" Text="{Binding Config.Description}" TextWrapping="Wrap" FontSize="11" HorizontalAlignment="Left" TextAlignment="Left" Margin="10,5" Foreground="#404040" />
+
+                    <StackPanel Grid.Column="1" Margin="10,5" Orientation="Horizontal">
+                        <Border Width="24" Height="24" CornerRadius="3" Background="Red" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Stopped}}">
+                        </Border>
+                        <Border Width="24" Height="24" CornerRadius="3" Background="Green" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Running}}">
+                        </Border>
+                        <Border x:Name="flashingBorderStart" Style="{StaticResource BorderFlashingStyle}" Width="24" Height="24" CornerRadius="3" Background="Orange" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Starting}}">
+                        </Border>
+                        <Border x:Name="flashingBorderStop" Style="{StaticResource BorderFlashingStyle}" Width="24" Height="24" CornerRadius="3" Background="Orange" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Stopping}}">
+                        </Border>
+                        <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+                    </StackPanel>
+
+                    <sharedControls:ImageButton Grid.Row="1" Grid.Column="1" Margin="10,5" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="Green" Command="{Binding StartExecution}">Start</sharedControls:ImageButton>
+
+                    <sharedControls:ImageButton Grid.Row="1" Grid.Column="1" Margin="10,5" ImageGeometry="{StaticResource StopGeometry}" ImageGeometryBrush="Red" Command="{Binding StopExecution}" Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={converters:BooleanToVisibilityConverter}}">Stop</sharedControls:ImageButton>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="ServiceTemplate" DataType="{x:Type vm:LauncherServiceVM}">
+            <Border BorderBrush="Gray" BorderThickness="2" Background="#FFDDDDDD" CornerRadius="5" Height="Auto" Margin="5,5" Visibility="{Binding Config.DisplayInLauncher, Converter={converters:BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300" />
+                            <ColumnDefinition Width="200" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="10,5">
+                            <Grid>
+                                <Image Source="{Binding Icon}" Width="32" Height="32" Stretch="Uniform" />
+                                <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource GearSolidGeometry}" sharedExtensions:ImageExt.GeometryBrush="Black" Style="{StaticResource Icon}" Width="32" Height="32" Visibility="{Binding Icon, Converter={converters:InvertedNullToVisibilityConverter}}" />
+                            </Grid>
+                            <TextBlock  Text="{Binding Config.Name}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" />
+                            <TextBlock  Text="v"  FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,2,0" Visibility="{Binding Version, Converter={converters:EmptyStringToVisibilityConverter}}" />
+                            <TextBlock  Text="{Binding Version}"  FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Text="{Binding Config.Description}" TextWrapping="Wrap" FontSize="11" HorizontalAlignment="Left" TextAlignment="Left" Margin="10,5" Foreground="#404040" />
+
+                        <StackPanel Grid.Column="1" Margin="10,5" Orientation="Horizontal">
+                            <Border Width="24" Height="24" CornerRadius="3" Background="Red" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Stopped}}">
+                            </Border>
+                            <Border Width="24" Height="24" CornerRadius="3" Background="Green" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Running}}">
+                            </Border>
+                            <Border x:Name="flashingBorderStart" Style="{StaticResource BorderFlashingStyle}" Width="24" Height="24" CornerRadius="3" Background="Orange" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Starting}}">
+                            </Border>
+                            <Border x:Name="flashingBorderStop" Style="{StaticResource BorderFlashingStyle}" Width="24" Height="24" CornerRadius="3" Background="Orange" Visibility="{Binding Status, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExecutionStatus.Stopping}}">
+                            </Border>
+                            <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+                        </StackPanel>
+
+                        <sharedControls:ImageButton Grid.Row="1" Grid.Column="1" Margin="10,5" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="Green" Command="{Binding StartExecution}">Start</sharedControls:ImageButton>
+
+                        <sharedControls:ImageButton Grid.Row="1" Grid.Column="1" Margin="10,5" ImageGeometry="{StaticResource StopGeometry}" ImageGeometryBrush="Red" Command="{Binding StopExecution}" Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={converters:BooleanToVisibilityConverter}}">Stop</sharedControls:ImageButton>
+                    </Grid>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Background="{StaticResource MainMenuBackgound}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid  >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Grid.RowSpan="2"
+                          Background="Black"
+                          BorderThickness="0"
+                          Opacity="0.2" />
+                    <TextBlock Grid.Row="0"
+                         Style="{StaticResource MainMenuTitle1}"
+                          Text="APPLICATIONS" />
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Applications}" ItemTemplate="{StaticResource ApplicationTemplate}" Margin="5">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel IsItemsHost="True" Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+                <Grid Margin="20" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Grid.RowSpan="2"
+                          Background="Black"
+                          BorderThickness="0"
+                          Opacity="0.2" />
+                    <TextBlock Grid.Row="0"
+                         Style="{StaticResource MainMenuTitle1}"
+                          Text="SERVICES" />
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Services}" ItemTemplate="{StaticResource ServiceTemplate}" Margin="5">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel IsItemsHost="True" Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
+
+           
+            </Grid>
+        </ScrollViewer>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Config.DisplayStopAll, Converter={converters:BooleanToVisibilityConverter}}">
+            <sharedControls:ImageButton  Margin="20" ImageGeometry="{StaticResource StopGeometry}" ImageGeometryBrush="Red" Command="{Binding StopAllExecution}" Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={converters:BooleanToVisibilityConverter}}">Stop all applications and services</sharedControls:ImageButton>
+        </Grid>
+    </Grid>
+  
+</Window>

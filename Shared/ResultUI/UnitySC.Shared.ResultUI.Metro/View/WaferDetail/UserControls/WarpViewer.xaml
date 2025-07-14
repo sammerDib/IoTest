@@ -1,0 +1,66 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls.WarpViewer"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common"
+    xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Warp"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters"
+    xmlns:sharedconverters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+    xmlns:warp="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Warp"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance warp:WarpDetailMeasureInfoVM, IsDesignTimeCreatable=True}"
+	mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:MeasureStateToToleranceDisplayerConverter x:Key="MeasureStateToToleranceDisplayerConverter" />
+            <converters:ValueToVisibilityConverter x:Key="WarpVisibilityConverter" ViewerTypeVisibilityValue="WARP"/>
+            <converters:ValueToVisibilityConverter x:Key="TTVVisibilityConverter" ViewerTypeVisibilityValue="TTV"/>
+
+            <sharedconverters:InvertedBooleanToHiddenVisibilityConverter x:Key="InvertedBooleanToHiddenVisibilityConverter"/>
+
+            <system:Double x:Key="FontSizeBig">16</system:Double>
+
+            <Style x:Key="TextHeaderInfo" TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="{StaticResource LightBrownMeasureInfoBrush}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal">
+        <StackPanel.Style>
+            <Style TargetType="StackPanel">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Settings.IsSurfaceWarp}" Value="True">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </StackPanel.Style>
+        <StackPanel>
+            <TextBlock Text="{Binding GlobalOutput, Mode=OneWay}" Style="{DynamicResource TextHeaderInfo}"/>
+
+            <userControls:WarpDisplay Margin="70,0,0,0" DataContext="{Binding WarpDisplayVM}" />
+        </StackPanel>
+
+        <StackPanel Margin="40,0,0,0" Visibility="{Binding Settings.IsSurfaceWarp, Converter={StaticResource InvertedBooleanToHiddenVisibilityConverter}}">
+            <TextBlock Text="TTV" Style="{DynamicResource TextHeaderInfo}"/>
+            <TextBlock HorizontalAlignment="Center" Margin="0,20,0,0"
+                       Text="{Binding TTVResult}" FontSize="{StaticResource FontSizeBig}"
+                         FontWeight="Bold"
+                         TextAlignment="Center">        
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

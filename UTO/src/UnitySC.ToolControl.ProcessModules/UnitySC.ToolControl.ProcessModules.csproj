@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A1EEFEFD-B1DB-440E-8FD1-A535951238E5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.ToolControl.ProcessModules</RootNamespace>
+    <AssemblyName>UnitySC.ToolControl.ProcessModules</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Devices\ProcessModule\Thor\IThor.cs" />
+    <Compile Include="Devices\ProcessModule\Thor\Thor.cs" />
+    <Compile Include="Devices\ProcessModule\Thor\Thor.g.cs">
+      <DependentUpon>Thor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\ProcessModule\Thor\Thor.sim.cs" />
+    <Compile Include="Devices\ProcessModule\ToolControlProcessModule\Configuration\ToolControlProcessModuleConfiguration.cs" />
+    <Compile Include="Devices\ProcessModule\ToolControlProcessModule\IToolControlProcessModule.cs" />
+    <Compile Include="Devices\ProcessModule\ToolControlProcessModule\ToolControlProcessModule.cs" />
+    <Compile Include="Devices\ProcessModule\ToolControlProcessModule\ToolControlProcessModule.g.cs">
+      <DependentUpon>ToolControlProcessModule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\ProcessModule\ToolControlProcessModule\ToolControlProcessModule.sim.cs" />
+    <Compile Include="Devices\ProcessModule\Wotan\IWotan.cs" />
+    <Compile Include="Devices\ProcessModule\Wotan\Wotan.cs" />
+    <Compile Include="Devices\ProcessModule\Wotan\Wotan.g.cs">
+      <DependentUpon>Wotan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\ProcessModule\Wotan\Wotan.sim.cs" />
+    <Compile Include="Devices\ToolControlManager\EventArgs\CollectionEventEventArgs.cs" />
+    <Compile Include="Devices\ToolControlManager\EventArgs\PPChangedEventArgs.cs" />
+    <Compile Include="Devices\ToolControlManager\EventArgs\S13F13EventArgs.cs" />
+    <Compile Include="Devices\ToolControlManager\EventArgs\S13F16EventArgs.cs" />
+    <Compile Include="Devices\ToolControlManager\IToolControlManager.cs" />
+    <Compile Include="Devices\ToolControlManager\Recipes\DeleteRecipeResult.cs" />
+    <Compile Include="Devices\ToolControlManager\Recipes\RecipeDownloadResult.cs" />
+    <Compile Include="Devices\ToolControlManager\Recipes\RecipeUploadResult.cs" />
+    <Compile Include="Devices\ToolControlManager\ToolControlManager.cs" />
+    <Compile Include="Devices\ToolControlManager\ToolControlManager.g.cs">
+      <DependentUpon>ToolControlManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\ToolControlManager\ToolControlManager.sim.cs" />
+    <Compile Include="Drivers\ToolControl\Constants.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\EquipmentState.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IComStringList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IFlowRecipeCollection.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IFlowRecipeItem.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IMaterialCarrier.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IMaterialCarrierCollection.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IProcessJob.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IProcessModule.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\IProcessModuleCollection.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\ISlot.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\ISlotCollection.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\ISubstrate.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\ITcUtoComInterface.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\ITcUtoComInterfaceEvents.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\ModuleState.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\OperationMode.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsAttribute.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsAttributeList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsDataFactory.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsError.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsErrorList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsItem.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsItemList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsVariable.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ISecsVariableList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableDataRequest.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableDataResponse.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableData_S13F13.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableData_S13F16.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableElement.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableElementList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\ITableElementListList.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\PPChangeState.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\SecsGem\SecsFormat.cs" />
+    <Compile Include="Drivers\ToolControl\Interfaces\StreamWrapper.cs" />
+    <Compile Include="Drivers\ToolControl\Ole32.cs" />
+    <Compile Include="Drivers\ToolControl\ToolControlDriver.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Devices\ProcessModule\Thor\Conditions\" />
+    <Folder Include="Devices\ProcessModule\Thor\Interlocks\" />
+    <Folder Include="Devices\ProcessModule\ToolControlProcessModule\Conditions\" />
+    <Folder Include="Devices\ProcessModule\ToolControlProcessModule\Interlocks\" />
+    <Folder Include="Devices\ProcessModule\Wotan\Conditions\" />
+    <Folder Include="Devices\ProcessModule\Wotan\Interlocks\" />
+    <Folder Include="Devices\ToolControlManager\Conditions\" />
+    <Folder Include="Devices\ToolControlManager\Interlocks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Devices\ProcessModule\Thor\Resources\MessagesConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\ProcessModule\ToolControlProcessModule\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\ProcessModule\ToolControlProcessModule\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\ProcessModule\Wotan\Resources\MessagesConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Agileo.Common-Protected">
+      <Version>7.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="Agileo.EquipmentModeling-Protected">
+      <Version>7.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj">
+      <Project>{097A017C-AB63-42BD-987B-6BC537EE36F2}</Project>
+      <Name>UnitySC.Shared.Dataflow.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{5256d984-4871-4d6a-9caf-ce8f45a51a70}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.Equipment.Abstractions\UnitySC.Equipment.Abstractions.csproj">
+      <Project>{88F78488-BC6A-43AE-9027-4D94B97AD7EE}</Project>
+      <Name>UnitySC.Equipment.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Devices\ProcessModule\Thor\Thor.device">
+      <DependentUpon>IThor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\ProcessModule\ToolControlProcessModule\ToolControlProcessModule.device">
+      <DependentUpon>IToolControlProcessModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\ProcessModule\Wotan\Wotan.device">
+      <DependentUpon>IWotan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\ToolControlManager\ToolControlManager.device">
+      <DependentUpon>IToolControlManager.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

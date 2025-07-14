@@ -1,0 +1,38 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lightTower="clr-namespace:Agileo.GUI.Services.LightTower;assembly=Agileo.GUI">
+
+    <DataTemplate DataType="{x:Type lightTower:LightTowerViewModel}">
+        <Grid SnapsToDevicePixels="True">
+            <ItemsControl Width="20" ItemsSource="{Binding Lights}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="1" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            x:Name="Rectangle"
+                            Fill="{Binding ColorBrush}"
+                            Opacity="0.2" />
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Visibility}" Value="Visible">
+                                <Setter TargetName="Rectangle" Property="Opacity" Value="1" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Viewbox
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Stretch="Fill">
+                <Polygon Fill="#50FFFFFF" Points="0,0 2,0 15,67, 0,67" />
+            </Viewbox>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

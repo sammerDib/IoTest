@@ -1,0 +1,40 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.MaterialLocations.MaterialLocationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:equipmentModeling="clr-namespace:Agileo.EquipmentModeling;assembly=Agileo.EquipmentModeling"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:materialLocations="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.MaterialLocations"
+    d:DataContext="{d:DesignInstance {x:Type materialLocations:MaterialLocationsViewModel}}"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <dataTables:DataTable DataSource="{Binding MaterialLocations}">
+        <GridView>
+            <dataTables:DataTableColumn
+                DisplayName="Location id"
+                SortKey="Name">
+                <GridViewColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type equipmentModeling:MaterialLocation}">
+                        <TextBlock
+                            Text="{Binding Name}"
+                            TextWrapping="Wrap" />
+                    </DataTemplate>
+                </GridViewColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn
+                DisplayName="Material id"
+                SortKey="Material">
+                <GridViewColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type equipmentModeling:MaterialLocation}">
+                        <TextBlock
+                            Text="{Binding Material.Name}"
+                            TextWrapping="Wrap" />
+                    </DataTemplate>
+                </GridViewColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+        </GridView>
+    </dataTables:DataTable>
+</UserControl>

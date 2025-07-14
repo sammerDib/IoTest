@@ -1,0 +1,183 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.BusinessPanelCommand.BusinessPanelCommandPanelView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+	xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+	xmlns:businessPanelCommand="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.BusinessPanelCommand"
+	Style="{StaticResource BusinessPanelViewStyle}"
+	d:DataContext="{d:DesignInstance businessPanelCommand:BusinessPanelCommandPanel, IsDesignTimeCreatable=True}"
+	d:DesignHeight="{StaticResource DesignHeight}"
+	d:DesignWidth="{StaticResource DesignWidth}"
+	mc:Ignorable="d">
+
+	<ScrollViewer
+		HorizontalScrollBarVisibility="Auto"
+		VerticalScrollBarVisibility="Auto">
+
+		<StackPanel
+			Width="500"
+			Margin="10,0,0,0"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Top">
+
+			<GroupBox Header="BusinessPanelCommand">
+				<controls:Card
+					Padding="20"
+					Style="{StaticResource FilledCardStyle}">
+					<DockPanel>
+						<TextBlock Text="CanExecute is enable" />
+						<CheckBox
+							HorizontalAlignment="Right"
+							IsChecked="{Binding BusinessPanelCommandCanExecute}"
+							Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+					</DockPanel>
+				</controls:Card>
+			</GroupBox>
+
+			<GroupBox Header="BusinessPanelToggleCommand">
+				<controls:Card
+					Padding="20"
+					Style="{StaticResource FilledCardStyle}">
+					<StackPanel Orientation="Vertical">
+
+						<controls:PropertyEditor
+							Margin="{StaticResource HorizontalStackPropertyMargin}"
+							PropertyName="State">
+							<StackPanel Orientation="Horizontal">
+								<controls:Chips
+									Margin="{behaviors:MarginAssist Right=10}"
+									Command="{Binding SetToogleCommandToDisplay}"
+									Content="Command A"
+									IsActivated="{Binding ToggleCommand.IsChecked}">
+									<controls:Chips.CommandParameter>
+										<system:Boolean>True</system:Boolean>
+									</controls:Chips.CommandParameter>
+								</controls:Chips>
+								<controls:Chips
+									Margin="{behaviors:MarginAssist Right=10}"
+									Command="{Binding SetToogleCommandToDisplay}"
+									Content="Command B"
+									IsActivated="{Binding ToggleCommand.IsChecked, Converter={StaticResource InvertedBoolConverter}}">
+									<controls:Chips.CommandParameter>
+										<system:Boolean>False</system:Boolean>
+									</controls:Chips.CommandParameter>
+								</controls:Chips>
+							</StackPanel>
+						</controls:PropertyEditor>
+
+						<DockPanel Margin="{StaticResource HorizontalStackPropertyMargin}">
+							<TextBlock Text="Command A CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding ToggleA}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+						<DockPanel>
+							<TextBlock Text="Command B CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding ToggleB}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+					</StackPanel>
+
+				</controls:Card>
+			</GroupBox>
+
+			<GroupBox Header="BusinessPanelCheckCommand">
+				<controls:Card
+					Padding="20"
+					Style="{StaticResource FilledCardStyle}">
+					<StackPanel Orientation="Vertical">
+
+						<controls:PropertyEditor
+							Margin="{StaticResource HorizontalStackPropertyMargin}"
+							PropertyName="State">
+							<StackPanel Orientation="Horizontal">
+								<controls:Chips
+									Margin="{behaviors:MarginAssist Right=10}"
+									Command="{Binding SetCheckStateCommand}"
+									Content="Checked"
+									IsActivated="{Binding CheckCommand.IsChecked}">
+									<controls:Chips.CommandParameter>
+										<system:Boolean>True</system:Boolean>
+									</controls:Chips.CommandParameter>
+								</controls:Chips>
+								<controls:Chips
+									Margin="{behaviors:MarginAssist Right=10}"
+									Command="{Binding SetCheckStateCommand}"
+									Content="Unchecked"
+									IsActivated="{Binding CheckCommand.IsChecked, Converter={StaticResource InvertedBoolConverter}}">
+									<controls:Chips.CommandParameter>
+										<system:Boolean>False</system:Boolean>
+									</controls:Chips.CommandParameter>
+								</controls:Chips>
+							</StackPanel>
+						</controls:PropertyEditor>
+
+
+						<DockPanel Margin="{StaticResource HorizontalStackPropertyMargin}">
+							<TextBlock Text="Check command CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding CheckCanExecute}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+						<DockPanel>
+							<TextBlock Text="Uncheck command CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding UncheckCanExecute}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+					</StackPanel>
+				</controls:Card>
+			</GroupBox>
+
+			<GroupBox Header="BusinessPanelCommandGroup">
+				<controls:Card
+					Padding="20"
+					Style="{StaticResource FilledCardStyle}">
+					<StackPanel Orientation="Vertical">
+
+						<DockPanel Margin="{StaticResource HorizontalStackPropertyMargin}">
+							<TextBlock Text="Command 1 CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding Command1CanExecute}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+						<DockPanel Margin="{StaticResource HorizontalStackPropertyMargin}">
+							<TextBlock Text="Command 2 CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding Command2CanExecute}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+						<DockPanel>
+							<TextBlock Text="Command 3 CanExecute is enable" />
+							<CheckBox
+								HorizontalAlignment="Right"
+								IsChecked="{Binding Command3CanExecute}"
+								Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+						</DockPanel>
+
+					</StackPanel>
+				</controls:Card>
+			</GroupBox>
+
+		</StackPanel>
+
+	</ScrollViewer>
+
+</UserControl>

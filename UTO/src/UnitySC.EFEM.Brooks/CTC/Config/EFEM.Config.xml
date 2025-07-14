@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module Type="Marathon" Name="EFEM" Config="Connected" ImplType="EC" SchemaFile="CtcModuleConfig.xsd" SchemaVersion="2">
+  <Communications>
+    <SocketCommServer IpAddress="127.0.0.1" PortNumber="8000" Protocol="STD" />
+  </Communications>
+  <ConfigParams>
+    <Param Name="ToolStationSubstrateTracking" Type="string" Value="None" Unit="NA" />
+  </ConfigParams>
+  <Ports>
+    <Port ID="A" Interlock="NO" Config="Connected" StationType="LoadPort" />
+    <Port ID="B" Interlock="NO" Config="Connected" StationType="LoadPort" />
+    <Port ID="C" Interlock="NO" Config="NotConnected" StationType="LoadPort" />
+    <Port ID="D" Interlock="NO" Config="NotConnected" StationType="LoadPort" />
+    <Port ID="U" Interlock="NO" StationType="Standard" Config="Connected" />
+    <Port ID="V" Interlock="NO" StationType="Standard" Config="Connected" />
+  </Ports>
+  <!-- load port A -->
+  <Device Type="LoadPort" Name="LoadPortA" Config="Connected" LoadportType="Vision_EC300"></Device>
+  <Device Type="CarrierId" Name="CarrierIdA1" Config="Connected"></Device>
+  <!-- load port B -->
+  <Device Type="LoadPort" Name="LoadPortB" Config="Connected" LoadportType="Vision_EC300"></Device>
+  <Device Type="CarrierId" Name="CarrierIdB1" Config="Connected"></Device>
+  <!-- load port C -->
+  <Device Type="LoadPort" Name="LoadPortC" Config="NotConnected" LoadportType="Vision_EC300"></Device>
+  <Device Type="CarrierId" Name="CarrierIdC1" Config="NotConnected"></Device>
+  <!-- load port D -->
+  <Device Type="LoadPort" Name="LoadPortD" Config="NotConnected" LoadportType="Vision_EC300"></Device>
+  <Device Type="CarrierId" Name="CarrierIdD1" Config="NotConnected"></Device>
+  <!-- Wafer Engine -->
+  <Device Type="WaferEngine" Name="WaferEngine" Config="Connected">
+    <ConfigParams>
+      <Param Name="RecipeEnable" Type="Boolean" Value="false" Unit="NA" />
+      <Param Name="EeSlotPitch" Type="NumberWithUnit" Value="1" Unit="slot" />
+    </ConfigParams>
+    <HwComps>
+      <HwComp Type="EndEffecter" Name="EE1" Config="Connected" ImplType="EC" />
+      <HwComp Type="EndEffecter" Name="EE2" Config="Connected" ImplType="EC" />
+      <HwComp Type="MotionAxis" Name="EE1" Config="Connected" />
+      <HwComp Type="MotionAxis" Name="EE2" Config="Connected" />
+      <HwComp Type="MotionAxis" Name="Theta" Config="Connected" />
+      <HwComp Type="MotionAxis" Name="X" Config="Connected" />
+      <HwComp Type="MotionAxis" Name="Z" Config="Connected" />
+      <HwComp Type="Feature" Name="OnTheFlyAligner" Config="NotConnected" />
+      <HwComp Type="Feature" Name="ActiveWaferCentering" Config="NotConnected" />
+      <HwComp Type="Feature" Name="WaferSlipDetection" Config="NotConnected" />
+      <HwComp Type="Feature" Name="SubstrateMapper" Config="NotConnected" />
+      <HwComp Type="Feature" Name="SafetyController" Config="Connected" />
+    </HwComps>
+  </Device>
+  <!-- Carrier port mappers  -->
+  <Device Type="PortMapper" Name="PortMapper.MappingWaferEngineEe" Config="NotConnected" />
+  <Device Type="PortMapper" Name="PortMapper.MappingWaferEngineCamera" Config="NotConnected" />
+  <Device Type="PortMapper" Name="PortMapper.PortAMapper" Config="Connected" />
+  <Device Type="PortMapper" Name="PortMapper.PortBMapper" Config="Connected" />
+  <Device Type="PortMapper" Name="PortMapper.PortCMapper" Config="NotConnected" />
+  <Device Type="PortMapper" Name="PortMapper.PortDMapper" Config="NotConnected" />
+  <Device Type="FFU" Name="FFU1" Config="Connected" />
+  <Device Type="MechanicalCentralizer" Name="MechanicalCentralizer" Config="NotConnected" />
+  <Device Type="Ionizer" Name="Ionizer1" Config="NotConnected" />
+  <!-- Wafer Aligner Marathon Aligner  -->
+  <Device Type="WaferAligner" Name="WaferAligner" Config="Connected" AlignerType="MarathonAligner">
+    <HwComps>
+      <HwComp Type="AlignerSensorType" Name="LineSensor" Config="NotConnected" />
+      <HwComp Type="AlignerSensorType" Name="PortCamera" Config="NotConnected" />
+      <HwComp Type="AlignerSensorType" Name="StarboardCamera" Config="NotConnected" />
+    </HwComps>
+  </Device>
+  <!-- WaferFlipper-->
+  <Device Type="WaferFlipper" Name="WaferFlipper1" Config="NotConnected" />
+  <!-- WaferIdReader-->
+  <Device Type="WaferIdReader" Name="WaferIdReaderCognex1T" Config="NotConnected" ImplType="Cognex">
+    <Communications>
+      <SocketCommServer IpAddress="192.168.192.2" PortNumber="23" />
+    </Communications>
+  </Device>
+  <Device Type="WaferIdReader" Name="WaferIdReaderCognex1B" Config="NotConnected" ImplType="Cognex">
+    <Communications>
+      <SocketCommServer IpAddress="192.168.192.1" PortNumber="23" />
+    </Communications>
+  </Device>
+  <Device Type="SubstrateIdReader" Name="SubstrateIdReaderCognex1" Config="NotConnected" ImplType="Cognex">
+    <Communications>
+      <SocketCommServer IpAddress="192.168.192.21" PortNumber="23" />
+    </Communications>
+  </Device>
+  <Device Type="LightTower" Name="LightTower1" Config="Connected" ImplType="LightTowerEcController" />
+  <WaferHosts>
+    <Host Type="Active" Name="WaferEngine.EE1" Config="Connected" />
+    <Host Type="Active" Name="WaferEngine.EE2" Config="Connected" />
+    <Host Type="Active" Name="WaferAligner.Chuck" Config="Connected" />
+    <Host Type="Passive" Name="WaferFlipper1.Chuck" Config="NotConnected" />
+    <Hosts Type="Passive" NameStart="PortA.Slot" IdStart="1" NumberOf="25" Config="Connected" />
+    <Hosts Type="Passive" NameStart="PortB.Slot" IdStart="1" NumberOf="25" Config="Connected" />
+    <Hosts Type="Passive" NameStart="PortC.Slot" IdStart="1" NumberOf="25" Config="NotConnected" />
+    <Hosts Type="Passive" NameStart="PortD.Slot" IdStart="1" NumberOf="25" Config="NotConnected" />
+    <Hosts Type="Passive" NameStart="MechanicalCentralizer.Slot" IdStart="1" NumberOf="1" Config="NotConnected" />
+  </WaferHosts>
+  <WaferLocations Owner="WaferEngine.EE1">
+    <Location Type="Home" Name="WaferEngine.EE1" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortA.Slot" IdStart="1" NumberOf="25" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortB.Slot" IdStart="1" NumberOf="25" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortC.Slot" IdStart="1" NumberOf="25" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="PortD.Slot" IdStart="1" NumberOf="25" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="MechanicalCentralizer.Slot" IdStart="1" NumberOf="1" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="OcrStation.Slot" IdStart="1" NumberOf="1" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferAligner.Chuck" Config="Connected" />
+    <Location Type="Transfer" Name="WaferFlipper1.Chuck" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="PortU.Slot" IdStart="1" NumberOf="1" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortV.Slot" IdStart="1" NumberOf="1" Config="Connected" />
+  </WaferLocations>
+  <WaferLocations Owner="WaferEngine.EE2">
+    <Location Type="Home" Name="WaferEngine.EE2" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortA.Slot" IdStart="1" NumberOf="25" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortB.Slot" IdStart="1" NumberOf="25" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortC.Slot" IdStart="1" NumberOf="25" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="PortD.Slot" IdStart="1" NumberOf="25" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="MechanicalCentralizer.Slot" IdStart="1" NumberOf="1" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="OcrStation.Slot" IdStart="1" NumberOf="1" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferAligner.Chuck" Config="Connected" />
+    <Location Type="Transfer" Name="WaferFlipper1.Chuck" Config="NotConnected" />
+    <Locations Type="Transfer" NameStart="PortU.Slot" IdStart="1" NumberOf="1" Config="Connected" />
+    <Locations Type="Transfer" NameStart="PortV.Slot" IdStart="1" NumberOf="1" Config="Connected" />
+  </WaferLocations>
+  <WaferLocations Owner="WaferAligner.Chuck">
+    <Location Type="Home" Name="WaferAligner.Chuck" Config="Connected" />
+    <Location Type="Transfer" Name="WaferEngine.EE1" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferEngine.EE2" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferAligner.Slot1" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferAligner.Slot2" Config="NotConnected" />
+  </WaferLocations>
+  <WaferLocations Owner="WaferFlipper1.Chuck">
+    <Location Type="Home" Name="WaferFlipper1.Chuck" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferEngine.EE1" Config="NotConnected" />
+    <Location Type="Transfer" Name="WaferEngine.EE2" Config="NotConnected" />
+  </WaferLocations>
+  <!--DIO Wafer sensing device-->
+  <Device Type="WaferSensing" Name="WaferSensing.PortX" Config="NotConnected" />
+  <Device Type="FacilityVacuum" Name="FacilityVacuum" Config="Connected" />
+  <Device Type="SlideBodyVacuum" Name="SlideBodyVacuum" Config="Connected" />
+  <Device Type="N2SystemSafetyInterlock" Name="N2SystemSafetyInterlock1" Config="NotConnected" />
+  <Device Type="EnvironLight" Name="EnvironLight1" Config="Connected" />
+  <!-- AutoTeach -->
+  <Device Type="AutoTeach" Name="AutoTeach" Config="NotConnected" />
+</Module>

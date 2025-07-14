@@ -1,0 +1,91 @@
+﻿<UserControl 
+    x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.ReportView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:wd="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:extensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+	d:DataContext="{d:DesignInstance wd:ReportVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+        <DockPanel
+			Margin="0,5,0,0"
+			DockPanel.Dock="Bottom"
+			IsEnabled="{Binding HasSeveralPoints}">
+			<controls:ImageButton
+				Width="30"
+				Height="30"
+				Padding="2"
+				Command="{Binding PreviousReportCommand}"
+				DockPanel.Dock="Left"
+				ImageGeometry="{StaticResource ArrowLeftGeometry}"
+				ImageGeometryBrush="{StaticResource IconsColor}"
+				Style="{StaticResource LeftImageButton}" />
+			<controls:ImageButton
+				Width="30"
+				Height="30"
+				Padding="2"
+				Command="{Binding NextReportCommand}"
+				DockPanel.Dock="Right"
+				ImageGeometry="{StaticResource ArrowRightGeometry}"
+				ImageGeometryBrush="{StaticResource IconsColor}"
+				Style="{StaticResource RightImageButton}" />
+			<TextBox
+				HorizontalContentAlignment="Center"
+				BorderThickness="0,1"
+				IsReadOnly="True"
+				Style="{StaticResource TextBoxNotRounded}"
+				Text="{Binding CurrentPointText, Mode=OneWay}" />
+		</DockPanel>
+		<Grid>
+            <StackPanel Orientation="Vertical" 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Center" 
+                        Visibility="{Binding HasNoReport, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <TextBlock
+					HorizontalAlignment="Center"
+					FontSize="14"
+					FontWeight="Bold"
+					Text="Post Processing Report" 
+                    Margin="5"/>
+
+                <StackPanel Margin="0,10" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Image Margin="0,0,6,0"
+					    extensions:ImageExt.GeometryBrush="{StaticResource IconsColor}"
+					    extensions:ImageExt.SourceGeometry="{StaticResource PdfGeometry}"
+					    Style="{StaticResource Icon}"
+                        Height="30"/>
+                    <TextBlock HorizontalAlignment="Center"  VerticalAlignment="Center">
+					    <Hyperlink
+                            FontSize="12"
+						    Command="{Binding OpenReportCommand}"
+						    Style="{StaticResource NavigationHyperLink}">
+						    <Run Text="{Binding ReportLabel, Mode=OneWay}" />
+					    </Hyperlink>        
+                    </TextBlock>
+                </StackPanel>
+                
+            </StackPanel>
+            <TextBlock
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				FontSize="30"
+				Opacity="0.7"
+				Text="No Report available"
+				TextAlignment="Center"
+				TextWrapping="Wrap"
+				Visibility="{Binding HasNoReport, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </Grid>
+	</DockPanel>
+</UserControl>

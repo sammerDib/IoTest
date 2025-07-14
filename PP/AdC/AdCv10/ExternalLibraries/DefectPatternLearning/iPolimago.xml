@@ -1,0 +1,1700 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>iPolimago</name>
+    </assembly>
+    <members>
+        <member name="T:Cvb.SharedPolimagoClfBase">
+            <summary>
+            Base class for shared classifiers implemented by Polimago.dll
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClfBase.#ctor(System.IntPtr)">
+            <summary>
+            internal ctor
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClfBase.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared search classifier object
+            </summary>
+        </member>
+        <member name="F:Cvb.SharedPolimagoClfBase._trainParams">
+            <summary>
+            Training parameters that were used for this classifier.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedPolimagoClfBase.TrainParams">
+            <summary>
+            Training parameters that were used for this classifier.
+            </summary>
+        </member>
+        <member name="T:Cvb.SharedPolimagoSearchClf">
+            <summary>
+            Reference counted Polimago search classifier.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.#ctor(System.IntPtr)">
+            <summary>
+            internal ctor
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared search classifier object
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.GridSearch(Cvb.Image.IMG,System.Int32,System.Int32,System.Int32,System.Int32,System.Double,System.Double,System.Double,System.Int32,Cvb.Polimago.TSearchResult[]@,System.Int32@)">
+            <summary>
+            Search function of Polimago.
+            </summary>
+            <remarks>
+            The function searches an image with the prescribed search classifier 
+            and collects the properties of found objects in a list of search
+            results (see description of #TSearchResult). For additional 
+            information please see the tutorial on search functions of Polimago.
+            </remarks>
+            <param name="img">Handle of the input image.</param>
+            <param name="left">Left edge of AOI to be searched.</param>
+            <param name="top">Top edge of AOI to be searched.</param>
+            <param name="right">Right edge of AOI to be searched.</param>
+            <param name="bottom">Bottom edge of AOI to be searched.</param>
+            <param name="step">Spacing of search grid in units of the feature
+            window width or hight (whichever is smaller). Higher values can
+            greatly speed up search operation, but may result in missed objects.</param>
+            <param name="threshold">Quality threshold for acceptable solutions. 0.2 
+            seems a good starting point for experiments.</param>
+            <param name="locality">minimal distance between accepted solutions in
+            units of feature window width or hight (whichever is smaller).</param>
+            <param name="maxResults">Maximal number of results to report.</param>
+            <param name="results">Pointer to an array of #TSearchResult structs
+            where PMGridSearch may store the results. The array must be allocated
+            with at least maxNumResults * sizeof(TSearchResult) bytes.</param>
+            <param name="numCalls">Number of perspectives processed.</param>
+            <returns>Number of objects found.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.Inspect(Cvb.Image.IMG,Cvb.Polimago.TSearchResult@,System.Int32@)">
+            <summary>
+            Executes an elementary search process.
+            </summary>
+            <remarks>
+            The function carries out the operation that #PMGridSearch executes
+            for grid point, starting at the perspective and position defined by
+            the initial value of the parameter SearchResult. When PMInspect
+            returns successfully, SearchResult will contain the final perspective
+            and result quality. For additional information please see the tutorial
+            on search functions of Polimago.
+            </remarks>
+            <param name="img">Handle of input image.</param>
+            <param name="searchResult">Reference to variable holding initial
+            perspective and which receives the final result.</param>
+            <param name="searchDepth">Number of perspectives processed.</param>
+            <returns>TRUE if search was successful at the specified position,
+            FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.InspectD(Cvb.Image.IMG,Cvb.Polimago.TSearchResult@,System.Int32@,Cvb.Polimago.TSearchResult[]@)">
+            <summary>
+            Same as #PMInspect with an additional diagnostic array returned.
+            </summary>
+            <remarks>
+            For additional information please see the tutorial on search functions
+            of Polimago.
+            </remarks>
+            <param name="img">Handle of input image.</param>
+            <param name="searchResult">Reference to variable holding initial
+            perspective and which receives the final result.</param>
+            <param name="searchDepth">Number of perspectives processed.</param>
+            <param name="diagnostics">Array that receives up to 11 intermediate
+            results of the inspect call.</param>
+            <returns>TRUE if search was successful at the specified position,
+            FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.GetTrainingParams(Cvb.Polimago.TTrainParams@,Cvb.Polimago.TTrainSearchParams@)">
+            <summary>
+            Retrieves the parameters that have been used during the generation
+            of a search classifier.
+            </summary>
+            <param name="trainParams">General training parameters and feature map
+            (see also description of #TTrainParams).</param>
+            <param name="trainSearchParams">Parameters specific to the training of
+            search classifies (#TSCLF; see also description of #TTrainSearchParams).</param>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.Save(System.String)">
+            <summary>
+            Attempts to save the given search classifier to a file.
+            </summary>
+            <param name="fileName">A zero-terminated string containing the file
+            name to save to.</param>
+            <returns>TRUE if saving the search classifier to the specified path
+            was successful, FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.GetXY(Cvb.Polimago.TSearchResult,System.Double@,System.Double@)">
+            <summary>
+            Returns the position in coordinates associated with the perspective
+            described by a search result.
+            </summary>
+            <param name="result">Search result (#TSearchResult) defining the
+            result's perspective.</param>
+            <param name="x">X position of the search result in the image.</param>
+            <param name="y">Y position of the search result in the image.</param>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.GetScaleAngle(Cvb.Polimago.TSearchResult,System.Double@,System.Double@)">
+            <summary>
+            Returns the scale and rotation angle associated with the
+            perspective described by a search result.
+            </summary>
+            <remarks>
+            Scale and angle are not available if the classifier has been generated
+            with the #TInvarianceType #TI_Translations. If the search classifier
+            was generated to using affine invariance (#TI_AffineGroup) scale and
+            angle are approximations based on the singular value decomposition of
+            the affine transformation matrix.
+            </remarks>
+            <param name="result">Search result (#TSearchResult) defining the
+            perspective.</param>
+            <param name="scale">Reference to scale.</param>
+            <param name="angle">Reference to rotation angle in radians.</param>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.GetMatrix(Cvb.Polimago.TSearchResult,Cvb.Image.TMatrix@)">
+            <summary>
+            Returns the components of the transformation matrix associated with
+            the perspective described by a search result.
+            </summary>
+            <param name="result">Search result (#TSearchResult) defining the 
+                                 perspective.</param>
+            <param name="m">The result's transformation matrix.</param>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.SearchResultToImage(Cvb.Image.IMG,Cvb.Polimago.TTransformation,Cvb.Image.IMG@)">
+            <summary>
+            Construct an image representation of a search predictor result.
+            </summary>
+            <remarks>
+            During a #PMGridSearch operation an iteration of search steps will be 
+            carried out which can be inspected using the output of #PMInspectD. 
+            #PMInspectD will output the trace that leads from a given (grid-)point
+            to the final result, and each individual step of this trace may be 
+            visualized as an image with PMSearchResultToImage.
+            </remarks>
+            <param name="src">Handle of the source image.</param>
+            <param name="t">Transformation between both images.</param>
+            <param name="dst">Handle of the target image.</param>
+            <returns>TRUE if successful, FALSE otherwise.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoSearchClf.SearchResultToImage(Cvb.Image.IMG,Cvb.Polimago.TTransformation,Cvb.SharedImg@)">
+            <summary>
+            Construct an image representation of a search predictor result.
+            </summary>
+            <remarks>
+            During a #PMGridSearch operation an iteration of search steps will be
+            carried out which can be inspected using the output of #PMInspectD. 
+            #PMInspectD will output the trace that leads from a given (grid-)point
+            to the final result, and each individual step of this trace may be 
+            visualized as an image with PMSearchResultToImage.
+            </remarks>
+            <param name="src">Handle of the source image.</param>
+            <param name="t">Transformation between both images.</param>
+            <param name="dst">Handle of the target image.</param>
+            <returns>TRUE if successful, FALSE otherwise.</returns>
+        </member>
+        <member name="T:Cvb.SharedPolimagoClf">
+            <summary>
+            Reference counted Polimago classification and regression classifier.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.#ctor(System.IntPtr)">
+            <summary>
+            internal ctor
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared search classifier object
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.Classify(Cvb.Image.IMG,System.Int32,System.Int32,System.String@,System.Double@,System.Double[]@)">
+            <summary>
+            Classifies the neighborhood of a point (X,Y) in an image according
+            to the specified classifier. 
+            </summary>
+            <remarks>
+            The classifier usage setting (retrieve with #PMGetClfTrainParams)
+            must be either #CU_ClassifyOneVersusAll or #CU_ClassifyOneVersusOne.
+            </remarks>
+            <param name="img">Image handle.</param>
+            <param name="x">X coordinate of the point in the image to classify.</param>
+            <param name="y">Y coordinate of the point in the image to classify.</param>
+            <param name="classLabel">A string buffer where the resulting
+            class label is returned.</param>
+            <param name="confidence">Maximal confidence.</param>
+            <param name="confidences">Array where the confidence may be returned
+            for each class label.</param>
+            <returns>TRUE if classification was successful, FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.Classify(Cvb.Image.IMG,System.Int32,System.Int32,System.String@,System.Double@)">
+            <summary>
+            Classifies the neighborhood of a point (X,Y) in an image according
+            to the specified classifier.
+            </summary>
+            <remarks>
+            The classifier usage setting (retrieve with #PMGetClfTrainParams)
+            must be either #CU_ClassifyOneVersusAll or #CU_ClassifyOneVersusOne.
+            </remarks>
+            <param name="img">Image handle.</param>
+            <param name="x">X coordinate of the point in the image to classify.</param>
+            <param name="y">Y coordinate of the point in the image to classify.</param>
+            <param name="classLabel">A string buffer where the resulting
+            class label is returned.</param>
+            <param name="confidence">Maximal confidence.</param>
+            <returns>TRUE if classification was successful, FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.PredictVector(Cvb.Image.IMG,System.Int32,System.Int32,System.Double[]@)">
+            <summary>
+            Numerical prediction of vector-valued function depending on the
+            neighborhood of a point (X,Y) in an image according to the specified 
+            classifier.
+            </summary>
+            <param name="img">Image handle.</param>
+            <param name="x">X coordinate of the point in the image to classify.</param>
+            <param name="y">Y coordinate of the point in the image to classify.</param>
+            <param name="resultVector">A double array to be filled with the
+            components of the prediction result vector. Length of the arraymust be
+            #PMGetOutputDimension * \c sizeof(double).</param>
+            <returns>TRUE if numerical prediction was successful, FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.Save(System.String)">
+            <summary>
+            Save the given classifier to a file.
+            </summary>
+            <remarks>
+            Note that this function cannot be used to save search classifiers. For
+            saving search classifiers please use #PMSaveSearchClf.
+            </remarks>
+            <param name="fileName">A zero-terminated string containing the file
+            name to save the classifier to. Note that existing files will be
+            overwritten.</param>           
+            <returns>TRUE if saving the classifier to the specified path was
+            successful, FALSE if not.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoClf.GetClassLabel(System.Int32)">
+            <summary>
+            Get the class label corresponding to a given index.
+            </summary>
+            <param name="classIndex">Index of the class in question. Must be
+            nonnegative and smaller than the return value of 
+            #PMGetNumClasses.</param>
+            <returns>Retrieved class label.</returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoClf.NumClasses">
+            <summary>
+            Returns the number of classes trained in a classifier if its usage
+            is #CU_ClassifyOneVersusAll or #CU_ClassifyOneVersusOne. 
+            </summary>
+            <return>
+            Number of classes represented in classifier (or zero if the classifier
+            has been trained for regression).
+            </return>
+        </member>
+        <member name="P:Cvb.SharedPolimagoClf.OutputDimension">
+            <summary>
+            Returns the number of parameters estimated for numerical prediction
+            by the classifier if the classifier's usage mode is #CU_Regression.
+            </summary>
+            <remarks>
+            For classifiers generated with #CU_ClassifyOneVersusAll the returned
+            value is the number of classes; for classifiers generated with 
+            #CU_ClassifyOneVersusOne the returned value is
+            #PMGetNumClasses*(#PMGetNumClasses-1)/2 (the number of possible pairs
+            of classes).
+            </remarks>
+            <return>
+            Number of parameters estimated for numerical prediction.
+            </return>
+        </member>
+        <member name="T:Cvb.SharedPolimagoTestResult">
+            <summary>
+            Reference counted Polimago test result.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.#ctor(System.IntPtr)">
+            <summary>
+            internal ctor
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared search classifier object
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.Save(System.String)">
+            <summary>
+            Save the result of a sample test or a leave out test to a file.
+            </summary>
+            <param name="fileName">A zero-terminated string containing the file
+            name to save the test result to. Note that existing files will be
+            overwritten.</param>
+            <returns>
+            TRUE if saving the classifier to the specified path was successful,
+            FALSE if not
+            </returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetTargetValue(System.Int32,System.Int32)">
+            <summary>
+            Returns the target value to be predicted for a specified example and
+            a specified output coordinate.
+            </summary>
+            <param name="exampleIndex">Index of test example.</param>
+            <param name="coordinateIndex">Coordinate index of predictor output.
+            Must be larger or equal to zero and less than the result of
+            #PMGetTestResultOutputDimension.</param>
+            <returns>Theoretically correct result of the prediction.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetNumericalPrediction(System.Int32,System.Int32)">
+            <summary>
+            Returns the actual value predicted for a specified example and a
+            specified output coordinate.
+            </summary>
+            <param name="exampleIndex">Index of test example.</param>
+            <param name="coordinateIndex">Coordinate index of predictor output.
+            Must be larger or equal to zero and less than the result of
+            #PMGetTestResultOutputDimension.</param>
+            <returns>
+            Predicted sample value (compare to output of #PMGetTestResultTargetValue
+            to verify correctness).
+            </returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetExampleMeanSquareError(System.Int32)">
+            <summary>
+            Returns the mean square error on a test example over all output
+            coordinates.
+            </summary>
+            <param name="exampleIndex">Index of an example in the test result.</param>
+            <returns>Mean square error for the queried example.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetClassLabel(System.Int32)">
+            <summary>
+            Get the class label corresponding to a given index and test result.
+            </summary>
+            <remarks>
+            Attention: The buffer pointed to by szClassLabel must be big enough
+            to hold the entire class label, otherwise a write access violation
+            may occur.
+            </remarks>
+            <param name="classIndex">Index of the class in question. Must be
+            nonnegative and smaller than the return value of 
+            #PMGetTestResultNumClasses.</param>
+            <returns>TRUE if the call was successful (i.e. all parameters are
+            valid), FALSE otherwise.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetTrueClassIndex(System.Int32)">
+            <summary>
+            Returns the index of the true class to which an example belongs.
+            </summary>
+            <param name="exampleIndex">Index of example.</param>
+            <returns>True class index of the example.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetPredictedClass(System.Int32)">
+            <summary>
+            Returns the class index which was predicted for a specific example.
+            </summary>
+            <param name="exampleIndex">Index of example.</param>
+            <returns>Predicted class index of the example.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetConfidence(System.Int32)">
+            <summary>
+            Returns the confidence associated with the classification of a
+            specified example.
+            </summary>
+            <param name="exampleIndex">Index of example.</param>
+            <returns>Confidence in classification for the example.</returns>
+        </member>
+        <member name="M:Cvb.SharedPolimagoTestResult.GetConfidenceDistribution(System.Int32,System.Int32)">
+            <summary>
+            Returns the confidence asserted by the classifier for
+            a classification of a specified example to a specified class.
+            </summary>
+            <param name="exampleIndex">Index of example.</param>
+            <param name="classIndex">Index of class.</param>
+            <returns>Relative confidence.</returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.NumExamples">
+            <summary>
+            Retrieves the number of examples that were tested.
+            </summary>
+            <returns>
+            The number of examples.
+            </returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.TrainParams">
+            <summary>
+            Retrieves the training parameters that were used for generating
+            a test result.
+            </summary>
+            <returns>
+            The training parameters used during generation of the test result.
+            </returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.OutputDimension">
+            <summary>
+            Get the number of numerical values estimated for a given test result.
+            </summary>
+            <remarks>
+            For tests based on numerical regression (usage = #CU_Regression) the 
+            result will match the label dimension used in the training database.
+            For tests with usage = #CU_ClassifyOneVersusAll the output dimension
+            will equal the number of classes in the training database. 
+            For usage = #CU_ClassifyOneVersusOne the output dimension is
+            (numclasses-1) * numclasses / 2.
+            </remarks>
+            <returns>The number of numerical values estimated in each step. </returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.TotalMeanSquareError">
+            <summary>
+            Returns the mean square error of the predictor over all examples
+            and all coordinates.
+            </summary>
+            <returns>The total mean square error.</returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.NumClasses">
+            <summary>
+            Returns the number of classes for a classifier used in the test.
+            </summary>
+            <remarks>
+            For tests calculated with usage = #CU_Regression the return value
+            will be zero.
+            </remarks>
+            <returns>Number of classes involved in the test.</returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.NumErrors">
+            <summary>
+            Returns the total number of errors made during classification testing.
+            </summary>
+            <returns>Number of errors in the test result.</returns>
+        </member>
+        <member name="P:Cvb.SharedPolimagoTestResult.ErrorRate">
+            <summary>
+            Returns the error rate (total number of errors divided by total 
+            number of examples) made during classification testing.
+            </summary>
+            <returns>Error rate of the test result.</returns>
+        </member>
+        <member name="T:Cvb.SharedPolimagoLearningDataAccess">
+            <summary>
+            Reference counted Learning data access object
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoLearningDataAccess.#ctor(System.IntPtr)">
+            <summary>
+            internal ctor
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedPolimagoLearningDataAccess.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared search classifier object
+            </summary>
+        </member>
+        <member name="T:Stemmer.Cvb.InternalExtensions">
+            <summary>
+            Definition of extension methods with internal visibility.
+            </summary>
+        </member>
+        <member name="F:Stemmer.Cvb.InternalExtensions.PREPROCESSINGMAXLENGTH">
+            <summary>
+            Maximum acceptable length of preprocessing code (not including the
+            terminating zero).
+            </summary>
+        </member>
+        <member name="F:Stemmer.Cvb.InternalExtensions.PREPROCESSINGVALIDCHARACTERS">
+            <summary>
+            Set of characters that are allowed on a preprocessing code.
+            </summary>
+        </member>
+        <member name="M:Stemmer.Cvb.InternalExtensions.GetPreprocessing(Stemmer.Cvb.TFeatureMapInternal)">
+            <summary>
+            Extract the preprocessing string from the internal data members.
+            </summary>
+            <param name="fm"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Cvb.Polimago">
+            <summary>
+            API of the CVB Polimago tool.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.MAXLABELLENGTH">
+            <summary>
+            Used internally for string marshaling.
+            </summary>
+        </member>
+        <member name="M:Cvb.Polimago.TrainClassifier(Cvb.SharedSil,Cvb.Polimago.TProgress,Cvb.Polimago.TClassifierUsage,System.String,System.Int32,System.Double,System.Boolean,Cvb.SharedPolimagoClf@)">
+            <summary>
+            The function creates a classifier from a given SIL (Sample Image List).
+            </summary>
+            <remarks>
+            Generate a classifier for classification or regression usage from the
+            given sample image list.
+            </remarks>
+            <param name="sil">Specifies the training data set - in this case a
+            sample image list.</param>
+            <param name="progress">Progress callback structure for progress
+            reports. May be used to show training progress on the user interface
+            (see description of #TProgress).</param>
+            <param name="usage">Classifier usage - regression, 1v1 or 1vall
+            classification (see description of #TClassifierUsage).Note that the
+            SIL's label type should be compatible with the parameter given here.
+            If it is not, the SIL labels will converted if possible, but the
+            results may prove to be useless.</param>
+            <param name="szPreproCode">Preprocessing to be used for training code.</param>
+            <param name="featureResolution">Determines the dimensions of the
+            classifier's retina (see feature-map lesson in the tutorial on search
+            functions)</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="interpolate">Image interpolation mode for feature extraction.</param>
+            <param name="clf">Clf Receives the handle of the generated classifier.</param>
+            <returns> One of the return codes defined in #TPolyMagoTrainingError.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.TrainClassifier(Cvb.Minos.MTS,Cvb.Polimago.TProgress,Cvb.Polimago.TClassifierUsage,System.String,System.Int32,System.Double,System.Boolean,Cvb.SharedPolimagoClf@)">
+            <summary>
+            The function creates a classifier from a given MTS (Minos Training
+            Set).
+            </summary>
+            <remarks>
+            Generate a classifier for classification or regression usage form the
+            given sample image list. Generally speaking the SIL objects are the
+            training database of choice for classification and regression
+            classifiers, but under certain conditions (feature window identical
+            for all classes) valid classification classifiers may also be
+            generated from an MTS file.
+            </remarks>
+            <param name="mts">Specifies the training data set - in this case a
+            minos training set.</param>
+            <param name="progress">Progress callback structure for progress
+            reports. May be used to show training progress on the user interface
+            (see description of #TProgress).</param>
+            <param name="usage">Classifier usage - regression, 1v1 or 1vall
+            classification (see description of #TClassifierUsage). Note that
+            the SIL's label type should be compatible with the parameter given
+            here. If it is not, the SIL labels will converted if possible, but
+            the result may prove to be useless.</param>
+            <param name="szPreproCode">Preprocessing to be used for training code.</param>
+            <param name="featureResolution">Determines the dimensions of the
+            classifier's retina (see feature-map lesson in the tutorial on search
+            functions).</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="interpolate">Image interpolation mode for feature extraction.</param>
+            <param name="clf">Clf Receives the handle of the generated classifier.</param>
+            <returns> One of the return codes defined in #TPolyMagoTrainingError.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.SampleTest(Cvb.SharedSil,Cvb.Polimago.TProgress,Cvb.SharedPolimagoClf,Cvb.SharedPolimagoTestResult@)">
+            <summary>
+            Sample test on a given classifier and test data available as a SIL
+            (Sample Image List).
+            </summary>
+            <remarks>
+            Performs a sample test of a classifier on a sample image list, i.e.
+            every single sample inside the sample image list is classified using
+            the classifier Clf and the result is compared versus the sample's
+            true label.
+            </remarks>
+            <param name="sil">Handle of the training data set.</param>
+            <param name="progress">Callback structure for progress report. Can be
+            used to show training progress on the user interface (see description
+            of the #TProgress struct).</param>
+            <param name="clf">Handle of the classifier to be used for testing.</param>
+            <param name="testResult">Receives the handle of the aggregated test
+            result (see description of #TTESTRESULT).</param>
+            <returns>
+            One of the return codes defined in #TPolyMagoTrainingError.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.SampleTest(Cvb.Minos.MTS,Cvb.Polimago.TProgress,Cvb.SharedPolimagoClf,Cvb.SharedPolimagoTestResult@)">
+            <summary>
+            Leave Out test on a given classifier and test data available as a MTS
+            (Minos Training Set).
+            </summary>
+            <remarks>
+            Performs a sample test of a classifier on a minos training set, i.e.
+            every single sample inside the training set is classified using the
+            classifier Clf and the result is compared versus the sample's true
+            label.
+            </remarks>
+            <param name="mts">Handle of the training data set.</param>
+            <param name="progress">Callback structure for progress report. Can be
+            used to show training progress on the user interface (see description
+            of the #TProgress struct).</param>
+            <param name="clf">Handle of the classifier to be used for testing.</param>
+            <param name="testResult">Receives the handle of the aggregated test
+            result (see description of #TTESTRESULT).</param>
+            <returns>
+            One of the return codes defined in #TPolyMagoTrainingError.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.LeaveOutTest(Cvb.SharedSil,Cvb.Polimago.TProgress,System.Int32,Cvb.Polimago.TClassifierUsage,System.String,System.Int32,System.Double,System.Boolean,Cvb.SharedPolimagoTestResult@)">
+            <summary>
+            Performs a leave-out-crossvalidation on the specified training data
+            set.
+            </summary>
+            <remarks>
+            In a leave-out-crossvalidation a number of training examples (holdout
+            set) is removed from the data training set each on each step and is
+            used for testing with a classifier that is generated from the rest of
+            the training samples. The process is repeated until every example in
+            the whole data set has been tested once.
+            </remarks>
+            <param name="sil">Specifies the training set.</param>
+            <param name="progress">Callback structure for progress report. May be
+            used to show testing progress on the user interface (see description
+            of #TProgress).</param>
+            <param name="holdOut">Number of examples to leave out on each pass.</param>
+            <param name="usage">Classifier usage (see description of
+            #TClassifierUsage).</param>
+            <param name="szPreproCode">Preprocessing code to be used for the
+            training steps of the test.</param>
+            <param name="featureResolution">Determines the dimensions of the
+            classifier's retina (see feature-map lesson in the tutorial on search
+            functions)</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="interpolate">Image interpolation mode for feature
+            extraction. FALSE: Implies simple truncation of fractional coordinates,
+            TRUE: implies bilinear interpolation (recommended).</param>
+            <param name="testResult">Receives the handle to the test result
+            container (see description of #TTESTRESULT).</param>
+            <returns>
+            One of the return codes defined in #TPolyMagoTrainingError.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.LeaveOutTest(Cvb.Minos.MTS,Cvb.Polimago.TProgress,System.Int32,Cvb.Polimago.TClassifierUsage,System.String,System.Int32,System.Double,System.Boolean,Cvb.SharedPolimagoTestResult@)">
+            <summary>
+            Leave Out test on test data available as a MTS (Minos Training Set).
+            </summary>
+            <param name="mts">Specifies the training data set.</param>
+            <param name="progress">Callback structure for progress report. May be
+            used to show testing progress on the user interface (see description
+            of #TProgress).</param>
+            <param name="holdOut">Number of examples to leave out on each pass.</param>
+            <param name="usage">Classifier usage (see description of
+            #TClassifierUsage).</param>
+            <param name="szPreproCode">Preprocessing code to be used for the
+            training steps of the test.</param>
+            <param name="featureResolution">Determines the dimensions of the
+            classifier's retina (see feature-map lesson in the tutorial on search
+            functions).</param>
+            <param name="lambda">Ridge regression regularization constant.
+            The default value 0.01 works well in most cases. May be slightly
+            increased for very small numbers of training examples and slightly
+            decreased for very large numbers of training examples.</param>
+            <param name="interpolate">Image interpolation mode for feature
+            extraction. FALSE: Implies simple truncation of fractional coordinates,
+            TRUE: implies bilinear interpolation (recommended).</param>
+            <param name="testResult">Receives the handle to the test result
+            container (see description of #TTESTRESULT).</param>
+            <returns>
+            One of the return codes defined in #TPolyMagoTrainingError.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.OpenTestResult(System.String)">
+            <summary>
+            Loads the result of a sample test or a leave out test from a file.
+            </summary>
+            <remarks>
+            If the test result can be successfully loaded from the given path its
+            reference count will be initialized to 1 and a ReleaseObject call
+            (see CVCImg.dll reference) will be needed to release the memory
+            occupied by the classifier.
+            </remarks>
+            <param name="fileName">Pointer to a zero-terminated string containing
+            the name of the file to be loaded.</param>
+            <returns>
+            TRUE if loading the test result from the specified path was successful,
+            FALSE if not.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.OpenSearchClf(System.String)">
+             <summary>
+             Open a search classifier from a given file path.
+             </summary>
+             <remarks>
+             If the classifier can be successfully loaded from the given path its
+             reference count will be initialized to 1 and a ReleaseObject call
+             (see CVCImg.dll reference) will be needed to release the memory
+             occupied by the classifier.
+             </remarks>
+             <param name="fileName">A zero-terminated string containing the
+             name of the file to be loaded.</param>
+             <returns>
+            TRUE if opening the classifier from the specified path was successful,
+            FALSE if not.
+             </returns>
+        </member>
+        <member name="M:Cvb.Polimago.Granularity(System.String)">
+            <summary>
+            The function returns the granularity (see tutorial) associated with
+            a preprocessing code.
+            </summary>
+            <param name="code">A zero-terminated string containing the
+            preprocessing code.</param>
+            <returns>
+            Divisor for width and height of the feature window.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.OpenClf(System.String)">
+            <summary>
+            Open a classifier from a given file path.
+            </summary>
+            <remarks>
+            If the classifier can be successfully loaded from the given path its
+            reference count will be initialized to 1 and a ReleaseObject call
+            (see CVCImg.dll reference) will be needed to release the memory
+            occupied by the classifier.
+            </remarks>
+            <param name="fileName">A zero-terminated string containing the name
+            of the file to be loaded.</param>
+            <returns>
+            TRUE if opening the classifier from the specified path was successful,
+            FALSE if not.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.TrainSearchClassifier(Cvb.SharedSil,Cvb.Polimago.TProgress,System.String,System.Double,Cvb.Polimago.TTrainSearchParams,Cvb.SharedPolimagoSearchClf@)">
+            <summary>
+            The function attempts to create a search classifier from the
+            specified SIL (Sample Image List).
+            </summary>
+            <remarks>
+            For additional information please see the tutorial on search functions
+            of Polimago.
+            </remarks>
+            <remarks>
+            Note that generating a search classifier from a sample image
+            list is not always possible - at least not with satisfactory results.
+            In order to be suitable for search classifier generation, a sample
+            image list should
+            - Contain only one class (exclusion status will be ignored!)
+            - Contain sample images with a sufficiently large fringe around them
+            so that the search classifier generation has enough leeway to extract
+            samples for offset/rotation/scale correction.
+            </remarks>
+            <remarks>
+            Note that generating a search classifier from a sample image
+            list will alter the list's feature window parameters based on the
+            contents of the \c TTrainSearchParams argument's invariance parameters
+            to make sure that the feature window is compatible with the invariance
+            parameters!
+            </remarks>
+            <param name="sil">Training data set.</param>
+            <param name="progress">Progress callback structure for progress reports.
+            May be used to show training progress on the user interface (see
+            description of #TProgress).</param>
+            <param name="szPreproCode">Preprocessing to be used for training.</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="trainSearchParams">Parameters for search training (see
+            description of #TTrainSearchParams struct).</param>
+            <param name="clf">Receives the handle of the generated classifier.</param>
+            <returns>One of the return codes defined in #TPolyMagoTrainingError.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.TrainSearchClassifier(Cvb.Minos.MTS,Cvb.Polimago.TProgress,System.String,System.Double,Cvb.Polimago.TTrainSearchParams,Cvb.SharedPolimagoSearchClf@)">
+            <summary>
+            The function attempts to create a search classifier from the
+            specified Minos Training Set.
+            </summary>
+            <remarks>
+            For additional information please see the tutorial on search functions
+            of Polimago.
+            </remarks>
+            <remarks>
+            Note that generating a search classifier from a sample image
+            list is not always possible - at least not with satisfactory results.
+            In order to be suitable for search classifier generation, a sample
+            image list should
+            - Contain only one class (exclusion status will be ignored!)
+            - Contain sample images with a sufficiently large fringe around them
+            so that the search classifier generation has enough leeway to extract
+            samples for offset/rotation/scale correction.
+            </remarks>
+            <remarks>
+            Note that generating a search classifier from a sample image
+            list will alter the list's feature window parameters based on the
+            contents of the \c TTrainSearchParams argument's invariance parameters
+            to make sure that the feature window is compatible with the invariance
+            parameters!
+            </remarks>
+            <param name="mts">Training data set.</param>
+            <param name="progress">Progress callback structure for progress
+            reports. May be used to show training progress on the user interface
+            (see description of #TProgress).</param>
+            <param name="szPreproCode">Preprocessing to be used for training.</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="trainSearchParams">Parameters for search training
+            (see description of #TTrainSearchParams struct).</param>
+            <param name="clf">Receives the handle of the generated classifier.</param>
+            <returns>One of the return codes defined in TPolyMagoTrainingError.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.TrainSearchClassifier(Cvb.Polimago.ILearningDataAccessSearch,Cvb.Polimago.TProgress,System.String,System.Double,Cvb.Polimago.TTrainSearchParams,Cvb.SharedPolimagoSearchClf@)">
+            <summary>
+            The function attempts to create a search classifier from the
+            specified learning data access object.
+            </summary>
+            <remarks>
+            For additional information please see the tutorial on search functions
+            of Polimago.
+            </remarks>
+            <param name="db">User-defined Training data set.</param>
+            <param name="progress">Progress callback structure for progress
+            reports. May be used to show training progress on the user interface
+            (see description of #TProgress).</param>
+            <param name="szPreproCode">Preprocessing to be used for training.</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="trainSearchParams">Parameters for search training
+            (see description of #TTrainSearchParams struct).</param>
+            <param name="clf">Receives the handle of the generated classifier.</param>
+            <returns>One of the return codes defined in #TPolyMagoTrainingError.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.TrainClassifier(Cvb.Polimago.ILearningDataAccessClassificationAndRegression,Cvb.Polimago.TProgress,Cvb.Polimago.TClassifierUsage,System.String,System.Int32,System.Double,System.Boolean,Cvb.SharedPolimagoClf@)">
+            <summary>
+            The function creates a classifier from a given MTS (Minos Training
+            Set).
+            </summary>
+            <remarks>
+            Generate a classifier for classification or regression usage form the
+            given sample image list. Generally speaking the SIL objects are the
+            training database of choice for classification and regression
+            classifiers, but under certain conditions (feature window identical
+            for all classes) valid classification classifiers may also be
+            generated from an MTS file.
+            </remarks>
+            <param name="db">Specifies the training data set - in this case a
+            generic training set.</param>
+            <param name="progress">Progress callback structure for progress
+            reports. May be used to show training progress on the user interface
+            (see description of #TProgress).</param>
+            <param name="usage">Classifier usage - regression, 1v1 or 1vall
+            classification (see description of #TClassifierUsage). Note that
+            the SIL's label type should be compatible with the parameter given
+            here. If it is not, the SIL labels will converted if possible, but
+            the result may prove to be useless.</param>
+            <param name="szPreproCode">Preprocessing to be used for training code.</param>
+            <param name="featureResolution">Determines the dimensions of the
+            classifier's retina (see feature-map lesson in the tutorial on search
+            functions).</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="interpolate">Image interpolation mode for feature extraction.</param>
+            <param name="clf">Clf Receives the handle of the generated classifier.</param>
+            <returns> One of the return codes defined in #TPolyMagoTrainingError.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.SampleTest(Cvb.Polimago.ILearningDataAccessClassificationAndRegression,Cvb.Polimago.TProgress,Cvb.SharedPolimagoClf,Cvb.SharedPolimagoTestResult@)">
+            <summary>
+            Sample test on a given classifier and test data set.
+            </summary>
+            <remarks>
+            Performs a sample test of a classifier on a sample image list, i.e.
+            every single sample inside the sample image list is classified using
+            the classifier Clf and the result is compared versus the sample's
+            true label.
+            </remarks>
+            <param name="db">Handle of the training data set.</param>
+            <param name="progress">Callback structure for progress report. Can be
+            used to show training progress on the user interface (see description
+            of the #TProgress struct).</param>
+            <param name="clf">Handle of the classifier to be used for testing.</param>
+            <param name="testResult">Receives the handle of the aggregated test
+            result (see description of #TTESTRESULT).</param>
+            <returns>
+            One of the return codes defined in #TPolyMagoTrainingError.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.LeaveOutTest(Cvb.Polimago.ILearningDataAccessClassificationAndRegression,Cvb.Polimago.TProgress,System.Int32,Cvb.Polimago.TClassifierUsage,System.String,System.Int32,System.Double,System.Boolean,Cvb.SharedPolimagoTestResult@)">
+            <summary>
+            Performs a leave-out-crossvalidation on the specified training data
+            set.
+            </summary>
+            <remarks>
+            In a leave-out-crossvalidation a number of training examples (holdout
+            set) is removed from the data training set each on each step and is
+            used for testing with a classifier that is generated from the rest of
+            the training samples. The process is repeated until every example in
+            the whole data set has been tested once.
+            </remarks>
+            <param name="db">Specifies the training set.</param>
+            <param name="progress">Callback structure for progress report. May be
+            used to show testing progress on the user interface (see description
+            of #TProgress).</param>
+            <param name="holdOut">Number of examples to leave out on each pass.</param>
+            <param name="usage">Classifier usage (see description of
+            #TClassifierUsage).</param>
+            <param name="szPreproCode">Preprocessing code to be used for the
+            training steps of the test.</param>
+            <param name="featureResolution">Determines the dimensions of the
+            classifier's retina (see feature-map lesson in the tutorial on search
+            functions)</param>
+            <param name="lambda">Ridge regression regularization constant. The
+            default value 0.01 works well in most cases. May be slightly increased
+            for very small numbers of training examples and slightly decreased for
+            very large numbers of training examples.</param>
+            <param name="interpolate">Image interpolation mode for feature
+            extraction. FALSE: Implies simple truncation of fractional coordinates,
+            TRUE: implies bilinear interpolation (recommended).</param>
+            <param name="testResult">Receives the handle to the test result
+            container (see description of #TTESTRESULT).</param>
+            <returns>
+            One of the return codes defined in #TPolyMagoTrainingError.
+            </returns>
+        </member>
+        <member name="M:Cvb.Polimago.GetErrorMessage(Cvb.Polimago.TPolimagoTrainingError)">
+            <summary>
+            The function returns a string interpreting an error code that
+            has been returned by one of the Polimago training functions
+            (#PMTrainClassifierFromMts, #PMTrainClassifierFromSil,
+            #PMTrainSearchClassifierFromMts, #PMTrainSearchClassifierFromSil).
+            </summary>
+            <remarks>
+            Converts an error value returned by one of the classifier training
+            functions into a printable text message (English).
+            </remarks>
+            <param name="errorCode">Numerical error code returned by the classifier
+            training functions (see #TPolyMagoTrainingError).</param>
+            <returns>
+            TRUE if the error message was copied successfully, FALSE if not
+            </returns>
+        </member>
+        <member name="T:Cvb.Polimago.ILearningDataAccess">
+            <summary>
+            Interface defining the learning data access methods commonly used.
+            </summary>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccess.GetFeatureWindow(System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Return the feature window for training.
+            </summary>
+            <param name="left">Left edge of the feature window (should be zero
+            or less than zero).</param>
+            <param name="top">Top edge of the feature window (should be zero or
+            less than zero).</param>
+            <param name="right">Right edge of the feature window (should be zero
+            or greater than zero).</param>
+            <param name="bottom">Bottom edge of the feature window (should be
+            zero or greater than zero).</param>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccess.GetImageFromImageIndex(System.Int32)">
+            <summary>
+            Retrieve the indexed image here.
+            </summary>
+            <param name="imageIndex">Image to be retrieved.</param>
+            <returns>Retrieved image; NULL if the indexed image does not
+            exist.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccess.GetNumExamplesInImage(System.Int32)">
+            <summary>
+            Return the number of examples available in the indexed image.
+            </summary>
+            <param name="imageIndex">Index of the image for which to retrieve
+            the number of available examples.</param>
+            <returns>Example count. 0 of no examples are present.</returns>
+        </member>
+        <member name="P:Cvb.Polimago.ILearningDataAccess.NumImagePlanes">
+            <summary>
+            Return the number of image planes to be used here. Must be either
+            1 or 3.
+            </summary>
+        </member>
+        <member name="P:Cvb.Polimago.ILearningDataAccess.NumImages">
+            <summary>
+            Return the number of available images here.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.ILearningDataAccessClassificationAndRegression">
+            <summary>
+            Interface defining learning data access used for classification and
+            regression predictors.
+            To use generic learning data access, implement an object that
+            implements this interface, then pass the object to the learning
+            function. Polimago will call the methods implemented on your object
+            to access the learning data while building the classifier.
+            </summary>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccessClassificationAndRegression.GetExamplePosition(System.Int32,System.Int32,System.Double@,System.Double@)">
+            <summary>
+            Return the position of the indexed example.
+            </summary>
+            <param name="imageIndex">Image in which the example is located.
+            </param>
+            <param name="exampleIndex">Overall example index to retrieve the
+            position for.</param>
+            <param name="X">x coordinate of the position.</param>
+            <param name="Y">y coordinate of the position.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccessClassificationAndRegression.GetExampleClassLabel(System.Int32,System.Int32)">
+            <summary>
+            Return the class label of the indexed example.
+            </summary>
+            <param name="imageIndex">Image in which the example is located.
+            </param>
+            <param name="exampleIndex">Index of the example for which to return
+            the string label.</param>
+            <returns>String label. Return null if classification is not the
+            goal.</returns>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccessClassificationAndRegression.GetExampleVector(System.Int32,System.Int32)">
+            <summary>
+            Return the example vector to go with the indexed example. Return
+            null if regression is not the goal.
+            </summary>
+            <param name="imageIndex">Image in which the example is located.
+            </param>
+            <param name="exampleIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Cvb.Polimago.ILearningDataAccessClassificationAndRegression.OutputDimension">
+            <summary>
+            Dimension of the regression results (return 0 here if no regression
+            is possible).
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.ILearningDataAccessSearch">
+            <summary>
+            Interface defining learning data access used for search predictors.
+            To use generic learning data access, implement an object that
+            implements this interface, then pass the object to the learning
+            function. Polimago will call the methods implemented on your object
+            to access the learning data while building the classifier.
+            </summary>
+        </member>
+        <member name="M:Cvb.Polimago.ILearningDataAccessSearch.GetExampleGeometry(System.Int32,System.Int32,Cvb.Polimago.TGeometrySpec@)">
+            <summary>
+            Return the 2D pose definition of an example.
+            </summary>
+            <param name="imageIndex">Image in which the example is located.
+            </param>
+            <param name="exampleIndex">Example for which to return the pose.
+            </param>
+            <param name="geometry">2D pose of the example.</param>
+            <returns>Return false if the referenced example does not exist.
+            Otherwise return true.</returns>
+        </member>
+        <member name="T:Cvb.Polimago.LearningDataAccessCompanion">
+            <summary>
+            Helper object that keeps the delegates alive when mapping from the
+            learning data interfaces to the unmanaged functions.
+            </summary>
+        </member>
+        <member name="M:Cvb.Polimago.LearningDataAccessCompanion.#ctor(Cvb.Polimago.ILearningDataAccessClassificationAndRegression)">
+            <summary>
+            ctor
+            </summary>
+            <param name="db"></param>
+        </member>
+        <member name="P:Cvb.Polimago.LearningDataAccessCompanion.NativeHandle">
+            <summary>
+            The native handle under which the callbacks are accessible.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.LearningDataAccessCompanionSearch">
+            <summary>
+            Same as LearningDataAccessCompanion but for creating search 
+            classifiers.
+            </summary>
+        </member>
+        <member name="M:Cvb.Polimago.LearningDataAccessCompanionSearch.#ctor(Cvb.Polimago.ILearningDataAccessSearch)">
+            <summary>
+            ctor
+            </summary>
+            <param name="db"></param>
+        </member>
+        <member name="T:Cvb.Polimago.TPolimagoTrainingError">
+            <summary>
+            Return codes used by the training functions of Polimago
+            (#PMTrainClassifierFromMts, #PMTrainClassifierFromSil,
+            #PMTrainSearchClassifierFromMts, #PMTrainSearchClassifierFromSil)
+            to indicate what went wrong during training.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.OK">
+            <summary>
+            Training finished successfully.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.BadAccessForSearchTraining">
+            <summary>
+            Training misses required callback definitions (only used internally).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.ImageDimensionMismatch">
+            <summary>
+            #TFeatureMap and callbacks provide contradicting information about
+            the number of images planes (only used internally).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.InconsistentFeaturemap">
+            <summary>
+            With the given parameters, feature window width and height must be
+            multiples of the preprocessing code's granularity.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.BadInvarianceType">
+            <summary>
+            An invalid variance type was specified.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.AccessVsUsageMismatch">
+            <summary>
+            The image data access definition is insufficient for the specified
+            classifier usage.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.BadAccess">
+            <summary>
+            Image access definition was insufficient (only used internally).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.RegressionError">
+            <summary>
+            An error occurred while calculating the ridge regression during
+            classifier generation.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.CreateClfError">
+            <summary>
+            Polimago was unable to create a classifier (potentially due to an
+            out of memory situation).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.HoldoutTooSmall">
+            <summary>
+            The holdout size was smaller or equal to 1.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.HoldoutTooLarge">
+            <summary>
+            The holdout size was bigger or equal to the last represented
+            class's sample count.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.PreprocessingError">
+            <summary>
+            Feature extraction failed.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.ClassNotInClassifier">
+            <summary>
+            Classifier does not contain a given class.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TPolimagoTrainingError.GeneralError">
+            <summary>
+            Unspecified error occurred.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TMapMode">
+            <summary>
+            Feature map mode used in Polimago Classifiers.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TMapMode.MantoStandard">
+            <summary>
+            Currently the only available map mode.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TClassifierUsage">
+            <summary>
+            Specifies the type of classification for which a classifier
+            may be used.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TClassifierUsage.UseRegression">
+            <summary>
+            Use for estimation of vector-valued functions (#PMPredictVector).
+            The dimension of the output is determined by the training set.
+            This usage type is enforced for the search functions of Polimago.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TClassifierUsage.UseClassifyOneVersusAll">
+            <summary>
+            Use for classification (#PMClassify). Estimates a vector-valued
+            function with as many components as the number of classes.
+            The index of the maximal component is the predicted class.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TClassifierUsage.UseClassifyOneVersusOne">
+            <summary>
+            Used as default for classification (#PMClassify). Estimates a
+            vector-valued function with as many components as there are pairs
+            of classes.The pair classifiers then each cast a vote for the winner
+            in the pair and the class with the largest total number of votes is
+            the predicted class. This is similar to the so-called voting mode
+            available in Common Vision Blox Manto.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TGroupSpec">
+            <summary>
+            Specifies how the geometry of an example is defined or how the
+            geometry of a result is retrieved in an array of double reals.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGroupSpec.XY">
+            <summary>
+            Specifies/retrieves position only, 2 double reals.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGroupSpec.XYScale">
+            <summary>
+            Position and scale, 3 double reals.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGroupSpec.XYAngle">
+            <summary>
+            Position and rotation angle (always radian).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGroupSpec.XYScaleAngle">
+            <summary>
+            Position, scale and rotation.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGroupSpec.XYMatrix">
+            <summary>
+            Position and 2x2 matrix.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TGeometrySpec">
+            <summary>
+            Description of an example's geometry as used in the
+            <see cref="T:Stemmer.Cvb.GetLearningDataExampleGeometry"/>. Note that part of the
+            struct is a union, the content of which will be interpreted depending
+            on the actual value of the <see cref="F:Cvb.Polimago.TGeometrySpec.Spec"/> member.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.X">
+            <summary>
+            x coordinate of the position.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.Y">
+            <summary>
+            y coordinate of the position.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.Spec">
+            <summary>
+            Depending on the value of Spec, the elements further down may
+            be interpreted or not interpreted.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.Scale">
+            <summary>
+            If <see cref="F:Cvb.Polimago.TGeometrySpec.Spec"/> is set to <see cref="F:Cvb.Polimago.TGroupSpec.XYScale"/>
+            this entry holds the scale of the example.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.Angle">
+            <summary>
+            If <see cref="F:Cvb.Polimago.TGeometrySpec.Spec"/> is set to <see cref="F:Cvb.Polimago.TGroupSpec.XYAngle"/>
+            this entry holds the orientation of the example.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.ScaleAngle">
+            <summary>
+            If <see cref="F:Cvb.Polimago.TGeometrySpec.Spec"/> is set to
+            <see cref="F:Cvb.Polimago.TGroupSpec.XYScaleAngle"/> this entry holds the scale
+            and orientation of the example.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.Transformation">
+            <summary>
+            If <see cref="F:Cvb.Polimago.TGeometrySpec.Spec"/> is set to
+            <see cref="F:Cvb.Polimago.TGroupSpec.XYMatrix"/> this entry holds affine
+            transformation matrix.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TGeometrySpec.TScaleAndAngle">
+            <summary>
+            Internal helper structure.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.TScaleAndAngle.Scale">
+            <summary>
+            Scale of the example.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TGeometrySpec.TScaleAndAngle.Angle">
+            <summary>
+            Orientation of the example.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TFeatureMap">
+            <summary>
+            Summarizes a number of parameters controlling feature extraction from
+            images.
+            </summary>
+            <remarks>
+            Similar to the #TTrainParams structure, the values of the TFeatureMap
+            structure are defined at training time, i.e.
+            when the classifier is generated, through the parameters passed to the
+            function that generates the classifier (e.g. #PMTrainClassifierFromSil,
+            #PMTrainClassifierFromMts, #PMTrainSearchClassifierFromSil or
+            #PMTrainSearchClassifierFromMts). Therefore the TFeatureMap can only be
+            extracted for an existing classifier (#PMGetClfTrainParams or
+            #PMGetSearchClfTrainParams).
+            </remarks>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.Mode">
+            <summary>
+            Type of the feature map. #MM_MantoStandard currently is the only
+            available map mode.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.Interpolate">
+            <summary>
+            Image interpolation mode for feature extraction. FALSE implies simple
+            truncation of fractional parts, TRUE  implies bilinear interpolation
+            (recommended).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.NumImgPlanes">
+            <summary>
+            Number of color planes in the images from which the classifier was
+            trained. If this differs from the number of color planes in the
+            image on which the classifier is used an error will be returned.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.FWL">
+            <summary>
+            Left edge of the feature window relative to the pattern position.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.FWT">
+            <summary>
+            Top edge of the feature window relative to the pattern position.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.FWR">
+            <summary>
+            Right edge of the feature window relative to the pattern position.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.FWB">
+            <summary>
+            Bottom edge of the feature window relative to the pattern position.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.Code">
+            <summary>
+            Contains the zero-terminated preprocessing string which is composed
+            using the following characters:
+            p = 4x4 Gauss pyramid (binomial low pass + sub sampling).
+            a = multi-directional derivative followed by Gauss pyramid.
+            s = same as a but with a simpler and slightly faster gradient filter.
+            + = concatenates feature vectors, example: aa+a is feature vector
+            generated by the preprocessing code aa concatenated with that
+            generated by aaa.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.Normalization">
+            <summary>
+            Normalization constant for feature vectors. Currently a default value of
+            150 will always be used during training.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.FeatureResolution">
+            <summary>
+            Determines the dimensions of the retina (see feature-map lesson in the
+            tutorial on search functions).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.RetinaW">
+            <summary>
+            Actual width of Retina in pixels (initialized automatically during
+            training).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.RetinaH">
+            <summary>
+            Actual height of Retina in pixels (initialized automatically during
+            training).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.CorrectX">
+            <summary>
+            Horizontal retina correction factor: CorrectX := (FWR-FWL+1)/RetinaW
+            (initialized automatically during training).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TFeatureMap.CorrectY">
+            <summary>
+            Vertical retina correction factor: CorrectY := (FWB-FWT+1)/RetinaH
+            (initialized automatically during training).
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TTrainParams">
+            <summary>
+            Contains the main training parameters of classifiers and numerical
+            predictors.
+            </summary>
+            <remarks>
+            Similar to the #TFeatureMap structure, the values of the TTrainParams
+            structure are defined at training time, i.e.
+            when the classifier is generated, through the parameters passed to the
+            function that generates the classifier (e.g. #PMTrainClassifierFromSil,
+            #PMTrainClassifierFromMts, #PMTrainSearchClassifierFromSil or
+            #PMTrainSearchClassifierFromMts). Therefore the TFeatureMap can only be
+            extracted for an existing classifier (#PMGetClfTrainParams or
+            #PMGetSearchClfTrainParams).
+            </remarks>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainParams.Usage">
+            <summary>
+            Controls the way the classifier may be used. See the description of
+            <see cref="T:Cvb.Polimago.TClassifierUsage"/> for details.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainParams.FeatureMap">
+            <summary>
+            Feature extraction parameters. See the description of
+            <see cref="T:Cvb.Polimago.TFeatureMap"/> for details.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainParams.Lambda">
+            <summary>
+            Ridge regression regularization constant used during training.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainParams.Offset">
+            <summary>
+            Intercept for weight vectors. Currently always set to zero.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.StartProgressReport">
+            <summary>
+            Callback that indicates the start of a new progress phase.
+            </summary>
+            <param name="id">Number identifying a progress phase.</param>
+            <param name="caption">Printable name of the progress phase that is
+                                  being started.</param>
+            <param name="total">Total number of steps of which the new progress
+                                phase consists.</param>
+        </member>
+        <member name="T:Cvb.Polimago.ProgressReport">
+            <summary>
+            Callback that is invoked every time a progress step has been made.
+            </summary>
+            <param name="id">Number identifying the progress phase.</param>
+            <returns>
+            TRUE to continue operation, FALSE if you want to the current operation
+            interrupt.
+            </returns>
+        </member>
+        <member name="T:Cvb.Polimago.ReleaseProgressReport">
+            <summary>
+            Callback that is invoked every time a progress phase has finished.
+            </summary>
+            <param name="id">Number identifying the progress phase</param>
+        </member>
+        <member name="T:Cvb.Polimago.TProgress">
+            <summary>
+            The TProgress class controls the display of training progress
+            using a user-definable pointer and three callback functions.
+            </summary>
+            <remarks>
+            Progress reporting is organized hierarchically i.e. a given progress
+            phase may consist of sub phases, that are indicated by calls to the
+            StartProgressReport callback, and inside the callbacks the different
+            phases can be identified by their ID.
+            </remarks>
+        </member>
+        <member name="M:Cvb.Polimago.TProgress.#ctor(Cvb.Polimago.StartProgressReport,Cvb.Polimago.ProgressReport,Cvb.Polimago.ReleaseProgressReport)">
+            <summary>
+            Construct a progress indicator structure.
+            </summary>
+            <param name="startDlg"></param>
+            <param name="stepDlg"></param>
+            <param name="releaseDlg"></param>
+        </member>
+        <member name="M:Cvb.Polimago.TProgress.Finalize">
+            <summary>
+            Finalize a progress indicator structure.
+            </summary>
+        </member>
+        <member name="P:Cvb.Polimago.TProgress.StartProgressReport">
+            <summary>
+            Pointer to function to be called at the start of a new progress
+            phase. Provides pointer to user-interface, an ID of the process
+            or sub-process, a caption and a total number of steps to be expected.
+            </summary>
+        </member>
+        <member name="P:Cvb.Polimago.TProgress.ProgressReport">
+            <summary>
+            Pointer to function to be called on the completion of a single
+            progress step.
+            </summary>
+        </member>
+        <member name="P:Cvb.Polimago.TProgress.ReleaseProgressReport">
+            <summary>
+            Pointer to function to be called at the end of a progress phase.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TInvarianceType">
+            <summary>
+            Invariance generation that may be used during search classifier
+            training.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceType.Translations">
+            <summary>
+            Translated object only (positional invariance).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceType.RotScaleTrans">
+            <summary>
+            Translated, rotated and scaled objects.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceType.AffineGroup">
+            <summary>
+            Translated and affine transformed object (position plus 2x2 matrix).
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TInvarianceParams">
+            <summary>
+            Controls the training of invariances for search classifiers.
+            </summary>
+            <remarks>
+            Please see the tutorial on search functions of Polimago for additional
+            information.
+            </remarks>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.InvarianceType">
+            <summary>
+            Determines the type of invariance. See description of
+            #TInvarianceType for details.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.XYRadius">
+            <summary>
+            Maximal translations given as a multiple of the feature window
+            width or height - whichever is smaller. 0.5 is recommended.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.MinScaleMinL">
+            <summary>
+            Smallest scale (InvarianceType #TI_RotScaleTrans) or singular value
+            (InvarianceType #TI_AffineGroup) in matrix SVD.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.MaxScaleMaxL">
+            <summary>
+            Largest scale (InvarianceType #TI_RotScaleTrans) or singular value
+            (InvarianceType #TI_AffineGroup) in matrix SVD.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.MinAngle">
+            <summary>
+            Smallest rotation angle (in radians).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.MaxAngle">
+            <summary>
+            Largest rotation angle (in radians).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TInvarianceParams.Reserved">
+            <summary>
+            Reserved bytes for future use.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TTrainSearchParams">
+            <summary>
+            Controls the training of search classifiers.
+            </summary>
+            <remarks>
+            Please see the tutorial on search functions of Polimago for additional
+            information.
+            </remarks>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.InvarianceParams">
+            <summary>
+            Controls invariance generation (see description of #TInvarianceParams).
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.SampleSize">
+            <summary>
+            Number of examples to be generated.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.NumClfs">
+            <summary>
+            Number of classification steps.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.Resolution12">
+            <summary>
+            Determines the classifier's retina dimension for the first two
+            stages of the search operation.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.ResolutionRest">
+            <summary>
+            Determines the classifier's retina dimension for the rest
+            of the search operation.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.NegaSense">
+            <summary>
+            Always set to 5.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTrainSearchParams.Reserved">
+            <summary>
+            Reserved bytes for future use.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TTransformation">
+            <summary>
+            Descriptor for object geometries.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TTransformation.Values">
+            <summary>
+            Values that describe the geometry.
+            </summary>
+        </member>
+        <member name="T:Cvb.Polimago.TSearchResult">
+            <summary>
+            Type of result returned by the Polimago search functions.
+            </summary>
+            <remarks>
+            The functions #PMGridSearch, #PMInspect and #PMInspectD return results
+            of this type. The geometry of search results may be obtained using the
+            functions #PMGetXY, #PMGetScaleAngle and #PMGetMatrix. For additional
+            information please see the tutorial on search functions of Polimago.
+            </remarks>
+        </member>
+        <member name="F:Cvb.Polimago.TSearchResult.Quality">
+            <summary>
+            The quality of the result.
+            </summary>
+        </member>
+        <member name="F:Cvb.Polimago.TSearchResult.G">
+            <summary>
+            Perspective parameters of the result.
+            </summary>
+        </member>
+    </members>
+</doc>

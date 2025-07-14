@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WaferSaverConfig StartScreen="Start" IsSim="false" ExceptionScreen="Exception" Version="2">
+  <Screen ID="Start">
+    <Title>
+      <Line>Confirm Wafer Location</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>One or more wafers have been detected as stranded on the robot, but it is not safe to automatically recover.</Line>
+        <Line>Please look at the wafer engine and determine whether there is a wafer located between the two end effectors.</Line>
+      </Paragraph>
+      <Paragraph>
+        <Line>Is there a wafer located between the two end effectors?</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Wafer between" ToScreen="AskTilt">
+        <Image>WaferAtMid</Image>
+        <OperatorLocationObservation>Mid</OperatorLocationObservation>
+      </TransitionButton>
+      <TransitionButton ButtonText="No wafer between" ToScreen="SensorSummary">
+        <Image>WaferAtLimit</Image>
+        <OperatorLocationObservation>Limit</OperatorLocationObservation>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="AskTilt">
+    <Title>
+      <Line>Is The Wafer Tilted?</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>Please look at the wafer engine and determine if the wafer is tilted.</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Tilted" ToScreen="WaferIsTilted">
+        <Image>WaferTilted</Image>
+      </TransitionButton>
+      <TransitionButton ButtonText="Not tilted" ToScreen="SensorSummary">
+        <Image>SingleWaferAtMid</Image>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="Exception" Type="Failure">
+    <Title>
+      <Line>Exception</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>An error occured.</Line>
+      </Paragraph>
+      <Exception />
+    </Controls>
+  </Screen>
+  <Screen ID="SensorSummary">
+    <Title>
+      <Line>Sensor Summary</Line>
+    </Title>
+    <Controls>
+      <SensorSummary>
+        <AgreeControls>
+          <Paragraph>
+            <!--Gonna say everything we need here in the AtLimit or AtMid controls, since those are only called on agree-->
+            <Line>
+            </Line>
+          </Paragraph>
+        </AgreeControls>
+        <DisagreeControls>
+          <Paragraph>
+            <Line>The state of the sensors do not agree with the reported wafer location.</Line>
+            <Line>If the wrong wafer location was selected, please restart the recovery process and select the proper location.</Line>
+            <Line>If the reported wafer location was correct, the tool sensors disagree with reality and require repair. Recovery will not be able to proceed.</Line>
+          </Paragraph>
+        </DisagreeControls>
+        <TiltedControls>
+          <Paragraph>
+            <Line>The state of the sensors do not agree with the reported wafer location.</Line>
+            <Line>Based on the sensor data and reported wafer location, it appears that there is a tilted wafer.</Line>
+            <Line>If the wrong wafer location was selected, please restart the recovery process and select the proper location.</Line>
+            <Line>If the reported wafer location was correct, it is unsafe to proceed with the recovery process. Manual intervention will be required to recover the wafer.</Line>
+          </Paragraph>
+        </TiltedControls>
+        <AtLimitControls>
+          <Paragraph>
+            <Line>The stray wafer is confirmed to be above the upper end effector and is ready to be recovered.</Line>
+          </Paragraph>
+          <TransitionButton ButtonText="Next" ToScreen="AboveRecoverySteps">
+            <Description>Proceed to steps for recovery.</Description>
+          </TransitionButton>
+        </AtLimitControls>
+        <AtMidControls>
+          <Paragraph>
+            <Line>The stray wafer is confirmed to be between the end effectors and is ready to be recovered.</Line>
+          </Paragraph>
+          <TransitionButton ButtonText="Next" ToScreen="BetweenRecoverySteps">
+            <Description>Proceed to steps for recovery.</Description>
+            <ToScreenOverride Condition="TwoWafers" Value="true" Screen="TwoWafersRecoverySteps" />
+          </TransitionButton>
+        </AtMidControls>
+      </SensorSummary>
+    </Controls>
+  </Screen>
+  <Screen ID="AboveRecoverySteps">
+    <Title>
+      <Line>Steps For Wafer Recovery</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The following steps will be carried out to recover the wafer. You will be prompted to confirm that you are ready before performing each step.</Line>
+        <Line>
+        </Line>
+        <Line>1. The OFA chuck will be slowly moved up a short distance to ensure the wafer is not touching the upper end effector.</Line>
+        <Line>2. The upper end effector will be homed and then slowly moved into position under the wafer on the OFA chuck.</Line>
+        <Line>2. The lower end effector will be homed and then slowly moved into position under the wafer on the OFA chuck.</Line>
+        <Line>3. The wafer will be aligned and rotated to a position where it can be centered on the end effector.</Line>
+        <Line>4. The upper end effector will be slowly moved a short distance so it is centered under the wafer on the OFA chuck.</Line>
+        <Line>5. The OFA chuck will be slowly moved down to the home position, dropping the wafer off on the end effector.</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Next" ToScreen="MoveOfaAboveEE">
+        <Description>Begin steps for recovery.</Description>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="BetweenRecoverySteps">
+    <Title>
+      <Line>Steps For Wafer Recovery</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The following steps will be carried out to recover the wafer. You will be prompted to confirm that you are ready before performing each step.</Line>
+        <Line>
+        </Line>
+        <Line>1. You will be guided through a series of steps to ensure the wafer is in a safe location for end effector motion.</Line>
+        <Line>2. The upper end effector will be homed and then slowly moved into position above the wafer on the OFA chuck.</Line>
+        <Line>2. The lower end effector will be homed and then slowly moved into position under the wafer on the OFA chuck.</Line>
+        <Line>3. The wafer will be aligned and rotated to a position where it can be centered on the end effector.</Line>
+        <Line>4. The lower end effector will be slowly moved a short distance so it is centered under the wafer on the OFA chuck.</Line>
+        <Line>5. The OFA chuck will be slowly moved down to the home position, dropping the wafer off on the end effector.</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Next" ToScreen="CheckWaferBetweenPosition">
+        <Description>Begin steps for recovery.</Description>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="TwoWafersRecoverySteps">
+    <Title>
+      <Line>Steps For Wafer Recovery</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The following steps will be carried out to recover the wafer. You will be prompted to confirm that you are ready before performing each step.</Line>
+        <Line>
+        </Line>
+        <Line>1. You will be guided through a series of steps to ensure the wafer is in a safe location for end effector motion.</Line>
+        <Line>3. The upper end effector will be homed and then left in the retracted position.</Line>
+        <Line>2. The lower end effector will be homed and then slowly moved into position under the wafer on the OFA chuck.</Line>
+        <Line>4. The wafer will be aligned and rotated to a position where it can be centered on the end effector.</Line>
+        <Line>5. The lower end effector will be slowly moved a short distance so it is centered under the wafer on the OFA chuck.</Line>
+        <Line>6. The OFA chuck will be slowly moved down to the home position, dropping the wafer off on the end effector.</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Next" ToScreen="CheckWaferBetweenPosition">
+        <Description>Begin steps for recovery.</Description>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="MoveOfaAboveEE">
+    <Title>
+      <Line>Move Wafer Above Upper End Effector</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The OFA chuck will be slowly moved up a short distance to ensure the wafer is not touching the upper end effector.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <MoveOfaChuck Amount="1" SuccessScreen="HomeUpperEEBelowWafer" />
+    </Controls>
+  </Screen>
+  <Screen ID="CheckWaferBetweenPosition">
+    <Title>
+      <Line>Center Wafer Between End Effectors</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>Please look at the wafer position between the two end effectors. Is the wafer evenly spaced between the two end effectors?</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Yes" ToScreen="HomeUpperEEAboveWafer">
+        <Description>The wafer is evenly spaced between the two end effectors.</Description>
+        <ToScreenOverride Condition="TwoWafers" Screen="HomeUpperEEAndRetract" Value="true" />
+      </TransitionButton>
+      <TransitionButton ButtonText="No" ToScreen="CenterWaferBetweenEEs">
+        <Description>The wafer is not evenly spaced between the two end effectors.</Description>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="CenterWaferBetweenEEs">
+    <Title>
+      <Line>Center Wafer Between End Effectors</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>Please look at the wafer position between the two end effectors. Is the wafer closer to the top end effector or the bottom end effector?</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Closer to top" ToScreen="JogOfaDown">
+        <Description>The wafer is closer to the top end effector.</Description>
+      </TransitionButton>
+      <TransitionButton ButtonText="Closer to bottom" ToScreen="JogOfaUp">
+        <Description>The wafer is closer to the bottom end effector.</Description>
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="JogOfaUp">
+    <Title>
+      <Line>Move OFA Up</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>You indicated that the wafer was closer to the lower end effector, so the OFA chuck will be slowly moved up a short distance.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <MoveOfaChuck Amount="1" SuccessScreen="CheckWaferBetweenPosition" />
+    </Controls>
+  </Screen>
+  <Screen ID="JogOfaDown">
+    <Title>
+      <Line>Move OFA Down</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>You indicated that the wafer was closer to the upper end effector, so the OFA chuck will be slowly moved down a short distance.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <MoveOfaChuck Amount="-1" SuccessScreen="CheckWaferBetweenPosition" />
+    </Controls>
+  </Screen>
+  <Screen ID="HomeUpperEEBelowWafer">
+    <Title>
+      <Line>Home Upper End Effector</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The upper end effector will be homed and then slowly moved into position under the wafer on the OFA chuck.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <HomeEe SuccessScreen="HomeLowerEE" Which="EE2" />
+    </Controls>
+  </Screen>
+  <Screen ID="HomeUpperEEAboveWafer">
+    <Title>
+      <Line>Home Upper End Effector</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The upper end effector will be homed and then slowly moved into position above the wafer on the OFA chuck.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <HomeEe SuccessScreen="HomeLowerEE" Which="EE2" />
+    </Controls>
+  </Screen>
+  <Screen ID="HomeUpperEEAndRetract">
+    <Title>
+      <Line>Home Upper End Effector</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The upper end effector will be homed.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <HomeEe SuccessScreen="CheckWaferShifted" Which="EE2" />
+    </Controls>
+  </Screen>
+  <Screen ID="CheckWaferShifted">
+    <Title>
+      <Line>Home Upper End Effector Complete</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The upper end effector home has completed and the lower end effector will now be homed.</Line>
+        <Line>The wafer on the OFA chuck will be checked to see if it shifted too far to recover.</Line>
+        <Line>If it is not shifted, recovery will proceed.</Line>
+      </Paragraph>
+      <TransitionButton ButtonText="Next" ToScreen="HomeLowerEE">
+        <Description>Check wafer shift on OFA chuck.</Description>
+        <ToScreenOverride Condition="ShiftedWafer" Screen="WaferShiftedTooFar" Value="true" />
+      </TransitionButton>
+    </Controls>
+  </Screen>
+  <Screen ID="HomeLowerEE">
+    <Title>
+      <Line>Home Lower End Effector</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The lower end effector will be homed and then slowly moved into position under the wafer on the OFA chuck.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <HomeEe SuccessScreen="RadialAlignWafer" Which="EE1" />
+    </Controls>
+  </Screen>
+  <Screen ID="RadialAlignWafer" ErrorScreen="RadialAlignError">
+    <Title>
+      <Line>Align Wafer</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The wafer will be aligned and rotated to a position where it can be centered on the end effector.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <RadialAlign SuccessScreen="AdjustEERadialOffset" />
+    </Controls>
+  </Screen>
+  <Screen ID="AdjustEERadialOffset">
+    <Title>
+      <Line>Adjust End Effector For Radial Offset</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The end effector below the wafer will be slowly moved so that it is centered under the wafer on the OFA chuck.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <MoveEeUnderWafer SuccessScreen="PutWafer" />
+    </Controls>
+  </Screen>
+  <Screen ID="PutWafer">
+    <Title>
+      <Line>Put Wafer To End Effector</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The OFA chuck will be slowly moved down to the home position, dropping the wafer off on the end effector.</Line>
+        <Line>Please ensure the system is in a safe state before executing the move.</Line>
+      </Paragraph>
+      <HomeOfaZ SuccessScreen="WaferSaved" />
+    </Controls>
+  </Screen>
+  <Screen ID="WaferShiftedTooFar" Type="Failure">
+    <Title>
+      <Line>Wafer Shifted Too Far</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The wafer on the OFA chuck was shifted too far to safely proceed with alignment. Manual recovery is required.</Line>
+      </Paragraph>
+    </Controls>
+  </Screen>
+  <Screen ID="WaferIsTilted" Type="Failure">
+    <Title>
+      <Line>Wafer Tilted</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>ERROR: </Line>
+        <Line>The wafer is tilted and is in an unsafe position for assited recovery. Manual recovery is required.</Line>
+      </Paragraph>
+    </Controls>
+  </Screen>
+  <Screen ID="UnrecoverableEnd" Type="Failure">
+    <Title>
+      <Line>Wafer Recovery Failed</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>This screen indicates that a unrecoverable error was encountered. OFA radial align failing is an example of such an unrecoverable error.</Line>
+      </Paragraph>
+    </Controls>
+  </Screen>
+  <Screen ID="RadialAlignError" Type="Failure">
+    <Title>
+      <Line>Wafer Recovery Failed</Line>
+    </Title>
+    <Controls>
+      <Paragraph Color="Red">
+        <Line>ERROR: </Line>
+        <Line>There was an error while attempting the radial correction align. Manual recovery is requied.</Line>
+      </Paragraph>
+      <Exception />
+    </Controls>
+  </Screen>
+  <Screen ID="WaferSaved" Type="Success">
+    <Title>
+      <Line>Wafer Recovered</Line>
+    </Title>
+    <Controls>
+      <Paragraph>
+        <Line>The wafer on the OFA has been successfully recovered.</Line>
+      </Paragraph>
+      <Paragraph>
+        <Line>For recovery started from SMS-II, initialization will automatically proceed.</Line>
+      </Paragraph>
+      <Paragraph>
+        <Line>For recovery started from InSight, please click Initialize again to fully initialize the tool.</Line>
+      </Paragraph>
+    </Controls>
+  </Screen>
+</WaferSaverConfig>

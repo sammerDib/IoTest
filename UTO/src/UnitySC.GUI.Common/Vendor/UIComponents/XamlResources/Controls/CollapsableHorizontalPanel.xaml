@@ -1,0 +1,55 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls1="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions">
+
+    <Style TargetType="{x:Type controls1:CollapsableHorizontalPanel}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls1:CollapsableHorizontalPanel}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition
+                                x:Name="PART_FirstRow"
+                                Height="{Binding FirstRowLength, RelativeSource={RelativeSource TemplatedParent}}"
+                                MinHeight="{Binding FirstRowMinHeight, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition
+                                x:Name="PART_SecondRow"
+                                Height="{Binding SecondRowLength, RelativeSource={RelativeSource TemplatedParent}}"
+                                MinHeight="{Binding SecondRowMinHeight, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Grid.RowDefinitions>
+
+                        <ContentPresenter Content="{Binding FirstRowContent, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                        <GridSplitter
+                            Grid.Row="1"
+                            Height="{StaticResource PanelMargin}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="Transparent"
+                            IsEnabled="{Binding SecondRowIsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                        <ContentPresenter
+                            Grid.Row="2"
+                            Content="{Binding SecondRowContent, RelativeSource={RelativeSource TemplatedParent}}"
+                            Visibility="{Binding SecondRowIsExpanded, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource FalseToCollapsedConverter}}" />
+
+                        <Button
+                            x:Name="PART_ExpandButton"
+                            Grid.Row="2"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            HorizontalContentAlignment="Left"
+                            markupExtensions:Icon.Geometry="{Binding SecondRowContentIcon, RelativeSource={RelativeSource TemplatedParent}}"
+                            Content="{Binding SecondRowContentTitle, RelativeSource={RelativeSource TemplatedParent}}"
+                            Visibility="{Binding SecondRowIsExpanded, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrueToCollapsedConverter}}" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

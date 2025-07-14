@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ABA2C6A4-BCB4-478A-BE76-CB62AB4941E9}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>UnitySC.Shared.UI</RootNamespace>
+    <AssemblyName>UnitySC.Shared.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoRelayCommandExt\AutoRelayCommand{T}.cs" />
+    <Compile Include="Behaviors\CloseWindowBehavior.cs" />
+    <Compile Include="Behaviors\EventToCommandBehavior.cs" />
+    <Compile Include="Behaviors\GridViewBehaviors.cs" />
+    <Compile Include="Chart\BaseHeatMapChartVM.cs" />
+    <Compile Include="Chart\BaseLineChart.cs" />
+    <Compile Include="Controls\ColorMapSelector.xaml.cs">
+      <DependentUpon>ColorMapSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DiePoint.cs" />
+    <Compile Include="Controls\DiePointsSelection.cs" />
+    <Compile Include="Controls\IOImageToggleButtons.xaml.cs">
+      <DependentUpon>IOImageToggleButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MoveThumb.cs" />
+    <Compile Include="Controls\OverlayedContentControl.cs" />
+    <Compile Include="Controls\TextBoxes\AlphaNumericTextBox.cs" />
+    <Compile Include="Controls\TextBoxes\LabelUnit.cs" />
+    <Compile Include="Controls\TextBoxes\TextBoxAngleUnit.cs" />
+    <Compile Include="Controls\TextBoxes\TextBoxWithPen.xaml.cs">
+      <DependentUpon>TextBoxWithPen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBoxes\LengthToleranceInput.xaml.cs">
+      <DependentUpon>LengthToleranceInput.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBoxes\TwoChoiceDisplay.xaml.cs">
+      <DependentUpon>TwoChoiceDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WizardNavigationControl\INavigable.cs" />
+    <Compile Include="Controls\WizardNavigationControl\INavigationManager.cs" />
+    <Compile Include="Controls\WizardNavigationControl\IWizardNavigationItem.cs" />
+    <Compile Include="Controls\WizardNavigationControl\WizardNavigationControl.cs" />
+    <Compile Include="Controls\ZoomboxImage\HorizontalLineMoveControl.cs" />
+    <Compile Include="Controls\ZoomboxImage\Scale.cs" />
+    <Compile Include="Controls\ZoomboxImage\VerticalLineMoveControl.cs" />
+    <Compile Include="Converters\BitmapToBitmapImageConverter.cs" />
+    <Compile Include="Converters\DictionaryItemConverter.cs" />
+    <Compile Include="Converters\ShowUnderscoresConverter.cs" />
+    <Compile Include="Extensions\ComboBoxExt.cs" />
+    <Compile Include="Controls\ToleranceDisplayer.cs" />
+    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
+    <Compile Include="Extensions\RoundedCornersExt.cs" />
+    <Compile Include="Extensions\TabControlExt.cs" />
+    <Compile Include="Extensions\TextBoxExt.cs" />
+    <Compile Include="Behaviors\TextboxEnterBehaviour.cs" />
+    <Compile Include="Extensions\TextBoxMaskExt.cs" />
+    <Compile Include="Behaviors\WebBrowserBehaviors.cs" />
+    <Compile Include="BusyHourglass.cs" />
+    <Compile Include="Controls\BindingProxy.cs" />
+    <Compile Include="Controls\DefectBinsConfig.xaml.cs">
+      <DependentUpon>DefectBinsConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DoubleUpDownTicks.cs" />
+    <Compile Include="Controls\ImageRepeatButton.cs" />
+    <Compile Include="Controls\ImageToggleButton.cs" />
+    <Compile Include="Controls\SizeBinsConfig.xaml.cs">
+      <DependentUpon>SizeBinsConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Status\StepStateImage.cs" />
+    <Compile Include="Controls\Wafer.cs" />
+    <Compile Include="Controls\WaferVisual.cs" />
+    <Compile Include="Controls\ZoomboxImage\ContentResizerControl.cs" />
+    <Compile Include="Controls\FormWithHelp.cs" />
+    <Compile Include="Controls\Header.xaml.cs">
+      <DependentUpon>Header.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HelpDisplay.xaml.cs">
+      <DependentUpon>HelpDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImageButton.cs" />
+    <Compile Include="Controls\ImageGroupBox.cs" />
+    <Compile Include="Controls\ZoomboxImage\ImageType.cs" />
+    <Compile Include="Controls\ZoomboxImage\ImageVM.cs" />
+    <Compile Include="Controls\ZoomboxImage\MoveThumb.cs" />
+    <Compile Include="Controls\Navigation.cs" />
+    <Compile Include="Controls\Notifier.xaml.cs">
+      <DependentUpon>Notifier.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NotifierWindow.xaml.cs">
+      <DependentUpon>NotifierWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ZoomboxImage\ResizeThumb.cs" />
+    <Compile Include="Controls\TextSlider.cs" />
+    <Compile Include="Controls\ZoomboxImage\RoiType.cs" />
+    <Compile Include="Controls\ZoomboxImage\ZoomboxImage.xaml.cs">
+      <DependentUpon>ZoomboxImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ZoomboxImage\ZoomboxWithImageList.xaml.cs">
+      <DependentUpon>ZoomboxWithImageList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ZoomboxImage\ZoomboxImageWithButtons.xaml.cs">
+      <DependentUpon>ZoomboxImageWithButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\UnityConverter.cs" />
+    <Compile Include="Dialog\DialogOwnerService.cs" />
+    <Compile Include="Dialog\ExceptionManager.cs" />
+    <Compile Include="Dialog\ExceptionDialogs\ExceptionDialog.xaml.cs">
+      <DependentUpon>ExceptionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\ExceptionDialogs\ExceptionDialogViewModel.cs" />
+    <Compile Include="Dialog\ExceptionDialogs\ExceptionViewer.xaml.cs">
+      <DependentUpon>ExceptionViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\FrameworkDialogs\FolderBrowser\CustomFolderBrowserDialog.cs" />
+    <Compile Include="Dialog\IDialogOwnerService.cs" />
+    <Compile Include="Dialog\FrameworkDialogs\MessageBox\CustomMessageBox.cs" />
+    <Compile Include="Dialog\FrameworkDialogs\CustomFrameworkDialogFactory.cs" />
+    <Compile Include="Dialog\FrameworkDialogs\OpenFile\CustomOpenFileDialog.cs" />
+    <Compile Include="Dialog\FrameworkDialogs\SaveFile\CustomSaveFileDialog.cs" />
+    <Compile Include="Enum\Help.cs" />
+    <Compile Include="Extensions\ImageExt.cs" />
+    <Compile Include="Extensions\TrulyObservableCollection.cs" />
+    <Compile Include="Graph\AdornedControl\AdornedControl.cs" />
+    <Compile Include="Graph\AdornedControl\AdornerEventArgs.cs" />
+    <Compile Include="Graph\Model\ConnectionViewModel.cs" />
+    <Compile Include="Graph\Model\ConnectorType.cs" />
+    <Compile Include="Graph\Model\ConnectorViewModel.cs" />
+    <Compile Include="Graph\Model\GraphViewModel.cs" />
+    <Compile Include="Graph\Model\NodeViewModel.cs" />
+    <Compile Include="Graph\UI\ConnectionDragEvents.cs" />
+    <Compile Include="Graph\UI\ConnectorItem.cs" />
+    <Compile Include="Graph\UI\ConnectorItemDragEvents.cs" />
+    <Compile Include="Graph\UI\GraphView.cs" />
+    <Compile Include="Graph\UI\GraphView_ConnectionDragging.cs" />
+    <Compile Include="Graph\UI\GraphView_DragSelection.cs" />
+    <Compile Include="Graph\UI\GraphView_NodeDragging.cs" />
+    <Compile Include="Graph\UI\NodeEvents.cs" />
+    <Compile Include="Graph\UI\NodeItem.cs" />
+    <Compile Include="Graph\UI\NodeItemsControl.cs" />
+    <Compile Include="Graph\Utils\AdornerPlacement.cs" />
+    <Compile Include="Graph\Utils\CollectionItemsChangedEventArgs.cs" />
+    <Compile Include="Graph\Utils\FrameworkElementAdorner.cs" />
+    <Compile Include="Graph\Utils\ImpObservableCollection.cs" />
+    <Compile Include="Graph\Utils\WpfUtils.cs" />
+    <Compile Include="Graph\ZoomAndPan\AnimationHelper.cs" />
+    <Compile Include="Graph\ZoomAndPan\ZoomAndPanControl.cs" />
+    <Compile Include="Graph\ZoomAndPan\ZoomAndPanControl_IScrollInfo.cs" />
+    <Compile Include="Helper\BindingProxy.cs" />
+    <Compile Include="Helper\DispatcherHelper.cs" />
+    <Compile Include="Helper\GridViewSort.cs" />
+    <Compile Include="Helper\ImageHelper.cs" />
+    <Compile Include="Helper\TabControlHelper.cs" />
+    <Compile Include="Helper\TaskHelper.cs" />
+    <Compile Include="Helper\TextBlockUtils.cs" />
+    <Compile Include="MarkupExtensions\StaticValue.cs" />
+    <Compile Include="Controls\NumericUpDown\DoubleUpDown.cs" />
+    <Compile Include="Controls\NumericUpDown\IntegerUpDown.cs" />
+    <Compile Include="Controls\NumericUpDown\NumericUpDown.cs" />
+    <Compile Include="Controls\TextBoxes\TextBoxUnit.cs" />
+    <Compile Include="AutoRelayCommandExt\AutoRelayCommand.cs" />
+    <Compile Include="ViewModel\AdvancedGridView\AdvancedGridViewSource.cs" />
+    <Compile Include="ViewModel\AdvancedGridView\DataTableSourceListFacade.cs" />
+    <Compile Include="ViewModel\AdvancedGridView\SortDefinition.cs" />
+    <Compile Include="ViewModel\AdvancedGridView\SortEngine.cs" />
+    <Compile Include="ViewModel\DefectBinsVM.cs" />
+    <Compile Include="ViewModel\DefectBinVM.cs" />
+    <Compile Include="ViewModel\FilterItemViewModel.cs" />
+    <Compile Include="ViewModel\Header\HeaderVM.cs" />
+    <Compile Include="ViewModel\Header\MenuItemVM.cs" />
+    <Compile Include="ViewModel\LengthVM.cs" />
+    <Compile Include="ViewModel\Navigation\NavigationVM.cs" />
+    <Compile Include="ViewModel\Navigation\PageMenuItemVM.cs" />
+    <Compile Include="ViewModel\Navigation\PageNavigationVM.cs" />
+    <Compile Include="ViewModel\Navigation\PageNavigationWithSaveVm.cs" />
+    <Compile Include="ViewModel\NotifierVM.cs" />
+    <Compile Include="ViewModel\SeletedItemVM.cs" />
+    <Compile Include="ViewModel\SizeBinsVM.cs" />
+    <Compile Include="ViewModel\SizeBinVM.cs" />
+    <Compile Include="ViewModel\TreeViewItemViewModel.cs" />
+    <Compile Include="ViewModel\ValidationViewModelBase.cs" />
+    <Compile Include="ViewModel\ViewModelBaseExt.cs" />
+    <Page Include="Controls\ColorMapSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DefectBinsConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Header.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HelpDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\IOImageToggleButtons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Notifier.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\NotifierWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SizeBinsConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TextBoxes\TextBoxWithPen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TextBoxes\LengthToleranceInput.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TextBoxes\TwoChoiceDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\WizardNavigationControl\WizardNavigationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ZoomboxImage\ZoomboxImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ZoomboxImage\ZoomboxWithImageList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ZoomboxImage\ZoomboxImageWithButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\ExceptionDialogs\ExceptionViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Graph\UI\Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Graph\ZoomAndPan\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\DefaultStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\GridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ImageGeometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\UnityStyleInTC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\UnityStylesNew.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ZoomboxImageResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Converters\BasicConverter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\ExceptionDialogs\ExceptionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ImageDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="Converters\BasicConverter.cs" />
+    <Page Include="Styles\UnityStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="LightningChart">
+      <Version>12.0.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmDialogs">
+      <Version>9.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmValidation">
+      <Version>3.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Ookii.Dialogs.Wpf">
+      <Version>5.0.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\ViewFinder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Styles\Icon\DataAccess.ico" />
+    <Resource Include="Styles\Icon\DataAccess.png" />
+    <Resource Include="Styles\Icon\PMClient.ico" />
+    <Resource Include="Styles\Icon\PMClient.png" />
+    <Resource Include="Styles\Icon\PMServer.ico" />
+    <Resource Include="Styles\Icon\PMServer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Controls\Status\ProgressGradient.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

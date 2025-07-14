@@ -1,0 +1,472 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.PeriodicStruct.PeriodicStructMeasureInfoView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:ps="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.PeriodicStruct"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+	x:Name="UserControl"
+	d:DataContext="{d:DesignInstance ps:PeriodicStructDetailMeasureInfoVM}"
+	d:DesignWidth="500"
+	mc:Ignorable="d">
+
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<converters:MeasureStateToToleranceDisplayerConverter x:Key="MeasureStateToToleranceDisplayerConverter" />
+
+			<system:Double x:Key="FontSizeBig">12</system:Double>
+
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<DockPanel Margin="0,5">
+
+		<common:MetroMeasureInfoHeaderView DockPanel.Dock="Top" />
+
+		<Grid
+			Margin="0,10,0,0"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Stretch">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<Viewbox
+				Height="240"
+				Stretch="Uniform">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<StackPanel
+						Grid.Column="2"
+						Margin="0,0,10,0"
+						HorizontalAlignment="Right"
+						VerticalAlignment="Top"
+						Orientation="Horizontal">
+						<StackPanel
+							HorizontalAlignment="Center"
+							Orientation="Vertical">
+							<TextBlock
+								Margin="5,7,0,0"
+								HorizontalAlignment="Center"
+								FontSize="10"
+								Text="Scan direction " />
+							<TextBlock HorizontalAlignment="Right">
+								<Run Text="Angle = " />
+								<Run Text="{Binding Point.ScanAngle.Value, StringFormat={}{0:F1}, Mode=OneWay}" />
+								<Run Text="°" />
+							</TextBlock>
+						</StackPanel>
+						<userControls:ScanDirectionViewer
+							Width="30"
+							Height="30"
+							Foreground="{StaticResource ScanDirectionMeasureInfoBrush}"
+							TargetAngle="{Binding Point.ScanAngle.Value}" />
+
+					</StackPanel>
+					<StackPanel
+						Grid.Row="1"
+						Grid.Column="0"
+						Width="165"
+						Margin="0,40,0,0"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Orientation="Vertical">
+						<TextBlock
+							Name="HeightTextBlock"
+							HorizontalAlignment="Center"
+							FontSize="{StaticResource FontSizeBig}"
+							FontWeight="Bold"
+							Foreground="{StaticResource LightBrownMeasureInfoBrush}"
+							Text="Height" />
+						<TextBlock
+							Margin="0,5,0,0"
+							HorizontalAlignment="Center"
+							FontSize="10">
+							<Run Text="{Binding HeightValue, Mode=OneWay}" />
+						</TextBlock>
+						<StackPanel
+							HorizontalAlignment="Center"
+							Orientation="Horizontal">
+							<controls:ToleranceDisplayer
+								Margin="0,4,0,0"
+								HorizontalAlignment="Center"
+								Tolerance="{Binding HeightState, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}" />
+							<TextBlock
+								Margin="5,5,0,0"
+								HorizontalAlignment="Center"
+								FontSize="10">
+								<Run Text="Deviation = " />
+								<Run Text="{Binding HeightDelta, Mode=OneWay}" />
+							</TextBlock>
+						</StackPanel>
+						<TextBlock
+							Margin="0,5,0,0"
+							HorizontalAlignment="Center"
+							FontSize="10">
+							<Run Text="Target" />
+							<Run Text="{Binding HeightTarget, Mode=OneWay}" />
+							<Run Text="+/-" />
+							<Run Text="{Binding HeightTolerance, Mode=OneWay}" />
+						</TextBlock>
+					</StackPanel>
+
+					<StackPanel
+						Grid.Row="1"
+						Grid.Column="1"
+						Width="165"
+						Margin="0,0,0,0"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Top"
+						Orientation="Vertical">
+						<TextBlock
+							Name="CountTextBlock"
+							HorizontalAlignment="Center"
+							FontSize="{StaticResource FontSizeBig}"
+							FontWeight="Bold"
+							Foreground="{StaticResource LightGreenMeasureInfoBrush}"
+							Text="Count" />
+						<TextBlock
+							Margin="0,5,0,0"
+							HorizontalAlignment="Center"
+							FontSize="10"
+							Text="{Binding StructCount}" />
+
+						<Grid
+							Height="60"
+							Margin="5,5">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition />
+								<ColumnDefinition />
+								<ColumnDefinition />
+								<ColumnDefinition />
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition />
+								<RowDefinition Height="3*" />
+								<RowDefinition />
+							</Grid.RowDefinitions>
+
+							<Line
+								Grid.Row="0"
+								Grid.Column="3"
+								Margin="8.7,0,0,0"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Bottom"
+								Stroke="Black"
+								StrokeDashArray="1 1"
+								StrokeThickness="2"
+								Y2="6" />
+
+							<Viewbox
+								Grid.Row="0"
+								Grid.Column="3"
+								Height="5"
+								Margin="0,5,0,0">
+								<userControls:Arrow
+									Width="37"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Stretch"
+									Angle="0"
+									Foreground="{StaticResource LightBlueMeasureInfoBrush}" />
+							</Viewbox>
+
+							<Line
+								Grid.Row="0"
+								Grid.Column="3"
+								Margin="0,0,7.7,0"
+								HorizontalAlignment="Right"
+								VerticalAlignment="Bottom"
+								Stroke="Black"
+								StrokeDashArray="1 1"
+								StrokeThickness="2"
+								Y2="6" />
+
+							<Grid
+								Grid.Row="1"
+								Grid.Column="0">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition />
+									<ColumnDefinition Width="2*" />
+									<ColumnDefinition />
+								</Grid.ColumnDefinitions>
+
+								<Rectangle
+									Height="2"
+									VerticalAlignment="Bottom"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="0"
+									Width="2"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Stretch"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="1"
+									Height="2"
+									VerticalAlignment="Top"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="2"
+									Width="2"
+									HorizontalAlignment="Left"
+									VerticalAlignment="Stretch"
+									Fill="Black" />
+
+								<Line
+									Grid.Column="0"
+									Margin="2,1,0,0"
+									Stroke="Black"
+									StrokeDashArray="1 1"
+									StrokeThickness="2"
+									X2="6" />
+
+								<Viewbox
+									Grid.Column="0"
+									Width="5"
+									Margin="0,2,2,2">
+									<userControls:Arrow
+										Height="63"
+										HorizontalAlignment="Center"
+										VerticalAlignment="Stretch"
+										Angle="90"
+										Foreground="{StaticResource LightBrownMeasureInfoBrush}" />
+								</Viewbox>
+								<Rectangle
+									Grid.Column="2"
+									Height="2"
+									VerticalAlignment="Bottom"
+									Fill="Black" />
+							</Grid>
+
+							<Grid
+								Grid.Row="1"
+								Grid.Column="1"
+								Margin="5,0">
+
+								<Ellipse
+									Width="5"
+									Height="5"
+									HorizontalAlignment="Left"
+									Fill="Black" />
+								<Ellipse
+									Width="5"
+									Height="5"
+									HorizontalAlignment="Center"
+									Fill="Black" />
+
+								<Ellipse
+									Width="5"
+									Height="5"
+									HorizontalAlignment="Right"
+									Fill="Black" />
+							</Grid>
+
+							<Grid
+								Grid.Row="1"
+								Grid.Column="2">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition />
+									<ColumnDefinition Width="2*" />
+									<ColumnDefinition />
+								</Grid.ColumnDefinitions>
+
+								<Rectangle
+									Height="2"
+									VerticalAlignment="Bottom"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="0"
+									Width="2"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Stretch"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="1"
+									Height="2"
+									VerticalAlignment="Top"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="2"
+									Width="2"
+									HorizontalAlignment="Left"
+									VerticalAlignment="Stretch"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="2"
+									Height="2"
+									VerticalAlignment="Bottom"
+									Fill="Black" />
+							</Grid>
+
+							<Grid
+								Grid.Row="1"
+								Grid.Column="3">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition />
+									<ColumnDefinition Width="2*" />
+									<ColumnDefinition />
+								</Grid.ColumnDefinitions>
+
+								<Rectangle
+									Height="2"
+									VerticalAlignment="Bottom"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="0"
+									Width="2"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Stretch"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="1"
+									Height="2"
+									VerticalAlignment="Top"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="2"
+									Width="2"
+									HorizontalAlignment="Left"
+									VerticalAlignment="Stretch"
+									Fill="Black" />
+
+								<Rectangle
+									Grid.Column="2"
+									Height="2"
+									VerticalAlignment="Bottom"
+									Fill="Black" />
+							</Grid>
+
+							<Line
+								Grid.Row="2"
+								Grid.Column="2"
+								Margin="0,0,7.7,0"
+								HorizontalAlignment="Right"
+								Stroke="Black"
+								StrokeDashArray="1 1"
+								StrokeThickness="2"
+								Y2="8" />
+							<Viewbox
+								Grid.Row="2"
+								Grid.Column="2"
+								Grid.ColumnSpan="2"
+								Height="5"
+								Margin="0,0,10,5"
+								HorizontalAlignment="Right">
+								<userControls:Arrow
+									Width="72"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Stretch"
+									Angle="0"
+									Foreground="{StaticResource LightPinkMeasureInfoBrush}" />
+							</Viewbox>
+							<Line
+								Grid.Row="2"
+								Grid.Column="3"
+								Margin="0,0,7.7,0"
+								HorizontalAlignment="Right"
+								Stroke="Black"
+								StrokeDashArray="1 1"
+								StrokeThickness="2"
+								Y2="8" />
+
+						</Grid>
+
+						<TextBlock
+							Name="PitchTextBlock"
+							HorizontalAlignment="Center"
+							FontSize="{StaticResource FontSizeBig}"
+							FontWeight="Bold"
+							Foreground="{StaticResource LightPinkMeasureInfoBrush}"
+							Text="Pitch" />
+						<TextBlock
+							Margin="0,5,0,0"
+							HorizontalAlignment="Center"
+							FontSize="10">
+							<Run Text="{Binding Pitch, Mode=OneWay}" />
+							<!--<Run Text="+/-" />
+							<Run Text="{Binding WidthTolerance, Mode=OneWay}" />-->
+							<!--  Doesnt have pitch tolerance in settings?  -->
+						</TextBlock>
+					</StackPanel>
+
+					<StackPanel
+						Grid.Row="1"
+						Grid.Column="2"
+						Width="165"
+						Margin="0,40,0,0"
+						HorizontalAlignment="Right"
+						VerticalAlignment="Top"
+						Orientation="Vertical">
+						<TextBlock
+							Name="WidthTextBlock"
+							Margin="0,0,0,0"
+							HorizontalAlignment="Center"
+							FontSize="{StaticResource FontSizeBig}"
+							FontWeight="Bold"
+							Foreground="{StaticResource LightBlueMeasureInfoBrush}"
+							Text="Width" />
+						<TextBlock
+							Margin="0,5,0,0"
+							HorizontalAlignment="Center"
+							FontSize="10">
+							<Run Text="{Binding WidthValue, Mode=OneWay}" />
+						</TextBlock>
+						<StackPanel
+							HorizontalAlignment="Center"
+							Orientation="Horizontal">
+							<controls:ToleranceDisplayer
+								Margin="0,4,0,0"
+								HorizontalAlignment="Center"
+								Tolerance="{Binding WidthState, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}" />
+							<TextBlock
+								Margin="5,5,0,0"
+								HorizontalAlignment="Center"
+								FontSize="10">
+								<Run Text="Deviation = " />
+								<Run Text="{Binding WidthDelta, Mode=OneWay}" />
+							</TextBlock>
+						</StackPanel>
+						<TextBlock
+							Margin="0,5,0,0"
+							HorizontalAlignment="Center"
+							FontSize="10">
+							<Run Text="Target" />
+							<Run Text="{Binding WidthTarget, Mode=OneWay}" />
+							<Run Text="+/-" />
+							<Run Text="{Binding WidthTolerance, Mode=OneWay}" />
+						</TextBlock>
+					</StackPanel>
+
+				</Grid>
+			</Viewbox>
+		</Grid>
+	</DockPanel>
+</UserControl>

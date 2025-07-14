@@ -1,0 +1,443 @@
+﻿<UserControl x:Class="ADC.View.Graph.GraphView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:view="clr-namespace:ADC.View"
+    xmlns:GraphModel="clr-namespace:GraphModel;assembly=GraphModel"
+    xmlns:GraphUI="clr-namespace:GraphUI;assembly=GraphUI"
+             xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools"
+             xmlns:ac="clr-namespace:AdornedControl;assembly=AdornedControl"
+             xmlns:graph="clr-namespace:ADC.View.Graph"
+             
+             xmlns:AdcEnum="clr-namespace:ADC.AdcEnum"
+    xmlns:VModel="clr-namespace:ADC.ViewModel"
+    xmlns:ZoomAndPan="clr-namespace:ZoomAndPan;assembly=ZoomAndPan"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ADC.View.Graph"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="GraphResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <RoutedUICommand x:Key="Commands.ZoomOut" />
+            <RoutedUICommand x:Key="Commands.ZoomIn" />
+            <RoutedUICommand x:Key="Commands.JumpBackToPrevZoom" />
+            <RoutedUICommand x:Key="Commands.FitContent" />
+            <RoutedUICommand x:Key="Commands.Fill" />
+            <RoutedUICommand x:Key="Commands.OneHundredPercent" />
+        <AdcTools:BindingProxy x:Key="proxy" Data="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GraphView}}}" />
+
+
+            <!--
+                Data-template for ConectionViewModel.
+                
+                Note that the 'Start' and 'End' of the arrow are bound to 'SourceConnectorHotspot' and 'DestConnectorHotspot' in
+                the view-model.
+                
+                In this sample a curved arrow represents connections between nodes.
+            -->
+            <DataTemplate DataType="{x:Type GraphModel:ConnectionViewModel}">
+
+                <!--
+                    An adorned control is used, to represent the connection.
+                    When the user hovers the mouse cursor over the connection, the
+                    'delete connection' adorner pops up and allows them to delete the connection.
+                -->
+                <ac:AdornedControl
+                    HorizontalAdornerPlacement="Mouse"
+                    IsMouseOverShowEnabled="False"
+                    IsMouseButtonShowEnabled="{Binding ElementName=graphControl, Path=IsNotDragging}"
+                    VerticalAdornerPlacement="Mouse">
+                    <!--  IsMouseOverShowEnabled="{Binding ElementName=graphControl, Path=IsNotDragging}"  -->
+                    <!--  IsMouseOverShowEnabled="{Binding ElementName=RecipeView, Path=IsAdornedEnabled}"  -->
+
+                    <!--  <local:Arrow
+                        Stroke="{StaticResource connectionBrush}"
+                        StrokeThickness="1"
+                        Fill="{StaticResource connectionBrush}"
+                        Start="{Binding SourceConnectorHotspot}"
+                        End="{Binding DestConnectorHotspot}"
+                        IsHitTestVisible="False"
+                    />-->
+
+                    <!--  The connection is represented by a curved arrow.  -->
+                    <graph:CurvedArrow
+                        Fill="{DynamicResource connectionBrush}"
+                        Points="{Binding Points}"
+                        Stroke="{DynamicResource connectionBrush}"
+                        StrokeThickness="3" />
+
+                    <ac:AdornedControl.AdornerContent >
+
+                        <!--
+                            This is the adorner that pops up when the user hovers the mouse over the connection.
+                            It displays a button that the user can click to delete the connection.
+                        -->
+                        <Canvas x:Name="connectionAdornerCanvas"
+                            Width="30"
+                            Height="30"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top" Visibility="{Binding Data.IsEditable, Source={StaticResource proxy}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Line
+                                Stroke="Black"
+                                StrokeThickness="1"
+                                X1="0"
+                                X2="15"
+                                Y1="30"
+                                Y2="15" />
+
+                            <!--  Commande a deplacer de RecipeViewModel à GraphModel:ConnectionViewModel ????  -->
+                            <!--Command="{Binding Source={StaticResource Locator}, Path=RecipeViewModel.DeleteConnectionCommand}"-->
+                            <Button x:Name="deleteConnectionButton" Canvas.Left="10" Canvas.Top="0"
+                                Width="20"
+                                Height="20"                         
+                                Command="{Binding Data.DataContext.DeleteConnectionCommand, Source={StaticResource proxy}}"
+                                CommandParameter="{Binding}"
+                                Cursor="Hand"
+                                Focusable="False"
+                                Template="{StaticResource deleteButtonTemplate}" />
+                        </Canvas>
+                    </ac:AdornedControl.AdornerContent>
+                </ac:AdornedControl>
+            </DataTemplate>
+
+
+            <!--  Define a data-template for the 'NodeViewModel' class.  -->
+            <DataTemplate DataType="{x:Type GraphModel:NodeViewModel}">
+                <Grid
+                    MinWidth="130"
+                    Margin="6,10,6,10"
+                        SizeChanged="Node_SizeChanged" Background="{Binding BackgroundColorIndex, Converter={StaticResource ColorIndexToNodeColorConverter}}">
+
+                    <!--
+                        This grid contains the node's connectors.
+                        The margin is negative so that the connectors overlap the body of the node and it's selection border.
+                    -->
+                    <Grid Margin="4,-8,4,-8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <!--  spacer  -->
+                            <RowDefinition Height="2" />
+                            <!-- <RowDefinition Height="*" MinHeight="20" /> -->
+                            <RowDefinition Height="auto" />
+                            <!--  spacer  -->
+                            <RowDefinition Height="2" />
+                            <RowDefinition Height="auto" />
+                            <!--  spacer  -->
+                            <RowDefinition Height="2" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  The name of the node.  -->
+                        <TextBlock Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            Text="{Binding Name}" />
+
+                        <TextBlock Grid.Row="4"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                                Text="{Binding Info}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GraphView}},Path=NodeInfoIsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        </TextBlock>
+
+                        <TextBlock Grid.Row="4"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                                Text="{Binding ProgressInfo}" Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GraphView}},Path=NodeProgessInfoIsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        </TextBlock>
+
+                        <!--  Displays the node's input connectors.  -->
+                        <ItemsControl Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            Focusable="False"
+                            ItemTemplate="{StaticResource inputConnectorTemplate}"
+                            ItemsSource="{Binding InputConnectors}" />
+
+                        <!--  Displays the node's output connectors.  -->
+                        <ItemsControl Grid.Row="6"
+                            HorizontalAlignment="Center"
+                            Focusable="False"
+                            ItemTemplate="{StaticResource outputConnectorTemplate}"
+                            ItemsSource="{Binding OutputConnectors}" />
+                    </Grid>             
+
+                    <Viewbox Height="20" Margin="-10,-10"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <ContentControl ContentTemplate="{Binding State, Converter={StaticResource ModuleStateToImageDictionaryConverter}}" ToolTip="{Binding Message}"/>
+                    </Viewbox>
+
+                </Grid>
+            </DataTemplate>
+
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <UserControl.InputBindings>
+
+        <!--  Bind input to commands.  -->
+        <KeyBinding Command="{Binding CopyNodeCommand}" Gesture="CTRL+C" />
+        <KeyBinding Command="{Binding PastNodeCommand}" Gesture="CTRL+V" />
+        <KeyBinding Command="{Binding CutNodeCommand}" Gesture="CTRL+X" />
+        <KeyBinding Key="Del" Command="{Binding DeleteNodeCommand}" />
+        <KeyBinding Key="Minus" Command="{StaticResource Commands.ZoomOut}" />
+        <KeyBinding Key="Plus" Command="{StaticResource Commands.ZoomIn}" />
+        <KeyBinding Key="Backspace" Command="{StaticResource Commands.JumpBackToPrevZoom}" />
+        <KeyBinding Key="Space" Command="{StaticResource Commands.FitContent}" />
+        <!--  KeyBinding Key="F5" Command="{Binding RunGraphCommand}" /  -->
+
+    </UserControl.InputBindings>
+
+    <UserControl.CommandBindings>
+
+        <!--  Bind commands to event handlers.  -->
+
+        <CommandBinding Command="{StaticResource Commands.ZoomOut}" Executed="ZoomOut_Executed" />
+        <CommandBinding Command="{StaticResource Commands.ZoomIn}" Executed="ZoomIn_Executed" />
+        <CommandBinding
+            CanExecute="JumpBackToPrevZoom_CanExecuted"
+            Command="{StaticResource Commands.JumpBackToPrevZoom}"
+            Executed="JumpBackToPrevZoom_Executed" />
+        <CommandBinding Command="{StaticResource Commands.FitContent}" Executed="FitContent_Executed" />
+        <CommandBinding Command="{StaticResource Commands.Fill}" Executed="Fill_Executed" />
+        <CommandBinding Command="{StaticResource Commands.OneHundredPercent}" Executed="OneHundredPercent_Executed" />
+
+    </UserControl.CommandBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+
+        <!--  ScrollViewer Graph container  -->
+        <ScrollViewer Grid.Row="0"
+            Background="#FFEFEFF2"
+            CanContentScroll="True"
+            Focusable="False"
+            HorizontalScrollBarVisibility="Visible"
+            VerticalScrollBarVisibility="Visible">
+            <!--
+                The ZoomAndPanControl displays the GraphView as its content.
+                We can use the mouse to zoom and pan about the GraphView.
+            -->
+            <ZoomAndPan:ZoomAndPanControl x:Name="zoomAndPanControl"
+                Background="LightGray"
+                    ContentOffsetX="{Binding Data.OffsetX, Source={StaticResource proxy}, Mode=TwoWay}"
+                    ContentOffsetY="{Binding Data.OffsetY, Source={StaticResource proxy}, Mode=TwoWay}"
+                    ContentScale="{Binding Data.Scale, Source={StaticResource proxy}, Mode=TwoWay}"
+                    ContentViewportHeight="0"
+                    ContentViewportWidth="0"
+                Focusable="False"
+                IsMouseWheelScrollingEnabled="True">
+                <!--
+                    We need to nest our GraphView in an AdornerDecorator so that adorners work correct when
+                    we zoom in and out using the ZoomAndPanControl
+                -->
+                <AdornerDecorator>
+                    <!--
+                        This grid specifies the size of the ZoomAndPanControl's content.
+                        It wraps up both the GraphView and drag-zooming Canvas.
+                    -->
+                    <Grid Width="2000" Height="4000">
+                        <!--  The GraphView is the content displayed by the ZoomAndPanControl.  -->
+
+                        <GraphUI:GraphView x:Name="graphControl"
+                                           Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GraphView}},Path=GraphBackground}"
+                            ConnectionDragCompleted="graphControl_ConnectionDragCompleted"
+                            ConnectionDragStarted="graphControl_ConnectionDragStarted"
+                            ConnectionDragging="graphControl_ConnectionDragging"
+                                ConnectionsSource="{Binding Path=GraphVM.Connections}"
+                                EnableNodeDragging="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:GraphView}},Path=IsEditable}"
+                            MouseDown="graphControl_MouseDown"
+                            MouseMove="graphControl_MouseMove"
+                            MouseUp="graphControl_MouseUp"
+                            MouseWheel="graphControl_MouseWheel"
+                            NodeDragCompleted="graphControl_NodeDragCompletedEvent"
+                            NodeDragStarted="graphControl_NodeDragStartedEvent"
+                            NodeLeftClic="graphControl_NodeLeftClic"
+                                NodesSource="{Binding Path=GraphVM.Nodes}"
+                            QueryConnectionFeedback="graphControl_QueryConnectionFeedback"
+                                SelectionChanged="graphControl_SelectionChanged"
+                                Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+                            <GraphUI:GraphView.ContextMenu>
+                                <ContextMenu>
+
+                                    <!--  Clicking this menu item creates a new node.  -->
+                                    <!--<MenuItem
+                                    Header="Insert Module Before..."
+                                    IsEnabled="{Binding IsEditable}"
+                                    ToolTip="Insert a module between this module and its parents.">
+                                                        <MenuItem.Icon>
+                                                            <Image Source="../../Resources/insert-module-before.png" />
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>--> 
+                                    <MenuItem
+                                        Command="{Binding InsertChildNodeCommand}"
+                                        Header="Insert Module After..."
+                                        ToolTip="Insert a module between this module and its children.">
+                                        <MenuItem.Icon>
+                                            <Viewbox>
+                                                <ContentControl ContentTemplate="{DynamicResource InsertModuleAfterADCImage}"/>
+                                            </Viewbox>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem
+                                        Command="{Binding AddChildNodeCommand}"
+                                        Header="Create new Branch from here..."
+                                        ToolTip="Add a module in a new branch after this module.">
+                                        <MenuItem.Icon>
+                                            <Viewbox>
+                                                <ContentControl ContentTemplate="{DynamicResource AddBranchADCImage}"/>
+                                            </Viewbox>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem
+                                        Command="{Binding DeleteNodeCommand}"
+                Header="Delete Module">
+                                        <MenuItem.Icon>
+                                            <Viewbox>
+                                                <ContentControl ContentTemplate="{DynamicResource DeleteADCImage}"/>
+                                            </Viewbox>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator />
+                                    <MenuItem x:Name="ExporAsMetaBloc"
+                                        Command="{Binding ExportAsMetaBlocCommand}"
+                                        Header="Export as Metablock..."
+                                        ToolTip="Save the selected modules in a file for later use." >
+                                        <MenuItem.Icon>
+                                            <Viewbox>
+                                                <ContentControl ContentTemplate="{DynamicResource ExportMetablockADCImage}"/>
+                                            </Viewbox>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem
+                                        Command="{Binding ManageExportsCommand}"
+                                        Header="Select visible Parameters..."
+                                        ToolTip="Select Parameters that are displayed in the Simplified View." >
+                                        <MenuItem.Icon>
+                                            <Viewbox>
+                                                <ContentControl ContentTemplate="{DynamicResource VisibleParameterADCImage}"/>
+                                            </Viewbox>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </GraphUI:GraphView.ContextMenu>                          
+                        </GraphUI:GraphView>
+
+                        <!--
+                            This Canvas and Border are used as a very simple way to render a drag rectangle that the user
+                            uses to specify an area to zoom in on.
+                        -->
+                        <Canvas x:Name="dragZoomCanvas" Visibility="Collapsed">
+                            <Border x:Name="dragZoomBorder"
+                                Background="Silver"
+                                BorderBrush="Black"
+                                BorderThickness="1"
+                                CornerRadius="1"
+                                Opacity="0" />
+                        </Canvas>
+
+                    </Grid>
+                </AdornerDecorator>
+            </ZoomAndPan:ZoomAndPanControl>
+
+        </ScrollViewer>
+
+
+        <!--  Grid placed below the zoom and pan control that contains the zoom slider, zoom label and some buttons.  -->
+        <Grid Grid.Row="1" Grid.Column="0"
+            Style="{DynamicResource UnityGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Menu>
+                    <!--
+                        The 'Maj content' button.  Causes the nodes to be placed automatiquely.
+                    -->
+                    <MenuItem
+                        Command="{Binding AlignNodesCommand}"
+                        Header="Align"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Fit all nodes to the viewport" />
+
+                    <!--
+                        The 'fit content' button.  Causes the content to be scaled so that all the graph nodes fit in the viewport.
+                    -->
+                    <MenuItem
+                        Command="{DynamicResource Commands.FitContent}"
+                        Header="Fit"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Fit all nodes to the viewport" />
+
+                    <!--
+                        The fill button.  Causes the content to be scaled so that it fits in the viewport.
+                    -->
+                    <MenuItem
+                        Command="{StaticResource Commands.Fill}"
+                        Header="Fill"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Fit the entire content area to the viewport" />
+
+                    <!--
+                        The 100% button.  Causes the content to be scaled to 100 percent.
+                    -->
+                    <MenuItem
+                        Command="{StaticResource Commands.OneHundredPercent}"
+                        Header="100%"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Scale the content to 100%" />
+
+                    <!--  Button to zoom out.  -->
+                    <MenuItem
+                        Command="{StaticResource Commands.ZoomOut}"
+                        Header="-"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Zoom out from the content" />
+                </Menu>
+            </StackPanel>
+
+            <!--  Slider to change the current zoom level.  -->
+            <Slider Grid.Column="1"
+                Margin="5,5,5,5"
+                LargeChange="20"
+                Maximum="200"
+                Minimum="10"
+                SmallChange="10"
+                TickFrequency="10"
+                TickPlacement="TopLeft"
+                ToolTip="Change the zoom level of the content"
+                Value="{Binding ElementName=zoomAndPanControl, Path=ContentScale, Converter={StaticResource ScaleToPercentConverter}}" />
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Menu>
+                    <!--
+                        Button to zoom in.
+                    -->
+                    <MenuItem
+                        Command="{StaticResource Commands.ZoomIn}"
+                        Header="+"
+                        Style="{DynamicResource UnityMenuItemStyle}"
+                        ToolTip="Zoom in on the content" />
+                </Menu>
+                <!--  Stick a resize grip in the bottom right corner of the window.  -->
+                <ResizeGrip DockPanel.Dock="Right" />
+
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</UserControl>

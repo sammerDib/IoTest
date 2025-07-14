@@ -1,0 +1,421 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:converters1="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.DataTree.Utilities.Converters"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dataTreeControls="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.DataTree.Controls"
+	xmlns:filters="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.Generic.Filters"
+	xmlns:interfaces="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.DataTree.Interfaces"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:searchControls="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.Generic.Search.Controls"
+	xmlns:sortControls="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.Generic.Sort.Controls"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	mc:Ignorable="d">
+
+	<!--#region Constants-->
+	<system:Double x:Key="DataTreeItemMinHeight">40</system:Double>
+	<system:Double x:Key="DataTreeDisabledOpacity">0.3</system:Double>
+	<KeyTime x:Key="DataTreeItemRotationAnimationKeyTime">0:0:0.15</KeyTime>
+	<!--#endregion Constants-->
+
+	<!--#region Converters-->
+	<converters1:ITreeNodeToLeftMarginConverter
+		x:Key="ITreeNodeToLeftMarginConverter"
+		Length="20" />
+	<!--#endregion Converters-->
+
+	<!--#region Brushes-->
+	<SolidColorBrush x:Key="DataTreeItemBackground" Color="Transparent" />
+	<SolidColorBrush x:Key="DataTreeItemMouseOverBackground" Opacity="0.2" Color="Black" />
+	<SolidColorBrush x:Key="DataTreeItemSelectedBackground" Opacity="0.5" Color="#1E89AF" />
+	<SolidColorBrush x:Key="DataTreeItemSelectedForeground" Color="Black" />
+	<SolidColorBrush x:Key="DataTreeItemDropTargetBackground" Color="Black" />
+	<!--#endregion Brushes-->
+
+	<!--#region TreeElement-->
+
+	<Style
+		x:Key="DataTreeItemExpandToggleButtonStyle"
+		BasedOn="{x:Null}"
+		TargetType="{x:Type ToggleButton}">
+		<Setter Property="MinHeight" Value="{StaticResource DataTreeItemMinHeight}" />
+		<Setter Property="Height" Value="Auto" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="HorizontalContentAlignment" Value="Left" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ToggleButton}">
+					<Grid
+						x:Name="container"
+						Width="{TemplateBinding Width}"
+						Height="{TemplateBinding Height}"
+						Background="Transparent">
+						<DockPanel>
+							<Path
+								x:Name="ExpandPath"
+								Height="10"
+								Margin="10,0"
+								Data="m 5.9999998,294.18 -4.59,-4.59 L 0,291 5.9999998,297 12,291 10.59,289.59 Z"
+								DockPanel.Dock="Right"
+								Fill="{TemplateBinding Foreground}"
+								Opacity="{StaticResource DataTreeDisabledOpacity}"
+								RenderTransformOrigin="0.5,0.5"
+								SnapsToDevicePixels="True"
+								Stretch="Uniform">
+								<Path.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform />
+										<SkewTransform />
+										<RotateTransform />
+										<TranslateTransform />
+									</TransformGroup>
+								</Path.RenderTransform>
+							</Path>
+							<ContentPresenter
+								x:Name="contentPresenter"
+								Margin="{TemplateBinding Padding}"
+								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+								DockPanel.Dock="Left"
+								Focusable="False"
+								RecognizesAccessKey="True"
+								SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+						</DockPanel>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CheckStates">
+								<VisualStateGroup.Transitions>
+									<VisualTransition
+										GeneratedDuration="2"
+										From="Unchecked"
+										To="Checked">
+										<Storyboard>
+											<DoubleAnimationUsingKeyFrames
+												Storyboard.TargetName="ExpandPath"
+												Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+												<EasingDoubleKeyFrame
+													KeyTime="0"
+													Value="-90" />
+												<EasingDoubleKeyFrame
+													KeyTime="{StaticResource DataTreeItemRotationAnimationKeyTime}"
+													Value="0" />
+											</DoubleAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualTransition>
+									<VisualTransition
+										GeneratedDuration="2"
+										From="Checked"
+										To="Unchecked">
+										<Storyboard>
+											<DoubleAnimationUsingKeyFrames
+												Storyboard.TargetName="ExpandPath"
+												Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+												<EasingDoubleKeyFrame
+													KeyTime="0"
+													Value="0" />
+												<EasingDoubleKeyFrame
+													KeyTime="{StaticResource DataTreeItemRotationAnimationKeyTime}"
+													Value="-90" />
+											</DoubleAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualTransition>
+								</VisualStateGroup.Transitions>
+								<!--  Instant duration to avoid animation when creating the UI element  -->
+								<VisualState x:Name="Checked">
+									<Storyboard>
+										<DoubleAnimation
+											Storyboard.TargetName="ExpandPath"
+											Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)"
+											To="0"
+											Duration="0" />
+									</Storyboard>
+								</VisualState>
+								<!--  Instant duration to avoid animation when creating the UI element  -->
+								<VisualState x:Name="Unchecked">
+									<Storyboard>
+										<DoubleAnimation
+											Storyboard.TargetName="ExpandPath"
+											Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)"
+											To="-90"
+											Duration="0" />
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!--  This control is dependent on a DataContext ITreeNode typed because it is used with an encapsulation of the model by an ITreeNode managed by the DataTree.  -->
+	<Style TargetType="{x:Type dataTreeControls:DataTreeItem}">
+		<d:Style.DataContext>
+			<x:Type Type="interfaces:ITreeNode" />
+		</d:Style.DataContext>
+		<Setter Property="IsClicked" Value="{Binding IsClicked}" />
+		<Setter Property="IsDragDropDestination" Value="{Binding IsNextParentOfDraggedElement}" />
+		<Setter Property="IsExpandable" Value="{Binding IsExpandable}" />
+		<Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+		<Setter Property="IsMouseOverHeader" Value="{Binding IsMouseOver, Mode=OneWayToSource}" />
+		<Setter Property="IsSelected" Value="{Binding IsSelected}" />
+		<Setter Property="OnDragCommand" Value="{Binding OnDragCommand}" />
+		<Setter Property="SelectedCommand" Value="{Binding SelectCommand}" />
+		<Setter Property="ItemTemplate" Value="{Binding ItemTemplate, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dataTreeControls:DataTree}}}" />
+		<Setter Property="ItemTemplateSelector" Value="{Binding ItemTemplateSelector, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type dataTreeControls:DataTree}}}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type dataTreeControls:DataTreeItem}">
+					<Grid>
+						<Border
+							x:Name="MainBorder"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							Opacity="{StaticResource DataTreeDisabledOpacity}" />
+
+						<DockPanel>
+
+							<!--#region Header-->
+
+							<!--  A Border cannot be used instead of grid, the transparent background is necessary to raise trigger events  -->
+							<ContentControl
+								x:Name="PART_HeaderGrid"
+								DockPanel.Dock="Top">
+								<Grid>
+
+									<Rectangle
+										Fill="{TemplateBinding Background}"
+										IsHitTestVisible="False" />
+
+									<Border
+										x:Name="Header"
+										Background="Transparent"
+										Focusable="True"
+										SnapsToDevicePixels="true">
+
+										<DockPanel Margin="{Binding Path=., Converter={StaticResource ITreeNodeToLeftMarginConverter}}">
+
+											<ToggleButton
+												x:Name="Expander"
+												ClickMode="Press"
+												DockPanel.Dock="Left"
+												Foreground="{TemplateBinding Foreground}"
+												IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+												Style="{StaticResource DataTreeItemExpandToggleButtonStyle}" />
+
+											<!--  Models are always encapsulated in TreeNodes, that's why it is possible to reference DataContext.Model because the DataContext is always of type TreeNode  -->
+											<!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+											<ContentPresenter
+												x:Name="PART_Header"
+												HorizontalAlignment="Stretch"
+												VerticalAlignment="Center"
+												Content="{Binding DataContext.Model, RelativeSource={RelativeSource TemplatedParent}}"
+												ContentTemplate="{TemplateBinding ItemTemplate}"
+												ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
+
+										</DockPanel>
+
+									</Border>
+
+								</Grid>
+
+							</ContentControl>
+							<!--#endregion Header-->
+
+						</DockPanel>
+
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsDragDropDestination" Value="true">
+							<Setter TargetName="MainBorder" Property="Background" Value="{DynamicResource DataTreeItemDropTargetBackground}" />
+						</Trigger>
+						<Trigger Property="IsExpandable" Value="False">
+							<Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+						</Trigger>
+						<Trigger Property="IsMouseOverHeader" Value="True">
+							<Setter TargetName="Header" Property="Background" Value="{DynamicResource DataTreeItemMouseOverBackground}" />
+						</Trigger>
+						<Trigger Property="IsSelected" Value="true">
+							<Setter TargetName="Header" Property="Background" Value="{DynamicResource DataTreeItemSelectedBackground}" />
+							<Setter TargetName="Header" Property="TextElement.Foreground" Value="{DynamicResource DataTreeItemSelectedForeground}" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter TargetName="PART_HeaderGrid" Property="Opacity" Value="{StaticResource DataTreeDisabledOpacity}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!--#endregion TreeElement-->
+
+	<!--#region DataTree-->
+
+	<Style TargetType="{x:Type dataTreeControls:DataTreeItemsControl}">
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Focusable" Value="True" />
+		<Setter Property="VerticalAlignment" Value="Stretch" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ItemsControl}">
+					<ScrollViewer
+						CanContentScroll="True"
+						Focusable="False"
+						VerticalScrollBarVisibility="Auto">
+						<ItemsPresenter />
+					</ScrollViewer>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="ItemsPanel">
+			<Setter.Value>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						IsItemsHost="True"
+						IsVirtualizing="True"
+						Orientation="Vertical"
+						VirtualizationMode="Recycling" />
+				</ItemsPanelTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<DataTemplate x:Key="DataTreeDragDropSeparatorTemplate">
+		<Grid
+			Height="10"
+			Panel.ZIndex="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="10" />
+				<ColumnDefinition />
+				<ColumnDefinition Width="10" />
+			</Grid.ColumnDefinitions>
+			<Rectangle
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				Height="2"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Fill="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType=ContentPresenter}}" />
+			<Polygon
+				Grid.Column="0"
+				VerticalAlignment="Center"
+				Fill="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+				Points="0,0 10,5, 0,10" />
+			<Polygon
+				Grid.Column="2"
+				VerticalAlignment="Center"
+				Fill="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+				Points="10,0 10,10, 0,5" />
+		</Grid>
+	</DataTemplate>
+
+	<Style TargetType="{x:Type dataTreeControls:DataTree}">
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+		<Setter Property="Focusable" Value="True" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type dataTreeControls:DataTree}">
+					<Grid
+						Background="Transparent"
+						Focusable="True">
+
+						<!--#region Drag and Drop Grid-->
+						<Grid
+							x:Name="PART_DragGrid"
+							Height="Auto"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Top"
+							Panel.ZIndex="1"
+							IsHitTestVisible="False"
+							Visibility="Hidden">
+							<Grid.RenderTransform>
+								<TranslateTransform x:Name="PART_DragGridTransform" />
+							</Grid.RenderTransform>
+							<ContentPresenter
+								Panel.ZIndex="1"
+								Content="{Binding}"
+								ContentTemplate="{StaticResource DataTreeDragDropSeparatorTemplate}" />
+						</Grid>
+						<!--#endregion Drag and Drop Grid-->
+
+						<!--#region Tree-->
+						<DockPanel
+							x:Name="NavigationDockPanel"
+							Margin="30,0,0,0">
+							<Border
+								x:Name="HeaderBorder"
+								BorderBrush="{DynamicResource ListViewBorderBrush}"
+								BorderThickness="0,0,0,1"
+								DockPanel.Dock="Top">
+								<DockPanel>
+
+									<sortControls:SortingButton
+										x:Name="SortingButton"
+										Margin="10,0,0,0"
+										DockPanel.Dock="Left"
+										SortEngine="{Binding DataSource.Sort, RelativeSource={RelativeSource TemplatedParent}}" />
+
+									<ContentPresenter
+										Content="{Binding AdditionalHeaderContent, RelativeSource={RelativeSource TemplatedParent}}"
+										DockPanel.Dock="Right" />
+
+									<searchControls:SearchBar
+										x:Name="SearchBar"
+										VerticalAlignment="Top"
+										SearchEngine="{Binding DataSource.Search, RelativeSource={RelativeSource TemplatedParent}}" />
+
+								</DockPanel>
+							</Border>
+
+							<ContentPresenter
+								Content="{TemplateBinding BottomAdditionalContent}"
+								DockPanel.Dock="Bottom" />
+							<dataTreeControls:DataTreeItemsControl
+								x:Name="PART_Content"
+								Focusable="False"
+								ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+								ItemContainerStyleSelector="{TemplateBinding ItemContainerStyleSelector}"
+								ItemsSource="{Binding DataSource.SourceView, RelativeSource={RelativeSource TemplatedParent}}"
+								VirtualizingPanel.ScrollUnit="Pixel" />
+						</DockPanel>
+						<!--#endregion Tree-->
+
+						<filters:FilterPanelView
+							x:Name="FilterPanelView"
+							HorizontalAlignment="Left"
+							Background="Transparent"
+							DataContext="{Binding DataSource.Filter, RelativeSource={RelativeSource TemplatedParent}}" />
+
+					</Grid>
+
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding DataSource.Filter.Collection.Count, RelativeSource={RelativeSource Self}}" Value="0">
+							<Setter TargetName="NavigationDockPanel" Property="Margin" Value="0" />
+							<Setter TargetName="FilterPanelView" Property="Visibility" Value="Collapsed" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding DataSource.Search.SearchDefinitions.Count, RelativeSource={RelativeSource Self}}" Value="0">
+							<Setter TargetName="SearchBar" Property="Visibility" Value="Collapsed" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding DataSource.Sort.SortDefinitions.Count, RelativeSource={RelativeSource Self}}" Value="0">
+							<Setter TargetName="SortingButton" Property="Visibility" Value="Collapsed" />
+						</DataTrigger>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding DataSource.Search.SearchDefinitions.Count, RelativeSource={RelativeSource Self}}" Value="0" />
+								<Condition Binding="{Binding DataSource.Sort.SortDefinitions.Count, RelativeSource={RelativeSource Self}}" Value="0" />
+							</MultiDataTrigger.Conditions>
+							<Setter TargetName="HeaderBorder" Property="Visibility" Value="Collapsed" />
+						</MultiDataTrigger>
+					</ControlTemplate.Triggers>
+
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!--#endregion DataTree-->
+
+</ResourceDictionary>

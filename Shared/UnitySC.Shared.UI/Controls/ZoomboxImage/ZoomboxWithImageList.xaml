@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="UnitySC.Shared.UI.Controls.ZoomboxImage.ZoomboxWithImageList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="theView">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key='resultsSource'
+                      Source="{Binding ElementName=theView, Path=ItemsSource}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Side" />
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Liste des images -->
+        <ListView x:Name="resultList" ItemsSource="{Binding Source={StaticResource resultsSource}}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0,0,5,0">
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Expander IsExpanded="True">
+                                            <Expander.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Path=Name}" FontWeight="Bold" Foreground="Gray" FontSize="20" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Expander.Header>
+                                            <ItemsPresenter />
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </ListView.GroupStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Type" Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Height="18" Width="24">
+                                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource FringesGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource IconsColor}"
+                                                   Visibility="{Binding Path=ImageType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static local:ImageType.Fringe}}" />
+                                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource WaferGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource IconsColor}"
+                                                   Visibility="{Binding Path=ImageType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static local:ImageType.Light}}" />
+                                    <Border Background="Black"
+                                                    Visibility="{Binding Path=ImageType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static local:ImageType.Dark}}">
+                                        <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource WaferGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource IconsColor}" />
+                                    </Border>
+                                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource FileGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource IconsColor}"
+                                                   Visibility="{Binding Path=ImageType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static local:ImageType.Data}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Image -->
+        <local:ZoomboxImageWithButtons Grid.Column="1" ImageSource="{Binding ElementName=resultList, Path=SelectedItem.Image}" />
+    </Grid>
+</UserControl>

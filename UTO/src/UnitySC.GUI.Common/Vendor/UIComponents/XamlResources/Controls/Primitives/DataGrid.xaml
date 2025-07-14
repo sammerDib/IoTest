@@ -1,0 +1,212 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!--#region Column header-->
+
+    <SolidColorBrush x:Key="DataGridColumnHeaderForeground" Color="{DynamicResource HeaderForeground}" />
+    <SolidColorBrush x:Key="DataGridColumnHeaderBackground" Color="{DynamicResource HeaderBackground}" />
+
+    <Style x:Key="DataGridColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource DataGridColumnHeaderForeground}" />
+        <Setter Property="HorizontalContentAlignment" Value="left" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Background" Value="{DynamicResource DataGridColumnHeaderBackground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                    <Grid>
+                        <Border
+                            x:Name="Border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
+                        <ContentPresenter
+                            Margin="5,0"
+                            HorizontalAlignment="left"
+                            VerticalAlignment="Center">
+                            <ContentPresenter.Resources>
+                                <Style BasedOn="{StaticResource Body1TextStyle}" TargetType="TextBlock" />
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion Column header-->
+
+    <!--#region Row header-->
+
+    <SolidColorBrush x:Key="DataGridRowHeaderForeground" Color="{DynamicResource HeaderForeground}" />
+    <SolidColorBrush x:Key="DataGridRowHeaderBackground" Color="{DynamicResource HeaderBackground}" />
+
+    <Style x:Key="DataGridRowHeaderStyle" TargetType="{x:Type DataGridRowHeader}">
+        <Setter Property="Background" Value="{DynamicResource DataGridRowHeaderBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource DataGridRowHeaderForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridRowHeader}">
+                    <Grid>
+                        <Border
+                            x:Name="Border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
+                        <ContentPresenter
+                            Margin="5,0,-5,0"
+                            HorizontalAlignment="left"
+                            VerticalAlignment="Center">
+                            <ContentPresenter.Resources>
+                                <Style BasedOn="{StaticResource Body1TextStyle}" TargetType="TextBlock" />
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion Row header-->
+
+    <!--#region Column Headers Presenter-->
+    <!--  Customize DataGridColumnHeadersPresenter of datagrid so the header will go entirely to the right of control (no "dead-zone" above the scrollbar)  -->
+    <Style BasedOn="{StaticResource {x:Type DataGridColumnHeadersPresenter}}" TargetType="{x:Type DataGridColumnHeadersPresenter}">
+        <Setter Property="Grid.ColumnSpan" Value="2" />
+    </Style>
+    <!--#endregion Column Headers Presenter-->
+
+    <!--#region Cell-->
+
+    <SolidColorBrush x:Key="DataGridItemBackground" Color="{DynamicResource PanelBackground}" />
+    <SolidColorBrush x:Key="DataGridItemForeground" Color="{DynamicResource PanelForeground}" />
+    <SolidColorBrush x:Key="DataGridSelectedItemBackground" Color="{DynamicResource SelectionBackground}" />
+    <SolidColorBrush x:Key="DataGridSelectedItemForeground" Color="{DynamicResource SelectionForeground}" />
+
+    <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Foreground" Value="{DynamicResource DataGridItemForeground}" />
+        <Setter Property="Background" Value="{DynamicResource DataGridItemBackground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Grid>
+                        <Border
+                            x:Name="Border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
+                        <ContentPresenter
+                            Margin="5,0"
+                            HorizontalAlignment="left"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource DataGridSelectedItemForeground}" />
+                <Setter Property="Background" Value="{DynamicResource DataGridSelectedItemBackground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion Cell-->
+
+    <!--#region Row-->
+    <!--  This style is only use for disable Row Background (Trigger used by Cell)  -->
+    <Style TargetType="{x:Type DataGridRow}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Validation.ErrorTemplate" Value="{x:Null}" />
+        <Setter Property="ValidationErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <TextBlock
+                        Margin="2,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource SeverityErrorBrush}"
+                        Text="!" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridRow}">
+                    <Border
+                        x:Name="DGR_Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
+                        <SelectiveScrollingGrid>
+                            <SelectiveScrollingGrid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </SelectiveScrollingGrid.ColumnDefinitions>
+                            <SelectiveScrollingGrid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </SelectiveScrollingGrid.RowDefinitions>
+                            <DataGridCellsPresenter
+                                Grid.Column="1"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <DataGridDetailsPresenter
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                Visibility="{TemplateBinding DetailsVisibility}" />
+                            <DataGridRowHeader
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                        </SelectiveScrollingGrid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsNewItem" Value="True">
+                <Setter Property="Margin" Value="{Binding NewItemMargin, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion Row-->
+
+    <!--#region DataGrid-->
+
+    <SolidColorBrush x:Key="DataGridBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="DataGridBorderbrush" Color="{DynamicResource HeaderBackground}" />
+    <SolidColorBrush x:Key="DataGridForeground" Color="{DynamicResource PanelForeground}" />
+    <SolidColorBrush x:Key="DataGridHorizontalGridLinesBrush" Color="{DynamicResource HeaderBackground}" />
+    <SolidColorBrush x:Key="DataGridVerticalGridLinesBrush" Color="Transparent" />
+
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CanUserReorderColumns" Value="False" />
+        <Setter Property="CanUserResizeColumns" Value="False" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="Background" Value="{DynamicResource DataGridBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DataGridBorderbrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource DataGridHorizontalGridLinesBrush}" />
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource DataGridVerticalGridLinesBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource DataGridForeground}" />
+        <Setter Property="ColumnHeaderStyle" Value="{DynamicResource DataGridColumnHeaderStyle}" />
+        <Setter Property="RowHeaderStyle" Value="{DynamicResource DataGridRowHeaderStyle}" />
+    </Style>
+
+    <!--#endregion DataGrid-->
+
+</ResourceDictionary>

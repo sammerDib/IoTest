@@ -1,0 +1,160 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.Carriers.CarriersViewerPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:carriers="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.Carriers"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance carriers:CarriersViewerPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <DockPanel>
+
+        <Expander
+            DockPanel.Dock="Right"
+            ExpandDirection="Left"
+            IsExpanded="{Binding DetailsOpen, Mode=TwoWay}">
+            <Expander.Header>
+                <Grid>
+                    <Grid.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </Grid.LayoutTransform>
+                    <TextBlock
+                        Padding="0"
+                        VerticalAlignment="Center"
+                        RenderTransformOrigin="0.5,0.5"
+                        SnapsToDevicePixels="True"
+                        Text="{localize:Static equipment:EquipmentResources.CARRIERS_DETAIL}" />
+                </Grid>
+            </Expander.Header>
+            <carriers:CarrierViewerView
+                Width="500"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}"
+                DataContext="{Binding CarrierViewer}"
+                IsEnabled="{Binding DataContext, RelativeSource={RelativeSource Self}, Converter={StaticResource NullToFalseConverter}}" />
+        </Expander>
+
+        <Separator
+            Margin="0"
+            DockPanel.Dock="Right"
+            Style="{StaticResource VerticalSeparatorStyle}" />
+
+        <dataTables:DataTable DataSource="{Binding Carriers}" SelectedItem="{Binding SelectedCarrier}">
+
+            <GridView AllowsColumnReorder="True">
+
+                <dataTables:DataTableColumn
+                    Width="150"
+                    DisplayName="{localize:Static equipment:EquipmentResources.CARRIERS_CARRIER_ID}"
+                    SortKey="ObjID">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type e87:Carrier}">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                Text="{Binding ObjID}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="150"
+                    DisplayName="{localize:Static equipment:EquipmentResources.CARRIERS_PORT_ID}"
+                    SortKey="LocationId">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type e87:Carrier}">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                Text="{Binding PortID}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="150"
+                    DisplayName="{localize:Static equipment:EquipmentResources.CARRIERS_STATUS_ID}"
+                    SortKey="CarrierIdStatus">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type e87:Carrier}">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                Text="{Binding CarrierIdStatus}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="150"
+                    DisplayName="{localize:Static equipment:EquipmentResources.CARRIERS_SLOT_MAP_STATUS}"
+                    SortKey="SlotMapStatus">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type e87:Carrier}">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                Text="{Binding SlotMapStatus}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="150"
+                    DisplayName="{localize:Static equipment:EquipmentResources.CARRIERS_ACCESSING_STATUS}"
+                    SortKey="CarrierAccessingStatus">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type e87:Carrier}">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                Text="{Binding CarrierAccessingStatus}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+            </GridView>
+
+            <dataTables:DataTable.BottomAdditionalContent>
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource AddIcon}"
+                        Command="{Binding CreateCarrier}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static equipment:EquipmentResources.CARRIERS_ADD}" />
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource EditIcon}"
+                        Command="{Binding EditCarrier}"
+                        IsEnabled="True"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static equipment:EquipmentResources.CARRIERS_EDIT}" />
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource DuplicateIcon}"
+                        Command="{Binding DuplicateCarrier}"
+                        IsEnabled="True"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static equipment:EquipmentResources.CARRIERS_DUPLICATE}" />
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource DeleteIcon}"
+                        Command="{Binding DeleteCarrier}"
+                        IsEnabled="True"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static equipment:EquipmentResources.CARRIERS_DELETE}" />
+                </StackPanel>
+            </dataTables:DataTable.BottomAdditionalContent>
+
+        </dataTables:DataTable>
+    </DockPanel>
+</UserControl>

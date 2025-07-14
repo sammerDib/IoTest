@@ -1,0 +1,49 @@
+<UserControl
+    x:Class="UnitySC.ToolControl.ProcessModules.GUI.Views.Panels.Setup.DeviceSettings.ProcessModule.ToolControlProcessModule.ToolControlProcessModuleSettingsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:deviceSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolControlProcessModule="clr-namespace:UnitySC.ToolControl.ProcessModules.GUI.Views.Panels.Setup.DeviceSettings.ProcessModule.ToolControlProcessModule"
+    d:DataContext="{d:DesignInstance toolControlProcessModule:ToolControlProcessModuleSettingsPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <Grid>
+        <controls:Card Visibility="{Binding ErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource Headline4TextStyle}"
+                Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_ERROR}" />
+        </controls:Card>
+        <UniformGrid Columns="2" Visibility="{Binding SettingsVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <controls:Card>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <DockPanel>
+                        <GroupBox DockPanel.Dock="Top" Header="{localize:Static toolControlProcessModule:ToolControlProcessModuleSettingsResources.S_SETUP_PROCESS_MODULE_SETTINGS}">
+                            <StackPanel Orientation="Vertical">
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static toolControlProcessModule:ToolControlProcessModuleSettingsResources.S_SETUP_PROCESS_MODULE_ID}">
+                                    <TextBox Text="{Binding ModuleId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static toolControlProcessModule:ToolControlProcessModuleSettingsResources.S_SETUP_DEVICE_SETTINGS_OUT_OF_SERVICE}">
+                                    <CheckBox IsChecked="{Binding IsOutOfService, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+                            </StackPanel>
+                        </GroupBox>
+                    </DockPanel>
+                </ScrollViewer>
+            </controls:Card>
+        </UniformGrid>
+    </Grid>
+</UserControl>

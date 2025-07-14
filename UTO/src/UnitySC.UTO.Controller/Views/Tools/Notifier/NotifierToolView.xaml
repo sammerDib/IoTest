@@ -1,0 +1,193 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Tools.Notifier.NotifierToolView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:notifier="clr-namespace:UnitySC.UTO.Controller.Views.Tools.Notifier"
+    xmlns:viewModel="clr-namespace:UnitySC.Shared.UI.ViewModel;assembly=UnitySC.Shared.UI"
+    Width="600"
+    Height="800"
+    d:DataContext="{d:DesignInstance notifier:NotifierTool}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--  Styles  -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid
+        Margin="10"
+        DataContext="{Binding Notifier}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Header  -->
+        <Grid>
+            <StackPanel
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <TextBlock
+                    Margin="3,0"
+                    Text="{Binding NbUnreadMessages}" />
+                <TextBlock Text="Messages" />
+            </StackPanel>
+            <StackPanel
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center">
+                    <Hyperlink Command="{Binding ClearAllCommand}">
+                        Dismiss all
+                    </Hyperlink>
+                </TextBlock>
+                <ToggleButton
+                    Margin="6,0,0,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    IsChecked="{Binding NotificationEnabled}">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <Image
+                                        Margin="0"
+                                        Source="{StaticResource BellDisabled}"
+                                        Style="{StaticResource Icon}"
+                                        ToolTip="Hide popup notification" />
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <Image
+                                                Margin="0"
+                                                Source="{StaticResource Bell}"
+                                                Style="{StaticResource Icon}"
+                                                ToolTip="Show popup notification" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+            </StackPanel>
+        </Grid>
+        <!--  Content  -->
+        <ListView
+            Grid.Row="2"
+            ItemsSource="{Binding MessagesCV}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemContainerStyle>
+                <Style
+                    BasedOn="{StaticResource {x:Type ListBoxItem}}"
+                    TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="false" />
+                    <Setter Property="Height" Value="NaN" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type viewModel:MessageVM}">
+                    <Border
+                        x:Name="border"
+                        Background="White"
+                        BorderBrush="{StaticResource PanelBorderColor}"
+                        BorderThickness="2"
+                        CornerRadius="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Background="{StaticResource PanelBorderColor}"
+                                BorderThickness="2">
+                                <Image
+                                    Height="30"
+                                    Margin="4"
+                                    Source="{Binding Level, Converter={StaticResource MessageTypeToImageDictionaryConverter}}" />
+                            </Border>
+                            <StackPanel
+                                Grid.Column="1"
+                                Orientation="Vertical">
+                                <StackPanel
+                                    Margin="4,0"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Level}" />
+                                    <TextBlock
+                                        Margin="4,0"
+                                        Text="-" />
+                                    <TextBlock Text="{Binding Date}" />
+                                </StackPanel>
+                                <Line
+                                    Height="2"
+                                    HorizontalAlignment="Stretch"
+                                    Fill="{StaticResource PanelBorderColor}" />
+                                <TextBlock
+                                    MaxHeight="100"
+                                    Margin="2"
+                                    HorizontalAlignment="Left"
+                                    LineStackingStrategy="MaxHeight"
+                                    Text="{Binding Content}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                            <Button
+                                Grid.Column="1"
+                                Margin="0,5,5,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                markupExtensions:Icon.Geometry="{StaticResource DeleteIcon}"
+                                Background="Transparent"
+                                Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"
+                                CommandParameter="{Binding}">
+                                <Button.Style>
+                                    <Style
+                                        BasedOn="{StaticResource SquareIconifiedButtonStyle}"
+                                        TargetType="{x:Type Button}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=border}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!--  No Notifications  -->
+        <TextBlock
+            Grid.Row="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="No notifications">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding MessagesCV.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</UserControl>

@@ -1,0 +1,53 @@
+<#@ template hostspecific="true" language="C#" #>
+<#@ output encoding="utf-8" extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+using Agileo.GUI.Services.Icons;
+using System.Windows.Media;
+
+using UnitySC.GUI.Common.Vendor.Helpers;
+
+// ReSharper disable StringLiteralTypo
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+
+namespace UnitySC.GUI.Common.Vendor.UIComponents.XamlResources.Shared
+{
+    public static class PathIcon
+    {
+        private static PathGeometryIcon GetPathGeometryIcon(string pathGeometryKey)
+        {
+            return new PathGeometryIcon(ResourcesHelper.Get<PathGeometry>(pathGeometryKey));
+        }
+
+<#
+	var filePaths = Directory.GetFiles(Host.ResolvePath("."), "*.xaml");
+    var regex = new Regex("x:Key=\"(.*?)Icon\"");
+
+    var keys = new HashSet<string>();
+
+    foreach (var path in filePaths)
+    {
+        var fileContent = File.ReadAllText(path);
+        var matches = regex.Matches(fileContent);
+
+        foreach (Match match in matches)
+        {
+            keys.Add(match.Groups[1].Value);
+        }
+    }
+
+    foreach (var key in keys.OrderBy(a => a))
+    {
+        #>        public static PathGeometryIcon <#=key#> => GetPathGeometryIcon("<#=key#>Icon");
+<#
+    }
+#>
+    }
+}

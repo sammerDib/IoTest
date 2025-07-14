@@ -1,0 +1,436 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Alarms.Analysis.AnalysisPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:analysis="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Alarms.Analysis"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpf="http://oxyplot.org/skiawpf"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:enum="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Alarms.Analysis.Enum"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:core="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Alarms.Analysis.Core"
+    d:DataContext="{d:DesignInstance {x:Type analysis:AnalysisPanel}, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1.5*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,10"
+            LastChildFill="False">
+
+            <!--  Start date  -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_FROM}" />
+                <DatePicker
+                    Width="120"
+                    Margin="0,0,0,2"
+                    VerticalAlignment="Center"
+                    BorderThickness="0,0,0,2"
+                    SelectedDate="{Binding StartDate}" />
+            </StackPanel>
+
+            <!--  End date  -->
+            <StackPanel
+                Margin="10,0,0,0"
+                Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_TO}" />
+                <DatePicker
+                    Width="120"
+                    Margin="0,0,0,2"
+                    VerticalAlignment="Center"
+                    BorderThickness="0,0,0,2"
+                    SelectedDate="{Binding EndDate}" />
+            </StackPanel>
+
+            <!--  Select time period  -->
+            <ComboBox
+                Width="150"
+                Margin="20,0,0,0"
+                markupExtensions:Watermark.Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_CUSTOM}"
+                ItemsSource="{markupExtensions:EnumCollection {x:Type enum:Period}}"
+                SelectedValue="{Binding SelectedPeriod}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <controls:ChipsSelector
+                VerticalAlignment="Center"
+                DockPanel.Dock="Right"
+                ItemsSource="{markupExtensions:EnumCollection {x:Type enum:AlarmAnalysisDisplayMode}}"
+                SelectedItem="{Binding DisplayMode}">
+                <controls:ChipsSelector.ItemContainerStyle>
+                    <Style
+                        BasedOn="{StaticResource {x:Type controls:ChipsItem}}"
+                        TargetType="{x:Type controls:ChipsItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="{x:Static enum:AlarmAnalysisDisplayMode.Duration}">
+                                <Setter Property="IsEnabled" Value="False" />
+                                <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:ChipsSelector.ItemContainerStyle>
+                <controls:ChipsSelector.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            x:Name="TextBlock"
+                            Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_COUNT}" />
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="{x:Static enum:AlarmAnalysisDisplayMode.Duration}">
+                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_DURATION}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </controls:ChipsSelector.ItemTemplate>
+            </controls:ChipsSelector>
+
+            <!--  Filter source  -->
+            <DockPanel Margin="20,0,20,0">
+                <TextBlock
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_SOURCE}" />
+
+                <controls:FilterBox
+                    MinWidth="120"
+                    DataContext="{Binding SourceFilter}"
+                    ItemsSource="{Binding PossibleValues}"
+                    SelectedItems="{Binding SelectedValues}"
+                    Style="{StaticResource HorizontalFilterBoxStyle}">
+                    <controls:FilterBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                IsEnabled="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"
+                                IsHitTestVisible="False"
+                                Text="{Binding}" />
+                        </DataTemplate>
+                    </controls:FilterBox.ItemTemplate>
+                    <controls:FilterBox.SelectedItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <Path
+                                    Height="10"
+                                    Margin="5,0"
+                                    Data="{StaticResource CloseIcon}"
+                                    DockPanel.Dock="Right"
+                                    Fill="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                                    Stretch="Uniform" />
+                                <TextBlock
+                                    Margin="5,0"
+                                    Padding="0,0,0,4"
+                                    VerticalAlignment="Center"
+                                    IsHitTestVisible="True"
+                                    Text="{Binding}"
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </controls:FilterBox.SelectedItemTemplate>
+                </controls:FilterBox>
+
+            </DockPanel>
+
+        </DockPanel>
+
+        <controls:Card
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,5,5"
+            ClipContent="False"
+            Style="{StaticResource OutlinedCardStyle}">
+            <DockPanel>
+
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <controls:Card
+                        Margin="10"
+                        Style="{StaticResource FilledCardStyle}">
+                        <DockPanel>
+
+                            <TextBlock
+                                Margin="0,10,0,0"
+                                HorizontalAlignment="Center"
+                                DockPanel.Dock="Top"
+                                FontWeight="Normal"
+                                Style="{StaticResource Headline6TextStyle}"
+                                Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_OVERVIEW}" />
+
+                            <UniformGrid Columns="1">
+                                <controls:PropertyEditor
+                                    Margin="10"
+                                    PropertyName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_OCCURRENCE_COUNT}">
+                                    <controls:Displayer Value="{Binding TotalCount}" />
+                                </controls:PropertyEditor>
+                                <!--  future evolution  -->
+                                <controls:PropertyEditor
+                                    Margin="10"
+                                    PropertyName="Total occurrence duration"
+                                    Visibility="Collapsed">
+                                    <controls:Displayer Value="{Binding TotalDuration, Converter={StaticResource TimeSpanToStringConverter}}" />
+                                </controls:PropertyEditor>
+                            </UniformGrid>
+                        </DockPanel>
+                    </controls:Card>
+
+                    <controls:Card
+                        Grid.Column="1"
+                        Margin="10"
+                        Style="{StaticResource FilledCardStyle}">
+                        <DockPanel>
+
+                            <TextBlock
+                                Margin="0,10,0,0"
+                                HorizontalAlignment="Center"
+                                DockPanel.Dock="Top"
+                                Style="{StaticResource Headline6TextStyle}">
+                                <controls:OneWayRun
+                                    FontWeight="Normal"
+                                    Value="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_MOST_IMPACTING_SOURCE}" />
+                                <Run Text="{Binding MostImpactingDevice.DeviceName, Mode=OneWay}" />
+                            </TextBlock>
+
+                            <UniformGrid Columns="2">
+                                <controls:PropertyEditor
+                                    Margin="10"
+                                    PropertyName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_OCCURRENCE_COUNT}">
+                                    <controls:Displayer Value="{Binding MostImpactingDevice.TotalOccurrencesCount}" />
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="10"
+                                    PropertyName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_OCCURRENCE_COUNT_RATIO}">
+                                    <controls:Displayer Value="{Binding MostImpactingDevice.TotalOccurrencesCountRatio, StringFormat='\{0} %'}" />
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="10"
+                                    PropertyName="Device alarms duration"
+                                    Visibility="Collapsed">
+                                    <controls:Displayer Value="{Binding MostImpactingDevice.TotalOccurrenceDuration, StringFormat=hh\\:mm\\:ss}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="10"
+                                    PropertyName="Device alarms duration ratio"
+                                    Visibility="Collapsed">
+                                    <controls:Displayer Value="{Binding MostImpactingDevice.TotalOccurrenceDurationRatio, StringFormat='\{0} %'}" />
+                                </controls:PropertyEditor>
+                            </UniformGrid>
+                        </DockPanel>
+                    </controls:Card>
+
+                </Grid>
+
+                <controls:Card
+                    Margin="10"
+                    Style="{StaticResource OutlinedCardStyle}">
+                    <dataTables:DataTable
+                        DataSource="{Binding OccurrenceSource}"
+                        SelectedItem="{Binding SelectedAlarm}">
+
+                        <dataTables:DataTable.ItemContainerStyle>
+                            <Style
+                                BasedOn="{StaticResource GridViewItemStyle}"
+                                TargetType="{x:Type ListViewItem}">
+                                <d:Style.DataContext>
+                                    <x:Type Type="core:AnalysisOccurrencesWrapper" />
+                                </d:Style.DataContext>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPartOf80PercentOfImpact}" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Opacity="0.1" Color="{DynamicResource PanelForeground}" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </dataTables:DataTable.ItemContainerStyle>
+
+                        <dataTables:DataTable.FirstColumnCellTemplate>
+                            <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                <TextBlock
+                                    Margin="0,0,5,0"
+                                    Text="{Binding ImpactingPosition}"
+                                    TextAlignment="Right" />
+                            </DataTemplate>
+                        </dataTables:DataTable.FirstColumnCellTemplate>
+
+                        <GridView>
+
+                            <dataTables:DataTableColumn DisplayName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_SOURCE}">
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                        <TextBlock Text="{Binding Alarm.ProviderName}" />
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>
+
+                            <dataTables:DataTableColumn DisplayName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_ID}">
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                        <TextBlock Text="{Binding Alarm.Id}" />
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>
+
+                            <dataTables:DataTableColumn
+                                Width="450"
+                                DisplayName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_DESCRIPTION}">
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                        <TextBlock
+                                            Text="{Binding Alarm.Description}"
+                                            ToolTip="{Binding Alarm.Description}" />
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>
+
+                            <dataTables:DataTableColumn
+                                DisplayName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_COUNT}"
+                                SortKey="OccurrenceCount">
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                        <TextBlock Text="{Binding OccurrenceCount}" />
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>
+
+                            <dataTables:DataTableColumn DisplayName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_COUNT_RATIO}">
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                        <TextBlock>
+                                            <Run Text="{Binding OccurrenceCountRatio, Mode=OneWay, StringFormat=N0}" />
+                                            <Run Text="%" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>
+
+                            <dataTables:DataTableColumn
+                                DisplayName="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_DURATION}"
+                                SortKey="OccurrenceDuration">
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type core:AnalysisOccurrencesWrapper}">
+                                        <TextBlock Text="{Binding OccurrenceDuration, Converter={StaticResource TimeSpanToStringConverter}}" />
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>
+
+                            <!--<dataTables:DataTableColumn>
+                                <dataTables:DataTableColumn.Header>
+                                    <GridViewColumnHeader Content="Duration ratio" />
+                                </dataTables:DataTableColumn.Header>
+                                <dataTables:DataTableColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type alarms:AnalysisOccurrencesWrapper}">
+                                        <TextBlock>
+                                            <Run Text="{Binding OccurrenceDurationRatio, Mode=OneWay, StringFormat=N0}" />
+                                            <Run Text="%" />
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </dataTables:DataTableColumn.CellTemplate>
+                            </dataTables:DataTableColumn>-->
+
+                        </GridView>
+                    </dataTables:DataTable>
+                </controls:Card>
+            </DockPanel>
+        </controls:Card>
+
+        <UniformGrid
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Columns="1">
+            <controls:Card
+                Margin="5,0,0,5"
+                Style="{StaticResource OutlinedCardStyle}">
+                <DockPanel>
+                    <TextBlock
+                        Margin="10,10,0,0"
+                        HorizontalAlignment="Left"
+                        DockPanel.Dock="Top"
+                        Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                        Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_OCCURRENCE_COUNT_BY_SOURCE}" />
+                    <wpf:PlotView
+                        Margin="5,0"
+                        Model="{Binding SourcePieChartModel}" />
+                </DockPanel>
+            </controls:Card>
+            <controls:Card
+                Margin="5,5,0,0"
+                Style="{StaticResource OutlinedCardStyle}">
+                <DockPanel>
+                    <TextBlock
+                        Margin="10,10,0,0"
+                        HorizontalAlignment="Left"
+                        DockPanel.Dock="Top"
+                        Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                        Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_OCCURRENCE_COUNT_BY_ALARM}" />
+                    <wpf:PlotView
+                        Margin="5,0"
+                        Controller="{Binding PieChartController}"
+                        Model="{Binding OccurrencesPieChartModel}" />
+                </DockPanel>
+            </controls:Card>
+        </UniformGrid>
+
+        <controls:Card
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,5,5,0"
+            ClipContent="False"
+            Style="{StaticResource OutlinedCardStyle}">
+            <DockPanel>
+                <DockPanel
+                    Dock="Top"
+                    LastChildFill="False">
+                    <TextBlock
+                        Margin="10,10,0,0"
+                        HorizontalAlignment="Left"
+                        DockPanel.Dock="Left"
+                        Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                        Text="{localize:Static analysis:AnalysisPanelResources.ALARM_ANALYSIS_COUNT_EVOLUTION_OVER_TIME}" />
+                    <controls:ChipsSelector
+                        Margin="0,10,0,0"
+                        DockPanel.Dock="Right"
+                        ItemsSource="{markupExtensions:EnumCollection {x:Type enum:AlarmAnalysisEvolutionMode}}"
+                        SelectedItem="{Binding EvolutionMode}" />
+                </DockPanel>
+                <wpf:PlotView
+                    Margin="1,6,1,1"
+                    Model="{Binding AlarmEvolutionChartModel}" />
+            </DockPanel>
+        </controls:Card>
+
+    </Grid>
+</UserControl>

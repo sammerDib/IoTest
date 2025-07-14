@@ -1,0 +1,319 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Brooks.GUI.Views.Panels.Setup.DeviceSettings.LoadPortsSettings.BrooksLoadPort.BrooksLoadPortSettingsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:brooksLoadPort="clr-namespace:UnitySC.EFEM.Brooks.GUI.Views.Panels.Setup.DeviceSettings.LoadPortsSettings.BrooksLoadPort"
+    xmlns:configuration="clr-namespace:Agileo.Common.Configuration;assembly=Agileo.Common"
+    xmlns:configuration1="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort.Configuration;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+    xmlns:deviceSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings;assembly=UnitySC.GUI.Common"
+    xmlns:enums="clr-namespace:UnitySC.Equipment.Abstractions.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:loadPort="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:loadPortsSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.LoadPortsSettings;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox;assembly=UnitySC.GUI.Common"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions"
+    x:Name="BrooksLoadPortSettingsPanelUserControl"
+    d:DataContext="{d:DesignInstance brooksLoadPort:BrooksLoadPortSettingsPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <controls:Card Visibility="{Binding ErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource Headline4TextStyle}"
+                Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_ERROR}" />
+        </controls:Card>
+        <UniformGrid Columns="2" Visibility="{Binding SettingsVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <GroupBox Header="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_LOADPORT_CONFIGURATION}">
+                            <StackPanel>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksLoadPort:BrooksLoadPortSettingsResources.BROOKS_LOADPORT_NAME}">
+                                    <TextBox Text="{Binding BrooksLoadPortName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksLoadPort:BrooksLoadPortSettingsResources.LIGHT_CURTAIN_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding LightCurtainNodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_INIT_TIMEOUT}">
+                                    <DockPanel VerticalAlignment="Top">
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Right"
+                                            Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_SECONDS}" />
+                                        <numericBox:UIntBox HorizontalContentAlignment="Left" Value="{Binding InitializationTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DockPanel>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_CASSETTE_TYPE}">
+                                    <controls:ChipsSelector SelectedItem="{Binding CassetteType}">
+                                        <controls:ChipsSelector.ItemsSource>
+                                            <x:Array Type="{x:Type semiDefinitions:CassetteType}">
+                                                <semiDefinitions:CassetteType>Foup</semiDefinitions:CassetteType>
+                                                <semiDefinitions:CassetteType>Smif</semiDefinitions:CassetteType>
+                                                <semiDefinitions:CassetteType>Cassette</semiDefinitions:CassetteType>
+                                                <semiDefinitions:CassetteType>Custom</semiDefinitions:CassetteType>
+                                            </x:Array>
+                                        </controls:ChipsSelector.ItemsSource>
+                                        <controls:ChipsSelector.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type semiDefinitions:CassetteType}">
+                                                <TextBlock x:Name="CassetteTextBlock" Text="{Binding}" />
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static semiDefinitions:CassetteType.Foup}">
+                                                        <Setter TargetName="CassetteTextBlock" Property="Text" Value="FOUP" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding}" Value="{x:Static semiDefinitions:CassetteType.Smif}">
+                                                        <Setter TargetName="CassetteTextBlock" Property="Text" Value="SMIF" />
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </controls:ChipsSelector.ItemTemplate>
+                                    </controls:ChipsSelector>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_E84_ENABLED}">
+                                    <CheckBox IsChecked="{Binding IsE84Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <StackPanel Visibility="{Binding IsE84Enabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_E84_TP1}">
+                                        <DockPanel VerticalAlignment="Top">
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                DockPanel.Dock="Right"
+                                                Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_SETTINGS_SECONDS}" />
+                                            <numericBox:DoubleBox HorizontalContentAlignment="Left" Value="{Binding Tp1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DockPanel>
+                                    </controls:PropertyEditor>
+
+                                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_E84_TP2}">
+                                        <DockPanel VerticalAlignment="Top">
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                DockPanel.Dock="Right"
+                                                Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_SETTINGS_SECONDS}" />
+                                            <numericBox:DoubleBox HorizontalContentAlignment="Left" Value="{Binding Tp2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DockPanel>
+                                    </controls:PropertyEditor>
+
+                                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_E84_TP3}">
+                                        <DockPanel VerticalAlignment="Top">
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                DockPanel.Dock="Right"
+                                                Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_SETTINGS_SECONDS}" />
+                                            <numericBox:DoubleBox HorizontalContentAlignment="Left" Value="{Binding Tp3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DockPanel>
+                                    </controls:PropertyEditor>
+
+                                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_E84_TP4}">
+                                        <DockPanel VerticalAlignment="Top">
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                DockPanel.Dock="Right"
+                                                Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_SETTINGS_SECONDS}" />
+                                            <numericBox:DoubleBox HorizontalContentAlignment="Left" Value="{Binding Tp4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DockPanel>
+                                    </controls:PropertyEditor>
+
+                                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_E84_TP5}">
+                                        <DockPanel VerticalAlignment="Top">
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                DockPanel.Dock="Right"
+                                                Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_SETTINGS_SECONDS}" />
+                                            <numericBox:DoubleBox HorizontalContentAlignment="Left" Value="{Binding Tp5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DockPanel>
+                                    </controls:PropertyEditor>
+                                </StackPanel>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_HANDOFF_TYPE}">
+                                    <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection configuration1:HandOffType}" SelectedItem="{Binding HandOffType, UpdateSourceTrigger=PropertyChanged}">
+                                        <controls:ChipsSelector.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                            </DataTemplate>
+                                        </controls:ChipsSelector.ItemTemplate>
+                                    </controls:ChipsSelector>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_AUTO_HAND_OFF_TIMEOUT}">
+                                    <DockPanel VerticalAlignment="Top">
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Right"
+                                            Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_SETTINGS_SECONDS}" />
+                                        <numericBox:DoubleBox HorizontalContentAlignment="Left" Value="{Binding AutoHandOffTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DockPanel>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_MAPPING_SUPPORTED}">
+                                    <CheckBox IsChecked="{Binding IsMappingSupported, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_IS_IN_SERVICE}">
+                                    <CheckBox IsChecked="{Binding IsInService, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_CLOSE_DOOR_AFTER_ROBOT_ACTION}">
+                                    <CheckBox IsChecked="{Binding CloseDoorAfterRobotAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    Orientation="Horizontal"
+                                    PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_CARRIER_ID_ACQUISITION}">
+                                    <CheckBox IsChecked="{Binding IsCarrierIdSupported, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" Orientation="Horizontal">
+                                    <controls:PropertyEditor.PropertyName>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_BYPASS_READ_ID}" />
+                                        </StackPanel>
+                                    </controls:PropertyEditor.PropertyName>
+                                    <CheckBox IsChecked="{Binding ByPassReadId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" Orientation="Horizontal">
+                                    <controls:PropertyEditor.PropertyName>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_MANUAL_CARRIER_TYPE}" />
+                                        </StackPanel>
+                                    </controls:PropertyEditor.PropertyName>
+                                    <CheckBox IsChecked="{Binding IsManualCarrierTypeEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_ACQUISITION_TYPE}">
+                                    <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection configuration:CarrierIDAcquisitionType}" SelectedItem="{Binding CarrierIdAcquisition, UpdateSourceTrigger=PropertyChanged}">
+                                        <controls:ChipsSelector.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                            </DataTemplate>
+                                        </controls:ChipsSelector.ItemTemplate>
+                                    </controls:ChipsSelector>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_TAG_LOCATION}">
+                                    <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection loadPort:CarrierTagLocation}" SelectedItem="{Binding CarrierTagLocation, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_DEFAULT_CARRIER_ID}">
+                                    <TextBox Text="{Binding DefaultCarrierId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_READING_MAX_NUMBER_RETRY}">
+                                    <TextBox Text="{Binding MaxNumberOfRetry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_CARRIER_ID_START_INDEX}">
+                                    <TextBox Text="{Binding CarrierIdStartIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static loadPortsSettings:LoadPortsSettingsPanelResources.S_SETUP_LOADPORTS_CARRIER_ID_STOP_INDEX}">
+                                    <TextBox Text="{Binding CarrierIdStopIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:Card>
+            <controls:Card>
+                <dataTables:DataTable DataSource="{Binding DataTableCarrierTypes}">
+                    <GridView AllowsColumnReorder="True">
+
+                        <!--#region Id-->
+                        <dataTables:DataTableColumn DisplayName="Id" SortKey="Id">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type configuration1:CarrierType}">
+                                    <TextBlock Text="{Binding Id}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </dataTables:DataTableColumn>
+                        <!--#endregion Id-->
+
+                        <!--#region Name-->
+                        <dataTables:DataTableColumn DisplayName="Name" SortKey="Name">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type configuration1:CarrierType}">
+                                    <ComboBox ItemsSource="{Binding ElementName=RV201SettingsPanelUserControl, Path=DataContext.AvailableProfiles}" SelectedValue="{Binding Name}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </dataTables:DataTableColumn>
+                        <!--#endregion Name-->
+
+                        <!--#region MaterialType-->
+                        <dataTables:DataTableColumn DisplayName="MaterialType" SortKey="MaterialType">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type configuration1:CarrierType}">
+                                    <ComboBox ItemsSource="{markupExtensions:EnumCollection enums:MaterialType}" SelectedValue="{Binding MaterialType}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </dataTables:DataTableColumn>
+                        <!--#endregion MaterialType-->
+
+                        <!--#region Description-->
+                        <dataTables:DataTableColumn DisplayName="Description" SortKey="Description">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type configuration1:CarrierType}">
+                                    <TextBox Text="{Binding Description}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </dataTables:DataTableColumn>
+                        <!--#endregion Description-->
+
+                    </GridView>
+                </dataTables:DataTable>
+            </controls:Card>
+        </UniformGrid>
+    </Grid>
+</UserControl>

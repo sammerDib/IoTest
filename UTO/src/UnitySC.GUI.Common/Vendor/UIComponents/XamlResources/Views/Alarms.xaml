@@ -1,0 +1,81 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:alarmModeling="clr-namespace:Agileo.AlarmModeling;assembly=Agileo.AlarmModeling"
+    xmlns:alarms="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Alarms"
+    xmlns:analysis="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Alarms.Analysis"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <DataTemplate DataType="{x:Type alarms:Actives}">
+        <alarms:ActivesView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type alarms:Catalog}">
+        <alarms:CatalogView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type analysis:AnalysisPanel}">
+        <analysis:AnalysisPanelView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type alarms:History}">
+        <alarms:HistoryView />
+    </DataTemplate>
+
+    <!--#region Columns-->
+
+    <DataTemplate x:Key="AlarmAcknowledgedColumnTemplate" DataType="alarmModeling:AlarmOccurrence">
+        <Viewbox Height="16" VerticalAlignment="Stretch">
+            <Path
+                x:Name="Icon"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{StaticResource AlarmNotAcknowledgedIcon}"
+                Fill="{DynamicResource SeverityErrorBrush}"
+                Stretch="Uniform" />
+        </Viewbox>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Acknowledged}" Value="true">
+                <Setter TargetName="Icon" Property="Data" Value="{StaticResource AlarmAcknowledgedIcon}" />
+                <Setter TargetName="Icon" Property="Fill" Value="{DynamicResource SeveritySuccessBrush}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AlarmActiveColumnTemplate" DataType="alarmModeling:AlarmOccurrence">
+        <Viewbox Height="16" VerticalAlignment="Stretch">
+            <Path
+                x:Name="Icon"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{StaticResource AlarmSetIcon}"
+                Fill="{DynamicResource SeverityErrorBrush}"
+                Stretch="Uniform" />
+        </Viewbox>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding State}" Value="Cleared">
+                <Setter TargetName="Icon" Property="Opacity" Value="0" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!--#endregion Columns-->
+
+    <!--#region Styles-->
+
+    <Style
+        x:Key="AlarmStretchedHeaderStyle"
+        BasedOn="{StaticResource {x:Type GridViewColumnHeader}}"
+        TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </Style>
+
+    <!--#endregion Styles-->
+
+</ResourceDictionary>
+
+
+

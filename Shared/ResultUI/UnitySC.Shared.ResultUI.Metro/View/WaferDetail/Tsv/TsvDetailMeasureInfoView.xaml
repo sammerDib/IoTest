@@ -1,0 +1,272 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Tsv.TsvDetailMeasureInfoView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common"
+	xmlns:commonConverters="clr-namespace:UnitySC.Shared.ResultUI.Common.Converters;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:tsv="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Tsv"
+	xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+	x:Name="UserControl"
+	d:DataContext="{d:DesignInstance tsv:TsvDetailMeasureInfoVM}"
+	d:DesignWidth="500"
+	mc:Ignorable="d">
+
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<converters:MeasureStateToToleranceDisplayerConverter x:Key="MeasureStateToToleranceDisplayerConverter" />
+
+			<commonConverters:LenghtToStringMultiConverter
+				x:Key="LenghtToMicrometerMultiConverter"
+				NullValue="-"
+				ShowUnit="True"
+				Unit="Micrometer" />
+
+			<commonConverters:LengthToleranceToStringConverter
+				x:Key="LengthToleranceMicrometerToStringConverter"
+				NullValue="-"
+				ShowUnit="True"
+				Unit="Micrometer" />
+
+			<system:Double x:Key="FontSizeBig">20</system:Double>
+
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<DockPanel Margin="0,5">
+
+		<common:MetroMeasureInfoHeaderView DockPanel.Dock="Top" />
+
+		<Grid ShowGridLines="False">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<!--  Length  -->
+			<StackPanel
+				x:Name="LengthStakPanel"
+				Grid.ColumnSpan="2"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Center"
+				Orientation="Vertical">
+				<TextBlock
+					HorizontalAlignment="Left"
+					FontSize="{StaticResource FontSizeBig}"
+					FontWeight="Bold"
+					Foreground="{StaticResource ButtonForegroundBrushHover}"
+					Text="{Binding LengthLabel}" />
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left">
+					<TextBlock.Text>
+						<MultiBinding
+							Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+							Mode="OneWay">
+							<Binding Path="Point.LengthTsvStat.Mean" />
+							<Binding Path="Digits" />
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+				<controls:ToleranceDisplayer
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left"
+					Tolerance="{Binding Point.LengthTsvStat.State, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}"
+					Value="{Binding DeltaLength}" />
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left"
+					TextWrapping="Wrap">
+					<Run Text="Target" />
+					<Run>
+						<Run.Text>
+							<MultiBinding
+								Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+								Mode="OneWay">
+								<Binding Path="Settings.LengthTarget" />
+								<Binding Path="Digits" />
+							</MultiBinding>
+						</Run.Text>
+					</Run>
+					<Run Text=" +/- " />
+					<Run Text="{Binding Settings.LengthTolerance, Converter={StaticResource LengthToleranceMicrometerToStringConverter}}" />
+				</TextBlock>
+			</StackPanel>
+
+			<!--  Copla  -->
+			<StackPanel
+				Grid.Row="1"
+				Grid.Column="0"
+				Margin="0,5,0,0"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Orientation="Vertical"
+                Visibility="{Binding Copla, Converter={StaticResource NullToVisibilityConverter}}">
+				<TextBlock
+					HorizontalAlignment="Center"
+					FontSize="{StaticResource FontSizeBig}"
+					FontWeight="Bold"
+					Foreground="{StaticResource ButtonBorderBrush}"
+					Text="Copla" />
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Center">
+					<TextBlock.Text>
+						<MultiBinding
+							Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+							Mode="OneWay">
+							<Binding Path="Copla" />
+							<Binding Path="Digits" />
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+			</StackPanel>
+
+			<userControls:WidthLengthViewer
+				Grid.Row="0"
+				Grid.Column="1"
+				Height="{Binding ActualHeight, ElementName=LengthStakPanel}"
+				Margin="10,0,0,5"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				LengthValue="{Binding Point.LengthTsvStat.Mean.Micrometers}"
+				WidthValue="{Binding Point.WidthTsvStat.Mean.Micrometers}"
+                IsRectShaped="{Binding IsRectangularShaped}"
+                IsCircleShaped="{Binding IsCircleShaped}"/>
+
+			<!--  Width  -->
+			<StackPanel
+				Grid.Row="1"
+				Grid.Column="1"
+				Grid.ColumnSpan="2"
+				Margin="0,2,0,0"
+				HorizontalAlignment="Left"
+				Orientation="Vertical"
+                Visibility="{Binding IsCircleShaped, Mode=OneWay, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+				<TextBlock
+					HorizontalAlignment="Left"
+					FontSize="{StaticResource FontSizeBig}"
+					FontWeight="Bold"
+					Foreground="{StaticResource ButtonForegroundBrush}"
+					Text="Width" />
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left">
+					<TextBlock.Text>
+						<MultiBinding
+							Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+							Mode="OneWay">
+							<Binding Path="Point.WidthTsvStat.Mean" />
+							<Binding Path="Digits" />
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+				<controls:ToleranceDisplayer
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left"
+					Tolerance="{Binding Point.WidthTsvStat.State, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}"
+					Value="{Binding DeltaWidth}" />
+
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left">
+					<Run Text="Target" />
+					<Run>
+						<Run.Text>
+							<MultiBinding
+								Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+								Mode="OneWay">
+								<Binding Path="Settings.WidthTarget" />
+								<Binding Path="Digits" />
+							</MultiBinding>
+						</Run.Text>
+					</Run>
+					<Run Text=" +/- " />
+					<Run Text="{Binding Settings.WidthTolerance, Converter={StaticResource LengthToleranceMicrometerToStringConverter}}" />
+				</TextBlock>
+
+			</StackPanel>
+
+			<!--  Depth  -->
+			<StackPanel
+				Grid.Row="0"
+				Grid.Column="2"
+				Grid.ColumnSpan="2"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Top"
+				Orientation="Vertical">
+				<TextBlock
+					HorizontalAlignment="Left"
+					FontSize="{StaticResource FontSizeBig}"
+					FontWeight="Bold"
+					Foreground="{StaticResource LightBrownMeasureInfoBrush}"
+					Text="Depth" />
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left">
+					<TextBlock.Text>
+						<MultiBinding
+							Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+							Mode="OneWay">
+							<Binding Path="Point.DepthTsvStat.Mean" />
+							<Binding Path="Digits" />
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+				<controls:ToleranceDisplayer
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left"
+					Tolerance="{Binding Point.DepthTsvStat.State, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}"
+					Value="{Binding DeltaDepth}" />
+				<TextBlock
+					Margin="0,5,0,0"
+					HorizontalAlignment="Left">
+					<Run Text="Target" />
+					<Run>
+						<Run.Text>
+							<MultiBinding
+								Converter="{StaticResource LenghtToMicrometerMultiConverter}"
+								Mode="OneWay">
+								<Binding Path="Settings.DepthTarget" />
+								<Binding Path="Digits" />
+							</MultiBinding>
+						</Run.Text>
+					</Run>
+					<Run Text=" +/- " />
+					<Run Text="{Binding Settings.DepthTolerance, Converter={StaticResource LengthToleranceMicrometerToStringConverter}}" />
+				</TextBlock>
+			</StackPanel>
+
+			<userControls:DepthViewer
+				Grid.Row="0"
+				Grid.RowSpan="2"
+				Grid.Column="3"
+				Width="Auto"
+				Margin="10,0,0,5"
+				VerticalAlignment="Stretch"
+				DepthValue="{Binding Point.DepthTsvStat.Mean.Micrometers}"
+				Foreground="{StaticResource LightBrownMeasureInfoBrush}"
+				TargetValue="{Binding Settings.DepthTarget.Micrometers}"
+				Tolerance="{Binding Point.DepthTsvStat.State, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}" />
+
+
+		</Grid>
+
+	</DockPanel>
+
+</UserControl>

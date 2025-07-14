@@ -1,0 +1,392 @@
+﻿<UserControl x:Class="DeepLearningSoft48.Views.Components.ImageAnnotationTools"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DeepLearningSoft48.Views.Components" 
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:services="clr-namespace:DeepLearningSoft48.Services"
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+             md:DialogServiceViews.IsRegistered="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <services:SerializableColorToSolidBrushConverter x:Key="SerializableColorToSolidBrushConverter" />   
+            <Style x:Key="ToolButton" TargetType="sharedControls:ImageToggleButton" BasedOn="{StaticResource ImageToggleButtonChromeLessStyle}">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="MaxWidth" Value="40" />
+                <Setter Property="MaxHeight" Value="40" />
+
+                <Style.Triggers>
+                    <Trigger Property="Button.IsDefaulted" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrushHover}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource ButtonForegroundBrushHover}" />
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="BorderBrush" Value="{StaticResource ButtonForegroundBrushHover}" />
+                    </Trigger>
+                    <Trigger Property="sharedControls:ImageToggleButton.IsChecked" Value="True">
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="{StaticResource ButtonForegroundBrushHover}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid Margin="10 15 10 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="ANNOTATION TOOLS" TextAlignment="Center" FontWeight="Bold" />
+
+            <Grid Grid.Row="1" HorizontalAlignment="Stretch" Margin="5 15 5 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
+                    <sharedControls:ImageToggleButton IsChecked="{Binding IsObjChecked}" ImageGeometry="{StaticResource ObjectDetectionGeometry}" HorizontalAlignment="Right" Margin="0 0 5 0">Object</sharedControls:ImageToggleButton>
+                    <sharedControls:ImageToggleButton IsChecked="{Binding IsSegmChecked}" ImageGeometry="{StaticResource PixelsDetectionGeometry}" HorizontalAlignment="Left" Margin="5 0 0 0">Segmentation</sharedControls:ImageToggleButton>
+                </StackPanel>
+
+                <TextBlock Grid.Row="1" Text="Annotation Type" TextAlignment="Center" Margin="5" />
+            </Grid>
+
+            <Border Grid.Row="2" BorderThickness="0 0.25 0 0.25" BorderBrush="Gray">
+                <Grid Margin="0 5 0 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <sharedControls:ImageToggleButton
+                            Style="{StaticResource ToolButton}"
+                            ToolTip="Select"
+                            IsChecked="{Binding IsCursorChecked}"
+                            ImageGeometry="{StaticResource SelectionGeometry}">
+
+                            <sharedControls:ImageToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="7" />
+                                </Style>
+                            </sharedControls:ImageToggleButton.Resources>                           
+                        </sharedControls:ImageToggleButton>
+
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsObjChecked}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+
+                            <sharedControls:ImageToggleButton 
+                                ToolTip="Bounding Box"
+                                Style="{StaticResource ToolButton}"
+                                IsChecked="{Binding IsBoxChecked}"
+                                ImageGeometry="{StaticResource BoundingBoxesGeometry}">
+
+                                <sharedControls:ImageToggleButton.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="7" />
+                                    </Style>
+                                </sharedControls:ImageToggleButton.Resources>
+                            </sharedControls:ImageToggleButton>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSegmChecked}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <sharedControls:ImageToggleButton
+                                Grid.Column="0"
+                                Style="{StaticResource ToolButton}"
+                                ToolTip="Pencil"
+                                IsChecked="{Binding IsPencilChecked}"
+                                Name="PencilButton"
+                                ImageGeometry="{StaticResource PencilLineGeometry}">
+
+                                <sharedControls:ImageToggleButton.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="7" />
+                                    </Style>
+                                </sharedControls:ImageToggleButton.Resources> 
+                            </sharedControls:ImageToggleButton>
+
+                            <sharedControls:ImageToggleButton
+                                Grid.Column="1" 
+                                Style="{StaticResource ToolButton}" 
+                                ToolTip="Line"
+                                IsChecked="{Binding IsLineChecked}"
+                                ImageGeometry="{StaticResource LineGeometry}">
+
+                                <sharedControls:ImageToggleButton.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="7" />
+                                    </Style>
+                                </sharedControls:ImageToggleButton.Resources>
+                            </sharedControls:ImageToggleButton>
+
+                            <sharedControls:ImageToggleButton
+                                Grid.Column="2" 
+                                Style="{StaticResource ToolButton}" 
+                                ToolTip="Polygon"
+                                IsChecked="{Binding IsPolygonChecked}"
+                                ImageGeometry="{StaticResource PolygonGeometry}">
+
+                                <sharedControls:ImageToggleButton.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="7" />
+                                    </Style>
+                                </sharedControls:ImageToggleButton.Resources>
+                            </sharedControls:ImageToggleButton>
+                        </Grid>
+
+                        <sharedControls:ImageToggleButton
+                            Style="{StaticResource ToolButton}" 
+                            IsChecked="{Binding IsEraserChecked}"
+                            ToolTip="Eraser"
+                            ImageGeometry="{StaticResource EraserGeometry}">
+
+                            <sharedControls:ImageToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="7" />
+                                </Style>
+                            </sharedControls:ImageToggleButton.Resources>
+                        </sharedControls:ImageToggleButton>
+
+                            <sharedControls:ImageToggleButton
+                            Style="{StaticResource ToolButton}" 
+                            IsChecked="{Binding IsClearAllChecked}"
+                            ToolTip="Clear All annotations on Selected Wafer"
+                            ImageGeometry="{StaticResource CloseCircleGeometry}">
+
+                                <sharedControls:ImageToggleButton.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="7" />
+                                    </Style>
+                                </sharedControls:ImageToggleButton.Resources>
+                            </sharedControls:ImageToggleButton>
+
+                            <sharedControls:ImageToggleButton
+                            Style="{StaticResource ToolButton}" 
+                            IsChecked="{Binding IsFillChecked}"
+                            ToolTip="Fill"
+                            ImageGeometry="{StaticResource FillerPotGeometry}">
+
+                            <sharedControls:ImageToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="7" />
+                                </Style>
+                            </sharedControls:ImageToggleButton.Resources>
+                        </sharedControls:ImageToggleButton>
+
+                        <sharedControls:ImageToggleButton
+                            Style="{StaticResource ToolButton}" 
+                            ToolTip="Size"
+                            ButtonBase.Click="SizeButton_ClickButton"
+                            x:Name="SizeButton">
+
+                            <sharedControls:ImageToggleButton.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="7" />
+                                </Style>
+                            </sharedControls:ImageToggleButton.Resources>
+
+                            <Grid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource StrokeThicknessGeometry}" Grid.Row="0" Margin="2"/>
+                                    
+                                    <Path Stroke="Black" HorizontalAlignment="Center" Grid.Row="1">
+                                        <Path.Data>
+                                            <PathGeometry>
+                                                <PathFigure IsClosed="false" StartPoint="0,0">
+                                                    <LineSegment Point="4,4" />
+                                                    <LineSegment Point="8,0" />
+                                                </PathFigure>
+                                            </PathGeometry>
+                                        </Path.Data>
+                                    </Path>
+                                </Grid>
+
+                                <Popup
+                                    x:Name="PopUp"
+                                    HorizontalOffset="-17.5"
+                                    AllowsTransparency="True"
+                                    Placement="Bottom"
+                                    HorizontalAlignment="Center"
+                                    Focusable="False">
+
+                                    <ListBox
+                                        MinWidth="70"
+                                        ItemsSource="{Binding SizePossibleValues}"
+                                        SelectedItem="{Binding SelectedEntry}"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="1">
+
+                                        <ListBox.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="7" />
+                                            </Style>
+                                        </ListBox.Resources>
+
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="ListBoxItem">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Border.CornerRadius" Value="7" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Value}" />
+                                                    <TextBlock Text="px" Margin="0 0 3 0"/>
+                                                    <Line Stroke="Black" StrokeThickness="{Binding Key}" X1="0" X2="40" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Popup>
+                            </Grid>
+                        </sharedControls:ImageToggleButton>
+                    </StackPanel>
+                    </ScrollViewer>
+                    <TextBlock Grid.Row="1" Text="Tools and Shapes" TextAlignment="Center" Margin="5"/>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" BorderThickness="0 0 0.25 0" BorderBrush="Gray" Padding="0 0 10 0">
+                    <Grid Margin="0 10 0 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <ComboBox Grid.Row="0" ItemsSource="{Binding DefectCategories}" VerticalAlignment="Center" SelectedValue="{Binding SelectedCategory}" Margin="0 5">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle Grid.Column="0" Margin="0,2,5,2" Width="16" Height="16" Stroke="DimGray" Fill="{Binding Color, Converter={StaticResource SerializableColorToSolidBrushConverter}}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <Grid Grid.Row="1" Margin="0 0 0 5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <sharedControls:ImageButton 
+                                Grid.Column="0" 
+                                Margin="2"
+                                Image="\Resources\Icons\color-wheel.png"
+                                Content="Add" 
+                                Command="{Binding AddNewDefectCategoryCommand}"/>
+
+                            <sharedControls:ImageButton 
+                                Grid.Column="1" 
+                                Margin="2"
+                                IsEnabled="{Binding CanEdit}"
+                                ImageGeometry="{StaticResource PencilGeometry}"
+                                Content="Edit" 
+                                Command="{Binding EditDefectCategoryCommand}"/>
+                        </Grid>
+
+                        <TextBlock Grid.Row="2" Text="Defect Categories" TextAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <ListBox 
+                        Grid.Row="0" 
+                        ItemsSource="{Binding DefectCategories}" 
+                        SelectedItem="{Binding SelectedCategory}"
+                        Margin="3"
+                        Background="{StaticResource WindowBackgroundBrush}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid
+                                    HorizontalAlignment="Left" 
+                                    VerticalAlignment="Top" 
+                                    Margin="5 0" 
+                                    Background="{StaticResource WindowBackgroundBrush}" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Ellipse Width="20" Height="20" ToolTip="{Binding Label}" Stroke="DimGray" Margin="2" Fill="{Binding Color, Converter={StaticResource SerializableColorToSolidBrushConverter}}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBlock Grid.Row="1" Text="Colors" TextAlignment="Center" />
+                </Grid>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>

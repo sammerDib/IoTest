@@ -1,0 +1,129 @@
+<Window
+    x:Class="UnitySC.GUI.Common.Views.Splashscreen.SplashScreenWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:splashscreen="clr-namespace:UnitySC.GUI.Common.Views.Splashscreen"
+    x:Name="Root"
+    Width="550"
+    Height="410"
+    MinWidth="550"
+    MinHeight="410"
+    d:DataContext="{d:DesignInstance splashscreen:SplashScreenViewModel, IsDesignTimeCreatable=True}"
+    AllowsTransparency="True"
+    Background="Transparent"
+    Foreground="{DynamicResource SplashScreenForeground}"
+    IsHitTestVisible="True"
+    MouseDown="SplashScreenWindow_OnMouseDown"
+    ResizeMode="{Binding ResizeMode}"
+    ShowInTaskbar="True"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <SolidColorBrush x:Key="SplashScreenBackground" Color="{DynamicResource PanelBackground}" />
+        <SolidColorBrush x:Key="SplashScreenForeground" Color="{DynamicResource PanelForeground}" />
+
+        <DropShadowEffect
+            x:Key="SplashScreenShadow"
+            BlurRadius="24"
+            Direction="270"
+            Opacity="0.7"
+            ShadowDepth="8"
+            Color="Black" />
+    </Window.Resources>
+    <Grid>
+        <Grid>
+            <Grid.OpacityMask>
+                <VisualBrush Visual="{Binding ElementName=BackgroundBorder}" />
+            </Grid.OpacityMask>
+            <Border
+                x:Name="BackgroundBorder"
+                Grid.ColumnSpan="2"
+                Margin="20"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{DynamicResource SplashScreenBackground}"
+                CornerRadius="3"
+                Effect="{StaticResource SplashScreenShadow}" />
+            <ProgressBar
+                Margin="20"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Value="{Binding ProgressPercentage, Mode=OneWay, FallbackValue=99}">
+                <ProgressBar.Style>
+                    <Style
+                        BasedOn="{StaticResource {x:Type ProgressBar}}"
+                        TargetType="{x:Type ProgressBar}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding MainCauseException}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ProgressBar.Style>
+            </ProgressBar>
+        </Grid>
+
+        <DockPanel Margin="30">
+
+            <TextBlock
+                HorizontalAlignment="Right"
+                DockPanel.Dock="Top"
+                FontSize="48"
+                FontWeight="Bold"
+                Foreground="{DynamicResource SplashScreenForeground}"
+                Text="{Binding EquipmentName, FallbackValue='Equipment'}" />
+
+            <Grid>
+
+                <!--#region Dynamic Content-->
+                <ContentPresenter Content="{Binding}">
+                    <ContentPresenter.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <splashscreen:SplashScreenContentView
+                                    x:Name="NormalContent"
+                                    Visibility="Collapsed" />
+                                <splashscreen:SplashScreenExceptionView
+                                    x:Name="ExceptionContent"
+                                    Visibility="Visible" />
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding MainCauseException}" Value="{x:Null}">
+                                    <Setter TargetName="NormalContent" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="ExceptionContent" Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ContentPresenter.ContentTemplate>
+                </ContentPresenter>
+                <!--#endregion Dynamic Content-->
+
+                <!--#region Tool, Software name & version-->
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    DockPanel.Dock="Top"
+                    FontSize="16"
+                    Foreground="{DynamicResource SplashScreenForeground}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} v{1}">
+                            <Binding
+                                FallbackValue="Equipment Controller"
+                                Path="SoftwareName" />
+                            <Binding
+                                FallbackValue="1.0.0.0"
+                                Path="SoftwareVersion" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <!--#endregion Tool, Software name & version-->
+
+            </Grid>
+
+        </DockPanel>
+    </Grid>
+</Window>

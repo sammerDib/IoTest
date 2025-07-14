@@ -1,0 +1,135 @@
+<Window
+    x:Class="UnitySC.UTO.Controller.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:common="clr-namespace:UnitySC.GUI.Common;assembly=UnitySC.GUI.Common"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialog="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Integration.Dialog"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:UnitySC.UTO.Controller.Views"
+    Width="1920"
+    Height="1080"
+    MinWidth="800"
+    MinHeight="600"
+    d:DataContext="{d:DesignInstance views:MainWindowViewModel,
+                                     d:IsDesignTimeCreatable=False}"
+    Style="{StaticResource MainWindowStyle}"
+    WindowState="Maximized"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <Style BasedOn="{StaticResource Body1TextStyle}" TargetType="{x:Type TextBlock}" />
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CancelCurrentPopupCommand}" />
+        <KeyBinding
+            Key="L"
+            Command="{Binding OpenLoginPanelCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding Key="Enter" Command="{Binding ValidateCurrentPopupCommand}" />
+    </Window.InputBindings>
+    <Window.Template>
+        <ControlTemplate TargetType="{x:Type Window}">
+            <Border
+                d:DataContext="{d:DesignInstance {x:Type views:MainWindowViewModel},
+                                                 IsDesignTimeCreatable=True}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}">
+                <Border.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding Source={x:Static common:App.Instance}, Path=UserInterfaceManager.GlobalScale}" ScaleY="{Binding Source={x:Static common:App.Instance}, Path=UserInterfaceManager.GlobalScale}" />
+                </Border.LayoutTransform>
+                <Grid>
+                    <AdornerDecorator>
+                        <controls:InteractionDisplayer Interaction="{Binding Popups.Current}">
+                            <Grid>
+                                <DockPanel>
+
+                                    <!--#region TitlePanel-->
+                                    <ContentPresenter Content="{Binding TitlePanel}" DockPanel.Dock="Top" />
+                                    <!--#endregion TitlePanel-->
+
+                                    <!--#region NavigationElements-->
+                                    <TabControl
+                                        x:Name="NavigationTabControl"
+                                        DockPanel.Dock="Bottom"
+                                        ItemsSource="{Binding Navigation.RootMenu.Items}"
+                                        SelectedItem="{Binding Navigation.SelectedRootMenuItem}"
+                                        Style="{StaticResource FirstLevelNavigationTabControlStyle}" />
+                                    <!--#endregion NavigationElements-->
+
+                                    <!--#region SelectedNavigationElement-->
+                                    <Grid DockPanel.Dock="Bottom">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition x:Name="SubNavigationColumn" Width="Auto" />
+                                            <ColumnDefinition x:Name="NavigationColumn" Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--#region SubNavigation-->
+                                        <ContentPresenter
+                                            Grid.Column="0"
+                                            Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin},
+                                                                            Bottom={StaticResource PanelMargin}}"
+                                            Content="{Binding Navigation.SelectedRootMenuItem}"
+                                            ContentTemplateSelector="{StaticResource SubNavigationDataTemplateSelector}"
+                                            UseLayoutRounding="True" />
+                                        <!--#endregion SubNavigation-->
+
+                                        <!--#region BusinessPanel-->
+                                        <ContentPresenter
+                                            Grid.Column="1"
+                                            Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin},
+                                                                            Bottom={StaticResource PanelMargin}}"
+                                            Content="{Binding Navigation.SelectedBusinessPanel}" />
+                                        <!--#endregion BusinessPanel-->
+
+                                        <!--#region Tools-->
+                                        <ContentPresenter
+                                            x:Name="ToolPresenter"
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Stretch"
+                                            Content="{Binding ToolManager}"
+                                            ContentTemplate="{StaticResource ToolManagerTemplate}"
+                                            SnapsToDevicePixels="True" />
+                                        <!--#endregion Tools-->
+
+                                        <!--#region Commands-->
+                                        <ContentPresenter
+                                            x:Name="CommandContainer"
+                                            Grid.Column="2"
+                                            Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin},
+                                                                            Bottom={StaticResource PanelMargin}}"
+                                            Content="{Binding Navigation.SelectedBusinessPanel}"
+                                            ContentTemplate="{StaticResource CommandContainerTemplate}"
+                                            DockPanel.Dock="Right"
+                                            SnapsToDevicePixels="True" />
+                                        <!--#endregion Commands-->
+
+                                    </Grid>
+                                    <!--#endregion SelectedNavigationElement-->
+                                </DockPanel>
+                                <ContentPresenter />
+                            </Grid>
+                        </controls:InteractionDisplayer>
+                    </AdornerDecorator>
+                    <dialog:DialogOwnerView DataContext="{Binding DialogOwner}" />
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <!--  If is in design mode, the command container is displayed in the BusinessPanel template  -->
+                <DataTrigger Binding="{Binding IsInDesignMode, FallbackValue=true}" Value="true">
+                    <Setter TargetName="CommandContainer" Property="Visibility" Value="Collapsed" />
+                    <Setter TargetName="NavigationTabControl" Property="ItemsSource" Value="{Binding Navigation.RootMenu.Items}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ToolManager.HasVisibleAndMaximizedTool}" Value="true">
+                    <Setter TargetName="ToolPresenter" Property="VerticalAlignment" Value="Stretch" />
+                    <Setter TargetName="ToolPresenter" Property="HorizontalAlignment" Value="Stretch" />
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Template>
+</Window>

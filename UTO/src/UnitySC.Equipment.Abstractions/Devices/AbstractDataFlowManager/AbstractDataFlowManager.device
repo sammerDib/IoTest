@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="AbstractDataFlowManager">
+                  <Types>
+                    <CSharpType PlatformType="UnitySC.Shared.Data.Enum.TC_DataflowStatus, UnitySC.Shared.Data, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.MaterialRecipe, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.DataAccess.Dto.DataflowRecipeInfo, UnitySC.DataAccess.Dto, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Material.Wafer, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <DeviceType Name="AbstractDataFlowManager" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\AbstractDataFlowManager\AbstractDataFlowManager.device|UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.AbstractDataFlowManager" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.AbstractDataFlowManager, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="StartRecipe" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="materialRecipe" Type="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.MaterialRecipe" />
+                            <Parameter Name="processJobId" Type="String" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.Conditions.IsRecipeAvailable, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="AbortRecipe" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="jobId" Type="String" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="StartJobOnMaterial" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="recipe" Type="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.DataflowRecipeInfo" />
+                            <Parameter Name="wafer" Type="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.Wafer" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.Conditions.WaferPresentInRunningRecipe, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="GetAvailableRecipes" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="IsStopCancelAllJobsRequested" Type="Boolean" />
+                        <Status Name="DataflowState" Type="UnitySC.Equipment.Abstractions.Devices.AbstractDataFlowManager.TC_DataflowStatus" />
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

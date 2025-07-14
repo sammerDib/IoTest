@@ -1,0 +1,100 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.DataAnalysis.DataAnalysisPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataAnalysis="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.DataAnalysis"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:analyzer="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.DataAnalysis.Analyzer"
+    d:DataContext="{d:DesignInstance dataAnalysis:DataAnalysisPanel, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <dataTables:DataTable
+        DataSource="{Binding DataTableSource}"
+        ScrollViewer.IsDeferredScrollingEnabled="False"
+        SelectedItem="{Binding SelectedFileAnalysisViewModel, Mode=TwoWay}">
+
+		<GridView AllowsColumnReorder="True">
+
+			<!--#region DcpName-->
+			<dataTables:DataTableColumn
+				Width="300"
+				DisplayName="{localize:Static dataAnalysis:DataAnalysisPanelResources.DCP_NAME}"
+				SortKey="RelatedDataCollectionPlanName">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="analyzer:FileAnalysisViewModel">
+						<TextBlock
+							Text="{Binding RelatedDataCollectionPlanName}"
+							TextAlignment="Left" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion DcpName-->
+
+			<!--#region FileName-->
+			<dataTables:DataTableColumn
+				Width="400"
+				DisplayName="{localize:Static dataAnalysis:DataAnalysisPanelResources.FILE_NAME}"
+				SortKey="FileName">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="analyzer:FileAnalysisViewModel">
+						<TextBlock
+							Text="{Binding FileName}"
+							TextAlignment="Left" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion FileName-->
+
+			<!--#region Extension-->
+			<dataTables:DataTableColumn
+				Width="150"
+				DisplayName="{localize:Static dataAnalysis:DataAnalysisPanelResources.EXTENSION}"
+				SortKey="Extension">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="analyzer:FileAnalysisViewModel">
+						<TextBlock
+							Text="{Binding Extension}"
+							TextAlignment="Left" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion Extension-->
+
+			<!--#region StartDate-->
+			<dataTables:DataTableColumn
+				Width="250"
+				DisplayName="{localize:Static dataAnalysis:DataAnalysisPanelResources.START_ACQUISITION_DATE}"
+				SortKey="StartDate">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="analyzer:FileAnalysisViewModel">
+						<TextBlock
+							Text="{Binding StartDate}"
+							TextAlignment="Left" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion StartDate-->
+			<!--#region StopDate-->
+			<dataTables:DataTableColumn
+				Width="250"
+				DisplayName="{localize:Static dataAnalysis:DataAnalysisPanelResources.STOP_ACQUISITION_DATE}"
+				SortKey="StopDate">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="analyzer:FileAnalysisViewModel">
+						<TextBlock
+							Text="{Binding StopDate}"
+							TextAlignment="Left" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion StopDate-->
+
+		</GridView>
+
+	</dataTables:DataTable>
+</UserControl>

@@ -1,0 +1,803 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>iSil</name>
+    </assembly>
+    <members>
+        <member name="T:Cvb.Sil">
+            <summary>
+            Functionality to create and maintain a database with training 
+            information for Manto2.
+            </summary>
+        </member>
+        <member name="M:Cvb.Sil.CreateDataTypeImage(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a SIL data type descriptor object that represents images with 
+            a given dimension (# of planes), width, height, feature window and 
+            origin. Remember to Dispose() the object once it is no longer needed.
+            </summary>
+            <param name="nWidth">width of the images to enter the SIL</param>
+            <param name="nHeight">height of the images to enter the SIL</param>
+            <param name="nDimension">dimension of the images to enter the SIL
+            </param>
+            <param name="nDataType">data type of the images to enter the SIL
+            </param>
+            <param name="nFWLeft">left edge of the feature window inside these 
+            images</param>
+            <param name="nFWTop">to edge of the feature window inside these images
+            </param>
+            <param name="nFWWidth">width of the feature window</param>
+            <param name="nFWHeight">height of the feature window</param>
+            <param name="nFWOrgX">origin of the feature window</param>
+            <param name="nFWOrgY">origin of the feature window</param>
+            <returns>data type descriptor object, or null on error</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateDataTypeFloatVector(System.Int32)">
+            <summary>
+            Creates a SIL data type descriptor object that represents floating 
+            point data vectors of a given dimension. Remember to Dispose() the 
+            object once it is no longer needed. 
+            </summary>
+            <param name="nDimension">dimension of the data arrays</param>
+            <returns>data type descriptor object, or null on error</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateLabelTypeFloatVector(System.Int32)">
+            <summary>
+            Creates a SIL label type descriptor object that represents floating
+            point vector labels of a given length. 
+            </summary>
+            <param name="nDimension">dimension of the regression labels.</param>
+            <returns>label type descriptor object, or null on error</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateLabelTypeString">
+            <summary>
+            Creates a SIL label type descriptor object that represents a string 
+            label.
+            </summary>
+            <returns>label type descriptor object, or null on error</returns>
+        </member>
+        <member name="M:Cvb.Sil.Create(Cvb.SharedSilLabelType,Cvb.SharedSilDataType)">
+            <summary>
+            Creates a Sample Image List using the indicated label and data type.
+            Note that the general data and label type of a SIL cannot be changed 
+            after the SIL has been created. Remember to Dispose() the SIL once it
+            is no longer needed.
+            </summary>
+            <param name="LabelType">label type descriptor</param>
+            <param name="DataType">data type descriptor</param>
+            <returns>SIL object, or null on error</returns>
+        </member>
+        <member name="M:Cvb.Sil.CompareDataTypes(Cvb.SharedSilDataType,Cvb.SharedSilDataType)">
+            <summary>
+            Compares two data type descriptor objects. 
+            </summary>
+            <param name="TypeA">data type object to be compared</param>
+            <param name="TypeB">data type object to be compared</param>
+            <returns>
+            <list type="bullet">
+            <item>0: the two objects match</item>
+            <item>1: rhs describes a data type other than lhs</item>
+            <item>-1: rhs and lhs describe a vector of different length</item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:Cvb.Sil.CompareLabelTypes(Cvb.SharedSilLabelType,Cvb.SharedSilLabelType)">
+            <summary>
+            Compares two label type descriptor objects. 
+            </summary>
+            <param name="TypeA">data type object to be compared</param>
+            <param name="TypeB">data type object to be compared</param>
+            <returns>
+            <list type="bullet">
+            <item>0: the two objects match</item>
+            <item>1: rhs describes a data type other than lhs</item>
+            <item>-1: rhs and lhs describe a vector of different length</item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:Cvb.Sil.Load(System.String,Cvb.SharedSil@)">
+            <summary>
+            Load a SIL from disc.
+            </summary>
+            <param name="szFile">file to load</param>
+            <param name="Sil">loaded SIL (null if error occurred)</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="M:Cvb.Sil.Store(Cvb.SharedSil,System.String)">
+            <summary>
+            Saves the SIL to disc.
+            </summary>
+            <param name="Sil">SIL object to be stored</param>
+            <param name="szFile">file to store the SIL in</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateVectorLabel(System.Single[])">
+            <summary>
+            Create a vector-valued label for a SharedSil object.
+            This label can then be used for creating/adding new entries to a 
+            <see cref="T:Cvb.SharedSil"/> using AddItem. 
+            <see cref="T:Cvb.SharedSil"/> objects created with/for vector labels are 
+            suitable for regression tasks. Note that the object needs to be 
+            disposed of after use. 
+            </summary>
+            <param name="data">data to create the label from</param>
+            <returns>label object or null on failure</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateStringLabel(System.String)">
+            <summary>
+            Creates a SIL string label object using the input string. This label 
+            can then be used for creating/adding new entries to a 
+            <see cref="T:Cvb.SharedSil"/>. SIL objects created with/for string labels 
+            are suitable for classification tasks. Note that the object needs to 
+            be disposed of after use. 
+            </summary>
+            <param name="szString">string label to use for the label object
+            </param>
+            <returns>label object or null on failure</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateVectorData(System.Single[])">
+            <summary>
+            Creates a reference counted SIL vector data object using the input 
+            array. This data object can then be used for creating/adding new 
+            entries to a SIL using AddItem. Note that the object needs to be 
+            disposed of after use. 
+            </summary>
+            <param name="data">array to use as the data</param>
+            <returns>label object or null on failure</returns>
+        </member>
+        <member name="M:Cvb.Sil.CreateImageData(Cvb.Image.IMG,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates a reference SIL image data object. The data object is created 
+            from the entire input image SourceImage by extracting a rectangle of 
+            size nWidth x nHeight (using pixel coordinates) with the top/left of 
+            the extraction area located at nPosX / nPosY. This data object can 
+            then be used for creating/adding new entries to a SIL using AddItem. 
+            Note that the object needs to be disposed of after use. 
+            </summary>
+            <param name="SourceImage">image to extract from</param>
+            <param name="nPosX">extraction position</param>
+            <param name="nPosY">extraction position</param>
+            <param name="nWidth">extraction width</param>
+            <param name="nHeight">extraction height</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cvb.Sil.CompareData(Cvb.SharedSilData,Cvb.SharedSilData)">
+            <summary>
+            Compares two SIL data objects for equality.
+            </summary>
+            <param name="DataA">data to be compared</param>
+            <param name="DataB">data to be compared</param>
+            <returns>
+            <list type="bullet">
+            <item>0: the two objects match</item>
+            <item>1: rhs describes a data type other than lhs</item>
+            <item>-1: rhs and lhs describe different content</item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:Cvb.Sil.CompareLabels(Cvb.SharedSilData,Cvb.SharedSilData)">
+            <summary>
+            Compares two SIL label objects for equality.
+            </summary>
+            <param name="DataA">label to be compared</param>
+            <param name="DataB">label to be compared</param>
+            <returns>
+            <list type="bullet">
+            <item>0: the two objects match</item>
+            <item>1: rhs describes a label type other than lhs</item>
+            <item>-1: rhs and lhs describe different content</item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:Cvb.Sil.VerifyDataCompatibility(Cvb.SharedSilData,Cvb.SharedSilDataType)">
+            <summary>
+            Verifies if a datum is compatible with a data type descriptor.
+            </summary>
+            <param name="Data">data object to be verified</param>
+            <param name="DataType">data type descriptor object</param>
+            <returns>true if the data is compatible, false otherwise</returns>
+        </member>
+        <member name="M:Cvb.Sil.VerifyLabelCompatibility(Cvb.SharedSilLabel,Cvb.SharedSilLabelType)">
+            <summary>
+            Verifies if a label is compatible with a label type descriptor.
+            </summary>
+            <param name="Label">label object to be verified</param>
+            <param name="LabelType">label type descriptor object</param>
+            <returns>true if the label is compatible, false otherwise</returns>
+        </member>
+        <member name="M:Cvb.Sil.TransformLabelList(Cvb.SharedSil,Cvb.Sil.TransformSilLabel)">
+            <summary>
+            Transform the label list of a SIL with a user-definable callback.
+            </summary>
+            <param name="inputSIL">SIL to be transformed</param>
+            <param name="callback">callback with which to transform the labels
+            </param>
+            <returns>transformed SIL</returns>
+        </member>
+        <member name="M:Cvb.Sil.TransformDataList(Cvb.SharedSil,Cvb.Sil.TransformSilData)">
+            <summary>
+            Transform the data list of a SIL with a user-definable callback.
+            </summary>
+            <param name="inputSIL">SIL to be transformed</param>
+            <param name="callback">callback with which to transform the data
+            </param>
+            <returns>transformed SIL</returns>
+        </member>
+        <member name="M:Cvb.Sil.ImportFromManto(System.String,Cvb.SharedSil@)">
+            <summary>
+            Import a Manto 1 SIL into Manto2. With this function one can import 
+            SIL generated with the first version of Manto for use in Manto2. 
+            Please note, however, that there are a few restrictions involved, as 
+            Manto1 and Manto2 are not entirely feature compatible:
+            <list type="bullet">
+            <item>Manto2 does not use automatic instance generation, therefore the 
+            settings that are involved in automatic instance generation will be 
+            skipped during import.</item>
+            <item>Manto2 does not support "named" SILs, therefore the SIL name 
+            will be skipped during import.</item>
+            <item>Upon import the version 1 SIL will be automatically converted to 
+            a version 2 SIL object that can be saved, reloaded, queried and 
+            manipulated using the functions from iSIL.dll.</item>
+            </list>
+            </summary>
+            <param name="szSil">File name of the sample image list to be 
+            imported.</param>
+            <param name="sil">Handle to the imported sample image list.</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="T:Cvb.Sil.TransformSilData">
+            <summary>
+            SIL data transformation callback.
+            </summary>
+            <param name="dataIn">data to be transformed</param>
+            <param name="dataOut">transformed data</param>
+            <returns>true if the operation succeeded, false otherwise (may stop 
+            the iteration)</returns>
+        </member>
+        <member name="T:Cvb.Sil.TransformSilLabel">
+            <summary>
+            SIL label transformation callback.
+            </summary>
+            <param name="labelIn">label to be transformed</param>
+            <param name="labelOut">transformed label</param>
+            <returns>true if the operation succeeded, false otherwise (may stop 
+            the iteration)</returns>
+        </member>
+        <member name="T:Cvb.SharedSilDataType">
+            <summary>
+            Helper class to manage the reference count of a CVB reference counted 
+            SIL type descriptor object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedSilDataType.#ctor(System.IntPtr)">
+            <summary>
+            Creates a reference counted data type descriptor.
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedSilDataType.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            internal ctor
+            </summary>
+            <param name="handle"></param>
+            <param name="share"></param>
+        </member>
+        <member name="M:Cvb.SharedSilDataType.GetFeatureWindow(System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Gets the feature window dimensions of the SIL. Of course this function 
+            can only operate sensibly on a SIL that contains image data - on other 
+            SILs an error will be returned.
+            </summary>
+            <param name="Left">left edge of the feature window</param>
+            <param name="Top">top edge of the feature window</param>
+            <param name="Width">width of the feature window</param>
+            <param name="Height">height of the feature window</param>
+            <param name="OriginX">origin of the feature window</param>
+            <param name="OriginY">origin of the feature window</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSilDataType.SetFeatureWindow(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Set the feature window dimensions of the SIL. Of course this function 
+            can only operate sensibly on a SIL that contains image data - on other 
+            SILs an error will be returned. An error will also be returned when
+            trying to set values that exceed the limits of the image size.
+            </summary>
+            <param name="Left">left edge of the feature window</param>
+            <param name="Top">top edge of the feature window</param>
+            <param name="Width">width of the feature window</param>
+            <param name="Height">height of the feature window</param>
+            <param name="OriginX">origin of the feature window</param>
+            <param name="OriginY">origin of the feature window</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSilDataType.GetFringes(System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Get the extent of the fringes on a SIL that contains images. On SILs 
+            that do not operate on images, an error will be returned. The fringes 
+            of a SIL are a direct consequence of the geometry of the images stored 
+            inside the SIL and the currently set feature window (query with 
+            <see cref="M:Cvb.SharedSilDataType.GetFeatureWindow(System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Int32@)"/>), therefore the fringes are a read-only 
+            property. 
+            </summary>
+            <param name="Left">fringe left of the feature window</param>
+            <param name="Top">fringe above the feature window</param>
+            <param name="Right">fringe right of the feature window</param>
+            <param name="Bottom">fringe below the feature window</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSilDataType.GetImageDataGeometry(System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Gets the geometry parameters of the image data type. If DataType does 
+            not refer to an image data type descriptor, an error will be returned. 
+            </summary>
+            <param name="nWidth">width of the images in the SIL</param>
+            <param name="nHeight">height of the images in the SIL</param>
+            <param name="nDimension">dimension of the images in the SIL</param>
+            <param name="nDataType">CVB data type fo the images in the SIL</param>
+            <returns>0 or greater if successful</returns>
+        </member>
+        <member name="P:Cvb.SharedSilDataType.FloatVectorDataDim">
+            <summary>
+            Retrieves the dimension of the float data type descriptor. If this
+            descriptor does not describe float vectors, -1 will be returned.
+            </summary>
+        </member>
+        <member name="T:Cvb.SharedSilLabelType">
+            <summary>
+            Helper class to manage the reference count of a CVB reference counted 
+            Sil type descriptor object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedSilLabelType.#ctor(System.IntPtr)">
+            <summary>
+            Creates a reference counted label type descriptor.
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedSilLabelType.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            internal ctor
+            </summary>
+            <param name="handle"></param>
+            <param name="share"></param>
+        </member>
+        <member name="P:Cvb.SharedSilLabelType.FloatVectorLabelDim">
+            <summary>
+            Retrieves the dimension of the float label type descriptor. If this
+            descriptor does not describe float vectors, -1 will be returned.
+            </summary>
+        </member>
+        <member name="T:Cvb.TSilDataType">
+            <summary>
+            SIL data type indicator.
+            </summary>
+        </member>
+        <member name="F:Cvb.TSilDataType.SDT_Undefined">
+            Indicates cases where the state is undefined.
+        </member>
+        <member name="F:Cvb.TSilDataType.SDT_ImageData">
+            The SIL data consists of regular CVB images.
+        </member>
+        <member name="F:Cvb.TSilDataType.SDT_FloatData">
+            The SIL data consists of floating point arrays.
+        </member>
+        <member name="T:Cvb.TSilLabelType">
+            <summary>
+            SIL label type indicator.
+            </summary>
+        </member>
+        <member name="F:Cvb.TSilLabelType.SLT_Undefined">
+            Indicates cases where the state is undefined.
+        </member>
+        <member name="F:Cvb.TSilLabelType.SLT_String">
+            The labels in the SIL are strings.
+        </member>
+        <member name="F:Cvb.TSilLabelType.SLT_Float">
+            The labels in the SIL are float vectors.    
+        </member>
+        <member name="T:Cvb.SharedSil">
+            <summary>
+            Reference counted sample image list object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedSil.#ctor(System.IntPtr)">
+            <summary>
+            ctor
+            </summary>
+            <param name="handle"></param>
+        </member>
+        <member name="M:Cvb.SharedSil.FromHandle(System.IntPtr)">
+            <summary>
+            Only use if you *really* know what you are doing!
+            </summary>
+            <param name="handle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetDataIndex(Cvb.SharedSilData)">
+            <summary>
+            Get the index of a data object inside a SIL object's data list
+            (if present).
+            </summary>
+            <param name="silData">data object to check</param>
+            <returns>index or -1 if the object pointed to by silData is not
+            part of this SIL</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetLabelIndex(Cvb.SharedSilLabel)">
+            <summary>
+            Get the index of a label object inside a SIL object's label list.
+            </summary>
+            <param name="silLabel">label object to check</param>
+            <returns>index or -1 if the silLabel is not part of this SIL</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetData(System.Int32)">
+            <summary>
+            Get a SIL data list entry. Note that the caller should Dispose() the
+            returned object once it is no longer needed.
+            </summary>
+            <param name="index">index of the data list entry to retrieve</param>
+            <returns>handle to the retrieved data object; null on error</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetLabel(System.Int32)">
+            <summary>
+            Get a SIL label list entry. Note that the caller should Dispose() the
+            returned object once it is no longer needed.
+            </summary>
+            <param name="index">index of the label entry to retrieve</param>
+            <returns>handle to the retrieved data object; null on error</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.ChangeVectorLabel(System.Int32,System.Single[])">
+            <summary>
+            Modify a vector label's contents. This effectively relabels the 
+            existing class with the given LabelIndex. If a class with the new 
+            label pData already exists, the contents of the class LabelIndex will 
+            be merged into that class. 
+            </summary>
+            <param name="labelIndex">label to be updated</param>
+            <param name="data">data to update the label with</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.ChangeStringLabel(System.Int32,System.String)">
+            <summary>
+            Modify a string label's contents. This effectively renames the 
+            existing class with the given LabelIndex. If a class with the new 
+            label szString already exists, the contents of the class LabelIndex 
+            will be merged into that class. 
+            </summary>
+            <param name="labelIndex">label to be updated</param>
+            <param name="szLabel">new string to be set</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.DeleteData(System.Int32)">
+            <summary>
+            Remove an entry from a SIL's data list. If the removed data entry was 
+            the last one to which a label referred, then that label will also be 
+            removed from the label list as a side effect! (the aim is to never 
+            have a class with zero entries in the SIL).
+            </summary>
+            <param name="index">index of the data entry to be deleted</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.DeleteDataByLabel(System.Int32,System.Int32)">
+            <summary>
+            Remove an entry from a SIL label's data list. Note the difference 
+            between this function and DeleteData: The latter uses an index 
+            based on the SIL's "global" data entry list, whereas this function 
+            uses a label index to access a label's list of associated data 
+            entries. If the removed data entry was the last one to which a label 
+            referred, then that label will also be removed from the label list as 
+            a side effect! (the aim is to never have a class with zero entries in 
+            the SIL).
+            </summary>
+            <param name="labelIndex">label list index of the entry to be removed
+            </param>
+            <param name="dataIndex">data list index of the entry to be removed
+            </param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.DeleteLabel(System.Int32)">
+            <summary>
+            Remove an entry from a SIL's label list. Removing a label entry will 
+            automatically also remove all associated data entries!
+            </summary>
+            <param name="index">index of the label to be removed</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetDataByLabel(System.Int32,System.Int32)">
+            <summary>
+            Get a SIL data list entry associated with a specific label. Unlike 
+            <see cref="M:Cvb.SharedSil.GetData(System.Int32)"/>, which accesses the SIL's global data list 
+            (which in some cases makes index handling slightly inconvenient), this 
+            function accesses the data entries by class/label (i.e. it accesses 
+            the list of associated data in the label entry identified by 
+            LabelIndex). Remember to Dispose() the returned object once it is no
+            longer needed.
+            </summary>
+            <param name="LabelIndex">index of the label</param>
+            <param name="DataIndex">index of the data list entry in the label 
+            identified by the LabelIndex</param>
+            <returns>ojbect handle, null on errors</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetMaskData">
+            <summary>
+            Gets the mask data of this SIL.
+            </summary>
+            <returns>mask data object or null if no mask data exists</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.SetMaskData(Cvb.SharedSilData)">
+            <summary>
+            Sets the mask data of the SIL.
+            </summary>
+            <param name="MaskData">Mask data to be set. May be NULL in which case
+            only the current set of mask data will be erased, but not replaced
+            with anything new</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.AddItem(Cvb.SharedSilData,Cvb.SharedSilLabel)">
+            <summary>
+            Add a new entry into the SIL. An entry consists of the combination of 
+            data plus label. The data entry will always be added to the Sil no 
+            matter whether an identical entry is already present. The label entry 
+            however will be substituted for an already present entry if an 
+            identical entry is already inside the list of labels (thus avoiding 
+            duplicate entries in the Sil's label list). 
+            </summary>
+            <param name="data">data object to be added</param>
+            <param name="label">label under which to add the data</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.AddNamedImageItem(System.String,Cvb.Image.IMG,System.Int32,System.Int32)">
+            <summary>
+            Add a new image data entry to a SIL under a class name. Provides a 
+            convenient way of adding a new image data entry to a classification 
+            SIL (i.e. a SIL that uses string labels). 
+            </summary>
+            <param name="szName">label under which to add the image</param>
+            <param name="srcImage">image from which to add a sample</param>
+            <param name="nPosX">position at which to extract the sample</param>
+            <param name="nPosY">position at which to extract the sample</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.AddNamedVectorItem(System.String,System.Single[])">
+            <summary>
+            Add a new vector data entry to a SIL under a class name. Provides a 
+            convenient way of adding a new vector data entry to a classification 
+            SIL (i.e. a SIL that uses string labels). 
+            </summary>
+            <param name="szName">lable under which to add the data</param>
+            <param name="pData">data to be added</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.AddRegressionImageItem(System.Single[],Cvb.Image.IMG,System.Int32,System.Int32)">
+            <summary>
+            Add a new image data entry to a SIL under a regression value. Provides 
+            a convenient way of adding a new image data entry to a regression SIL 
+            (i.e. a SIL that uses vector labels). 
+            </summary>
+            <param name="pLabel">value under which to add the new image</param>
+            <param name="srcImage">image from which to add data</param>
+            <param name="nPosX">extraction position</param>
+            <param name="nPosY">extraciton position</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.AddRegressionVectorItem(System.Single[],System.Single[])">
+            <summary>
+            Add a new vector data entry to a SIL under a regression value. Provides 
+            a convenient way of adding a new image data entry to a regression SIL 
+            (i.e. a SIL that uses vector labels). 
+            </summary>
+            <param name="pLabel">value under which to add the new image</param>
+            <param name="pData">data value to add</param>
+            <returns>0 or greater if the operation was successful</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetNumDataReferencesByLabel(System.Int32)">
+            <summary>
+            Retrieve the number of data entries associated with a label. 
+            </summary>
+            <param name="LabelIndex">index of the label entry for which to query
+            the number of references.</param>
+            <returns># of associated data entries (-1 on errors)</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetDataType">
+            <summary>
+            Gets the data type descriptor object of a SIL. Remember to Dispose()
+            the retrieved object once it is no longer needed (note: this is a 
+            difference to the C/Delphi API where a Release is *not* necessary).
+            </summary>
+            <returns>data type descriptor object, or null on error</returns>
+        </member>
+        <member name="M:Cvb.SharedSil.GetLabelType">
+            <summary>
+            Gets the label type descriptor object of a SIL. Remember to Dispose()
+            the retrieved object once it is no longer needed (note: this is a 
+            difference to the C/Delphi API where a Release is *not* necessary).
+            </summary>
+            <returns>label type descriptor object, or null on error</returns>
+        </member>
+        <member name="P:Cvb.SharedSil.DataType">
+            <summary>
+            Principal data type of the SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.LabelType">
+            <summary>
+            Principal label type of the SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.NumClasses">
+            <summary>
+            Number of classes/discriminable regression labels in the SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.MinSampleCount">
+            <summary>
+            Number of samples in the smallest class in the SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.MaxSampleCount">
+            <summary>
+            Number of samples in the biggest class in the SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.AverageSampleCount">
+            <summary>
+            Average number of samples per class.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.CreationDate">
+            <summary>
+            The system time at creation of the SIL. 
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.ModificationDate">
+            <summary>
+            The system time at the last modification of the SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.NumLabelEntries">
+            <summary>
+            The number of labels (either for classification or for regression)
+            contained in this SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.NumDataEntries">
+            <summary>
+            The total number of samples contained in this SIL.
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSil.Comment">
+            <summary>
+            User-definable comment string for the SIL.
+            </summary>
+        </member>
+        <member name="T:Cvb.SharedSilLabel">
+            <summary>
+            Reference counted SIL label object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedSilLabel.#ctor(System.IntPtr)">
+            <summary>
+            Creates a reference counted label type descriptor.
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedSilLabel.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            internal ctor
+            </summary>
+            <param name="handle"></param>
+            <param name="share"></param>
+        </member>
+        <member name="M:Cvb.SharedSilLabel.GetFloatVectorLabel">
+            <summary>
+            Retrieve the float vector from a SharedSilLabel object. If the  
+            LabelType does not refer to a float vector, a null reference will be 
+            returned.
+            </summary>
+            <returns>vector label or null reference</returns>
+        </member>
+        <member name="M:Cvb.SharedSilLabel.GetStringLabel">
+            <summary>
+            Retrieves the string label in the SharedSilLabel object. If the Handle 
+            does not refer to a string label, a null reference will be returned. 
+            </summary>
+            <returns>string label or null reference</returns>
+        </member>
+        <member name="M:Cvb.SharedSilLabel.GetDataReference(System.Int32)">
+            <summary>
+            Get the data list item of a label at the specified index. 
+            Remember to Dispose() the returned object once it is no longer needed
+            (this is a difference to the C/Delphi API!). 
+            </summary>
+            <param name="Index">index of the data reference to retrieve</param>
+            <returns>data reference object or null</returns>
+        </member>
+        <member name="M:Cvb.SharedSilLabel.ToString">
+            <summary>
+            Convert the label to something displayable (either the string 
+            represented by this object or a string representation of the float
+            vector represented by this object).
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Cvb.SharedSilLabel.NumDataReferences">
+            <summary>
+            Number of data entries associated with this label. 
+            </summary>
+        </member>
+        <member name="P:Cvb.SharedSilLabel.ExcludedFlag">
+            <summary>
+            Get/Set whether the data associated with a label belongs to the set of
+            excluded classes.
+            </summary>
+        </member>
+        <member name="T:Cvb.SharedSilData">
+            <summary>
+            Reference counted SIL label object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedSilData.#ctor(System.IntPtr)">
+            <summary>
+            Creates a reference counted label type descriptor.
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedSilData.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            internal ctor
+            </summary>
+            <param name="handle"></param>
+            <param name="share"></param>
+        </member>
+        <member name="M:Cvb.SharedSilData.GetFloatVectorData">
+            <summary>
+            Copies the vector data from this SharedSilData object. If this object 
+            does not refer to a float vector data object, a null reference will 
+            be returned. 
+            </summary>
+            <returns>float vector data or null</returns>
+        </member>
+        <member name="M:Cvb.SharedSilData.GetImageData">
+            <summary>
+            Get the image handle of the SIL image data. The returned image's 
+            reference count will not be modified by handle retrieval, so if the 
+            caller intends to use the handle for a longer period of time he/she 
+            should call ShareObject on the image handle to ensure proper lifetime 
+            handling. If this object does not refer to an image data entry, a
+            null handle will be returned.
+            </summary>
+            <returns>image data or null</returns>
+        </member>
+        <member name="M:Cvb.SharedSilData.GetSharedImgData">
+            <summary>
+            Get the image handle of the SIL image data. If this object does not 
+            refer to an image data entry, a null handle will be returned.
+            </summary>
+            <returns>image data or null</returns>
+        </member>
+        <member name="M:Cvb.SharedSilData.GetLabelReference(System.Int32)">
+            <summary>
+            Get the label list item of a data reference at the specified index. 
+            Remember to Dispose() the returned object once it is no longer needed
+            (this is a difference to the C/Delphi API!). 
+            </summary>
+            <param name="Index">index of the label reference to retrieve</param>
+            <returns>label reference object or null</returns>
+        </member>
+        <member name="P:Cvb.SharedSilData.NumLabelReferences">
+            <summary>
+            Retrieve the number of labels associated with the input data. Possible 
+            return values are in theory 0 or 1, however empty classes are not 
+            currently supported, so return value will always be 1. 
+            </summary>
+        </member>
+    </members>
+</doc>

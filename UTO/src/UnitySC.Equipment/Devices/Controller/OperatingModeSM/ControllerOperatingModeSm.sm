@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="59b64f9b-8a55-437d-acd6-085a425ad5d8" name="ControllerOperatingModeSm" access="Internal" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <vertexContainerHasVertices Id="7d0ca541-360a-464a-bcb8-a1716e229016">
+      <initial Id="f53d2e12-413f-4334-8b0a-018c763012fe" name="Initial" nameSpace="ControllerOperatingModeSm">
+        <successors>
+          <transition Id="1799d70f-fa12-44e3-91c5-d55a40efb886" source="ControllerOperatingModeSm.Initial" destination="ControllerOperatingModeSM.Maintenance" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Maintenance" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="042644dc-d450-4789-ac78-9d5d7920ea79">
+      <state Id="c86fa794-009b-4262-b30e-63881dd0bb54" name="Maintenance" nameSpace="ControllerOperatingModeSm" entryAction="MaintenanceEntryAction" kind="Normal" entryActionLabel="Entry/ MaintenanceEntryAction">
+        <successors>
+          <transition Id="d7db7689-fc70-4aae-8df3-8bda7ef21e15" event="InitRequested" label="InitRequested" source="ControllerOperatingModeSm.Maintenance" destination="ControllerOperatingModeSM.Initialization" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Initialization" />
+          </transition>
+          <transition Id="d90082ef-dcab-4a35-baf1-daa767709918" event="EngineeringRequested" condition="EngineeringModeAllowed" label="EngineeringRequested  [ EngineeringModeAllowed ]" source="ControllerOperatingModeSm.Maintenance" destination="ControllerOperatingModeSm.Engineering" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Engineering" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+    <stateMachineHasStates Id="896f2ccc-05f8-4e93-a79b-d5f24b226881">
+      <state Id="1f11eb70-117d-451c-b399-64b29d14a4fe" name="Production" nameSpace="ControllerOperatingModeSm" kind="Normal">
+        <vertices>
+          <stateHasNestedStates Id="fd30f460-962c-4199-ba76-7f16b4dc8631">
+            <state Id="ff17f994-1bfa-463e-8758-cf6600035332" name="Executing" nameSpace="ControllerOperatingModeSm.Production" kind="Normal">
+              <successors>
+                <transition Id="8ff097ef-ae80-4366-95d9-61787f80d162" event="JobExecutionEnded" label="JobExecutionEnded" source="ControllerOperatingModeSm.Production.Executing" destination="ControllerOperatingModeSm.Production.Idle" nameSpace="ControllerOperatingModeSm.Production">
+                  <stateMoniker name="/ControllerOperatingModeSm/Production/Idle" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <vertexContainerHasVertices Id="e1ca8751-cb6e-4edf-830b-31033e7fbadb">
+            <state Id="9526cf9e-8238-40d1-aec0-a705034e1b83" name="Idle" nameSpace="ControllerOperatingModeSm.Production" kind="Normal">
+              <successors>
+                <transition Id="9660e6ce-2493-450b-9c69-0d2c0091d7a4" event="JobExecutionStarted" label="JobExecutionStarted" source="ControllerOperatingModeSm.Production.Idle" destination="ControllerOperatingModeSm.Production.Executing" nameSpace="ControllerOperatingModeSm.Production">
+                  <stateMoniker name="/ControllerOperatingModeSm/Production/Executing" />
+                </transition>
+                <transition Id="e6ea08d8-acde-4013-80e3-4ec4e00f39ca" event="InitRequested" label="InitRequested" source="ControllerOperatingModeSm.Production.Idle" destination="ControllerOperatingModeSm.Initialization" nameSpace="ControllerOperatingModeSm.Production">
+                  <stateMoniker name="/ControllerOperatingModeSm/Initialization" />
+                </transition>
+                <transition Id="5de36ade-1fff-42f7-9092-541d20494eba" event="EngineeringRequested" label="EngineeringRequested" source="ControllerOperatingModeSm.Production.Idle" destination="ControllerOperatingModeSm.Engineering" nameSpace="ControllerOperatingModeSm.Production">
+                  <stateMoniker name="/ControllerOperatingModeSm/Engineering" />
+                </transition>
+              </successors>
+            </state>
+          </vertexContainerHasVertices>
+        </vertices>
+        <successors>
+          <transition Id="42c00f6d-f232-4c47-9485-d0a29020df18" event="MaintenanceRequested" label="MaintenanceRequested" source="ControllerOperatingModeSm.Production" destination="ControllerOperatingModeSm.Maintenance" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Maintenance" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+    <stateMachineHasStates Id="cf57c986-49fd-4202-9e7a-4c0e4bb43e06">
+      <state Id="94e16297-102c-4be4-a8dd-493563390aa3" name="Initialization" nameSpace="ControllerOperatingModeSm" kind="Normal">
+        <successors>
+          <transition Id="36494b75-bb0a-4cc1-9679-a6ede88b0ea7" event="InitFailed" label="InitFailed" source="ControllerOperatingModeSm.Initialization" destination="ControllerOperatingModeSm.Maintenance" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Maintenance" />
+          </transition>
+          <transition Id="23585559-1de5-4a04-9d61-e44a35663dda" event="InitCompleted" condition="SubDevicesNotIdleOrWaferPresentOrWaferIncoherence" label="InitCompleted  [ SubDevicesNotIdleOrWaferPresentOrWaferIncoherence ]" source="ControllerOperatingModeSm.Initialization" destination="ControllerOperatingModeSm.Maintenance" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Maintenance" />
+          </transition>
+          <transition Id="3f10b628-3fd7-4e03-aaba-9f395ba4da41" event="InitCompleted" condition="SubDevicesIdleAndNoWaferPresent" label="InitCompleted  [ SubDevicesIdleAndNoWaferPresent ]" source="ControllerOperatingModeSm.Initialization" destination="ControllerOperatingModeSm.Production.Idle" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Production/Idle" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+    <vertexContainerHasVertices Id="568d5f85-a114-4d06-a382-2ec76b496098">
+      <state Id="df7534c8-1eef-41cf-918b-653c46543351" name="Engineering" nameSpace="ControllerOperatingModeSm" kind="Normal">
+        <successors>
+          <transition Id="2ef904fe-2e2a-4639-bf65-770583dff283" event="MaintenanceRequested" label="MaintenanceRequested" source="ControllerOperatingModeSm.Engineering" destination="ControllerOperatingModeSm.Maintenance" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Maintenance" />
+          </transition>
+          <transition Id="b8d99068-9be0-4c0f-a74a-92eaa7c7489f" event="InitRequested" label="InitRequested" source="ControllerOperatingModeSm.Engineering" destination="ControllerOperatingModeSm.Initialization" nameSpace="ControllerOperatingModeSm">
+            <stateMoniker name="/ControllerOperatingModeSm/Initialization" />
+          </transition>
+        </successors>
+      </state>
+    </vertexContainerHasVertices>
+  </vertices>
+</stateMachine>

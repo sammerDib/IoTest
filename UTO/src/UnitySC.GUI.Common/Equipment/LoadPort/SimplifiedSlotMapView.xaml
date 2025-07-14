@@ -1,0 +1,36 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Equipment.LoadPort.SimplifiedSlotMapView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loadPort="clr-namespace:UnitySC.GUI.Common.Equipment.LoadPort"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="UserControlSlotMap"
+    d:DataContext="{d:DesignInstance loadPort:SimplifiedSlotMapViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Border
+        BorderBrush="{DynamicResource HeaderedContentControlHeaderBackground}"
+        BorderThickness="0"
+        CornerRadius="3">
+        <ItemsControl
+            x:Name="ItemsControlSlots"
+            MinWidth="115"
+            AlternationCount="5"
+            ItemTemplate="{StaticResource SimplifiedSlotItemTemplate}"
+            ItemsSource="{Binding IndexedSlots}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="{x:Type ContentPresenter}">
+                    <Setter Property="Height" Value="{Binding ElementName=UserControlSlotMap, Path=ItemHeight}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+    </Border>
+</UserControl>

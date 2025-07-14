@@ -1,0 +1,89 @@
+﻿<UserControl
+    x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Bow.BowMeasureInfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:sharedResultUIConverters="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters"
+    xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+    xmlns:Bow="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Bow"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:sharedUIconverters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance Bow:BowDetailMeasureInfoVM}"
+    d:DesignWidth="500"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <sharedResultUIConverters:MeasureStateToToleranceDisplayerConverter x:Key="MeasureStateToToleranceDisplayerConverter" />
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <sharedUIconverters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+
+            <system:Double x:Key="FontSizeBig">12</system:Double>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel Margin="0,5">
+        
+        <Grid
+            Margin="0,10,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch">
+      
+            <Viewbox
+                Height="240"
+                Stretch="Uniform">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Height="Auto"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <controls:ToleranceDisplayer
+                                Margin="4,2,4,4"
+                                HorizontalAlignment="Center"
+                                Tolerance="{Binding BowState, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}" />
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock
+                            Name="BowTextBlock"
+                            HorizontalAlignment="Center"
+                            FontSize="{StaticResource FontSizeBig}"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource LightBrownMeasureInfoBrush}"
+                            Text="Bow" />
+                                <TextBlock
+                            Margin="5,3,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="10">
+                            <Run Text="{Binding BowValue, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <userControls:BowViewer
+                            BowValue="{Binding Point.BowStat.Mean.Micrometers}"
+                            BowTargetMinValue="{Binding Settings.BowTargetMin.Micrometers}"
+                            BowTargetMaxValue="{Binding Settings.BowTargetMax.Micrometers}"
+                            Foreground="{StaticResource LightBrownMeasureInfoBrush}">
+                        </userControls:BowViewer>
+                    </Grid>
+                </Grid>
+            </Viewbox>
+        </Grid>
+    </DockPanel>
+</UserControl>

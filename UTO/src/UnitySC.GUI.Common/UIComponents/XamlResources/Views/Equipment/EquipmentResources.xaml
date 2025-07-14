@@ -1,0 +1,286 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:enums="clr-namespace:UnitySC.Equipment.Abstractions.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.Resources"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:processModule="clr-namespace:UnitySC.Equipment.Abstractions.Devices.ProcessModule;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:vendorEnums="clr-namespace:UnitySC.Equipment.Abstractions.Vendor.Devices.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:driveableProcessModule="clr-namespace:UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule;assembly=UnitySC.Equipment.Abstractions">
+
+    <DataTemplate x:Key="PmOperatingModeDisplayerTemplate" DataType="{x:Type processModule:ProcessModule}">
+
+        <controls:Displayer
+            x:Name="DisplayerState"
+            FontSize="{StaticResource FontSizeNormal}"
+            FontWeight="DemiBold"
+            Value="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding State}" Value="{x:Static vendorEnums:OperatingModes.Maintenance}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MAINTENANCE}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding State}" Value="{x:Static vendorEnums:OperatingModes.Initialization}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_INITIALIZING}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding State}" Value="{x:Static vendorEnums:OperatingModes.Idle}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDLE}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding State}" Value="{x:Static vendorEnums:OperatingModes.Executing}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_EXECUTING}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsOutOfService}" Value="True">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_OUTOFSERVICE}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="StatusDisplayerTemplate" DataType="{x:Type vendorEnums:OperatingModes}">
+
+        <controls:Displayer
+            x:Name="DisplayerState"
+            FontSize="{StaticResource FontSizeNormal}"
+            FontWeight="DemiBold"
+            Value="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Maintenance}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MAINTENANCE}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Initialization}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_INITIALIZING}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Idle}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDLE}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Executing}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_EXECUTING}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="TitlePanelMainStatusDisplayerTemplate" DataType="{x:Type vendorEnums:OperatingModes}">
+
+        <controls:Displayer
+            x:Name="DisplayerState"
+            FontSize="{StaticResource FontSizeHeader}"
+            FontWeight="DemiBold"
+            Value="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Initialization}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_INITIALIZING}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Maintenance}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MAINTENANCE}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Idle}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Green" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDLE}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Executing}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_EXECUTING}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="TitlePanelSubStatusDisplayerTemplate" DataType="{x:Type vendorEnums:OperatingModes}">
+
+        <controls:Displayer
+            x:Name="DisplayerState"
+            FontSize="{StaticResource FontSizeVerySmall}"
+            FontWeight="DemiBold"
+            Value="{Binding Converter={StaticResource TextToHumanizedTextConverter}}">
+            <controls:Displayer.Style>
+                <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                    <Setter Property="MinHeight" Value="10" />
+                </Style>
+            </controls:Displayer.Style>
+        </controls:Displayer>
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Initialization}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_INITIALIZING}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Maintenance}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MAINTENANCE}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Idle}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Green" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDLE}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static vendorEnums:OperatingModes.Executing}">
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_EXECUTING}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="TitlePanelProcessModuleSubStatusDisplayerTemplate" DataType="{x:Type enums:ProcessModuleState}">
+
+        <controls:Displayer
+            x:Name="ProcessModuleDisplayerState"
+            FontSize="{StaticResource FontSizeVerySmall}"
+            FontWeight="DemiBold"
+            Value="{Binding Converter={StaticResource TextToHumanizedTextConverter}}">
+            <controls:Displayer.Style>
+                <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                    <Setter Property="MinHeight" Value="10" />
+                </Style>
+            </controls:Displayer.Style>
+        </controls:Displayer>
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Unknown}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_UNKNOWN}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Offline}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_OFFLINE}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Error}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_ERROR}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.ShuttingDown}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_SHUTTING_DOWN}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Initializing}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_INITIALIZING}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Idle}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_IDLE}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Active}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_ACTIVE}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="ProcessModuleStatusDisplayerTemplate" DataType="{x:Type enums:ProcessModuleState}">
+
+        <controls:Displayer
+            x:Name="ProcessModuleDisplayerState"
+            FontSize="{StaticResource FontSizeNormal}"
+            FontWeight="DemiBold"
+            Value="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Unknown}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_UNKNOWN}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Offline}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_OFFLINE}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Error}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_ERROR}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.ShuttingDown}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_SHUTTING_DOWN}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Initializing}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_INITIALIZING}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Idle}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_IDLE}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static enums:ProcessModuleState.Active}">
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_ACTIVE}" />
+                <Setter TargetName="ProcessModuleDisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ProcessModuleStateDisplayerTemplate" DataType="{x:Type driveableProcessModule:DriveableProcessModule}">
+
+        <controls:Displayer
+            x:Name="DisplayerState"
+            FontSize="{StaticResource FontSizeNormal}"
+            FontWeight="DemiBold"
+            Value="{Binding ProcessModuleState, Converter={StaticResource TextToHumanizedTextConverter}}" />
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding ProcessModuleState }" Value="{x:Static enums:ProcessModuleState.Unknown}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource HelpIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Orange" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ProcessModuleState}" Value="{x:Static enums:ProcessModuleState.Initializing}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ProcessModuleState}" Value="{x:Static enums:ProcessModuleState.Offline}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="None" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ProcessModuleState}" Value="{x:Static enums:ProcessModuleState.Idle}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ProcessModuleState}" Value="{x:Static enums:ProcessModuleState.Active}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Blue" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ProcessModuleState}" Value="{x:Static enums:ProcessModuleState.Error}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ProcessModuleState}" Value="{x:Static enums:ProcessModuleState.ShuttingDown}">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource ActivesIcon}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsOutOfService}" Value="True">
+                <Setter TargetName="DisplayerState" Property="Icon" Value="{StaticResource RemoveIcon}" />
+                <Setter TargetName="DisplayerState" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_PM_OUTOFSERVICE}" />
+                <Setter TargetName="DisplayerState" Property="Color" Value="Red" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+</ResourceDictionary>

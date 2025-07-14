@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+
+  <configSections>
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false"/>
+    <!-- For more information on Entity Framework configuration, visit http://go.microsoft.com/fwlink/?LinkID=237468 -->
+  </configSections>
+
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.8"/>
+  </startup>
+
+  <runtime>
+    <gcAllowVeryLargeObjects enabled="true"/>
+  </runtime>
+
+  <appSettings>
+    <add key="LogFolder" value="C:\Unitysc\logs\ADC"/>
+    <add key="serilog:minimum-level" value="Debug"/>
+    <add key="Editor.RecipeFolder" value="C:\Unitysc\ExternalADC\Recipes"/>
+    <add key="Editor.MetablockFolder" value="C:\Unitysc\ExternalADC\Metablocks"/>
+    <add key="Editor.StartupMode" value="ExpertRecipeEdition"/>    <!--ExpertRecipeEdition, SimplifiedRecipeEdition -->
+    <add key="Editor.HelpFolder" value="C:\Unitysc\ExternalADC\Help"/>
+    <add key="Editor.HideAdaToAdcWindowsServiceStatus" value="false"/>
+    <add key="DatabaseConfig.UseExportedDatabase" value="false"/>
+    <add key="DatabaseConfig.ExportedDatabaseFile" value="C:\Unitysc\ExternalADC\DataBase.adcdb"/>
+    <add key="DatabaseConfig.UseDatabaseToGetRecipes" value="true"/>
+    <add key="DatabaseConfig.RecipeCache" value="RecipeDataBaseCache"/>    <!-- Cache pour les recettes et fichiers associés-->
+    <add key="DatabaseConfig.AdditionnalRecipeFiles.ServerDirectory" value="C:\Unitysc\ExternalADC\SqlRecipeFile"/>    <!-- Emplacement des fichier liées aux recettes dans la base de données-->
+    <add key="DatabaseResults.ServerName" value="10.100.20.19\SQLUNITYSC"/>    <!--or IP = "172.123.123.123, or ServerName = "FMO-UNTITY-23"  or if in local computer = "(local)-->
+    <add key="DatabaseResults.Use" value="true"/>    <!--false => use Recipe.OutputDir as destination directory -->
+    <add key="AdcEngine.ProductionMode" value="InAcquisition"/>    <!--InADC|InAcquisition-->
+    <add key="AdcEngine.NbTasksPerPool" value="1"/>
+    <add key="Debug.ImageViewer" value="C:\Program Files\IrfanView\i_view64.exe"/>
+    <add key="AdaFolder" value="C:\Unitysc\ExternalADC\Ada"/>
+    <add key="AdaToAdc.TestMode.PreloadImages" value="False"/>
+    <add key="AdaToAdc.TestMode.AlwaysSendTheSameImage" value="False"/>
+    <add key="AdaToAdc.TransferToRobot.Enable" value="False"/>
+    <add key="AdaToAdc.TransferToRobot.Embedded" value="True"/>
+    <add key="Grading.Path" value="\\172.20.33.2\CIMConnectProjects\Equipment1\ADC\Sorting\"/>
+    <!-- V8 matrix are not used <add key="AdaToAdc.MatrixV8Folder" value="C:\Altasight\Configrep\ConvertFile_DataBase"/> -->
+  </appSettings>
+
+  <connectionStrings>
+    <add name="InspectionEntities" connectionString="metadata=res://*/Inspection.csdl|res://*/Inspection.ssdl|res://*/Inspection.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=10.100.20.19\SQLUNITYSC;initial catalog=Inspection;user id=InspectionUser;password=UnitySql;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient"/>
+  </connectionStrings>
+
+  <entityFramework>
+    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework"/>
+    <providers>
+      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer"/>
+    </providers>
+  </entityFramework>
+
+  <!-- debug WCF
+  <system.diagnostics>
+    <sources>
+      <source name="System.ServiceModel"
+              switchValue="Information, ActivityTracing"
+              propagateActivity="true" >
+        <listeners>
+          <add name="xml"/>
+        </listeners>
+      </source>
+      <source name="System.ServiceModel.MessageLogging">
+        <listeners>
+          <add name="xml"/>
+        </listeners>
+      </source>
+      <source name="myUserTraceSource"
+              switchValue="Information, ActivityTracing">
+        <listeners>
+          <add name="xml"/>
+        </listeners>
+      </source>
+    </sources>
+    <sharedListeners>
+      <add name="xml"
+           type="System.Diagnostics.XmlWriterTraceListener"
+           initializeData="ADC.svclog" />
+    </sharedListeners>
+  </system.diagnostics>
+  -->
+
+  <system.serviceModel>
+    <services>
+      <service name="ADCEngine.AdcExecutor" behaviorConfiguration="AdcExecutorBehavior">
+        <endpoint name="IAdcExecutor"
+                  address="AdcExecutor" contract="ADCEngine.IAdcExecutor"
+                  binding="customBinding" bindingConfiguration="customBinding"/>
+        <endpoint name="IAdcAcquisition"
+                  address="AdcAcquisition" contract="AcquisitionAdcExchange.IAdcAcquisition"
+                  binding="customBinding" bindingConfiguration="customBinding"/>
+        <host>
+          <baseAddresses>
+            <add baseAddress="net.tcp://localhost:22222/"/>
+          </baseAddresses>
+        </host>
+      </service>
+      <service name="AdcToRobot.TransferToRobot">
+        <endpoint address="TransferToRobot" binding="netTcpBinding" bindingConfiguration="netTcpBinding"
+          name="ITransferToRobot" contract="AdcRobotExchange.ITransferToRobot"/>
+        <host>
+          <baseAddresses>
+            <add baseAddress="net.tcp://localhost:22223/"/>
+          </baseAddresses>
+        </host>
+      </service>
+    </services>
+
+    <behaviors>
+      <serviceBehaviors>
+        <behavior name="AdcExecutorBehavior">
+          <serviceThrottling maxConcurrentSessions="10"/>
+          <dataContractSerializer maxItemsInObjectGraph="2147483647"/>
+        </behavior>
+      </serviceBehaviors>
+      <endpointBehaviors>
+        <behavior name="AdcExecutorEndPointBehavior">
+          <dataContractSerializer maxItemsInObjectGraph="2147483647"/>
+        </behavior>
+      </endpointBehaviors>
+    </behaviors>
+
+    <bindings>
+      <customBinding>
+        <binding name="customBinding" sendTimeout="00:01:00">
+          <binaryMessageEncoding compressionFormat="None" />
+          <tcpTransport
+              maxBufferSize="2147483647" maxReceivedMessageSize="2147483647" maxBufferPoolSize="2147483647"
+              transferMode="Buffered" />
+        </binding>
+      </customBinding>
+      <netTcpBinding>
+        <binding name="netTcpBinding" sendTimeout="00:00:10"
+                 maxBufferSize="2147483647" maxReceivedMessageSize="2147483647" maxBufferPoolSize="2147483647"
+                 transferMode="Buffered">
+          <reliableSession enabled="true" />
+          <security mode="None" />
+        </binding>
+        <binding name="netTcpBindingVID" sendTimeout="00:00:01"
+                 maxBufferSize="2147483647" maxReceivedMessageSize="2147483647" maxBufferPoolSize="2147483647"
+                 transferMode="Buffered">
+          <reliableSession enabled="true" />
+          <security mode="None" />
+        </binding>
+      </netTcpBinding>
+    </bindings>
+
+    <client>
+      <endpoint name="IAdcExecutor"
+                contract="ADCEngine.IAdcExecutor"
+                address="net.tcp://localhost:22222/AdcExecutor"
+                binding="customBinding" bindingConfiguration="customBinding"
+                behaviorConfiguration="AdcExecutorEndPointBehavior"/>
+      <endpoint name="IAdcAcquisition"
+                contract="AcquisitionAdcExchange.IAdcAcquisition"
+                address="net.tcp://localhost:22222/AdcAcquisition"
+                binding="customBinding" bindingConfiguration="customBinding"
+                behaviorConfiguration="AdcExecutorEndPointBehavior"/>
+      <endpoint name="ITransferToRobot"
+                contract="AdcRobotExchange.ITransferToRobot"
+                address="net.tcp://localhost:22223/TransferToRobot"
+                binding="netTcpBinding" bindingConfiguration="netTcpBindingVID"/>
+
+      <!--Dataflow-->
+      <endpoint address="net.tcp://localhost:2222/PMDFService" contract="UnitySC.Shared.Dataflow.PM.Service.Interface.IPMDFService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="PMDFService"/>
+      <endpoint address="net.tcp://localhost:2222/DataflowManagerFDCService" contract="UnitySC.Shared.FDC.Interface.IFDCService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="DataflowManagerFDCService" />
+
+      <!-- DataAccess -->
+      <endpoint address="net.tcp://localhost:2221/RecipeService" contract="UnitySC.DataAccess.Service.Interface.IDbRecipeService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="RecipeService" />
+      <endpoint address="net.tcp://localhost:2221/ResultService" contract="UnitySC.DataAccess.Service.Interface.IResultService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="ResultService" />
+      <endpoint address="net.tcp://localhost:2221/ToolService" contract="UnitySC.DataAccess.Service.Interface.IToolService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="ToolService" />
+      <endpoint address="net.tcp://localhost:2221/UserService" contract="UnitySC.DataAccess.Service.Interface.IUserService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="UserService" />
+      <endpoint address="net.tcp://localhost:2221/LogService" contract="UnitySC.DataAccess.Service.Interface.ILogService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="LogService" />
+      <endpoint address="net.tcp://localhost:2221/RegisterResultService" contract="UnitySC.DataAccess.Service.Interface.IRegisterResultService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="RegisterResultService" />
+      <endpoint address="net.tcp://localhost:2221/DBMaintenanceService" contract="UnitySC.DataAccess.Service.Interface.IDBMaintenanceService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="DBMaintenanceService" />
+      <endpoint address="net.tcp://localhost:2221/DataAccessFDCService" contract="UnitySC.Shared.FDC.Interface.IFDCService" binding="netTcpBinding" bindingConfiguration="DefaultNetTcpConfiguration" name="DataAccessFDCService" />
+
+    </client>
+  </system.serviceModel>
+
+</configuration>

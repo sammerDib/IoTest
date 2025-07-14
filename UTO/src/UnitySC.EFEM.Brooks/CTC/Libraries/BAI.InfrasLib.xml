@@ -1,0 +1,2517 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BAI.InfrasLib</name>
+    </assembly>
+    <members>
+        <member name="T:System.Buffers.ArrayPool`1">
+            <summary>
+            Provides a resource pool that enables reusing instances of type <see cref="T:T[]"/>.
+            </summary>
+            <remarks>
+            <para>
+            Renting and returning buffers with an <see cref="T:System.Buffers.ArrayPool`1"/> can increase performance
+            in situations where arrays are created and destroyed frequently, resulting in significant
+            memory pressure on the garbage collector.
+            </para>
+            <para>
+            This class is thread-safe.  All members may be used by multiple threads concurrently.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:System.Buffers.ArrayPool`1.Shared">
+            <summary>
+            Retrieves a shared <see cref="T:System.Buffers.ArrayPool`1"/> instance.
+            </summary>
+            <remarks>
+            The shared pool provides a default implementation of <see cref="T:System.Buffers.ArrayPool`1"/>
+            that's intended for general applicability.  It maintains arrays of multiple sizes, and
+            may hand back a larger array than was actually requested, but will never hand back a smaller
+            array than was requested. Renting a buffer from it with <see cref="M:System.Buffers.ArrayPool`1.Rent(System.Int32)"/> will result in an
+            existing buffer being taken from the pool if an appropriate buffer is available or in a new
+            buffer being allocated if one is not available.
+            byte[] and char[] are the most commonly pooled array types. For these we use a special pool type
+            optimized for very fast access speeds, at the expense of more memory consumption.
+            The shared pool instance is created lazily on first access.
+            </remarks>
+        </member>
+        <member name="M:System.Buffers.ArrayPool`1.Rent(System.Int32)">
+            <summary>
+            Retrieves a buffer that is at least the requested length.
+            </summary>
+            <param name="minimumLength">The minimum length of the array needed.</param>
+            <returns>
+            An <see cref="T:T[]"/> that is at least <paramref name="minimumLength"/> in length.
+            </returns>
+            <remarks>
+            This buffer is loaned to the caller and should be returned to the same pool via
+            <see cref="M:System.Buffers.ArrayPool`1.Return(`0[],System.Boolean)"/> so that it may be reused in subsequent usage of <see cref="M:System.Buffers.ArrayPool`1.Rent(System.Int32)"/>.
+            It is not a fatal error to not return a rented buffer, but failure to do so may lead to
+            decreased application performance, as the pool may need to create a new buffer to replace
+            the one lost.
+            </remarks>
+        </member>
+        <member name="M:System.Buffers.ArrayPool`1.Return(`0[],System.Boolean)">
+            <summary>
+            Returns to the pool an array that was previously obtained via <see cref="M:System.Buffers.ArrayPool`1.Rent(System.Int32)"/> on the same
+            <see cref="T:System.Buffers.ArrayPool`1"/> instance.
+            </summary>
+            <param name="array">
+            The buffer previously obtained from <see cref="M:System.Buffers.ArrayPool`1.Rent(System.Int32)"/> to return to the pool.
+            </param>
+            <param name="clearArray">
+            If <c>true</c> and if the pool will store the buffer to enable subsequent reuse, <see cref="M:System.Buffers.ArrayPool`1.Return(`0[],System.Boolean)"/>
+            will clear <paramref name="array"/> of its contents so that a subsequent consumer via <see cref="M:System.Buffers.ArrayPool`1.Rent(System.Int32)"/>
+            will not see the previous consumer's content.  If <c>false</c> or if the pool will release the buffer,
+            the array's contents are left unchanged.
+            </param>
+            <remarks>
+            Once a buffer has been returned to the pool, the caller gives up all ownership of the buffer
+            and must not use it. The reference returned from a given call to <see cref="M:System.Buffers.ArrayPool`1.Rent(System.Int32)"/> must only be
+            returned via <see cref="M:System.Buffers.ArrayPool`1.Return(`0[],System.Boolean)"/> once.  The default <see cref="T:System.Buffers.ArrayPool`1"/>
+            may hold onto the returned buffer in order to rent it again, or it may release the returned buffer
+            if it's determined that the pool already has enough buffers stored.
+            </remarks>
+        </member>
+        <member name="T:BAI.Exceptions.BaiException">
+            <summary>
+            Base exception for all Brooks Automation Exceptions
+            </summary>
+        </member>
+        <member name="M:BAI.Exceptions.BaiException.#ctor(System.String,System.UInt32,BAI.Exceptions.ExceptionContext,System.String,System.Exception)">
+            <summary>
+            Full constructor - all other constructors call the full constructor
+            </summary>
+            <param name="source">Source of exception - normally use the convention module.devoce.object.</param>
+            <param name="errorcode">Unique error type identified - unsigned int. Note, this is not System.Exception.HResult - signed int.</param>
+            <param name="context">Context of execution, such as query, command execution, etc.</param>
+            <param name="message">Error message</param>
+            <param name="innerException">Optional inner exception.</param>
+        </member>
+        <member name="M:BAI.Exceptions.BaiException.#ctor(System.String,System.UInt32,BAI.Exceptions.ExceptionContext,System.String)">
+            <summary>
+            Full constructor - all other constructors call the full constructor
+            </summary>
+            <param name="source">Source of exception - normally use the convention module.devoce.object.</param>
+            <param name="errorcode">Unique error type identified - unsigned int. Note, this is not System.Exception.HResult - signed int.</param>
+            <param name="context">Context of execution, such as query, command execution, etc.</param>
+            <param name="message">Error message</param>
+        </member>
+        <member name="P:BAI.Exceptions.BaiException.ErrorCode">
+            <summary>
+            Unique error type identifier - unsigned int.
+            Note, this is not System.Exception.HResult - signed int.
+            </summary>
+        </member>
+        <member name="P:BAI.Exceptions.BaiException.AdditionalInfo">
+            <summary>
+            Additional information desired to be sent.
+            </summary>
+        </member>
+        <member name="P:BAI.Exceptions.BaiException.Context">
+            <summary>
+            Context of execution such as querying that does not change state, or executing a command that intend to change state.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ExceptionContext">
+            <summary>
+            Context of execution that encountered an exception.
+            <ul>Examples:
+            <li>Query   - operation querying the state, will not change state.</li>
+            <li>Command - operation that intends to change state.</li>
+            <li>Startup - System startup.</li>
+            <li>Monitor - System monitoring.</li>
+            </ul>
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ExecutionExceptions.ExecutionException">
+            <summary>
+            Indicates a failure during robot movement.
+            </summary>
+        </member>
+        <member name="M:BAI.Exceptions.ExecutionExceptions.ExecutionException.#ctor(System.String,System.UInt32,System.String,System.Exception)">
+            <summary>
+            Full constructor - all other constructors call the full constructor
+            </summary>
+            <param name="source">source of exception - normally use the convention module.device.object. Required for execution exceptions.</param>
+            <param name="errorcode">Error type unique identifier.</param>
+            <param name="message">error message</param>
+            <param name="innerException">optional inner exception if not null</param>
+        </member>
+        <member name="T:BAI.Exceptions.ExecutionExceptions.OperationTimedoutException">
+            <summary>
+            Exception to use when an operation timed out.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.GeneralExceptions.FtpError">
+            <summary>
+            Ftp exception class for exception happened during any ftp operation
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.GeneralExceptions.RecThreadAbort">
+            <summary>
+            Infrastructure exception used to shutdown a thread after a client exits.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.EmptyStringException">
+            <summary>
+            Exception to throw when either a null or empty string is supplied when not expected.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.EmptyArrayException">
+            <summary>
+            Exception to throw when either a null or empty string is supplied when not expected.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.NegativeValueNotValidException">
+            <summary>
+            Exception to throw when a negative is provided while postive or zero value are expected
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.ValueNotPositiveException">
+            <summary>
+            Exception to throw when a zero or negative is provided while postive value is expected
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.OperationNotSupportedException">
+            <summary>
+            Exception to use when an operation timed out.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.InvariantViolationException">
+            <summary>
+            Indicates a programming error. This can be raised at any point of execution, so it should be ExecutionException.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.IncompleteObjectIdException">
+            <summary>
+            Exception thrown when an object identifier does not comply to the standard BAI format module.device.object
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.ValidationExceptions.ValidationException">
+            <summary>
+            Indicates a failure before the robot has begun moving.
+            </summary>
+        </member>
+        <member name="T:BAI.Exceptions.VerificationExceptions.VerificationException">
+            <summary>
+            Indicates that robot successfully moved but did not acomplish its goal.
+            </summary>
+        </member>
+        <member name="M:BAI.Exceptions.VerificationExceptions.VerificationException.#ctor(System.String,System.UInt32,System.String,System.Exception)">
+            <summary>
+            Full constructor - all other constructors call the full constructor
+            </summary>
+            <param name="source">source of exception - normally use the convention module.device.object. Required for verification exceptions.</param>
+            <param name="errorcode">Unique error type identifier</param>
+            <param name="message">error message</param>
+            <param name="innerException">optional inner exception if not null</param>
+        </member>
+        <member name="T:BAI.General.ErrorHandlingOption">
+            <summary>
+            Enumeration for options in handling errors.
+            Default - let the API handle what the errors are
+            Absorb - absorb the error: log the error and swallow it.
+            SendWarningAlarm - send the error as a warning alarm event.
+            SendFatalAlarm - send the error as a fatal alarm event.
+            ThrowException - throw or re-throw exception.
+            </summary>
+        </member>
+        <member name="M:BAI.General.OptionalComponent.OptionalNamedComponentSC.DeviceEnableSCStateChart.IsTransitionValid(BAI.General.OptionalComponent.OptionalNamedComponentSC.DeviceEnableSCEventsEnum)">
+            <summary>
+            Will not return the correct answer if there are pending events on the event queue.
+            </summary>
+        </member>
+        <member name="T:BAI.General.ControlClient">
+            <summary>
+            Represents the client that is controlling the tool.
+            </summary>
+        </member>
+        <member name="P:BAI.General.ControlClient.HostName">
+            <summary>
+            The host name of the controlling client.
+            </summary>
+        </member>
+        <member name="P:BAI.General.ControlClient.ProcessName">
+            <summary>
+            The process name of the controlling client.
+            </summary>
+        </member>
+        <member name="P:BAI.General.ControlClient.ProcessId">
+            <summary>
+            The process id of the controlling client.
+            </summary>
+        </member>
+        <member name="T:BAI.General.SinglePointOfControlChangedDel">
+            <param name="oldClient">Indicates the host that was in control before the control changed.</param>
+            <param name="newClient">Indicates the host that became in control.</param>
+            <param name="haveControl">Indicates if the client that receives the event is in control or not.</param>
+        </member>
+        <member name="T:BAI.General.ISinglePointOfControlEvents">
+            <summary>
+            Events to notify the customer when the control is taken or yield by the client app.
+            </summary>
+        </member>
+        <member name="E:BAI.General.ISinglePointOfControlEvents.SinglePointOfControlChanged">
+            <summary>
+            Raised every time another host gets in control (every time the control changes from one host to another).
+            </summary>
+        </member>
+        <member name="T:BAI.General.ISinglePointOfControl">
+            <summary>
+            Manages control of the tool when multiple clients are connected.
+            </summary>
+            <remarks>
+            When used from the ANI, the ANI server appears as a single client to the API.
+            Therefore all connections to the ANI have the same single point of control state.
+            </remarks>
+        </member>
+        <member name="M:BAI.General.ISinglePointOfControl.TakeControl">
+            <summary>
+            Takes control of the tool.
+            </summary>
+            <returns>true if control was taken</returns>
+        </member>
+        <member name="M:BAI.General.ISinglePointOfControl.YieldControl">
+            <summary>
+            Yields control back the client whom previously had control.
+            </summary>
+            <returns>true if the control was given back</returns>
+        </member>
+        <member name="M:BAI.General.ISinglePointOfControl.HaveControl">
+            <summary>
+            Queries if the current client has control.
+            </summary>
+            <returns>true if the client has control</returns>
+        </member>
+        <member name="M:BAI.General.ISinglePointOfControl.GetCurrentControlClient">
+            <summary>
+            Gets the identity of the controlling client.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.General.IFormattableExt">
+            <summary>
+            Extend System.IFormattable for data type serialization to string with format
+            </summary>
+        </member>
+        <member name="M:BAI.General.IFormattableExt.ToString(System.IFormatProvider)">
+            <summary>
+            Serialize an object to string with format provider such as CultureInfo
+            </summary>
+            <param name="formatProvider">Such as Culture.InvariantCulture, or CurrentCulture</param>
+            <returns>String representation of the object</returns>
+        </member>
+        <member name="M:BAI.General.NumberWithUnit`1.ToString">
+            <summary>
+            Serialize object to string with CultureInfo.CurrentCulture
+            </summary>
+            <returns>String representation of object under current culture</returns>
+        </member>
+        <member name="T:BAI.General.CommDisconnectedCallBack">
+            <summary>
+            Generic interface to represent a connection.
+            The client and server names are normally given or constructed at connection creation.
+            </summary>
+            
+        </member>
+        <member name="T:BAI.General.IConnectable">
+            <summary>
+            Events for controlling the connection to the API.
+            </summary>
+            <remarks>
+            For the ANI, these members control the connection between the ANI server
+            and the tool. They do not effect the connection between the ANI client
+            and the ANI server.
+            </remarks>
+        </member>
+        <member name="P:BAI.General.IConnectable.Connected">
+            <summary>
+            True if the CTC is connected to the EC and commands can be sent.
+            </summary>
+        </member>
+        <member name="M:BAI.General.IConnectable.Connect">
+            <summary>
+            Connect the to the EC.
+            </summary>
+        </member>
+        <member name="M:BAI.General.IConnectable.Disconnect">
+            <summary>
+            Disconnect from the EC.
+            </summary>
+        </member>
+        <member name="T:BAI.General.IntWithUnit">
+            <summary>
+            Represents a number with a unit.
+            This can be used to represent time such as 3 s, 500 ms, length such as 300 mm, 1500 um, and etc.
+            </summary>
+            <remarks>
+            Please note, -Infinity, +Infinity are valid integer values for the Parse() methods.
+            -Infinity parses to -2147483648. +Infinity or Infinity parses to 2147483647. 
+            </remarks>
+        </member>
+        <member name="M:BAI.General.IntWithUnit.ToString">
+            <summary>
+            Serialize object to string with CultureInfo.CurrentCulture
+            </summary>
+            <returns>String representation of object under current culture</returns>
+        </member>
+        <member name="M:BAI.General.IntWithUnit.Parse(System.String)">
+            <summary>
+            Parse string to deserialize object under CultureInfo.CurrentCulture
+            </summary>
+            <param name="s">String to parse in format of number unit such as 1.23 mm</param>
+            <returns>Deserialized object</returns>
+        </member>
+        <member name="M:BAI.General.IntWithUnit.ParseInteger(System.String,System.Globalization.NumberStyles,System.IFormatProvider)">
+            <summary>
+            Parse integer including +-Infinity 
+            </summary>
+            <param name="s">String representation of integer, including +-Infinity</param>
+            <param name="style">Integer number style enumeration with bit pattern selections</param>
+            <param name="provider">FormatProvider such as CultureInfo.CurrentCulture, CurrentInfo.InvariantCulture</param>
+            <returns>Integer parsed from input string</returns>
+        </member>
+        <member name="M:BAI.General.IntWithUnit.ParseInteger(System.String,System.IFormatProvider)">
+            <summary>
+            Parse integer including +-Infinity 
+            </summary>
+            <param name="s">String representation of integer, including +-Infinity</param>
+            <param name="provider">FormatProvider such as CultureInfo.CurrentCulture, CurrentInfo.InvariantCulture</param>
+            <returns>Integer parsed from input string</returns>
+        </member>
+        <member name="T:BAI.General.NumberWithUnit">
+            <summary>
+            Represents a number with a unit. This can be used to represent time (3 s, 500 ms), pressure (760 Torr, 500 mTorr), and etc.
+            Do not use this to large array of data with the same unit.
+            </summary>
+        </member>
+        <member name="M:BAI.General.NumberWithUnit.ToString">
+            <summary>
+            Serialize object to string with CultureInfo.CurrentCulture
+            </summary>
+            <returns>String representation of object under current culture</returns>
+        </member>
+        <member name="M:BAI.General.NumberWithUnit.Parse(System.String)">
+            <summary>
+            Parse string to deserialize object under CultureInfo.CurrentCulture
+            </summary>
+            <param name="s">String to parse in format of number unit such as 1.23 mm</param>
+            <returns>Deserialized object</returns>
+        </member>
+        <member name="T:BAI.General.ObjectId">
+            <summary>
+            Class used to identify objects in the distributed system using strings with format module.device.object
+            </summary>
+            <remarks>
+            Example of object identifiers:
+                EFEM.FoupA.Slot12, EFEM.Robot.EE2, EFEM.Prealigner.Chuck, EFEM.Robot.Coordinates,
+                VT3.Shuttle.EE2, VT3.Chamber.SVC, TC.ColumnB.Slot2, TC.Carousel.Coordinates
+            </remarks>
+        </member>
+        <member name="M:BAI.General.ObjectId.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructor to use module, device and object fields.
+            </summary>
+            <param name="moduleName">Single field such as "VT2", "TC", "PM3", "EFEM".</param>
+            <param name="deviceName">Single field such as "Shuttle", "ColumnB", "FoupA", "Prealigner".</param>
+            <param name="objectName">Can be a single field or multiple fields, such as "EE2", "Slot23", "Coordinates.R2".</param>
+        </member>
+        <member name="M:BAI.General.ObjectId.Parse(System.String)">
+            <summary>
+            Parses an object ID from a string using this format: module.device.object
+            </summary>
+            <param name="fullName">The name to parse; for example: "EFEM.WaferEngine.EE1"</param>
+            <returns>ObjectId</returns>
+            <exception cref="T:BAI.Exceptions.ValidationExceptions.IncompleteObjectIdException"></exception>
+        </member>
+        <member name="M:BAI.General.ObjectId.TryParse(System.String,BAI.General.ObjectId@)">
+            <summary>
+            Attempts to parse an object ID.
+            </summary>
+            <param name="fullName">The name to parse; for example: "EFEM.WaferEngine.EE1".</param>
+            <param name="objId">if parsing succeeds, set objId. otherwise set to null.</param>
+            <returns>true if parsing succeeds, false if otherwise</returns>
+        </member>
+        <member name="M:BAI.Infras.General.StringHelper.Split(System.String,System.String,System.Boolean)">
+            <summary>
+            Splits a string
+            </summary>
+            <param name="token">The separator</param>
+            <param name="str">The original string</param>
+            <param name="removeEmptyEntries">If yes, empty tokens will be removed</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.General.IHaveVersion.GetVersion(System.String,System.String@)">
+            <summary>
+            Attempts to get a version string.
+            </summary>
+            <param name="versionType"></param>
+            <param name="version"></param>
+            <returns>true if the version spec is valid, false otherwise</returns>
+        </member>
+        <member name="M:BAI.Infras.General.IHaveVersion.GetPatchVersion(System.String,System.String@)">
+            <summary>
+            Attempts to get a patch version string.
+            </summary>
+            <param name="versionType"></param>
+            <param name="patchVersion"></param>
+            <returns>true if the version spec is valid, false otherwise</returns>
+        </member>
+        <member name="T:BAI.Infras.General.ExportAttribute">
+            <summary>
+            Marks types as being creatable by the component service.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.General.ExportAttribute.#ctor(System.Type)">
+             <summary>
+            
+             </summary>
+             <param name="interfaceType">What interface this type can be configured under.</param>
+        </member>
+        <member name="T:BAI.Infras.General.InjectAttribute">
+            <summary>
+            Indicates the parameter is another component in the component service.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.General.InjectAttribute.#ctor(BAI.Infras.General.NamePrefix,System.String)">
+            <summary>
+            The name of the injected instance is a combination of a prefix and a hard-coded string.
+            </summary>
+            <param name="prefix"></param>
+            <param name="name"></param>
+        </member>
+        <member name="M:BAI.Infras.General.InjectAttribute.#ctor(System.String)">
+            <summary>
+            The name of the injected instance is a hard-coded string.
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:BAI.Infras.General.InjectAttribute.#ctor">
+            <summary>
+            The name of the injected instance is defined in configuration.
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.General.UnixVersionHelper">
+             <summary>
+             A wrapper around uname(1).
+             </summary>
+             <remarks>
+             uname(1) is part of posix, so you can generally find it on any Unix. Docs:
+             https://pubs.opengroup.org/onlinepubs/009604599/utilities/uname.html
+            
+             Our build of Linux for Phytec uses GNU Coreutils. Docs:
+             https://www.gnu.org/software/coreutils/manual/html_node/uname-invocation.html
+             </remarks>
+        </member>
+        <member name="M:BAI.Infras.General.UnixVersionHelper.GetOperatingSystem">
+            <summary>
+            The name of the operating system. For example "Linux" or "FreeBSD" or "Darwin".
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.General.UnixVersionHelper.GetPhytecDistroVersion">
+            <summary>
+            The version of the Phytec image. This correspond to the Nuget package version and Agile version.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.General.CompSvc.GetVersion(System.String,System.String,System.String@)">
+            <summary>
+            Attempts to get a version string.
+            </summary>
+            <param name="versionType"></param>
+            <param name="targetSpec"></param>
+            <param name="version"></param>
+            <returns>true if the version spec is valid, false otherwise</returns>
+        </member>
+        <member name="M:BAI.Infras.General.CompSvc.GetPatchVersion(System.String,System.String,System.String@)">
+            <summary>
+            Attempts to get a patch version string.
+            </summary>
+            <param name="versionType"></param>
+            <param name="targetSpec"></param>
+            <param name="patchVersion"></param>
+            <returns>true if the version spec is valid, false otherwise</returns>
+        </member>
+        <member name="M:BAI.Infras.General.DirectoryUtil.SetRootPathEnv(System.String)">
+            <summary>
+            Sets the location of the Brooks API CTC folder.
+            </summary>
+            <remarks>
+            If use the ClientInitLoader, you do not need to call this method.
+            This should be called before using any other Brooks API.
+            This method can only be called once.
+            </remarks>
+            <param name="root_path">The path to the CTC folder, typically c:\BAI\CTC</param>
+            <exception cref="T:System.IO.DirectoryNotFoundException">Thrown if the <paramref name="root_path"/> directory does not exist.</exception>
+            <exception cref="T:System.ApplicationException">Thrown if the root path has already been set.</exception>
+        </member>
+        <member name="M:BAI.Infras.General.Factory`2.TryCreate(`0,`1@)">
+            <summary>
+            Attempts to find and create the object with the given key.  A return value
+            indicates whether the object was found.
+            </summary>
+            <param name="key"></param>
+            <param name="val">If this function returns true, <paramref name="val"/> contains the created object.</param>
+            <returns>True if the key was found, false otherwise.</returns>
+        </member>
+        <member name="T:BAI.Infras.General.SingletonConfigBasedFactory`1">
+            <summary>
+            A config based factory that only creates one instance of each
+            instance name.  Repeated requests are given a cached instance.
+            </summary>
+            <typeparam name="TVal">The type of object to create.</typeparam>
+        </member>
+        <member name="M:BAI.Infras.General.FactoryConfigData.#ctor">
+            <summary>
+            Creates a config that will throw from every method.
+            Useful if you do not want to allow your application to rely on
+            global config data.
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.General.TimeoutManagerOptInAttribute">
+            <summary>
+            Indicates that the attributed class is aware of the TimeoutManager
+            and would like its timeouts managed.
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.General.TimeoutManager">
+            <summary>
+            Services to extend timeouts while debugging.
+            </summary>
+            <remarks>
+            This class has no implemention until it can be code reviewed.
+            See the timeoutmanager.txt file in this directory for a more complete implementation.
+            </remarks>
+        </member>
+        <member name="P:BAI.Infras.General.TimeoutManager.ShouldTimeoutsBeInfinite">
+            <summary>
+            Indicates whether timeouts should be made infinite.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.General.TimeoutManager.Register(System.Object)">
+            <summary>
+            Registers an object with the timeout manager.  Only classes marked with
+            <see cref="T:BAI.Infras.General.TimeoutManagerOptInAttribute"/> will have their timeout modified.
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.#ctor(System.Boolean)">
+            <param name="logInternalMessages">if false, this class will not log any messages of its own, making testing easier</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.RemoteReceiverIsConnected(System.Net.IPAddress)">
+            <summary>
+            Returns true if connected to the remote log service.
+            </summary>
+            <param name="remoteAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.RemoteReceiverIsAlive(System.Net.IPAddress)">
+            <summary>
+            Returns true if the connection to the given <paramref name="remoteAddress"/> is alive.
+            </summary>
+            <param name="remoteAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.AddRemoteReceiver(System.Net.IPAddress)">
+            <summary>
+            Connect to the <paramref name="remoteAddress"/> and stream logs from it to this LogService.
+            </summary>
+            <param name="remoteAddress"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.AddRemoteReceiver(System.Net.IPAddress,System.String)">
+            <summary>
+            Connect to the <paramref name="remoteAddress"/> and stream logs from it to this LogService.
+            </summary>
+            <param name="remoteAddress"></param>
+            <param name="hostnamePrefix">A string to prefix to the begin of the host name in the log messages</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.RemoveRemoteReceiver(System.Net.IPAddress)">
+            <summary>
+            Stop receiving log messages from the <paramref name="remoteAddress"/>.
+            </summary>
+            <param name="remoteAddress"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.GetRemoteReceiverAddresses">
+            <summary>
+            Gets the list of remote log services this instance is connected to.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.Subscribe(BAI.Infras.LogServices.ILogListener)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.Unsubscribe(BAI.Infras.LogServices.ILogListener)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.Log(BAI.Infras.LogServices.LogMessage)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.Log(BAI.Infras.LogServices.LogMessageType,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.Log(BAI.Infras.LogServices.LogMessageType,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogInfoFormat(System.String,System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogDiag(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogDiag(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogDiagFormat(System.String,System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogInfo(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogInfo(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogErrorFormat(System.String,System.String,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogError(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogError(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogError(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogServiceBase.LogError(System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.SmartFruMessagesReceiver.#ctor">
+            <summary>
+            For testing purposes.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.SmartFruMessagesReceiver.#ctor(System.Net.IPEndPoint)">
+            <summary>
+            Constructor to start connecting to SocketListenerDistributor's server socket
+            </summary>
+            <param name="transmitterIPEndPoint">transmitterIPEndPoint</param>
+        </member>
+        <member name="T:BAI.Infras.LogServices.SmartFruMessage">
+            <summary>
+            Class to represent a log message.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.SmartFruMessage.#ctor(System.DateTime,BAI.Infras.LogServices.LogMessageType,System.String,System.String,System.String,System.UInt32,System.String,System.String,BAI.Infras.LogServices.FruData)">
+            <summary>
+            Full constructor - all other constructors call the full constructor.
+            </summary>
+            <param name="timeStamp"></param>
+            <param name="messageType"></param>
+            <param name="hostName">if null the HostName defaults to the current host name</param>
+            <param name="source">if null the Source defaults to the current host name</param>
+            <param name="fruName">name of the fru</param>
+            <param name="messageId">messageId</param>
+            <param name="message"></param>
+            <param name="additionalInfo"></param>
+            <param name="fruData"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.StdOutListenerImp.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.StdOutListenerImp.OnMessages(BAI.Infras.LogServices.LogMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.StdOutListenerImp.OnUnsubscribedByDistributor(System.String)">
+            <summary>
+            This listener is unsubscribed by message distributor
+            </summary>
+            <param name="reason"></param>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.Info">
+            <summary>
+            Informational message.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.Prof">
+            <summary>
+            Profiling message (track performance in time, memory and etc).
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.Diag">
+            <summary>
+            Diagnostic message.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.Warn">
+            <summary>
+            Warning message.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.Erro">
+            <summary>
+            Error message.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.Debg">
+            <summary>
+            Debugging message.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.LogServices.LogMessageType.RemoteLogTransmitterInfo">
+            <summary>
+            Used by the RemoteLogTransmitter to communicate information to the RemoteLogReceiver.
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.LogServices.LogMessage">
+            <summary>
+            Class to represent a log message.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogMessage.#ctor(System.DateTime,BAI.Infras.LogServices.LogMessageType,System.String,System.String,System.String)">
+            <summary>
+            Full constructor - all other constructors call the full constructor.
+            </summary>
+            <param name="timeStamp"></param>
+            <param name="messageType"></param>
+            <param name="hostName">if null the HostName defaults to the current host name</param>
+            <param name="source">if null the Source defaults to the current host name</param>
+            <param name="message"></param>
+        </member>
+        <member name="P:BAI.Infras.LogServices.LogMessage.TimeStamp">
+            <summary>
+            When this message was produced.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.LogServices.LogMessage.Source">
+            <summary>
+            The component that produced this message.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.LogServices.LogMessage.Message">
+            <summary>
+            The content of the message.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.LogServices.LogMessage.HostName">
+            <summary>
+            Where this message was produced.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogFileListenerImp.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogFileListenerImp.OnMessages(BAI.Infras.LogServices.LogMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogFileListenerImp.OnUnsubscribedByDistributor(System.String)">
+            <summary>
+            This listener is unsubscribed by message distributor
+            </summary>
+            <param name="reason"></param>
+        </member>
+        <member name="T:BAI.Infras.LogServices.ILogListener">
+            <summary>
+            Implemented by objects who want to recieve the log stream.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogListener.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogListener.OnMessages(BAI.Infras.LogServices.LogMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogListener.OnUnsubscribedByDistributor(System.String)">
+            <summary>
+            This listener is unsubscribed by message distributor
+            </summary>
+            <param name="reason"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogListener.RemoveOldLogs">
+            <summary>
+            When the size of stored logs exceeds some maximum size, this removes the old logs.
+            If a listener does not store logs persistently, this method does nothing.
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.LogServices.LogMessageCodec">
+            <summary>
+            Class to encode and decode between byte stream and BAI log message
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogMessageCodec.Decode(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Decode byte array to log messages. 
+            </summary>
+            <param name="data"></param>
+            <param name="startIndex"></param>
+            <param name="bytesToDecode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogMessageCodec.DecodeDateTimeISO(System.String)">
+            <summary>
+            Decode date time from string in ISO 8601 format 1999-12-31T23:59:59
+            </summary>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogService.AddRemoteReceiver(System.Net.IPAddress)">
+            <summary>
+            Connect to the <paramref name="remoteAddress"/> and stream logs from it to this LogService.
+            </summary>
+            <param name="remoteAddress"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogService.AddRemoteReceiver(System.Net.IPAddress,System.String)">
+            <summary>
+            Connect to the <paramref name="remoteAddress"/> and stream logs from it to this LogService.
+            </summary>
+            <param name="remoteAddress"></param>
+            <param name="hostnamePrefix">A string to prefix to the begin of the host name in the log messages</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogService.RemoveRemoteReceiver(System.Net.IPAddress)">
+            <summary>
+            Stop receiving log messages from the <paramref name="remoteAddress"/>.
+            </summary>
+            <param name="remoteAddress"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogService.Flush">
+            <summary>
+            Blocks until all pending messages are writing to listeners.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.Log(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            Logs a message. All other methods call this one.
+            </summary>
+            <param name="message">the message to log</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.Log(BAI.Infras.LogServices.LogMessageType,System.String,System.String)">
+            <summary>
+            Logs a message.
+            </summary>
+            <param name="messageType">The type of message to log.</param>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.Log(BAI.Infras.LogServices.LogMessageType,System.String)">
+            <summary>
+            Logs a message.
+            </summary>
+            <param name="messageType">The type of message to log.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogInfo(System.String,System.String)">
+            <summary>
+            Logs an informational message.
+            </summary>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogInfo(System.String)">
+            <summary>
+            Logs an informational message.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogInfoFormat(System.String,System.String,System.Object[])">
+            <summary>
+            Logs a informational message that is formatted using .NET composite formatting.
+            </summary>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="messageFormatString">A .NET composite formatting string.</param>
+            <param name="args">The arguments to be used with the formatting string.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogDiag(System.String,System.String)">
+            <summary>
+            Logs a diagnostic message.
+            </summary>
+            <remarks>
+            Diagnostic messages are not logged to standard out when running on Windows CE.
+            </remarks>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogDiag(System.String)">
+            <summary>
+            Logs a diagnostic message.
+            </summary>
+            <remarks>
+            Diagnostic messages are not logged to standard out when running on Windows CE.
+            </remarks>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogDiagFormat(System.String,System.String,System.Object[])">
+            <summary>
+            Logs a diagnostic message that is formatted using .NET composite formatting.
+            </summary>
+            <remarks>
+            Diagnostic messages are not logged to standard out when running on Windows CE.
+            </remarks>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="messageFormatString">A .NET composite formatting string.</param>
+            <param name="args">The arguments to be used with the formatting string.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogError(System.String,System.String)">
+            <summary>
+            Logs an error message.
+            </summary>
+            <remarks>
+            Some applications display error messages more prominently.
+            For example, InSight only shows error messages by default and colors them red.
+            </remarks>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogError(System.String)">
+            <summary>
+            Logs an error message.
+            </summary>
+            <remarks>
+            Some applications display error messages more prominently.
+            For example, InSight only shows error messages by default and colors them red.
+            </remarks>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogError(System.String,System.Exception)">
+            <summary>
+            Logs an exception.
+            </summary>
+            <remarks>
+                <para>
+                    The exception's Message property will be logged as an error while the stack track will
+                    be logged as an Info message.
+                </para>
+                <para>
+                    Some applications display error messages more prominently.
+                    For example, InSight only shows error messages by default and colors them red.
+                </para>
+            </remarks>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="exception">The exception to log.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogError(System.Exception)">
+            <summary>
+            Logs an exception.
+            </summary>
+            <remarks>
+                <para>
+                    The exception's Message property will be logged as an error while the stack track will
+                    be logged as an Info message.
+                </para>
+                <para>
+                    Some applications display error messages more prominently.
+                    For example, InSight only shows error messages by default and colors them red.
+                </para>
+            </remarks>
+            <param name="exception">The exception to log.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogServiceProvider.LogErrorFormat(System.String,System.String,System.Object[])">
+            <summary>
+            Logs a error message that is formatted using .NET composite formatting.
+            </summary>
+            <remarks>
+            Some applications display error messages more prominently.
+            For example, InSight only shows error messages by default and colors them red.
+            </remarks>
+            <param name="source">The name of the component logging this message.</param>
+            <param name="messageFormatString">A .NET composite formatting string.</param>
+            <param name="args">The arguments to be used with the formatting string.</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogDistributor.Subscribe(BAI.Infras.LogServices.ILogListener)">
+            <summary>
+            Subscribes the <paramref name="listener"/> to the log message stream.
+            </summary>
+            <remarks>
+            The <paramref name="listener"/> will recieve log messages starting on the
+            next log processing cycle. See the Logging Infrastructure article in the
+            See Also section of this article for more information.
+            </remarks>
+            <param name="listener"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.ILogDistributor.Unsubscribe(BAI.Infras.LogServices.ILogListener)">
+            <summary>
+            Unsubscribes the <paramref name="listener"/> from log messages.
+            </summary>
+            <remarks>
+            The listener may receive one more batch of messages after being unsubscribed.
+            </remarks>
+            <param name="listener"></param>
+        </member>
+        <member name="T:BAI.Infras.LogServices.LogService">
+            <summary>
+            The logging service use by the BAI API.
+            </summary>
+            <remarks>
+            Please see the [Log Service](xref:log_service) article in the documention for more information.
+            </remarks>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogService.#ctor(System.Boolean,System.Int32)">
+            <param name="logInternalMessages">if false, this class will not log any messages of its own, making testing easier</param>
+            <param name="checkIntervalMs">sleep time between processing messages</param>
+        </member>
+        <member name="P:BAI.Infras.LogServices.LogService.Instance">
+            <summary>
+            The singleton instance of the LogService.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogService.Log(BAI.Infras.LogServices.LogMessage)">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Infras.LogServices.LogService.oldLogRemover(System.Object)">
+            <summary>
+            Cleanup old log files
+            </summary>
+            <param name="state"></param>
+            <remarks>
+            The log file listener will remove old log files when we call OnMessages.
+            We don't call OnMessages when there are no messages.
+            There are a number of services that put stuff into the log folder
+            besides this log service.
+            To prevent these other services from fill up the disk when the system is
+            idle, periodically remove old log files.
+            </remarks>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogReceiver.#ctor(System.String,System.Int32)">
+            <summary>
+            Constructor to start connecting to SocketListenerDistributor's server socket
+            </summary>
+            <param name="transmitterAddress">host name or IP address of SocketListenerDistributor</param>
+            <param name="port">port number that SocketListenerDistributor's server socket is listening on</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogReceiver.#ctor(System.String,System.Int32,System.String)">
+            <summary>
+            Constructor to start connecting to SocketListenerDistributor's server socket
+            </summary>
+            <param name="transmitterAddress">host name or IP address of SocketListenerDistributor</param>
+            <param name="port">port number that SocketListenerDistributor's server socket is listening on</param>
+            <param name="hostnamePrefix">A string to prefix to the begin of the host name in the log messages</param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogReceiver.#ctor(System.Boolean)">
+            <summary>
+            This constructor does not actually connect. For testing purposes.
+            </summary>
+            <param name="testingCtor"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogReceiver.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            Logs received messages (from remote transmitter) to local LogService.
+            Do nothing is transmitter is local - to prevent loop transmitt/receive.
+            Derived class need to override this method.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogTransmitter.#ctor(System.Net.Sockets.Socket)">
+            <summary>
+            Transmitter is created by SocketListenerDistributor when it's server socket accepts a client socket connection request.
+            </summary>
+            <param name="transmitterSocket"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogTransmitter.OnMessages(BAI.Infras.LogServices.LogMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogTransmitter.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogTransmitter.OnMessages(BAI.Infras.LogServices.SmartFruMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogTransmitter.OnMessage(BAI.Infras.LogServices.SmartFruMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogTransmitter.OnUnsubscribedByDistributor(System.String)">
+            <summary>
+            This listener is unsubscribed by message distributor
+            </summary>
+            <param name="reason"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogDistributor.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogDistributor.OnMessages(BAI.Infras.LogServices.LogMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.RemoteLogDistributor.OnUnsubscribedByDistributor(System.String)">
+            <summary>
+            This listener is unsubscribed by message distributor
+            </summary>
+            <param name="reason"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.WellknownListener.OnMessage(BAI.Infras.LogServices.LogMessage)">
+            <summary>
+            A single message is distributed by message distributor
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.WellknownListener.OnMessages(BAI.Infras.LogServices.LogMessage[])">
+            <summary>
+            A block of messages are distributed by message distributor
+            </summary>
+            <param name="messages"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.WellknownListener.OnUnsubscribedByDistributor(System.String)">
+            <summary>
+            This listener is unsubscribed by message distributor
+            </summary>
+            <param name="reason"></param>
+        </member>
+        <member name="M:BAI.Infras.LogServices.WellknownListener.RemoveOldLogs">
+            <summary>
+            Perform log rotation.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.ComponentService.IComponentService.GetVersion(System.String,System.String,System.String@)">
+            <summary>
+            Attempts to get a version string.
+            </summary>
+            <param name="versionType"></param>
+            <param name="targetSpec"></param>
+            <param name="version"></param>
+            <returns>true if the version spec is valid, false otherwise</returns>
+        </member>
+        <member name="M:BAI.Infras.ComponentService.IComponentService.GetPatchVersion(System.String,System.String,System.String@)">
+            <summary>
+            Attempts to get a patch version string.
+            </summary>
+            <param name="versionType"></param>
+            <param name="targetSpec"></param>
+            <param name="patchVersion"></param>
+            <returns>true if the version spec is valid, false otherwise</returns>
+        </member>
+        <member name="M:BAI.Infras.ComponentService.IComponentService.SecondStageInit">
+            <summary>
+            Call after EC initalization to perform a second stage of init.
+            </summary>
+            <remarks>
+            Some components in the system may have circular dependancies.
+            This second stage allows them to wait till all objects are created
+            before trying to get their dependancies.
+            </remarks>
+        </member>
+        <member name="M:BAI.Infras.ComponentService.IRemoteComponentConnector.ConnectProxy(System.Type,System.Type,System.String,System.String,System.String)">
+            <summary>
+            Creates and connects a reflection-based remote imp.
+            </summary>
+            <param name="interfaceType">The type of the interface for the proxy to implement.</param>
+            <param name="baseType">Proxy base type (can be null for default)</param>
+            <param name="localName">The name of the component as defined in the local config files.  Used to look up the server address.</param>
+            <param name="remoteName">The name of the component in the remote EC's Component Service.</param>
+            <param name="clientName">The name of the client.  Usually the client passes in "CTC".</param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Infras.EventServices.EventsHelper2">
+            <summary>
+            A class to help with raising events safely in remoting scenarios.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.EventServices.EventsHelper2.Fire(System.Delegate,System.Object[])">
+            <summary>
+            Raises the supplied event delegate in a remoting-safe manner on a single thread.
+            </summary>
+            <param name="eventHandler">The event delegate to raise.</param>
+            <param name="args">The arguments.</param>
+            <remarks>
+            <para>
+                When using remoting and app domains, it is possible for the object target of a delegate
+                to disapear. Exceptions are thrown when invoking the event. Ideally clinets would
+                unregister events before unloading app domains or shutting down remoting servers.
+                But that is not always the case.
+            </para>
+            <para>
+                This method will raise the provided event for every target in the event's invocation list.
+                Any invocation target that fails the call will be removed and processing will continue.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:BAI.Infras.EventServices.EventPrinter.Register(System.Object)">
+            <summary>
+            Uses Console.WriteLine to print every event that happens on <paramref name="obj"/>.
+            </summary>
+            <remarks>
+            Right now this probably only prints events that are directly declared on
+            <paramref name="obj"/>'s class.  Evevnts on base types may no be printed.
+            </remarks>
+            <param name="obj"></param>
+        </member>
+        <member name="P:BAI.Infras.Configs.HwParamDictionary`2.Keys">
+            <summary>
+            This only returns the cached names.
+            Override if you want to return all usable names.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.Configs.HwParamDictionary`2.Contains(`0)">
+            <summary>
+            Contains will return true if 'name' is a valid parameter name
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.Configs.HwParamDictionary`2.getParamOnDevice(`0)">
+            <summary>
+            Must throw KeyNotFoundException for invalid name
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.Facade.FacadeFeedBackBase`2.#ctor(BAI.Infras.SocketComm.SocketCommServerGen{`0,`1},System.String)">
+            <summary>
+            For testing purposes only.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.AtomMsg.atomStringSplit(System.String)">
+             <summary>
+             Customized split to parse ATOM messages - special handling of white spaces
+             The message supported to be "REPLY 123 1 Additional Data" with the single space as field separator
+             But not all replies comply - some with additoinal white spaces in between fields
+             Part of the message - entire string after "REPLY" is parsed by the ParseReply()/ParseAERS() methods.
+            
+             Two problems with the standard string.Split(. . .) calls:
+             1. In regular .NET framework, this can be removed by a string split option
+                But the option is not availavle in compact .NET framework
+             2. Some of the messages would need to preserve the spaces with high-fidelity.
+                The standard split would add extra empty field depending on even/odd number of spaces.
+            
+             This customized split method
+             1. Ignores extra white spaces for first two fields
+             2. Make the additional data into one single third field
+            
+             </summary>
+             <param name="s"></param>
+             <returns></returns>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.MessageContainer`1">
+            <summary>
+            Internal class to handle a particular type of messages (Request, Acknowledge, Reply).
+            </summary>
+            <remarks>
+            Details:
+                It contains three maps
+                    1. Map[MessageId, TMsgType] messageMap - used to hold message for the matching type
+                    2. Map[MessageId, DataWaiter(of TMsgType)]  waiterMap  - used to signal clients that are waiting for a particular message (ID)
+                    3. Map[MessageId, GetMessageAsyncResult] asyncMap - used for BeginGetMessage calls that don't complete synchronously
+            </remarks>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.MessageContainer`1.GetMessage(BAI.Infras.SocketComm.MessageId,System.Int32)">
+            <summary>
+            Wait for at most <paramref name="timeout"/> milliseconds for a reply with the <paramref name="id"/>.
+            </summary>
+            <param name="id">The id of the message to wait for.</param>
+            <param name="timeout">The number of milliseconds to wait for a reply before returning</param>
+            <returns>null if the message did not arrive before the timeout expired</returns>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.NetstringMsgCodec`1">
+            <summary>
+            For messages that are encapsulated in a netstring.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.NetworkNode">
+            <remarks/>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.NetworkNode.Peer">
+            <remarks/>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.NetworkNode.Name">
+            <remarks/>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.NetworkNode.Address">
+            <remarks/>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.NetworkNode.Controller">
+            <remarks/>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.ControllerType">
+            <remarks/>
+        </member>
+        <member name="F:BAI.Infras.SocketComm.ControllerType.CTC">
+            <remarks/>
+        </member>
+        <member name="F:BAI.Infras.SocketComm.ControllerType.VxWorks">
+            <remarks/>
+        </member>
+        <member name="F:BAI.Infras.SocketComm.ControllerType.Linux">
+            <remarks/>
+        </member>
+        <member name="F:BAI.Infras.SocketComm.ControllerType.ArmSoc">
+            <remarks/>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SimpleStringMessageCodec.#ctor">
+            <summary>
+            Default simplestring codec uses "\r\n" as a message separator.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SimpleStringMessageCodec.#ctor(System.String)">
+            <summary>
+            Overriding classes may define a message separator, such as "\r"
+            </summary>
+            <param name="messageSeparator"></param>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SimpleStringCodec.#ctor">
+            <summary>
+            Default simplestring codec uses "\r\n" as a message separator.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SimpleStringCodec.#ctor(System.String)">
+            <summary>
+            Overriding classes may define a message separator, such as "\r"
+            </summary>
+            <param name="messageSeparator"></param>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.SimpleStringMessage">
+            <summary>
+            Simple String Messages
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.ISocketCommClientConnection">
+            <summary>
+            Interface for a private socket connection between modules
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.ISocketCommClientConnection.SendRequest(BAI.Infras.SocketComm.ReqMessage)">
+            <summary>
+            Send a request message from client endpoint to server endpoint
+            </summary>
+            <param name="req">request message</param>
+            <returns>message ID after acknowledge message is received</returns>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.ISocketCommClientConnection.WaitForReply(BAI.Infras.SocketComm.MessageId,System.Int32)">
+            <summary>
+            Wait for reply message until specified timeout
+            </summary>
+            <param name="id">message ID returned when request message was sent via SendRequest()</param>
+            <param name="msTimeout">timeout for the wait period in milli-seconds. 
+            If smaller than default system timeout, system default is used silently.
+            </param>
+            <returns>reply message received with result or error</returns>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.ISocketCommClientConnection.GetReply(BAI.Infras.SocketComm.MessageId)">
+            <summary>
+            Get reply message if it has arrived. Otherwise null. This method does not wait.
+            </summary>
+            <param name="id">message ID returned when request message was sent via SendRequest()</param>
+            <returns>reply message if it has arrived. Otherwise, null.</returns>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.ISocketCommClientConnection.SendRequestAndWaitForReply(BAI.Infras.SocketComm.ReqMessage,System.Int32)">
+            <summary>
+            This is the same as SendRequest() + WaitForReply()
+            </summary>
+            <param name="req">request message</param>
+            <param name="msTimeout">timeout for the wait period in milli-seconds. 
+            If smaller than default system timeout, system default is used silently.
+            </param>
+            <returns>reply message received with result or error</returns>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.SocketCommListener.PortOffset">
+            <summary>
+            An value added to the port number of all servers and clients.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.SocketCommListener.IsBound">
+            <summary>
+            Indicates that the listener is bound to its port.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.DecodeResults`1.IncrementBytesDecoded(System.UInt32)">
+            <summary>
+            Increments the total number of bytes that were either decoded or
+            skipped.
+            </summary>
+            <param name="increment">The number of bytes that were consumed.
+            </param>
+            <remarks>
+            Call this method if some bytes were skipped but not decoded into
+            a message.  Otherwise, call <see cref="M:BAI.Infras.SocketComm.DecodeResults`1.AddDecodedMessage(`0,System.UInt32)"/>. Do
+            not call both.
+            </remarks>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.ICodec`1.Decode(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Decode zero or more messages from the given buffer.
+            </summary>
+            <param name="msgBuffer">The buffer.</param>
+            <param name="start">The start of the valid area of the buffer.</param>
+            <param name="size">How long the valid area is.</param>
+            <returns>The decoded messages and how much space was used.</returns>
+            <remarks>
+            Please note: the buffer is only valid for the duraction of the call to this message.
+            After this method returns, the buffer can be overwritten with new data.
+            DONES NOT STORE REFERENCES TO THIS BUFFER.
+            </remarks>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.StdMessage">
+            <summary>
+            Standard message used for socket communications with EC.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.StdMessage.#ctor(BAI.Infras.SocketComm.HeaderSection,BAI.Infras.SocketComm.DataSection)">
+            <summary>
+            Full constructor - all other constructors call this
+            </summary>
+            <param name="header"></param>
+            <param name="data"></param>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.StdMessage.#ctor(BAI.Infras.SocketComm.HeaderSection,BAI.Infras.SocketComm.ReqData,BAI.Infras.SocketComm.RepData)">
+            <summary>
+            Constructor to contruct with request and reply data
+            </summary>
+            <param name="header"></param>
+            <param name="req"></param>
+            <param name="rep"></param>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.StdMessage.#ctor(BAI.Infras.SocketComm.HeaderSection,BAI.Infras.SocketComm.ReqData,System.Boolean)">
+            <summary>
+            Constructor for making a request message
+            </summary>
+            <param name="header"></param>
+            <param name="req"></param>
+            <param name="replyExpected"></param>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.HeaderSection">
+            <summary>
+            Header section of a message
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.SocketComm.HeaderSection.Flags">
+            <summary>
+            To support making changes in protocols without breaking backwards compatability.
+            </summary>
+            <remarks>
+            Keep in mind that since <see cref="M:BAI.Infras.SocketComm.HeaderSection.ToReply"/> has always echod the Flags field,
+            you can only rely on flags sent in one direction.
+            </remarks>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.DataSection">
+            <summary>
+            Data section of a standard message for communication with EC
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.DataSection.#ctor(BAI.Infras.SocketComm.ReqData,BAI.Infras.SocketComm.RepData)">
+            <summary>
+            Full constructor - all other constructors call this one
+            </summary>
+            <param name="req"></param>
+            <param name="rep"></param>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.DataSection.#ctor(BAI.Infras.SocketComm.ReqData,System.Boolean)">
+            <summary>
+            Constructor for request message
+            </summary>
+            <param name="req"></param>
+            <param name="replyExpected"></param>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.ReqData">
+            <summary>
+            Request part of the data section of a message
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.ReqData.#ctor(System.String,System.Collections.Generic.List{BAI.Infras.SocketComm.MessageAttribute})">
+            <summary>
+            Full constructor. All other constructored call this one.
+            </summary>
+            <param name="commandVerb"></param>
+            <param name="attributes"></param>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.RepData">
+            <summary>
+            Reply part of the data section.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.RepData.#ctor(BAI.Infras.SocketComm.ReplyCode,BAI.Infras.SocketComm.MessageAttribute)">
+            <summary>
+            Full constructor - all other constructors call this
+            </summary>
+            <param name="replyCode">whether message is a request, successful reply, busy reply (never used) or error reply</param>
+            <param name="resultValue"></param>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.RepData.#ctor(BAI.Infras.SocketComm.ReplyCode,System.String)">
+            <summary>
+            Full constructor - all other constructors call this
+            </summary>
+            <param name="replyCode">whether message is a request, successful reply, busy reply (never used) or error reply</param>
+            <param name="resultValue"></param>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.RepData.#ctor">
+            <summary>
+            Constructor to make a reply section for a request message
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SocketCommClientConnectionImp.SendRequest(BAI.Infras.SocketComm.ReqMessage)">
+            <summary>
+            Send a request message from client endpoint to server endpoint.
+            It returns after receiving the acknowledge message from server endpoint, or timed out on communication timeout interval.
+            </summary>
+            <param name="req">request message</param>
+            <returns>message ID after acknowledge message is received</returns>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SocketCommClientConnectionImp.GetReply(BAI.Infras.SocketComm.MessageId)">
+            <summary>
+            Get reply message if it has arrived. Otherwise null. This method does not wait.
+            </summary>
+            <param name="id">message ID returned when request message was sent via SendRequest()</param>
+            <returns>reply message if it has arrived. Otherwise, null.</returns>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SocketCommClientConnectionImp.WaitForReply(BAI.Infras.SocketComm.MessageId,System.Int32)">
+            <summary>
+            Wait for reply message until specified timeout
+            </summary>
+            <param name="id">message ID returned when request message was sent via SendRequest()</param>
+            <param name="msTimeout">timeout for the wait period. If null, system default is used.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Infras.SocketComm.SocketCommClientConnectionImp.SendRequestAndWaitForReply(BAI.Infras.SocketComm.ReqMessage,System.Int32)">
+            <summary>
+            This is the same as SendRequest() + WaitForReply()
+            </summary>
+            <param name="req">request message</param>
+            <param name="msTimeout">timeout for the wait period in milli-seconds.
+            If smaller than default system timeout, system default is used silently.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Infras.SocketComm.StdMsgCodec">
+            <summary>
+            Class to encode and decode between byte stream and BAI standard message
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.ClientSocket.#ctor">
+            <summary>
+            Display all communications to the debug log
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.ClientSocket.Close">
+            <summary>
+            Always release those sockets.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.DataSocket.Create(System.String)">
+            <summary>
+            when doing data transfers, we need to open another socket for it.
+            </summary>
+            <returns>Connected socket</returns>            
+        </member>
+        <member name="T:BAI.Infras.FtpServices.FtpClient">
+            <summary>
+            FtpClient class which expose all functionality ncessary for Ftp operations on the client side
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.#ctor">
+            <summary>
+            Default contructor
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructor which automatically sets most common used parameters
+            </summary>
+            <param name="server">name if the ftp host server, can be an ip address or DNS known name</param>
+            <param name="username">The user who has he rights to log on the server</param>
+            <param name="password">password of the specified user</param>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.#ctor(System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Constructor who allows to set even the port for the ftp server
+            </summary>
+            <param name="server">name if the ftp host server, can be an ip address or DNS known name</param>
+            <param name="username">The user who has he rights to log on the server</param>
+            <param name="password">password of the specified user</param>
+            <param name="port">port number</param>
+        </member>
+        <member name="P:BAI.Infras.FtpServices.FtpClient.Server">
+            <summary>
+            Gets and Sets the name of the FTP server.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BAI.Infras.FtpServices.FtpClient.RemotePort">
+            <summary>
+            Gets and Sets the port number.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BAI.Infras.FtpServices.FtpClient.RemotePath">
+            <summary>
+            GetS and Sets the remote directory.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.FtpServices.FtpClient.Username">
+            <summary>
+            Gets and Sets the username.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.FtpServices.FtpClient.Password">
+            <summary>
+            Gets and Set the password.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.FtpServices.FtpClient.BinaryMode">
+            <summary>
+            If the value of mode is true, set binary mode for downloads, else, Ascii mode.
+            </summary>
+        </member>
+        <member name="T:BAI.Infras.FtpServices.FtpClient.FtpEventArgs">
+            <summary>
+            Argument class for events coming from FTP Client
+            </summary>
+        </member>
+        <member name="E:BAI.Infras.FtpServices.FtpClient.FileDownloadSuccess">
+            <summary>
+            Event in case of success donwload from the ftp server
+            </summary>
+        </member>
+        <member name="E:BAI.Infras.FtpServices.FtpClient.FileDownloadFailed">
+            <summary>
+            Event in case of a donwload failure
+            </summary>
+        </member>
+        <member name="E:BAI.Infras.FtpServices.FtpClient.FileUploadSuccess">
+            <summary>
+            Event in case of success upload to the ftp server
+            </summary>
+        </member>
+        <member name="E:BAI.Infras.FtpServices.FtpClient.FileUploadFailed">
+            <summary>
+            Event in case of a failed upload to the ftp server
+            </summary>
+        </member>
+        <member name="E:BAI.Infras.FtpServices.FtpClient.FileDeleteSuccess">
+            <summary>
+            Event in case of success deletion on the ftp server
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Login">
+            <summary>
+            Login to the remote server.
+            </summary>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+            <remarks> First connects to the ftp server and after that send user name and password only if the server ask for them
+            In the end it will change the currnet folder to the path specified by RemotePath attribute</remarks>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Close">
+            <summary>
+            Close the FTP connection.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.GetFileList">
+            <summary>
+            Return a string array containing the remote directory's file list.
+            </summary>
+            <returns>Returns a list of strings one per each file the string value represents the file name</returns>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.GetFileList(System.String)">
+            <summary>
+            Return a string array containing the remote directory's file list.
+            </summary>
+            <param name="mask">this is the mask applied to fillter out unnecessary results
+            If mask =*.* the result of this methos should be identically with GetFileList() without parametes</param>
+            <returns>Returns a list of strings one per each file the string value represents the file name</returns>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.GetFileSize(System.String)">
+            <summary>
+            Return the size of a file.
+            </summary>
+            <param name="fileName">name of the remote file</param>
+            <returns>the file size in bytes</returns>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Download(System.String)">
+            <summary>
+            Download a file to the Assembly's local directory,
+            keeping the same file name.
+            </summary>
+            <param name="remFileName">the name of the file to be download</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Download(System.String,System.Boolean)">
+            <summary>
+            Download a remote file to the Assembly's local directory,
+            keeping the same file name, and set the resume flag.
+            </summary>
+            <param name="remFileName">the name of the file to be download</param>
+            <param name="resume">If true the it will try to resume the previuous download operaqtion. If server
+            doesn't support resumming it will re-start the downlod from the begining</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Download(System.String,System.String)">
+            <summary>
+            Download a remote file to a local file name which can include
+            a path. The local file name will be created or overwritten,
+            but the path must exist.
+            </summary>
+            <param name="remFileName">the name of the file to be download</param>
+            <param name="locFileName">The local file name</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Download(System.String,System.String,System.Boolean)">
+            <summary>
+            Download a remote file to a local file name which can include
+            a path, and set the resume flag. The local file name will be
+            created or overwritten, but the path must exist.
+            </summary>
+            <param name="remFileName">the name of the file to be download</param>
+            <param name="locFileName">The local file name</param>
+            <param name="resume">If true the it will try to resume the previuous download operaqtion. If server
+            doesn't support resumming it will re-start the downlod from the begining</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Download(System.String,System.IO.Stream)">
+            <summary>
+            Download a remote file to a local file name which can include
+            a path, and set the resume flag. The local file name will be
+            created or overwritten, but the path must exist.
+            </summary>
+            <param name="remFileName">the name of the file to be download</param>
+            <param name="output">Where to write the downloaded file.</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.DownloadDirectory(System.String)">
+            <summary>
+            Downloads an entire directory from the Ftp server
+            </summary>
+            <param name="localPath">local folder where the files are downloaded</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+            <remarks>Sice a local path is not specified it will download on the current application directory</remarks>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.DownloadDirectory(System.String,System.String)">
+            <summary>
+            Downloads an entire directory from the Ftp server into a specified local path
+            </summary>
+            <param name="remotePath">remote folder to be downloaded</param>
+            <param name="localPath">the local path where the files to be downloaded</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.DownloadDirectory(System.String,System.String,System.Boolean)">
+            <summary>
+            Downloads an entire directory from the Ftp server into a specified local path with an recurse option
+            </summary>
+            <param name="remotePath">remote folder to be downloaded</param>
+            <param name="localPath">the local path where the files to be downloaded</param>
+            <param name="recurse">If true it will go recursivelly on the directory path and get them all</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Upload(System.String)">
+            <summary>
+            Upload a file.
+            </summary>
+            <param name="fileName">name of the file to be uploaded</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.Upload(System.String,System.Boolean)">
+            <summary>
+            Upload a file and set the resume flag.
+            </summary>
+            <param name="fileName">name of the file to be uploaded</param>
+            <param name="resume">If treue it will try to resume previous operation. If the server doesn't support resume
+            it will re-start operation from the begining</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.UploadDirectory(System.String,System.Boolean)">
+            <summary>
+            Upload a directory and its file contents
+            </summary>
+            <param name="path">path of the directory to be uploaded</param>
+            <param name="recurse">Whether to recurse sub directories</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.UploadDirectory(System.String,System.Boolean,System.String)">
+            <summary>
+            Upload a directory and its file contents
+            </summary>
+            <param name="path">path of the directory to be uploaded</param>
+            <param name="recurse">Whether to recurse sub directories</param>
+            <param name="mask">Only upload files of the given mask - everything is '*.*'</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.DeleteFile(System.String)">
+            <summary>
+            Delete a file from the remote FTP server.
+            </summary>
+            <param name="fileName">the name of the file to be deleted</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.RenameFile(System.String,System.String,System.Boolean)">
+            <summary>
+            Rename a file on the remote FTP server.
+            </summary>
+            <param name="oldFileName">the name of the file to be renamed</param>
+            <param name="newFileName">the new name for the file</param>
+            <param name="overwrite">setting to false will throw exception if it exists</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.MakeDir(System.String)">
+            <summary>
+            Create a directory on the remote FTP server.
+            </summary>
+            <param name="dirName"></param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.RemoveEmptyDir(System.String)">
+            <summary>
+            Delete a directory on the remote FTP server.
+            </summary>
+            <param name="dirName">Dir name to be removed on the server. Shall be relative path to the current folder</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.RemoveCurrentDirContent">
+            <summary>
+            Delete all content inside current directory
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FtpClient.ChangeDir(System.String)">
+            <summary>
+            Change the current working directory on the remote FTP server.
+            </summary>
+            <param name="dirName">target dir on the ftp server. Shall be relative path to the current folder</param>
+            <exception cref="T:BAI.Exceptions.GeneralExceptions.FtpError">In case of any error during communication with ftp server this exception will be trown</exception>
+        </member>
+        <member name="T:BAI.Infras.FtpServices.FTPdirectory">
+            <summary>
+            Stores a list of files and directories from an FTP result
+            </summary>
+            <remarks></remarks>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FTPdirectory.#ctor(System.String,System.String)">
+            <summary>
+            Constructor: create list from a (detailed) directory string
+            </summary>
+            <param name="dir">directory listing string</param>
+            <param name="path"></param>
+            <remarks></remarks>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FTPdirectory.GetFiles(System.String)">
+            <summary>
+            Filter out only files from directory listing
+            </summary>
+            <param name="ext">optional file extension filter</param>
+            <returns>FTPdirectory listing</returns>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FTPdirectory.GetDirectories">
+            <summary>
+            Returns a list of only subdirectories
+            </summary>
+            <returns>FTPDirectory list</returns>
+            <remarks></remarks>
+        </member>
+        <member name="T:BAI.Infras.FtpServices.FTPfileInfo">
+            <summary>
+            Represents a file or directory entry from an FTP listing
+            </summary>
+            <remarks>
+            This class is used to parse the results from a detailed
+            directory list from FTP. It supports most formats of
+            </remarks>
+        </member>
+        <member name="T:BAI.Infras.FtpServices.FTPfileInfo.DirectoryEntryTypes">
+            <summary>
+            Identifies entry as either File or Directory
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.FtpServices.FTPfileInfo.#ctor(System.String,System.String)">
+            <summary>
+            Constructor taking a directory listing line and path
+            </summary>
+            <param name="line">The line returned from the detailed directory list</param>
+            <param name="path">Path of the directory</param>
+            <remarks></remarks>
+        </member>
+        <member name="F:BAI.Infras.FtpServices.FTPfileInfo._ParseFormats">
+            <summary>
+            List of REGEX formats for different FTP server listing formats
+            </summary>
+            <remarks>
+            The first three are various UNIX/LINUX formats, fourth is for MS FTP
+            in detailed mode and the last for MS FTP in 'DOS' mode.
+            </remarks>
+        </member>
+        <member name="P:BAI.Infras.StateChart.StateChart.CurrentTopState">
+            <summary>
+            The outer-most current state.
+            </summary>
+        </member>
+        <member name="P:BAI.Infras.StateChart.StateChart.CurrentState">
+            <summary>
+            The inner-most current state.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.StateChart.StateChart.IsAtState(BAI.Utils.General.EnumBase)">
+            <summary>
+            Determines if the given <paramref name="stEnum"/> is the current state
+            or the current substate.
+            </summary>
+            <remarks>
+            This method with check all the active nest states.
+            </remarks>
+            <param name="stEnum">The state to search for.</param>
+            <returns>true if the state was found, false otherwise</returns>
+        </member>
+        <member name="P:BAI.Infras.StateChart.State.IsReplayState">
+            <summary>
+            If true, on entry to this state the StateEvent will be triggered again.
+            </summary>
+            <remarks>
+            This feature is useful if you have a transition coming to a super state
+            and what to enter different sub states depending on the event.
+            The event is replyed in an atomic fasion, so that no other event
+            can be processed.
+            </remarks>
+        </member>
+        <member name="F:BAI.Infras.StateChart.StateEventStatus.Queued">
+            <summary>
+            The state chart has not finished processing this event.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.StateChart.StateEventStatus.Transitioned">
+            <summary>
+            The state chart trasnitioned to a new state because of the event.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.StateChart.StateEventStatus.Unsupported">
+            <summary>
+            There were no matching transtions for this event.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.StateChart.StateEvent.mState">
+            <summary>
+            Internal value that is set by the transition object.
+            </summary>
+        </member>
+        <member name="F:BAI.Infras.StateChart.StateEvent.mStatus">
+            <summary>
+            Value that is exposed publicly. Only changed after the CurrentState of StateChart has changed.
+            </summary>
+        </member>
+        <member name="M:BAI.Infras.StateChart.StateEvent.#ctor(BAI.Utils.General.EnumBase,System.Threading.EventWaitHandle,System.Object[])">
+            <summary>
+            The <paramref name="processWh"/> will only be set once the state machine has
+            transtioned to the new state or rejected the event.
+            </summary>
+            <param name="ev"></param>
+            <param name="processWh">An option EventWaitHandle that will be set when this StateEvent is processed by the state machine.</param>
+            <param name="para"></param>
+        </member>
+        <member name="P:BAI.Infras.StateChart.StateEvent.Status">
+            <summary>
+            Indicates whether this event has been processed and if so,
+            whether or not it caused a transition.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.General.BrooksStreamWriter.MarkCompleted">
+            <summary>
+            Makes the file a successfully written.
+            </summary>
+        </member>
+        <member name="T:BAI.Utils.General.ByteArrayExtensions">
+             <summary>
+             Replacements for string functions that operate on bytes instead chars.
+             </summary>
+             <remarks>
+             See this articles for more information about Netstrings: http://en.wikipedia.org/wiki/Netstring
+            
+             Basicly, they take the form of:
+                 [0-9]+ ':' .* ','
+             where the the byte count of ".*" is defined by the ascii number at the start.
+             </remarks>
+        </member>
+        <member name="M:BAI.Utils.General.ByteArrayExtensions.ParseNetstring(System.ArraySegment{System.Byte})">
+            <summary>
+            Parses one net string and returns the rest of the bytes.
+            </summary>
+            <remarks>
+            Based on parse_netstring in Mongrel2's request.py.
+            </remarks>
+            <param name="msg"></param>
+            <returns></returns>
+            <exception cref="T:BAI.Utils.General.NetStringFormatException">Thrown if the message is mallformed or the buffer does not have the complete message.</exception>
+        </member>
+        <member name="M:BAI.Utils.General.ByteArrayExtensions.TryParseNetstring(System.ArraySegment{System.Byte},BAI.Utils.General.ParsedNetString@)">
+            <summary>
+            Parses one net string and returns the rest of the bytes.
+            </summary>
+            <remarks>
+            Based on parse_netstring in Mongrel2's request.py.
+            </remarks>
+            <param name="msg"></param>
+            <param name="ret"></param>
+            <returns>true if the net string was succesfully parsed, false if there is not enough data to full parse</returns>
+            <exception cref="T:BAI.Utils.General.NetStringFormatException">Thrown if the message is mallformed.</exception>
+        </member>
+        <member name="M:BAI.Utils.General.ByteArrayExtensions.CreateNetString(System.Text.Encoding,System.String[])">
+            <summary>
+            Creates a net string that contains a one net string for
+            each element in strings.
+            </summary>
+            <param name="enc"></param>
+            <param name="strings"></param>
+            <returns></returns>
+        </member>
+        <member name="F:BAI.Utils.General.ParsedNetString.Content">
+            <summary>
+            The content of the net string.
+            </summary>
+        </member>
+        <member name="F:BAI.Utils.General.ParsedNetString.Rest">
+            <summary>
+            The remaining bytes after the end of the net string.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.General.BitOpsEx.GetBits(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Shifts and masks <paramref name="val"/> so that only the bits between
+            <paramref name="bottomBit"/> and <paramref name="topBit"/> (inclusive) are returned.
+            </summary>
+            <param name="val"></param>
+            <param name="bottomBit"></param>
+            <param name="topBit">the bit at this location becomes bit 0 in the returned value</param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Utils.General.EnumBase`1">
+            <summary>
+            An EnumBase with a strongly typed GetEnum function.
+            </summary>
+            <typeparam name="T">Subclasses should set this type to themselves.  Subclasses should also be sealed.</typeparam>
+        </member>
+        <member name="F:BAI.Utils.General.NetString.ByteCount">
+            <summary>
+            The size of the net string including the length string and delimiters.
+            </summary>
+            <remarks>
+            That is, the number of bytes that ToByteArray(byte[],int) will put
+            into the given array.
+            </remarks>
+        </member>
+        <member name="M:BAI.Utils.General.ParserUtil.Parse(System.String,System.String,System.Globalization.CultureInfo)">
+            <summary>
+            Parse a string to an object of most frequently used types.
+            All primatives, Decimal, IntWithUnit and NumberWithUnit
+            </summary>
+            <param name="parseType">Type to parse, case insensitive</param>
+            <param name="parseValue">Value to parse</param>
+            <param name="culture">Format provider for the number, such as CultureInfo.CurrentCulture, CultureInfo.InvariantCulture</param>
+            <returns>Parsed object of type specified</returns>
+        </member>
+        <member name="T:BAI.Utils.General.PlatformShim">
+            <summary>
+            Shims for functions that differ on the full framework and the compact framework.
+            </summary>
+        </member>
+        <member name="P:BAI.Utils.General.PlatformShim.NewLine">
+            <summary>
+            A replacement for Environment.NewLine.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.General.PlatformShim.DynamicInvoke(System.Delegate,System.Object[])">
+            <summary>
+            A replacement for Delegate.DynamicInvoke.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.General.PlatformShim.SplitRemoveEmpty(System.String,System.Char[])">
+            <summary>
+            A replacement for string.Split with StringSplitOptions.RemoveEmptyEntries.
+            </summary>
+            <param name="str"></param>
+            <param name="separator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.General.PlatformShim.WriteAllText(System.String,System.String)">
+            <summary>
+            Write the file and forces writeback to the disk.
+            </summary>
+        </member>
+        <member name="T:BAI.Utils.General.SuperSyncFileStream">
+            <summary>
+            Atomically writes a file.
+            </summary>
+            <remarks>
+            Before disposing this object, be sure to call <see cref="M:BAI.Utils.General.SuperSyncFileStream.MarkCompleted"/> to
+            indicate that all file content has been succesfully written.
+            </remarks>
+        </member>
+        <member name="M:BAI.Utils.General.SuperSyncFileStream.MarkCompleted">
+            <summary>
+            Indicates the entire file has been written.
+            Should be called before this object is disposed.
+            </summary>
+        </member>
+        <member name="T:BAI.Utils.General.SuperSyncStreamWriter">
+            <summary>
+            Atomically writes a file.
+            </summary>
+            <remarks>
+            Before disposing this object, be sure to call <see cref="M:BAI.Utils.General.SuperSyncStreamWriter.MarkCompleted"/> to
+            indicate that all file content has been succesfully written.
+            </remarks>
+        </member>
+        <member name="M:BAI.Utils.General.SuperSyncStreamWriter.MarkCompleted">
+            <summary>
+            Makes the file a successfully written.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.General.DateTimeUtil.DateTimeFromIsoString(System.String)">
+            <summary>
+            Parse date time from string in ISO 8601 format 
+            2008-12-31T23:59:59 or 2008-12-31T23:59:59.999
+            </summary>
+            <param name="datetimeIso"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.General.DateTimeUtil.DateTimeToIsoString(System.DateTime,System.Boolean)">
+            <summary>
+            Write datetime to ISO 8601 format 2008-12-31T23:59:59 or 2008-12-31T23:59:59.999
+            </summary>
+            <param name="datetime">an instane of DateTime</param>
+            <param name="includeMilliSec">whether to include the fraction of a second (ms)</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.General.DateTimeUtil.DateTimeToIsoStringStd(System.DateTime)">
+            <summary>
+            Write datetime to ISO 8601 standard format 2008-12-31T23:59:59
+            </summary>
+            <param name="datetime">an instane of DateTime</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.General.DateTimeUtil.DateTimeToIsoStringExt(System.DateTime)">
+            <summary>
+            Write datetime to ISO 8601 extended format 2008-12-31T23:59:59.999
+            </summary>
+            <param name="datetime">an instane of DateTime</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.General.NumberUtil.ParseHexNumber(System.String)">
+             <summary>
+            
+             </summary>
+             <param name="hexNumber">a hex number starting with '0x'</param>
+             <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Collections.MultiSet`1.#ctor(System.String,System.Int32)">
+            <summary>
+            Construct a multiset with a maximum count limit.
+            </summary>
+            <param name="name">A name for the multiset to use in exception messages.</param>
+            <param name="maxCount">Max count for a single item, or -1 for no limit.</param>
+        </member>
+        <member name="T:BAI.Utils.Collections.Range">
+            <summary>
+            Collection to represent a range: lower and upper limits with a unit
+            </summary>
+        </member>
+        <member name="F:BAI.Utils.Collections.Range.lower">
+            <summary>
+            The lower bound of the Range.
+            </summary>
+        </member>
+        <member name="F:BAI.Utils.Collections.Range.upper">
+            <summary>
+            The upper bound of the range.
+            </summary>
+        </member>
+        <member name="F:BAI.Utils.Collections.Range.unit">
+            <summary>
+            The unit of <see cref="F:BAI.Utils.Collections.Range.lower"/> and <see cref="F:BAI.Utils.Collections.Range.upper"/>.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.Collections.Range.ToString">
+            <summary>
+            Serialize object to string with CultureInfo.CurrentCulture
+            </summary>
+            <returns>String representation of object under current culture</returns>
+        </member>
+        <member name="P:BAI.Utils.Collections.AutoSetQ`1.IsAlive">
+            <summary>
+            Returns false if the Q is disposed.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.Collections.AutoSetQ`1.Enqueue(`0)">
+            <exception cref="T:System.ObjectDisposedException"></exception>
+        </member>
+        <member name="M:BAI.Utils.Collections.AutoSetQ`1.Enqueue(`0[])">
+            <exception cref="T:System.ObjectDisposedException"></exception>
+        </member>
+        <member name="M:BAI.Utils.Collections.AutoSetQ`1.WaitForNextItem">
+            <exception cref="T:System.ObjectDisposedException"></exception>
+            <exception cref="T:BAI.Exceptions.ExecutionExceptions.AutoSetQTimeOutException"></exception>
+        </member>
+        <member name="M:BAI.Utils.Collections.AutoSetQ`1.WaitForNextItem(System.Int32)">
+            <exception cref="T:System.ObjectDisposedException"></exception>
+            <exception cref="T:BAI.Exceptions.ExecutionExceptions.AutoSetQTimeOutException"></exception>
+        </member>
+        <member name="T:BAI.Utils.Collections.ThreadSafeDictionary`2">
+            <summary>
+            DO NOT USE THIS CLASS. See remarks.
+            </summary>
+            <remarks>
+            <para>
+                While this class does help you avoid conncurent access problems,
+                it does not prevent race conditions. Consider:
+                <code>
+                    ThreadSafeDictionary d;
+                    if (!d.ContainsKey("test"))
+                        d.Add("test", new object());
+                </code>
+                It is possible for Add to throw a ArgumentException for a duplicate key if another thread inserted
+                an object after our thread checked for an object.
+            </para>
+            <para>
+                Instead of using this class, just use a regular dictionary and lock when accessing it.
+                Alternatively, if you populate the dictionary on one thread and then never modify it again,
+                it is safe to use no locking to access the dictionary.
+            </para>
+            </remarks>
+            <typeparam name="TKey"></typeparam>
+            <typeparam name="TValue"></typeparam>
+        </member>
+        <member name="M:BAI.Utils.Collections.ThreadSafeDictionary`2.Set(System.Collections.Generic.Dictionary{`0,`1})">
+            <summary>
+            Makes a copy of the <paramref name="dictionary"/> and replaces this instance's content with it.
+            </summary>
+            <param name="dictionary">The dictionary to copy.</param>
+        </member>
+        <member name="M:BAI.Utils.Collections.ObjectIdUtils.FindObjects(System.Collections.Generic.ICollection{BAI.General.ObjectId},System.String,System.String,System.String)">
+            <summary>
+            Find objects in a collection that matches a keyword and satisfies optional additional criteria
+            </summary>
+            <param name="collection">Collection of object identifiers to search from</param>
+            <param name="keyword">keyword for the search</param>
+            <param name="primaryCriterion">primary additional criterion for narrowing down the search. Can be null.</param>
+            <param name="secondaryCriterion">secondary additional criterion for narrowing down the seatch. Can be null.</param>
+            <returns>Objects in the collection that contains the keyword and satisfies the search criteria</returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.BytesToUshort(System.Byte,System.Byte,System.UInt16@)">
+            <summary>
+            Pack two bytes to an unsigned short in Little Endian byte order
+            </summary>
+            <param name="lsb"></param>
+            <param name="msb"></param>
+            <param name="packed"></param>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.ByteArrayToUshortReverseEndian(System.Byte[],System.UInt32)">
+            <summary>
+            Pack bytes to an unsigned short 1st swapping Endian byte order
+            </summary>
+            <param name="data"></param>
+            <param name="startIndex"></param>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.ByteArrayToShortReverseEndian(System.Byte[],System.UInt32)">
+            <summary>
+            Pack bytes to an short 1st swapping Endian byte order
+            </summary>
+            <param name="data"></param>
+            <param name="startIndex"></param>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.UshortToBytes(System.UInt16,System.Byte@,System.Byte@)">
+            <summary>
+            Unpack an unsigned short to two bytes in Little Endian byte order
+            </summary>
+            <param name="packed"></param>
+            <param name="lsb"></param>
+            <param name="msb"></param>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.BytesToUint(System.Byte,System.Byte,System.Byte,System.Byte,System.UInt32@)">
+            <summary>
+            Pack four bytes to an unsigned int in Little Endian byte order
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.ByteArrayToUintReverseEndian(System.Byte[],System.UInt32)">
+            <summary>
+            Pack bytes to an unsigned int 1st swapping Endian byte order
+            </summary>
+            <param name="data"></param>
+            <param name="startIndex"></param>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.ByteArrayToIntReverseEndian(System.Byte[],System.UInt32)">
+            <summary>
+            Pack bytes to an int 1st swapping Endian byte order
+            </summary>
+            <param name="data"></param>
+            <param name="startIndex"></param>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PrimativeConvert.UintToBytes(System.UInt32,System.Byte@,System.Byte@,System.Byte@,System.Byte@)">
+            <summary>
+            Unpack an unsigned int to 4 bytes in Little Endian byte order
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.Conversions.ArrayConvert.UshortArrayToByteArray(System.UInt16[])">
+            <summary>
+            Pack a ushort array to a byte array with the same memory layout (Little Endian)
+            </summary>
+            <param name="wordArr"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.ArrayConvert.ByteArrayToUshortArray(System.Byte[])">
+            <summary>
+            Pack a byte array to a ushort array with the same memory layout (Little Endian)
+            </summary>
+            <param name="byteArr"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:BAI.Utils.Conversions.ArrayConvert.ConcatArray(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Creates a new array containing the partial contents of the two given arrays.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.Conversions.ArrayConvert.ConcatArray(System.Byte[],System.Byte[])">
+            <summary>
+            Creates a new array containing the contents of the two given arrays, concatenated together.
+            </summary>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PressureConversions.ConvertPressure(BAI.General.IntWithUnit,System.String)">
+            <summary>
+            Convert pressure to desired unit - may lose precision when converting to bigger units
+            </summary>
+            <param name="pressure"></param>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PressureConversions.ConvertPressure(BAI.General.NumberWithUnit,System.String)">
+            <summary>
+            conver input pressure to specified units
+            </summary>
+            <param name="pressure"></param>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.PressureConversions.NormalizePressure(BAI.General.NumberWithUnit)">
+            <summary>
+            Normalize input pressure to use "torr" as the unit
+            </summary>
+            <param name="pressure"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.TimeConversions.ConvertTime(BAI.General.IntWithUnit,System.String)">
+            <summary>
+            conver input time to specified units - may lose precision if converting to bigger units
+            </summary>
+            <param name="time"></param>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.TimeConversions.ConvertTime(BAI.General.NumberWithUnit,System.String)">
+            <summary>
+            conver input time to specified units
+            </summary>
+            <param name="time"></param>
+            <param name="unit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Conversions.TimeConversions.NormalizeTime(BAI.General.NumberWithUnit)">
+            <summary>
+            Normalize input time to use "second" as the unit
+            </summary>
+            <param name="time"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Utils.Net.Helper.ParseMessage(System.Byte[])">
+            <summary>
+            Parse a message off the wire.
+            </summary>
+            <param name="input"></param>
+            <returns>The message command and JSON payload</returns>
+        </member>
+        <member name="M:BAI.Utils.Net.EcDiscoveryClient.QueryEc(System.Net.IPAddress)">
+            <summary>
+            Queries if the EC is running on a specific device.
+            </summary>
+            <param name="address"></param>
+            <returns>null if the EC does not respond within one second</returns>
+        </member>
+        <member name="M:BAI.Utils.Net.FtpClient.Upload(System.String,System.String)">
+            <summary>
+            Method to upload the specified file to the specified FTP Server
+            </summary>
+            <param name="localFilePathName">file full name to be uploaded</param>
+            <param name="remoteFilePathName"></param>
+            <remarks>
+            example remoteFilePathName: "EC/ConfigVT.IO.Config.xml"
+            localFilePathName: "C:\\temp\\test.xml"
+            </remarks>
+        </member>
+        <member name="M:BAI.Utils.Net.FtpClient.Download(System.String,System.String)">
+            example remoteFilePathName: "EC/ConfigVT.IO.Config.xml"
+            localFilePathName: "C:\\temp\\test.xml"
+        </member>
+        <member name="P:BAI.Utils.SignalProc.MovingAve.IsFull">
+            <summary>
+            Indicates whether windowSize samples have been collected.
+            </summary>
+        </member>
+        <member name="T:BAI.Utils.Threading.MutexHolder">
+            <summary>
+            Designed to be used within a using block.  This makes sure you aquire the mutex
+            at the start and release it at the end, even if you throw an exception.
+            </summary>
+        </member>
+        <member name="T:BAI.Utils.Threading.SimpleMessageHandler`1">
+            <summary>
+            Processes data on a dedicated thread.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:BAI.Utils.Threading.ThreadStarter.StartThread(System.String,System.Threading.ThreadStart)">
+            <summary>
+            Starts a background thread.
+            </summary>
+            <param name="name">Indicates the name of the thread.</param>
+            <param name="action">Is the method that will be called by the thread.</param>
+        </member>
+        <member name="M:BAI.Utils.Threading.ThreadStarter.StartThread(System.String,System.Threading.ThreadStart,System.Boolean)">
+            <summary>
+            Starts a thread.
+            </summary>
+            <param name="name">Indicates the name of the thread.</param>
+            <param name="action">Is the method that will be called by the thread.</param>
+            <param name="isBackgroundThread">Indicates whether the thread will be a background or a foreground thread.</param>
+        </member>
+        <member name="T:BAI.Utils.Threading.ThreadExecWrapper">
+            <summary>
+            ThreadExecWrapper - class to wrap Thread
+            </summary>
+        </member>
+        <member name="T:BAI.Internal.LongTermAttribute">
+            <summary>
+            Indicates that the method blocks for a while and should be implemented
+            as a long term message in message handlers.
+            </summary>
+        </member>
+        <member name="T:BAI.Internal.DeviceNameAttribute">
+            <summary>
+            Indicates that the string contains a device name and should be replaced on the client
+            side with the proper name.
+            </summary>
+        </member>
+    </members>
+</doc>

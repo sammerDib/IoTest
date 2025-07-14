@@ -1,0 +1,582 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Jobs.JobsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controlJobs="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Jobs.ControlJobs"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTree.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:controls1="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors;assembly=UnitySC.GUI.Common"
+    xmlns:e40="clr-namespace:Agileo.Semi.Gem300.Abstractions.E40;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:e94="clr-namespace:Agileo.Semi.Gem300.Abstractions.E94;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:gem="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem"
+    xmlns:jobs="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Jobs"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:processJobs="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Jobs.ProcessJobs"
+    d:DataContext="{d:DesignInstance jobs:JobsPanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <controls1:Card>
+
+        <DockPanel>
+
+            <Expander
+                DockPanel.Dock="Right"
+                Header="{localize:Static gem:GemGeneralRessources.GEM_DETAIL}"
+                IsExpanded="{Binding IsExpanderOpened, Mode=TwoWay}">
+                <ContentPresenter VerticalAlignment="Stretch" Content="{Binding SelectedValue}">
+                    <ContentPresenter.ContentTemplateSelector>
+                        <dataTemplateSelectors:GenericDataTemplateSelector>
+                            <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                <controlJobs:ControlJobDetailsView DataContext="{Binding}" />
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                <processJobs:ProcessJobDetailsView DataContext="{Binding}" />
+                            </DataTemplate>
+                        </dataTemplateSelectors:GenericDataTemplateSelector>
+                    </ContentPresenter.ContentTemplateSelector>
+                </ContentPresenter>
+                <Expander.Style>
+                    <Style BasedOn="{StaticResource LeftExpanderStyle}" TargetType="{x:Type Expander}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PjCjTreeSource.DisplayedTreeElements.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedValue.IsInCreation}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SelectedValue}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Expander.Style>
+            </Expander>
+
+            <controls:DataTree
+                DataSource="{Binding PjCjTreeSource}"
+                IsEnabled="{Binding SelectedValue.IsInGlobalEdition, Converter={StaticResource InvertedBoolConverter}}"
+                SelectedValue="{Binding SelectedValue}">
+                <controls:DataTree.GridView>
+                    <GridView>
+
+                        <dataTables:DataTableColumn Width="200" DisplayName="{localize:Static gem:GemGeneralRessources.GEM_ID}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <DockPanel LastChildFill="True">
+                                            <controls:DataTreeExpander />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding ObjId}" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <DockPanel LastChildFill="True">
+                                            <controls:DataTreeExpander />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding ProcessJob.ObjID}" />
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                        <dataTables:DataTableColumn Width="160" DisplayName="{localize:Static gem:GemGeneralRessources.GEM_STATE}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <controls1:Icon
+                                                x:Name="IconState"
+                                                Margin="0,0,5,0"
+                                                Data="{StaticResource TimePickerIcon}" />
+                                            <TextBlock
+                                                x:Name="TextBlockState"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Tag="{Binding State}"
+                                                Text="{Binding State, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                        </StackPanel>
+                                        <DataTemplate.Triggers>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e94:State.QUEUED}">
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e94:State.SELECTED}">
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e94:State.WAITINGFORSTART}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="IconState" Property="Data" Value="{StaticResource WaitTimeIcon}" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e94:State.EXECUTING}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="IconState" Property="Data" Value="{StaticResource ActivesIcon}" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e94:State.PAUSED}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e94:State.COMPLETED}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <controls1:Icon
+                                                x:Name="IconState"
+                                                Margin="0,0,5,0"
+                                                Data="{StaticResource TimePickerIcon}" />
+                                            <TextBlock
+                                                x:Name="TextBlockState"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Tag="{Binding ProcessJob.JobState}"
+                                                Text="{Binding ProcessJob.JobState, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                        </StackPanel>
+                                        <DataTemplate.Triggers>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.PROCESSING}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="IconState" Property="Data" Value="{StaticResource ActivesIcon}" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.WAITINGFORSTART}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Visible" />
+                                                <Setter TargetName="IconState" Property="Data" Value="{StaticResource WaitTimeIcon}" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.SETTINGUP}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.ABORTED}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.ABORTING}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.STOPPED}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.STOPPING}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.PROCESSCOMPLETE}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.PAUSED}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.PAUSING}">
+                                                <Setter TargetName="TextBlockState" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger SourceName="TextBlockState" Property="Tag" Value="{x:Static e40:JobState.QUEUED_POOLED}">
+                                                <Setter TargetName="IconState" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                        <dataTables:DataTableColumn Width="160" DisplayName="{localize:Static controlJobs:ControlJobResources.CJ_START_METHOD}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Body2TextStyle}"
+                                            Text="{Binding StartMethod, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Body2TextStyle}"
+                                            Text="{Binding ProcessJob.ProcessStart, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                        <dataTables:DataTableColumn Width="160" DisplayName="{localize:Static controlJobs:ControlJobResources.CJ_ORDER}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Text="{Binding ControlOrder, Converter={StaticResource TextToHumanizedTextConverter}}"
+                                            TextAlignment="Left" />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <TextBlock Style="{StaticResource Body2TextStyle}" Text="" />
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                        <dataTables:DataTableColumn Width="160" DisplayName="{localize:Static processJobs:ProcessJobsResources.PJ_RECIPE_ID}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Body2TextStyle}"
+                                            Text="" />
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Body2TextStyle}"
+                                            Text="{Binding ProcessJob.RecipeID}" />
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                        <dataTables:DataTableColumn Width="200" DisplayName="{localize:Static gem:GemGeneralRessources.GEM_CARRIER}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <Control x:Name="ContentPresenterCarrier">
+                                            <Control.Template>
+                                                <ControlTemplate>
+                                                    <Expander ExpandDirection="Down" IsExpanded="{Binding IsCarrierListOpened}">
+                                                        <Expander.Header>
+                                                            <StackPanel Margin="-24,0,-20,0" Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,0,5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding InputSpecCarriers.Count, Mode=OneWay}" />
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{localize:Static gem:GemGeneralRessources.GEM_CARRIERS}" />
+                                                            </StackPanel>
+
+                                                        </Expander.Header>
+                                                        <ItemsControl AlternationCount="2" ItemsSource="{Binding InputSpecCarriers}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <DockPanel>
+                                                                        <Button
+                                                                            Margin="5,0,0,0"
+                                                                            markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                                                                            Background="Transparent"
+                                                                            Command="{Binding DataContext.GoToCarrierFromIdCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
+                                                                            CommandParameter="{Binding}"
+                                                                            DockPanel.Dock="Right"
+                                                                            Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                                                        <TextBlock
+                                                                            VerticalAlignment="Center"
+                                                                            Style="{StaticResource Body2TextStyle}"
+                                                                            Text="{Binding}" />
+                                                                    </DockPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Control.Template>
+                                        </Control>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding InputSpecCarriers.Count}" Value="1">
+                                                <Setter TargetName="ContentPresenterCarrier" Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <DockPanel>
+                                                                <Button
+                                                                    Margin="5,0,0,0"
+                                                                    markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                                                                    Background="Transparent"
+                                                                    Command="{Binding DataContext.GoToCarrierFromIdCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
+                                                                    CommandParameter="{Binding InputSpecCarriers[0]}"
+                                                                    DockPanel.Dock="Right"
+                                                                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding InputSpecCarriers[0]}" />
+                                                            </DockPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                            <DataTrigger />
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <Control x:Name="ContentPresenterCarrier">
+                                            <Control.Template>
+                                                <ControlTemplate>
+                                                    <Expander ExpandDirection="Down" IsExpanded="{Binding IsCarrierListOpened}">
+                                                        <Expander.Header>
+                                                            <StackPanel Margin="-24,0,-20,0" Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,0,5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding CarriersDetails.Count, Mode=OneWay}" />
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{localize:Static gem:GemGeneralRessources.GEM_CARRIERS}" />
+                                                            </StackPanel>
+
+                                                        </Expander.Header>
+                                                        <ItemsControl AlternationCount="2" ItemsSource="{Binding CarriersDetails}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <DockPanel>
+                                                                        <Button
+                                                                            Margin="5,0,0,0"
+                                                                            markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                                                                            Background="Transparent"
+                                                                            Command="{Binding DataContext.GoToCarrierCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
+                                                                            CommandParameter="{Binding}"
+                                                                            DockPanel.Dock="Right"
+                                                                            Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                                                        <TextBlock
+                                                                            VerticalAlignment="Center"
+                                                                            Style="{StaticResource Body2TextStyle}"
+                                                                            Text="{Binding MaterialNameListElement.CarrierID}" />
+                                                                    </DockPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Control.Template>
+                                        </Control>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding CarriersDetails.Count}" Value="1">
+                                                <Setter TargetName="ContentPresenterCarrier" Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <DockPanel>
+                                                                <Button
+                                                                    Margin="5,0,0,0"
+                                                                    markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                                                                    Background="Transparent"
+                                                                    Command="{Binding DataContext.GoToCarrierCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
+                                                                    CommandParameter="{Binding CarriersDetails[0]}"
+                                                                    DockPanel.Dock="Right"
+                                                                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding CarriersDetails[0].MaterialNameListElement.CarrierID}" />
+                                                            </DockPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                            <DataTrigger />
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                        <dataTables:DataTableColumn Width="160" DisplayName="{localize:Static gem:GemGeneralRessources.GEM_ERROR}">
+                            <GridViewColumn.CellTemplateSelector>
+                                <dataTemplateSelectors:GenericDataTemplateSelector>
+                                    <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                                        <Control x:Name="ContentPresenterError">
+                                            <Control.Template>
+                                                <ControlTemplate>
+                                                    <Expander ExpandDirection="Down" IsExpanded="{Binding IsErrorListOpened}">
+                                                        <Expander.Header>
+                                                            <StackPanel
+                                                                Margin="-24,0,-20,0"
+                                                                VerticalAlignment="Center"
+                                                                Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,0,5,0"
+                                                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding Errors.Count, Mode=OneWay}" />
+                                                                <TextBlock
+                                                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{localize:Static gem:GemGeneralRessources.GEM_ERROR}" />
+                                                            </StackPanel>
+
+                                                        </Expander.Header>
+                                                        <ItemsControl AlternationCount="2" ItemsSource="{Binding Errors}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock
+                                                                        VerticalAlignment="Center"
+                                                                        Style="{StaticResource Body2TextStyle}"
+                                                                        Text="{Binding Id}" />
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Control.Template>
+                                        </Control>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Errors.Count}" Value="1">
+                                                <Setter TargetName="ContentPresenterError" Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <DockPanel VerticalAlignment="Center">
+                                                                <TextBlock
+                                                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding Errors[0].Id}" />
+                                                            </DockPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Errors.Count}" Value="0">
+                                                <Setter TargetName="ContentPresenterError" Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,0,5,0"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding Errors.Count, Mode=OneWay}" />
+                                                                <TextBlock Style="{StaticResource Body2TextStyle}" Text="{localize:Static gem:GemGeneralRessources.GEM_ERROR}" />
+                                                            </StackPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type processJobs:ProcessJobDetailsViewModel}">
+                                        <Control x:Name="ContentPresenterError">
+                                            <Control.Template>
+                                                <ControlTemplate>
+                                                    <Expander ExpandDirection="Down" IsExpanded="{Binding IsErrorListOpened}">
+                                                        <Expander.Header>
+                                                            <StackPanel
+                                                                Margin="-24,0,-20,0"
+                                                                VerticalAlignment="Center"
+                                                                Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,0,5,0"
+                                                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding Errors.Count, Mode=OneWay}" />
+                                                                <TextBlock
+                                                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{localize:Static gem:GemGeneralRessources.GEM_ERROR}" />
+                                                            </StackPanel>
+
+                                                        </Expander.Header>
+                                                        <ItemsControl AlternationCount="2" ItemsSource="{Binding Errors}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock
+                                                                        VerticalAlignment="Center"
+                                                                        Style="{StaticResource Body2TextStyle}"
+                                                                        Text="{Binding Description}" />
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Control.Template>
+                                        </Control>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Errors.Count}" Value="1">
+                                                <Setter TargetName="ContentPresenterError" Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <DockPanel VerticalAlignment="Center">
+                                                                <TextBlock
+                                                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding Errors[0].Description}" />
+                                                            </DockPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Errors.Count}" Value="0">
+                                                <Setter TargetName="ContentPresenterError" Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,0,5,0"
+                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                    Text="{Binding Errors.Count, Mode=OneWay}" />
+                                                                <TextBlock Style="{StaticResource Body2TextStyle}" Text="{localize:Static gem:GemGeneralRessources.GEM_ERROR}" />
+                                                            </StackPanel>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+
+                                    </DataTemplate>
+                                </dataTemplateSelectors:GenericDataTemplateSelector>
+                            </GridViewColumn.CellTemplateSelector>
+                        </dataTables:DataTableColumn>
+
+                    </GridView>
+                </controls:DataTree.GridView>
+                <controls:DataTree.BottomAdditionalContent>
+                    <StackPanel Margin="10" Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,10,0"
+                            markupExtensions:Icon.Geometry="{DynamicResource AddIcon}"
+                            Command="{Binding AddCommand}"
+                            Style="{StaticResource SquareIconifiedButtonStyle}"
+                            ToolTip="{localize:Static gem:GemGeneralRessources.GEM_ADD}" />
+                        <Button
+                            Margin="0,0,10,0"
+                            markupExtensions:Icon.Geometry="{DynamicResource EditIcon}"
+                            Command="{Binding EditCjCommand}"
+                            Style="{StaticResource SquareIconifiedButtonStyle}"
+                            ToolTip="{localize:Static gem:GemGeneralRessources.GEM_EDIT}" />
+                        <Button
+                            Margin="0,0,10,0"
+                            markupExtensions:Icon.Geometry="{DynamicResource DuplicateIcon}"
+                            Command="{Binding DuplicatePjCommand}"
+                            IsEnabled="{Binding DuplicatePjCommand.IsEnabled}"
+                            Style="{StaticResource SquareIconifiedButtonStyle}"
+                            ToolTip="{localize:Static gem:GemGeneralRessources.GEM_DUPLICATE}" />
+                        <Button
+                            Margin="0,0,10,0"
+                            markupExtensions:Icon.Geometry="{DynamicResource DeleteIcon}"
+                            Command="{Binding DeleteCommand}"
+                            Style="{StaticResource SquareIconifiedButtonStyle}"
+                            ToolTip="{localize:Static gem:GemGeneralRessources.GEM_DELETE}" />
+                    </StackPanel>
+                </controls:DataTree.BottomAdditionalContent>
+            </controls:DataTree>
+
+        </DockPanel>
+
+    </controls1:Card>
+</UserControl>

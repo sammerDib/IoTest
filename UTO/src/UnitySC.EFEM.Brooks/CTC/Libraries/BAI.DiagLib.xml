@@ -1,0 +1,716 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BAI.DiagLib</name>
+    </assembly>
+    <members>
+        <member name="M:BAI.Diag.AcousticSensor.IAcousticSensor.RecordAudio(System.Single)">
+            <summary>
+            Start recording audio immediately
+            </summary>
+            <param name="seconds">Length of audio recording</param>
+        </member>
+        <member name="M:BAI.Diag.AcousticSensor.IAcousticSensor.SetAudioRecordingThreshold(System.Int16,System.Single)">
+            <summary>
+            Set threshold at which to start recording audio
+            </summary>
+            <param name="audioLevel">level at which to start recording audio</param>
+            <param name="seconds">length of audio recording</param>
+        </member>
+        <member name="E:BAI.Diag.AcousticSensor.IAcousticSensor.AudioRcvd">
+            <summary>
+            This event will be raised when audio data received
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.Provider.HwComp.Motion.IAxisTraceConnection">
+            <summary>
+            Represents a connection to a remote <see cref="T:BAI.Diag.Provider.HwComp.Motion.IAxisTrace"/>.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.Provider.HwComp.Motion.AxisTraceFactory">
+            <summary>
+            Factory for <see cref="T:BAI.Diag.Provider.HwComp.Motion.IAxisTrace"/>
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.Provider.HwComp.Motion.AxisTraceFactory.Create(System.String,System.String)">
+            <summary>
+            Connects to a remote <see cref="T:BAI.Diag.Provider.HwComp.Motion.IAxisTrace"/>.
+            </summary>
+            <param name="componentName"></param>
+            <param name="clientName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Diag.Provider.HwComp.Motion.IAxisTrace">
+            <summary>
+            A motion axis.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.Provider.HwComp.Motion.IAxisTrace.AmplifierTemperature">
+            <summary>
+            The current temperature of the drive.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.Provider.HwComp.Motion.IAxisTrace.SerialNumber">
+            <summary>
+            The serial number of the axis.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.Provider.IDiagnosableComponent">
+            <summary>
+            A component that has diagnosable members.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.Provider.TimeSeriesAttribute">
+            <summary>
+            Includes the attributed property in a time series.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.Provider.TimeSeriesAttribute.PollIntervalMs">
+            <summary>
+            How often time series a polled.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.Provider.TimeSeriesAttribute.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:BAI.Diag.Provider.TimeSeriesAttribute"/>.
+            </summary>
+            <param name="unit">the unit of the dataum in the time series</param>
+        </member>
+        <member name="P:BAI.Diag.Provider.TimeSeriesAttribute.Unit">
+            <summary>
+            The unit of the dataum in the time series.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.SmartFru.Interface.ISmartFruSource.InstanceName">
+            <summary>
+            Smart FRU HW Device 
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SmartFru.Interface.TimeSeriesDataFilterBase.op_Inequality(BAI.Diag.SmartFru.Interface.TimeSeriesDataFilterBase,BAI.Diag.SmartFru.Interface.TimeSeriesDataFilterBase)">
+            <summary>
+            this is second one '!='
+            </summary>
+            <param name="obj1"></param>
+            <param name="obj2"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Diag.SmartFru.Interface.MessageSubscription">
+            <summary>
+            Represents a subscription to Smart Fru Service Log messages including
+            Warnings, Alarms, Start Operation, End Operation smart fru log messages.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.SmartFru.Interface.MessageSubscription.SubscriberName">
+            <summary>
+            Name provided by client subscriber.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.SmartFru.Interface.MessageSubscription.SourceInstance">
+            <summary>
+            The Smart Fru Instance
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SmartFru.Interface.MessageSubscription.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Creates a new Message Subscription object.
+            </summary>
+            <param name="subscriberName"></param>
+            <param name="sourceInstance"></param>
+            <param name="port"></param>
+        </member>
+        <member name="P:BAI.Diag.SmartFru.Interface.MessageSubscription.Key">
+            <summary>
+            Unique identifier for Message Subscription created from Subscriber Name and Source Instance.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.SmartFru.Interface.TimeSeriesSpecification.TriggerParameters">
+             <summary>
+             e.g., "MoveToReadyGet" for CollectonOperation
+             e.g., 5000 for the threshold using trigger CollectWhenThesholdExceeded
+                     Dictionary string, object> d = new Dictionary string, object>()
+            {
+                {"OperationName", "MoveToReadyGet" },
+                {"Threshold", "ThresholdName" },
+                {"Sensor", "MyOtherSensor"},
+                {"AlsoCollectThis", "XPosition" },
+                {"MoveAbsoluteReport", "MoveAbsoluteReport" },
+            };
+             </summary>
+        </member>
+        <member name="M:BAI.Diag.SmartFru.SmartFruDataManager.Create(System.String,System.String)">
+            <summary>
+            Connects to a remote <see cref="T:BAI.Diag.TimeSeries.Interface.ISmartFruDataManager"/>.
+            </summary>
+            <param name="moduleName">The name of the module to connect to.</param>
+            <param name="clientName">The client name, typically "CTC".</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruMessages.QueryAvailableMessages">
+            <summary>
+            Query, retrieve old data already in files.  In SmartFruService.log 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruStartupInfo.GetStartupErrors">
+            <summary>
+            Returns an array of any startup errors that occurced.
+            If the tool started up successfully, the array will be empty.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.Interface.StartupError.ComponentName">
+            <summary>
+            Which component failed to be created. For example, "EFEM.WaferEngine".
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.Interface.StartupError.ActionName">
+            <summary>
+            The name of the step during creation of the component that failed.
+            </summary>
+            <remarks>
+            Examples for the wafer engine include "TrajectoryManager" and "Create End Effecters".
+            </remarks>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.Interface.StartupError.FailureMessage">
+            <summary>
+            The error message for the failure.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.Interface.StartupError.SmartFruErrorId">
+            <summary>
+            The Smart FRU message id if available.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruTimeSeriesData.QuerySourceInstances">
+            <summary>
+            Queries the configured components on the system
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruTimeSeriesData.UnsubscribeDataAllExisting">
+            <summary>
+            Unsubscribe from all existing subscriptions.
+            Including other clients and subscribers.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruTimeSeriesData.QueryAvailableData">
+            <summary>
+            Query, retrieve old data already stored somewhere.   In data store, ask Ming. 
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruSystemInformation.GetControllerLocalTime">
+            <summary>
+            Gets the local time on the controller.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.Interface.ISmartFruSystemInformation.GetLoadPortCapacity">
+            <summary>
+            Gets how many potential load ports the module can handle
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="E:BAI.Diag.TimeSeries.Interface.ISmartFruSystemInformation.DateTimeChanged">
+            <summary>
+            Event to let Smart Fru know when a client has synched up the EC clock
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.ComponentDescriptor">
+            <summary>
+            Describes the probes availabe on a component
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ComponentDescriptor.#ctor(System.String,System.Collections.Generic.List{BAI.Diag.TimeSeries.TimeSeriesDescriptor})">
+            <summary>
+            Creates a new instance of <see cref="T:BAI.Diag.TimeSeries.ComponentDescriptor"/>.
+            </summary>
+            <param name="componentName"></param>
+            <param name="timeSeries"></param>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.ComponentDescriptor.ComponentName">
+            <summary>
+            The name of the component.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.ComponentDescriptor.TimeSeries">
+            <summary>
+            The probes available on that component.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.ITimeSeriesManager">
+            <summary>
+            Continiously records time series in the backgroup.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ITimeSeriesManager.GetAvailableTimeSeries">
+            <summary>
+            Gets all time series in being recorded in the system.
+            </summary>
+            <returns>a map from component names to the probes available</returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ITimeSeriesManager.GetHistoricalData(System.String,System.String,System.DateTime,System.DateTime)">
+            <summary>
+            Reads all saved data for a time series.
+            </summary>
+            <param name="componentName"></param>
+            <param name="timeSeriesName"></param>
+            <param name="start">If not null, indicates the a lower bound for the sample time.</param>
+            <param name="end">If not null, indcates the upper bound for the sample time.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ITimeSeriesManager.GetLastSampledValue(System.String,System.String)">
+            <summary>
+            Reads the last sampled value of a time series.
+            </summary>
+            <param name="componentName"></param>
+            <param name="timeSeriesName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ITimeSeriesManager.GetPollingIntervalMs">
+            <summary>
+            Reads the value of the polling interval in ms.
+            </summary>
+            <param></param>
+            <returns>The value of the polling interval in ms</returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ITimeSeriesManager.SetPollingIntervalMs(System.Int32)">
+            <summary>
+            Sets the polling interval in a range of 5-60s
+            </summary>
+            <param name="pollInterval"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.ITimeSeriesManager.SetDateTime(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.DateTimeKind)">
+            <summary>
+            Sets the date and time for the EC
+            </summary>
+            <param name="year"></param>
+            <param name="month"></param>
+            <param name="day"></param>
+            <param name="hours"></param>
+            <param name="minutes"></param>
+            <param name="seconds"></param>
+            <param name="miliseconds"></param>
+            <param name="kind"></param>
+            <returns></returns>
+        </member>
+        <member name="E:BAI.Diag.TimeSeries.ITimeSeriesManager.DataSampled">
+            <summary>
+            Raised periodically when time series are sampled.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.TimeSeriesManager">
+            <summary>
+            Factory for <see cref="T:BAI.Diag.TimeSeries.ITimeSeriesManager"/>
+            </summary>
+        </member>
+        <member name="F:BAI.Diag.TimeSeries.TimeSeriesManager.InstanceName">
+            <summary>
+            Name of the instance in the component service.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.TimeSeriesManager.Create(System.String,System.String)">
+            <summary>
+            Connects to a remote <see cref="T:BAI.Diag.TimeSeries.ITimeSeriesManager"/>.
+            </summary>
+            <param name="moduleName">The name of the module to connect to.</param>
+            <param name="clientName">The client name, typically "CTC".</param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.SampledEventArgs">
+            <summary>
+            Represents the live sampling of a time series.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.SampledEventArgs.#ctor(System.String,System.String,BAI.General.NumberWithUnit,System.DateTime)">
+            <summary>
+            Creates a new reference of <see cref="T:BAI.Diag.TimeSeries.SampledEventArgs"/>
+            </summary>
+            <param name="componentName"></param>
+            <param name="timeSeriesName"></param>
+            <param name="value"></param>
+            <param name="timestamp"></param>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.SampledEventArgs.ComponentName">
+            <summary>
+            The name of the component sampled.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.SampledEventArgs.TimeSeriesName">
+            <summary>
+            The name of the time series sampled.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.SampledEventArgs.Value">
+            <summary>
+            The sampled value.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.SampledEventArgs.Timestamp">
+            <summary>
+            The timestamp of the sampled value.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.TimeSeriesDescriptor">
+            <summary>
+            Describes one time series.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.TimeSeriesDescriptor.#ctor(System.String,System.Int32,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:BAI.Diag.TimeSeries.TimeSeriesDescriptor"/>.
+            </summary>
+            <param name="name"></param>
+            <param name="pollIntervalMs"></param>
+            <param name="unit"></param>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.TimeSeriesDescriptor.Name">
+            <summary>
+            The name of the time series.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.TimeSeriesDescriptor.PollIntervalMs">
+            <summary>
+            How often the value is sampled.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.TimeSeriesDescriptor.Unit">
+            <summary>
+            The unit of the value.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.ITimeSeriesClientConnection">
+            <summary>
+            A connection to a remote <see cref="T:BAI.Diag.TimeSeries.ITimeSeriesManager"/>.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.TimeSeries.TimeSeriesSample">
+            <summary>
+            One sample in a time series.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.TimeSeries.TimeSeriesSample.#ctor(System.DateTime,System.Double)">
+            <summary>
+            Creates a new instance of <see cref="T:BAI.Diag.TimeSeries.TimeSeriesSample"/>
+            </summary>
+            <param name="when"></param>
+            <param name="value"></param>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.TimeSeriesSample.When">
+            <summary>
+            When the sample was taken.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.TimeSeries.TimeSeriesSample.Value">
+            <summary>
+            The value of the sample.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.SignalTracer.ArmSocSignalTracer">
+            <summary>
+            Signal tracer that runs on the Arm Soc
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.#ctor(BAI.Systems.HwComm.XMsg.IXMsgDriver)">
+            <summary>
+            Create the signal tracer using an existing XMsgDriver
+            </summary>
+            <param name="xMsgDriver"></param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.Finalize">
+            <summary>
+            Deconstruct the signal tracer
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.GetTraceableSignals">
+            <summary>
+            Returns a list of traceable signals available to this signal tracer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.AddTraceOnSignal(System.String)">
+            <summary>
+            Adds a trace on a signal
+            </summary>
+            <param name="signal">Name of the signal to trace</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.RemoveTraceOnSignal(System.String)">
+            <summary>
+            Removes a trace on a signal
+            </summary>
+            <param name="signal">Name of the signal to not trace</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.AddRisingEdgeTriggerOnSignal(System.String,System.Single)">
+            <summary>
+            Add a trigger to start tracing based on a rising edge condition
+            </summary>
+            <param name="signal">Name of the signal to compare to the threshold value</param>
+            <param name="max">Threshold which needs to be passed to start the tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.AddFallingEdgeTriggerOnSignal(System.String,System.Single)">
+            <summary>
+            Add a trigger to start tracing based on a rising edge condition
+            </summary>
+            <param name="signal">Name of the signal to compare to the threshold value</param>
+            <param name="min">Threshold which needs to be passed to start the tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.AddWindowTriggerOnSignal(System.String,System.Single,System.Single)">
+            <summary>
+            Add a trigger to start tracing based on a rising edge condition
+            </summary>
+            <param name="signal">Name of the signal to compare to the threshold value</param>
+            <param name="min">lower threshold which needs to be passed to start the tracer</param>
+            <param name="max">Higher threshold which needs to be passed to start the tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.AddValueChangedTriggerOnSignal(System.String)">
+            <summary>
+            Adds a trigger that starts tracing when the specific signal changes
+            </summary>
+            <param name="signal">Name of the signal to monitor for change</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.ClearTriggers">
+            <summary>
+            Remove all triggers
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.ClearTraces">
+            <summary>
+            Remove all traces
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.GetMaximumRecordingFrequency">
+            <summary>
+            Returns the maximum recording frequency of the signal tracer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.ConfigureOneShotTracing(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Configure the signal tracer to record data with a specified interval, number of records, and pretrace.
+            Tracer will continue recording data until the configured number of records have been recorded.
+            </summary>
+            <param name="traceInterval">Interval relative to max frequency at which to record data. Recording frequency is MaxRecordingFrequency/traceInterval </param>
+            <param name="records">Number of records to record and store in one shot</param>
+            <param name="buckets">Number of buckets to store recorded data in. Will affect frequency at which recorded data is recieved from Tracer</param>
+            <param name="preTracePercent">Percent of total records which will be pretraced before the tracer is triggered</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.ConfigureStreamTracing(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Configure the signal tracer to record data with a specified interval, number of records, and pretrace.
+            Tracer will continue recording data until StopTracing is called.
+            </summary>
+            <param name="traceInterval">Interval relative to max frequency at which to record data. Recording frequency is MaxRecordingFrequency/traceInterval</param>
+            <param name="records">Number of records the data buffers will store while recording and streaming out data</param>
+            <param name="buckets">Number of buckets to store recorded data in. Will affect frequency at which recorded data is recieved from Tracer</param>
+            <param name="preTracePercent">Percent of total records which will be pretraced before the tracer is triggered</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.ConfigureOnTriggerOnlyTracing(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Configure the signal tracer to record data whenever the trigger occurs, at a specified interval
+            Tracer will record on every trigger until the buffer fills and then stop
+            </summary>
+            <param name="traceInterval">Interval relative to max frequency at which to record data. Recording frequency is MaxRecordingFrequency/traceInterval</param>
+            <param name="records">Number of records the data buffers will store while recording and streaming out data</param>
+            <param name="buckets">Number of buckets to store recorded data in. Will affect frequency at which recorded data is recieved from Tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.StartTracing">
+            <summary>
+            Start the signal tracer
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.StopTracing">
+            <summary>
+            Stop the signal tracer
+            </summary>
+        </member>
+        <member name="E:BAI.Diag.SignalTracer.ArmSocSignalTracer.TracedDataArrived">
+            <summary>
+            This event will be raised whenever traced data is ready for use by a client.
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.Dispose">
+            <summary>
+            Dispose the signal tracer
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ArmSocSignalTracer.Dispose(System.Boolean)">
+            <summary>
+            Dispose the signal tracer
+            </summary>
+            <param name="isDisposing">Is disposing from finalizer</param>
+        </member>
+        <member name="T:BAI.Diag.SignalTracer.TraceableSignal">
+            <summary>
+            Hold the name and data type of a traceable signal
+            </summary>
+        </member>
+        <member name="F:BAI.Diag.SignalTracer.TraceableSignal.signalName">
+            <summary>
+            Name of the signal
+            </summary>
+        </member>
+        <member name="F:BAI.Diag.SignalTracer.TraceableSignal.dataType">
+            <summary>
+            Data type of the signal
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.SignalTracer.ISignalTracer">
+            <summary>
+            The public interface for any signal tracing device 
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.GetTraceableSignals">
+            <summary>
+            Returns a list of traceable signals available to this signal tracer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.AddTraceOnSignal(System.String)">
+            <summary>
+            Adds a trace on a signal
+            </summary>
+            <param name="signal">Name of the signal to trace</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.RemoveTraceOnSignal(System.String)">
+            <summary>
+            Removes a trace on a signal
+            </summary>
+            <param name="signal">Name of the signal to not trace</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.AddRisingEdgeTriggerOnSignal(System.String,System.Single)">
+            <summary>
+            Add a trigger to start tracing based on a rising edge condition
+            </summary>
+            <param name="signal">Name of the signal to compare to the threshold value</param>
+            <param name="max">Threshold which needs to be passed to start the tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.AddFallingEdgeTriggerOnSignal(System.String,System.Single)">
+            <summary>
+            Add a trigger to start tracing based on a rising edge condition
+            </summary>
+            <param name="signal">Name of the signal to compare to the threshold value</param>
+            <param name="min">Threshold which needs to be passed to start the tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.AddWindowTriggerOnSignal(System.String,System.Single,System.Single)">
+            <summary>
+            Add a trigger to start tracing based on a rising edge condition
+            </summary>
+            <param name="signal">Name of the signal to compare to the threshold value</param>
+            <param name="min">lower threshold which needs to be passed to start the tracer</param>
+            <param name="max">Higher threshold which needs to be passed to start the tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.AddValueChangedTriggerOnSignal(System.String)">
+            <summary>
+            Adds a trigger that starts tracing when the specific signal changes
+            </summary>
+            <param name="signal">Name of the signal to monitor for change</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.ClearTriggers">
+            <summary>
+            Remove all triggers
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.ClearTraces">
+            <summary>
+            Remove all traces
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.GetMaximumRecordingFrequency">
+            <summary>
+            Returns the maximum recording frequency of the signal tracer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.ConfigureOneShotTracing(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Configure the signal tracer to record data with a specified interval, number of records, and pretrace.
+            Tracer will continue recording data until the configured number of records have been recorded.
+            </summary>
+            <param name="traceInterval">Interval relative to max frequency at which to record data. Recording frequency is MaxRecordingFrequency/traceInterval </param>
+            <param name="records">Number of records to record and store in one shot</param>
+            <param name="buckets">Number of buckets to store recorded data in. Will affect frequency at which recorded data is recieved from Tracer</param>
+            <param name="preTracePercent">Percent of total records which will be pretraced before the tracer is triggered</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.ConfigureStreamTracing(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Configure the signal tracer to record data with a specified interval, number of records, and pretrace.
+            Tracer will continue recording data until StopTracing is called.
+            </summary>
+            <param name="traceInterval">Interval relative to max frequency at which to record data. Recording frequency is MaxRecordingFrequency/traceInterval</param>
+            <param name="records">Number of records the data buffers will store while recording and streaming out data</param>
+            <param name="buckets">Number of buckets to store recorded data in. Will affect frequency at which recorded data is recieved from Tracer</param>
+            <param name="preTracePercent">Percent of total records which will be pretraced before the tracer is triggered</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.ConfigureOnTriggerOnlyTracing(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Configure the signal tracer to record data whenever the trigger occurs, at a specified interval
+            Tracer will record on every trigger until the buffer fills and then stop
+            </summary>
+            <param name="traceInterval">Interval relative to max frequency at which to record data. Recording frequency is MaxRecordingFrequency/traceInterval</param>
+            <param name="records">Number of records the data buffers will store while recording and streaming out data</param>
+            <param name="buckets">Number of buckets to store recorded data in. Will affect frequency at which recorded data is recieved from Tracer</param>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.StartTracing">
+            <summary>
+            Start the signal tracer
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.ISignalTracer.StopTracing">
+            <summary>
+            Stop the signal tracer
+            </summary>
+        </member>
+        <member name="E:BAI.Diag.SignalTracer.ISignalTracer.TracedDataArrived">
+            <summary>
+            This event will be raised whenever traced data is ready for use by a client.
+            </summary>
+            <summary>
+            This event will be raised whenever traced data is ready for use by a client.
+            </summary>
+        </member>
+        <member name="T:BAI.Diag.SignalTracer.SignalTracerFactory">
+            <summary>
+            Creates signal tracers for devices
+            </summary>
+        </member>
+        <member name="M:BAI.Diag.SignalTracer.SignalTracerFactory.Create(System.String,System.String)">
+            <summary>
+            Create a signal tracer for a device
+            </summary>
+            <param name="deviceName">Device on which signals will be traced</param>
+            <param name="clientName">The client using the tracer</param>
+            <returns></returns>
+        </member>
+        <member name="T:BAI.Diag.Communications.DiagReflectionRemoteImp">
+            <summary>
+            A version of ReflectionRemoteImp that can connect to a server while another client is already connected.
+            </summary>
+        </member>
+        <member name="P:BAI.Diag.Communications.DiagReflectionRemoteImp.ConnectMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:BAI.Diag.Communications.DiagReflectionRemoteImp.AsyncConnectMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:BAI.Diag.Communications.DiagReflectionRemoteImp.Create``1(System.String,System.String,System.String)">
+            <summary>
+            Creates and connects a reflection-based remote imp.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="localName">The name of the component as defined in the local config files.  Used to look up the server address.</param>
+            <param name="remoteName">The name of the component in the remote EC's Component Service.</param>
+            <param name="clientName">The name of the client.  Usually the client passes in "CTC".</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Diag.Communications.DiagReflectionRemoteImp.Create``2(System.String,System.String,System.String)">
+            <summary>
+            Creates and connects a reflection-based remote imp.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TBase"></typeparam>
+            <param name="localName">The name of the component as defined in the local config files.  Used to look up the server address.</param>
+            <param name="remoteName">The name of the component in the remote EC's Component Service.</param>
+            <param name="clientName">The name of the client.  Usually the client passes in "CTC".</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

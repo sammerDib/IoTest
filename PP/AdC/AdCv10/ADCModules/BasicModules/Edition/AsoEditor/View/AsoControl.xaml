@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="BasicModules.AsoEditor.AsoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"             
+             xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools"
+             xmlns:BasicModules="clr-namespace:BasicModules"
+             mc:Ignorable="d"              
+             d:DesignHeight="300" d:DesignWidth="600"
+             Loaded="UserControl_Loaded">
+    
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <AdcTools:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <DataGrid x:Name="dataGridDefectClass" Margin="10,10,10,10" HorizontalAlignment="Left"
+                  ItemsSource="{Binding AsoClassVMList}" AutoGenerateColumns="False"
+                  Visibility="{Binding HasVids, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+                  BeginningEdit="DataGrid_BeginningEdit"
+                  CanUserAddRows="False" CanUserDeleteRows="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Defect Class" Binding="{Binding DefectLabel}"/>
+                <DataGridTextColumn Header="Defect Category" Binding="{Binding DefectCategory}" />
+                <DataGridTemplateColumn Header="Color" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <xctk:ColorPicker SelectedColor="{Binding Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn Header="Save Thumbnails" Binding="{Binding SaveThumbnails}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <DataGrid x:Name="dataGridDefectCategory" Margin="10,10,10,10" HorizontalAlignment="Left"
+                  ItemsSource="{Binding AsoCategoryVMList}" AutoGenerateColumns="False"
+                  Visibility="{Binding HasVids, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  CanUserAddRows="False" CanUserDeleteRows="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="VID" Binding="{Binding VidNumber}" />
+                <DataGridTextColumn IsReadOnly="True" Header="VID Label" Binding="{Binding DefectCategory}" />
+                <DataGridTemplateColumn Header="Color" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <xctk:ColorPicker SelectedColor="{Binding Color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn Header="Save Thumbnails" Binding="{Binding SaveThumbnails}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+    
+</UserControl>

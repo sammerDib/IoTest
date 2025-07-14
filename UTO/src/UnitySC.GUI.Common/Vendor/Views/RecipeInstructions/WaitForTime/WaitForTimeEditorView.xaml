@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitForTime.WaitForTimeStepEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:scenarios="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.Scenarios"
+    xmlns:waitForTime="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.Wait"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox"
+    d:DataContext="{d:DesignInstance {x:Type waitForTime:WaitForTimeInstruction}, IsDesignTimeCreatable=True}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <controls:PropertyEditor PropertyName="{localize:Static scenarios:ScenarioResources.SCENARIO_INSTRUCTION_WAIT_TIME}">
+        <DockPanel>
+            <TextBlock
+                Margin="5,0,0,0"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Right"
+                Text="s" />
+            <numericBox:DoubleBox
+                StringFormat="F3"
+                Value="{Binding WaitingTime, Mode=TwoWay}" />
+        </DockPanel>
+    </controls:PropertyEditor>
+</UserControl>

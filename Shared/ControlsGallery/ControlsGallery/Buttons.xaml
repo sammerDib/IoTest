@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="ControlsGallery.Buttons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="1024">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <Grid Background="WhiteSmoke" MinWidth="1024">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="NORMAL" Margin="20">
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <Button Margin="10" HorizontalAlignment="Left">Normal Button</Button>
+                        <Button Margin="10" IsEnabled="False" HorizontalAlignment="Left">Disabled Button</Button>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="IMAGE" Margin="20" Grid.Row="1">
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <sharedControls:ImageButton Image="{StaticResource Tool}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10" HorizontalAlignment="Left" Width="400">Image Button with content centered</sharedControls:ImageButton>
+                        <sharedControls:ImageButton ImageGeometry="{StaticResource ToolGeometry}" ImageGeometryBrush="Orange" VerticalContentAlignment="Center" Margin="10" HorizontalAlignment="Left" Width="400" HorizontalContentAlignment="Left">Image Button With Orange geometry</sharedControls:ImageButton>
+                        <sharedControls:ImageButton ImageGeometryRight="{StaticResource ToolGeometry}" ImageGeometryRightBrush="Red" VerticalContentAlignment="Center" Margin="10" HorizontalAlignment="Left">Right Image Button With Red geometry</sharedControls:ImageButton>
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <TextBlock Text="Without Text" VerticalAlignment="Center" Margin="0,0,20,0" />
+                            <sharedControls:ImageButton  ImageGeometry="{StaticResource CaretTopGeometry}" ImageGeometryBrush="OrangeRed" Width="30" Height="30" />
+                            <sharedControls:ImageButton  ImageGeometry="{StaticResource CaretLeftGeometry}" ImageGeometryBrush="OrangeRed" Width="50" HorizontalContentAlignment="Center" />
+                            <sharedControls:ImageButton  ImageGeometry="{StaticResource AcquireImageGeometry}" Padding="0" ImageGeometryBrush="OrangeRed" Width="50" HorizontalContentAlignment="Center" IsEnabled="False" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <TextBlock Text="Without border" VerticalAlignment="Center" Margin="0,0,20,0" />
+                            <sharedControls:ImageButton Height="30"  ImageGeometry="{StaticResource ToolGeometry}" ImageGeometryBrush="{StaticResource ImageWarningColor}" Style="{StaticResource ImageButtonWithoutBorder}" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="REPEAT" Grid.Row="2" Margin="20">
+                    <StackPanel Margin="10">
+                        <TextBlock x:Name="DisplayCurrentValue" Text="{Binding CurrentValue, UpdateSourceTrigger=Explicit}" HorizontalAlignment="Center" Margin="10"></TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <sharedControls:ImageRepeatButton Margin="10" ImageGeometry="{StaticResource PlusGeometry}" Width="30" Click="ImageRepeatButton_Click" />
+                            <sharedControls:ImageRepeatButton Margin="10" ImageGeometry="{StaticResource PlusGeometry}" ImageGeometryBrush="Blue" Click="ImageRepeatButton_Click" Content="Click and Stay" />
+                            <sharedControls:ImageRepeatButton Margin="10,10,0,10" ImageGeometry="{StaticResource MinusGeometry}" ImageGeometryBrush="Red" Click="ImageRepeatMinusButton_Click" Style="{StaticResource LeftImageRepeatButton}" />
+                            <sharedControls:ImageRepeatButton Margin="0,10,10,10" ImageGeometry="{StaticResource PlusGeometry}" ImageGeometryBrush="Green" Click="ImageRepeatButton_Click" Style="{StaticResource RightImageRepeatButton}" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <GroupBox Header="HIGHLIGHTED" Grid.Row="0" Margin="20">
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <Button Style="{StaticResource HighlightedButton}" Margin="10" HorizontalAlignment="Left" >Highlight Button</Button>
+                        <Button Style="{StaticResource HighlightedButton}" Margin="10" IsEnabled="False" HorizontalAlignment="Left">Disabled Highlight Button</Button>
+                        <sharedControls:ImageButton Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource ToolGeometry}" ImageGeometryRightBrush="Blue" VerticalContentAlignment="Center" Margin="10" HorizontalAlignment="Left">Hilight Button with Right Blue geometry</sharedControls:ImageButton>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="LEFT/RIGHT" Margin="20" Grid.Row="1">
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <Button Style="{StaticResource LeftButton}">Left</Button>
+                            <sharedControls:TextBoxUnit Unit="%" Style="{StaticResource TextBoxUnitNotRounded}" Width="50"></sharedControls:TextBoxUnit>
+                            <Button Style="{StaticResource RightButton}">Right</Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <TextBlock VerticalAlignment="Center" Text="Images"></TextBlock>
+                            <sharedControls:ImageButton Margin="5,5,0,5" ImageGeometry="{StaticResource ToolGeometry}" ImageGeometryBrush="Orange" Width="30" Style="{StaticResource LeftImageButton}" />
+                            <sharedControls:TextBoxUnit Unit="%" Style="{StaticResource TextBoxUnitNotRounded}" Width="50" Text="22"></sharedControls:TextBoxUnit>
+                            <sharedControls:ImageButton Margin="0,5,5,5" ImageGeometry="{StaticResource ToolGeometry}" ImageGeometryBrush="OrangeRed" Width="30" Style="{StaticResource RightImageButton}" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="HYPERLINK" Grid.Row="2" Margin="20">
+                    <StackPanel Orientation="Vertical" Margin="20">
+                        <TextBlock Margin="10">
+                        <Hyperlink>Normal Hyperlink</Hyperlink>
+                        </TextBlock>
+                        <TextBlock Margin="10">
+                        <Hyperlink IsEnabled="False">Disabled Hyperlink</Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

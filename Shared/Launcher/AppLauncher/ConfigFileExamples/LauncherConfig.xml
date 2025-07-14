@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LauncherConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Applications> 
+	<Application>
+      <Name>UTO</Name>
+      <Description>The standalone version of UTO</Description>
+      <Path>C:\UnitySC\Release\Bin\UTO\UnitySC.UTO.Controller.exe</Path>
+      <Arguments>--ConfigurationPath C:\UnitySC\Release\Config\UTO\Configuration\XML\Configuration.xml --UserProfilesXmlPath C:\UnitySC\Release\Config\UTO\Configuration\XML\UserProfiles.xml</Arguments>
+      <ServiceDependencies>
+        <string>Data Access Server</string>
+		<string>DataFlow Server</string>
+        <string>Analyse Server</string>
+      </ServiceDependencies>
+     </Application>
+	 <Application>
+      <Name>Analyse Client</Name>
+      <Description>The standalone version of Analyse</Description>
+      <Path>C:\UnitySC\Release\Bin\Analyse\Client\UnitySC.PM.ANA.Client.exe</Path>
+      <Arguments>-c "C:\UnitySC\Release\Config\Analyse\Client"</Arguments>
+      <ServiceDependencies>
+        <string>Data Access Server</string>
+		<string>DataFlow Server</string>
+        <string>Analyse Server</string>
+      </ServiceDependencies>
+    </Application>
+	<Application>	
+	<Name>Analyse Client-WaferLess </Name>
+      <Description>The standalone version of Analyse</Description>
+      <Path>C:\UnitySC\Release\Bin\Analyse\Client\UnitySC.PM.ANA.Client.Wl.exe</Path>
+      <Arguments>-wl -c "C:\UnitySC\Release\Config\Analyse\Client"</Arguments>
+      <ServiceDependencies>
+        <string>Data Access Server</string>
+		<string>DataFlow Server</string>
+        <string>Analyse Server-WaferLess</string>
+      </ServiceDependencies>
+    </Application>
+	<Application>
+      <Name>Results Viewer DB</Name>
+      <Description>The Database version of viewer</Description>
+      <Path>C:\UnitySC\Release\Bin\ResultViewer\UnitySC.Result.Client.exe</Path>
+      <Arguments></Arguments>
+      <ServiceDependencies>
+	     <string>Data Access Server</string>
+      </ServiceDependencies>
+    </Application>	
+	<Application>
+      <Name>Results Viewer Folder</Name>
+      <Description>The standalone version of viewer</Description>
+      <Path>C:\UnitySC\Release\Bin\ResultViewer\UnitySC.Result.StandaloneClient.exe</Path>
+      <Arguments></Arguments>
+      <ServiceDependencies>
+      </ServiceDependencies>
+    </Application>
+  </Applications>
+  <Services>
+    <Service>
+      <Name>Data Access Server</Name>
+      <Description>To interact with the database</Description>
+      <Path>C:\UnitySC\Release\Bin\DataAccess\UnitySC.DataAccess.Service.Host.exe</Path>
+	  <Arguments>-c "C:\UnitySC\Release\Config\DataAccess"</Arguments>
+      <DisplayInLauncher>true</DisplayInLauncher>
+      <IsConsoleMode>true</IsConsoleMode>
+      <ShowConsoleWindow>true</ShowConsoleWindow>
+      <DelayBeforeLaunchingNextService>1</DelayBeforeLaunchingNextService>
+    </Service>
+	<Service>
+      <Name>DataFlow Server</Name>
+      <Description>To manage the interactions between the tools and the post processing</Description>
+      <Path>C:\UnitySC\Release\Bin\Dataflow\UnitySC.dataflow.Service.Host.exe</Path>
+      <Arguments>-c "C:\UnitySC\Release\Config\Dataflow"</Arguments>
+      <DisplayInLauncher>true</DisplayInLauncher>
+      <IsConsoleMode>true</IsConsoleMode>
+      <ShowConsoleWindow>true</ShowConsoleWindow>
+      <DelayBeforeLaunchingNextService>2</DelayBeforeLaunchingNextService>
+    </Service>
+    <Service>
+      <Name>Analyse Server</Name>
+      <Description>To interact with the tool</Description>
+      <Path>C:\UnitySC\Release\Bin\Analyse\Server\UnitySC.PM.ANA.Service.Host.exe</Path>
+      <Arguments>-c "C:\UnitySC\Release\Config\Analyse\Server"</Arguments>
+      <DisplayInLauncher>true</DisplayInLauncher>
+      <IsConsoleMode>true</IsConsoleMode>
+      <ShowConsoleWindow>true</ShowConsoleWindow>
+      <DelayBeforeLaunchingNextService>5</DelayBeforeLaunchingNextService>
+    </Service>
+	<Service>
+      <Name>Analyse Server-WaferLess</Name>
+      <Description>To interact with the tool</Description>
+      <Path>C:\UnitySC\Release\Bin\Analyse\Server\UnitySC.PM.ANA.Service.Host.Wl.exe</Path>
+      <Arguments>-wl -sh -sf -c "C:\UnitySC\Release\Config\Analyse\Server"</Arguments>
+      <DisplayInLauncher>true</DisplayInLauncher>
+      <IsConsoleMode>true</IsConsoleMode>
+      <ShowConsoleWindow>true</ShowConsoleWindow>
+      <DelayBeforeLaunchingNextService>5</DelayBeforeLaunchingNextService>
+    </Service>
+  </Services>
+  <DisplayStopAll>true</DisplayStopAll>
+</LauncherConfig>

@@ -1,0 +1,30 @@
+﻿<Window
+	x:Class="UnitySC.GUI.Common.Vendor.Simulation.SimulatorView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:simulation="clr-namespace:UnitySC.GUI.Common.Vendor.Simulation"
+	Title="Simulator"
+	Width="1024"
+	Height="768"
+	d:DataContext="{d:DesignInstance Type=simulation:SimulatorViewModel, IsDesignTimeCreatable=True}"
+	Background="{DynamicResource InteractionBackground}"
+	ResizeMode="CanResizeWithGrip"
+	WindowStartupLocation="CenterScreen"
+	mc:Ignorable="d">
+	<Grid>
+		<TabControl
+			IsSynchronizedWithCurrentItem="True"
+			ItemsSource="{Binding SimulatedDevices, Mode=OneWay}">
+			<TabControl.ItemContainerStyle>
+				<Style
+					BasedOn="{StaticResource {x:Type TabItem}}"
+					TargetType="{x:Type TabItem}">
+					<Setter Property="Header" Value="{Binding SimulatedDevice.Name, Mode=OneWay}" />
+					<Setter Property="Content" Value="{Binding SimulatedDevice.SimDeviceView, Mode=OneWay}" />
+				</Style>
+			</TabControl.ItemContainerStyle>
+		</TabControl>
+	</Grid>
+</Window>

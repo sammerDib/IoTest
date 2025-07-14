@@ -1,0 +1,117 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.WebVisu.WebVisuPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:webVisu="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.WebVisu"
+    xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    d:DataContext="{d:DesignInstance webVisu:WebVisuPanel, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <PathGeometry x:Key="BackIcon" Figures="M16.62 2.99c-.49-.49-1.28-.49-1.77 0L6.54 11.3c-.39.39-.39 1.02 0 1.41l8.31 8.31c.49.49 1.28.49 1.77 0s.49-1.28 0-1.77L9.38 12l7.25-7.25c.48-.48.48-1.28-.01-1.76z" />
+        <PathGeometry x:Key="ForwardIcon" Figures="M7.38 21.01c.49.49 1.28.49 1.77 0l8.31-8.31c.39-.39.39-1.02 0-1.41L9.15 2.98c-.49-.49-1.28-.49-1.77 0s-.49 1.28 0 1.77L14.62 12l-7.25 7.25c-.48.48-.48 1.28.01 1.76z" />
+        <PathGeometry x:Key="StarIcon" Figures="M0 0h24v24H0V0zm0 0h24v24H0V0zm12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z" />
+        <DropShadowEffect
+            x:Key="HeaderShadow"
+            BlurRadius="5"
+            Direction="-90"
+            Opacity="0.1"
+            RenderingBias="Performance"
+            ShadowDepth="5"
+            Color="Black" />
+    </UserControl.Resources>
+    <Grid x:Name="Grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Rectangle
+                Effect="{StaticResource HeaderShadow}"
+                Fill="{DynamicResource BusinessPanelBackground}" />
+            <DockPanel Margin="2">
+                <Grid DockPanel.Dock="Right">
+                    <ToggleButton
+                        dependencyObjects:Icon.Geometry="{StaticResource StarIcon}"
+                        Background="Transparent"
+                        IsChecked="{Binding Path=IsOpen, ElementName=Popup, Mode=TwoWay}"
+                        IsEnabled="{Binding Path=IsOpen, ElementName=Popup, Converter={StaticResource InvertedBoolConverter}}"
+                        Style="{StaticResource SquareIconifiedToggleButtonStyle}" />
+                    <Popup
+                        x:Name="Popup"
+                        AllowsTransparency="True"
+                        Placement="Bottom"
+                        PopupAnimation="Fade"
+                        StaysOpen="False">
+                        <controls:Card
+                            Margin="10"
+                            Padding="5"
+                            CornerRadius="3">
+                            <ItemsControl ItemsSource="{Binding LinkList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type webVisu:WebLink}">
+                                        <TextBlock Margin="5,3">
+                                            <Hyperlink
+                                                Command="{Binding DataContext.GoToCommand, ElementName=Grid}"
+                                                CommandParameter="{Binding Link}">
+                                                <Label Content="{Binding LocalizedName}" />
+                                            </Hyperlink>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:Card>
+                    </Popup>
+                </Grid>
+                <Button
+                    x:Name="Back"
+                    dependencyObjects:Icon.Geometry="{StaticResource BackIcon}"
+                    Background="Transparent"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                <Button
+                    x:Name="Forward"
+                    dependencyObjects:Icon.Geometry="{StaticResource ForwardIcon}"
+                    Background="Transparent"
+                    Command="{Binding ForwardCommand}"
+                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                <Button
+                    x:Name="Refresh"
+                    dependencyObjects:Icon.Geometry="{StaticResource RefreshIcon}"
+                    Background="Transparent"
+                    Command="{Binding RefreshCommand}"
+                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                <Button
+                    x:Name="Go"
+                    dependencyObjects:Icon.Geometry="{StaticResource SearchIcon}"
+                    Background="Transparent"
+                    Command="{Binding GoCommand}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                <TextBox
+                    x:Name="AddressTextBox"
+                    Margin="2"
+                    BorderThickness="0"
+                    KeyDown="AddressTextBox_OnKeyDown"
+                    Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+        </Grid>
+
+        <WebBrowser
+            x:Name="WebBrowser"
+            Grid.Row="1"
+            Margin="7"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Visibility="{Binding ExplorerVisibility}" />
+
+    </Grid>
+</UserControl>

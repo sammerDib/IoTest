@@ -1,0 +1,24 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:icons="clr-namespace:Agileo.GUI.Services.Icons;assembly=Agileo.GUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <DataTemplate DataType="{x:Type icons:PngIcon}">
+        <Image Source="{Binding ImageSource}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type icons:BitmapIcon}">
+        <Image Source="{Binding ImageSource}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type icons:PathGeometryIcon}">
+        <Path
+            Data="{Binding ImageSource}"
+            Fill="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+            Stretch="Uniform" />
+    </DataTemplate>
+
+</ResourceDictionary>

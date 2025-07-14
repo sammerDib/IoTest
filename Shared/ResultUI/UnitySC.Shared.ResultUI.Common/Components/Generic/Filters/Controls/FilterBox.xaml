@@ -1,0 +1,324 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:filterControls="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.Generic.Filters.Controls"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<!--#region Colors-->
+	<SolidColorBrush x:Key="FilterBoxBackground" Color="White" />
+	<SolidColorBrush x:Key="FilterBoxForeground" Color="Black" />
+	<!--#endregion Colors-->
+
+	<system:Double x:Key="DisabledOpacity">0.3</system:Double>
+	<system:Double x:Key="MouseOverOpacity">0.5</system:Double>
+
+	<DropShadowEffect
+		x:Key="ControlsShadow"
+		BlurRadius="5"
+		Direction="-90"
+		Opacity="0.3"
+		RenderingBias="Performance"
+		ShadowDepth="1"
+		Color="Black" />
+
+	<Style
+		x:Key="FilterBoxSelectedListBoxStyle"
+		TargetType="{x:Type ListBox}">
+		<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+		<Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBox}">
+					<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style
+		x:Key="FilterBoxSelectedListBoxItemStyle"
+		TargetType="{x:Type ListBoxItem}">
+		<Setter Property="SnapsToDevicePixels" Value="True" />
+		<Setter Property="Padding" Value="4,1" />
+		<Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
+		<Setter Property="Background">
+			<Setter.Value>
+				<SolidColorBrush Opacity="0.2" Color="Black" />
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<Border
+						x:Name="Bd"
+						Margin="5"
+						Padding="{TemplateBinding Padding}"
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="5"
+						SnapsToDevicePixels="true">
+						<ContentPresenter
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="Bd" Property="Background">
+								<Setter.Value>
+									<SolidColorBrush Opacity="0.5" Color="Black" />
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style
+		x:Key="FilterBoxListBoxItemStyle"
+		TargetType="{x:Type ListBoxItem}">
+		<Setter Property="SnapsToDevicePixels" Value="true" />
+		<Setter Property="OverridesDefaultStyle" Value="true" />
+		<Setter Property="Background" Value="White" />
+		<Setter Property="Foreground" Value="Black" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Padding" Value="8,4,0,4" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBoxItem}">
+					<Grid SnapsToDevicePixels="true">
+						<Border
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="0,0,0,1">
+							<Rectangle
+								x:Name="Background"
+								Fill="{TemplateBinding Background}"
+								IsHitTestVisible="True"
+								Opacity="1"
+								RadiusX="0"
+								RadiusY="0" />
+						</Border>
+						<Rectangle
+							x:Name="SelectedRectangle"
+							Fill="Black"
+							IsHitTestVisible="True"
+							Opacity="0"
+							RadiusX="0"
+							RadiusY="0" />
+						<StackPanel
+							Margin="{TemplateBinding Padding}"
+							Orientation="Horizontal">
+							<Path
+								x:Name="CheckBox"
+								Height="10"
+								Margin="0,0,7,0"
+								Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+								Fill="Black"
+								IsHitTestVisible="False"
+								Stretch="Uniform"
+								Visibility="Hidden" />
+							<ContentPresenter
+								x:Name="contentPresenter"
+								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+								<ContentPresenter.Resources>
+									<Style TargetType="TextBlock">
+										<Setter Property="FontSize" Value="16" />
+									</Style>
+								</ContentPresenter.Resources>
+							</ContentPresenter>
+						</StackPanel>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter TargetName="SelectedRectangle" Property="Opacity" Value="{StaticResource MouseOverOpacity}" />
+						</Trigger>
+						<Trigger Property="Selector.IsSelected" Value="True">
+							<Setter TargetName="CheckBox" Property="Visibility" Value="Visible" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style TargetType="{x:Type filterControls:FilterBox}">
+		<Setter Property="MinHeight" Value="68" />
+		<Setter Property="Background" Value="{DynamicResource FilterBoxBackground}" />
+		<Setter Property="Foreground" Value="{DynamicResource FilterBoxForeground}" />
+		<Setter Property="BorderBrush" Value="Black" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="SnapsToDevicePixels" Value="true" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type filterControls:FilterBox}">
+					<Border
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="2">
+						<Grid SnapsToDevicePixels="true">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="40" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<Grid
+								Grid.Row="0"
+								Grid.RowSpan="2">
+								<ToggleButton
+									x:Name="ToggleButton"
+									Height="{TemplateBinding Height}"
+									Background="{TemplateBinding Background}"
+									BorderThickness="0"
+									ClickMode="Press"
+									Focusable="false"
+									Foreground="{TemplateBinding Foreground}"
+									IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+									Opacity="0"
+									Style="{x:Null}" />
+								<ListBox
+									x:Name="PART_SelectedItemsControl"
+									Margin="0,25,0,2"
+									VerticalAlignment="Center"
+									Background="Transparent"
+									ItemTemplate="{TemplateBinding SelectedItemTemplate}"
+									ItemsSource="{TemplateBinding SelectedItems}"
+									ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+									SelectionMode="Multiple"
+									Style="{StaticResource FilterBoxSelectedListBoxStyle}"
+									TextBlock.Foreground="{TemplateBinding Foreground}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<WrapPanel IsItemsHost="True" />
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.Resources>
+										<Style
+											BasedOn="{StaticResource FilterBoxSelectedListBoxItemStyle}"
+											TargetType="{x:Type ListBoxItem}" />
+									</ListBox.Resources>
+								</ListBox>
+
+								<Popup
+									x:Name="PART_Popup"
+									AllowsTransparency="True"
+									Focusable="False"
+									HorizontalOffset="-1"
+									IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+									Placement="Bottom"
+									PopupAnimation="Slide"
+									VerticalOffset="2">
+									<Grid
+										x:Name="DropDown"
+										MinWidth="{TemplateBinding ActualWidth}"
+										Margin="10,0,10,10"
+										SnapsToDevicePixels="True">
+										<Border
+											Background="White"
+											CornerRadius="0,0,2,2"
+											Effect="{StaticResource ControlsShadow}" />
+										<Border
+											x:Name="DropDownBorder"
+											Margin="0,8"
+											BorderBrush="Black"
+											BorderThickness="0"
+											CornerRadius="0">
+											<StackPanel Orientation="Vertical">
+												<ListBoxItem
+													x:Name="PART_SelectAllItem"
+													Content="Select all"
+													Style="{StaticResource FilterBoxListBoxItemStyle}" />
+												<ListBox
+													x:Name="PART_PopupListBox"
+													MaxHeight="300"
+													DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
+													ItemContainerStyle="{StaticResource FilterBoxListBoxItemStyle}"
+													ItemTemplate="{TemplateBinding ItemTemplate}"
+													ItemsSource="{TemplateBinding ItemsSource}"
+													KeyboardNavigation.DirectionalNavigation="Contained"
+													ScrollViewer.IsDeferredScrollingEnabled="False"
+													SelectionMode="Multiple"
+													VirtualizingStackPanel.IsVirtualizing="False"
+													VirtualizingStackPanel.VirtualizationMode="Recycling" />
+											</StackPanel>
+										</Border>
+									</Grid>
+								</Popup>
+							</Grid>
+							<DockPanel
+								Grid.Row="0"
+								VerticalAlignment="Top">
+								<Button
+									x:Name="PART_ClearButton"
+									Width="18"
+									Height="18"
+									MinWidth="0"
+									MinHeight="0"
+									Margin="2"
+									Padding="0"
+									VerticalAlignment="Top"
+									Background="Transparent"
+									DockPanel.Dock="Right"
+									ToolTip="Clear">
+									<Path
+										Width="10"
+										Height="10"
+										Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+										Fill="Black"
+										Opacity="0.7"
+										Stretch="Uniform" />
+								</Button>
+								<TextBlock
+									Name="Header"
+									Margin="0"
+									Padding="7,4,5,0"
+									VerticalAlignment="Top"
+									Background="White"
+									Foreground="Black"
+									IsHitTestVisible="False"
+									SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+									Text="{TemplateBinding Title}" />
+							</DockPanel>
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding ElementName=PART_SelectedItemsControl, Path=HasItems}" Value="False">
+							<Setter TargetName="PART_ClearButton" Property="Visibility" Value="Hidden" />
+						</DataTrigger>
+						<Trigger Property="HasItems" Value="false">
+							<Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Opacity" Value="0.5" />
+						</Trigger>
+						<Trigger Property="IsGrouping" Value="true">
+							<Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+						</Trigger>
+						<Trigger SourceName="PART_Popup" Property="AllowsTransparency" Value="true">
+							<Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Standard" />
+		<Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True" />
+		<Setter Property="ItemsPanel">
+			<Setter.Value>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel />
+				</ItemsPanelTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>

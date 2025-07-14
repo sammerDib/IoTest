@@ -1,0 +1,3750 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>iMinosCVC</name>
+    </assembly>
+    <members>
+        <member name="T:Stemmer.Cvb.MinosLib">
+            <summary>
+            Import class for the DLLImport functions of MinosCVC
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos">
+            <summary>
+            CVB Tool for pattern recognition, alignment and optical character 
+            recognition (OCR) fields. 
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.MarshalStringRef_(System.IntPtr)">
+            <summary>
+            Converts the given pointer to a <c>sbyte</c> string into a net
+            string
+            </summary><param name="psbString">
+            Pointer to <c>sbyte</c> string.
+            </param><returns>
+            Net string object which is a copy of <paramref name="psbString"/>.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsCLF(Cvb.Minos.CLF)">
+            <summary>
+            Returns true if P is a valid handle to a Minos classifier, false
+            otherwise.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            True if valid Minos classifier handle.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsOldCLF(Cvb.Minos.CLF)">
+            <summary>
+            Returns true if clf is a valid handle to an old Minos classifier, 
+            created with the 16 bit version of Minos, false otherwise. (The old 
+            classifiers are unsuited for use in subpixel measurements and cannot 
+            be used with the correlation-quality-type).
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsResults(Cvb.Minos.RESULTS)">
+            <summary>
+            Returns true if results is a valid handle to a list of 
+            search-results (as created by the functions SearchAll, 
+            ReadCharacterList or OptCorrelations); false otherwise.
+            </summary><param name="results">
+            Handle to RESULTS-object to be checked.
+            </param><returns>
+            True if results is a valid handle; false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsMTS(Cvb.Minos.MTS)">
+            <summary>
+            Returns true if mts is a valid handle to a Minos training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><returns>
+            True if valid handle to a training set; false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsMTSImage(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns true if mtsImage is a valid handle to an MTS-Image. See 
+            NewMTSImage for the difference between MTS-images and ordinary image 
+            handles.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            True if valid handle to an MTS-Image; false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsMTSModel(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns true if mtsModel is a valid handle to an MTS-Model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            True if valid handle to an MTS-Model; false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.IsMTSInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns TRUE if mtsInstance is a valid handle to an MTS-Instance.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            True if valid handle to an MTS-Instance; false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.LoadCLFFile(System.String,Cvb.Minos.CLF@)">
+            <summary>
+            Loads a classifier from a diskfile.
+            </summary><param name="fileName">
+            String containing the files name.
+            </param><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.LoadCLFFile(System.String,Cvb.SharedMinosClf@)">
+            <summary>
+            Loads a classifier from a diskfile.
+            </summary><param name="fileName">
+            String containing the files name.
+            </param><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.WriteCLFFile(Cvb.Minos.CLF,System.String)">
+            <summary>
+            Saves a classifier to a diskfile.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="fileName">
+            String containing the files name.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.CLFToMemory(Cvb.Minos.CLF,System.IntPtr,System.Int64)">
+            <summary>
+            Serializes a classifier into a memory buffer.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="memory">
+            Points to the beginning of the memory block to receive the 
+            classifier. It must be allocated by the user 
+            (see GetCLFSize).
+            </param><param name="capacity">
+            Gives the size of the memory block.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MemoryToCLF(System.IntPtr,System.Int64,Cvb.Minos.CLF@)">
+            <summary>
+            Deserializes a classifier previously serialized with CLFToMemory.
+            </summary><param name="memory">
+            Points to the memory buffer containing the serialized classifier.
+            </param><param name="capacity">
+            Size of the serialized classifier.
+            </param><param name="clf">
+            Refers to a handle to receive the classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MemoryToCLF(System.IntPtr,System.Int64,Cvb.SharedMinosClf@)">
+            <summary>
+            Deserializes a classifier previously serialized with CLFToMemory.
+            </summary><param name="memory">
+            Points to the memory buffer containing the serialized classifier.
+            </param><param name="capacity">
+            Size of the serialized classifier.
+            </param><param name="clf">
+            Refers to a handle to receive the classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.LoadMTSFile(System.String,Cvb.Minos.MTS@)">
+            <summary>
+            Loads a training set from a diskfile.
+            </summary><param name="filename">
+            String containing the files name.
+            </param><param name="mts">
+            Refers to a variable receiving the handle to the training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.LoadMTSFile(System.String,Cvb.SharedMts@)">
+            <summary>
+            Loads a training set from a diskfile.
+            </summary><param name="filename">
+            String containing the files name.
+            </param><param name="mts">
+            Refers to a variable receiving the handle to the training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.WriteMTSFile(Cvb.Minos.MTS,System.String)">
+            <summary>
+            Saves a training set to a diskfile.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="filename">
+            String conaining the filename.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSToMemory(Cvb.Minos.MTS,System.IntPtr,System.Int64)">
+            <summary>
+            Serializes a training set into a memory buffer.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="memory">
+            Beginning of the memory block to receive the data. It must be 
+            allocated by the user (see GetMTSSize).
+            </param><param name="capacity">
+            Size of the memory block.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MemoryToMTS(System.IntPtr,System.Int64,Cvb.Minos.MTS@)">
+            <summary>
+            Deserializes a training set previously serialized with MTSToMemory.
+            </summary><param name="memory">
+            Points to the memory buffer containing the serialized data.
+            </param><param name="capacity">
+            Size of the serialized training set.
+            </param><param name="mts">
+            Refers to a variable to receive the handle to the training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MemoryToMTS(System.IntPtr,System.Int64,Cvb.SharedMts@)">
+            <summary>
+            Deserializes a training set previously serialized with MTSToMemory.
+            </summary><param name="memory">
+            Points to the memory buffer containing the serialized data.
+            </param><param name="capacity">
+            Size of the serialized training set.
+            </param><param name="mts">
+            Refers to a variable to receive the handle to the training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SearchResult(Cvb.Minos.RESULTS,System.Int32,System.Double@,System.Double@,System.Double@,System.Double@,System.Double@,System.String@,System.Int32@)">
+            <summary>
+            Returns an entry in a list of search results, as created by the 
+            functions SearchAll, ReadCharacterList and OptCorrelations.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><param name="index">
+            Ordinal number of the desired entry. The index is zero based: 0 
+            indexes the first, SearchResultsCount-1 the last entry.
+            </param><param name="quality">
+            Refers to the pattern quality corresponding to the entry.
+            </param><param name="xPos">
+            Refers to the x-position of the pattern.
+            </param><param name="yPos">
+            Refers to the y-position of the pattern.
+            </param><param name="dX">
+            Refers to the DeltaX of the model, which corresponds to the pattern.
+            </param><param name="dY">
+            Refers to the DeltaY of the model, which corresponds to the pattern.
+            </param><param name="name">
+            ClassID of the pattern.
+            </param><param name="AID">
+            Relevant only in the context of the MTS-consistency check functions, 
+            in which case it is the index of the MTS-image containing a 
+            suspicious point which the user might have forgotten to mark as a 
+            positive instance.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SearchResultsCount(Cvb.Minos.RESULTS)">
+            <summary>
+            Returns the number of entries in a list of search results, as 
+            created by the functions SearchAll, ReadCharacterList and 
+            OptCorrelations.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><returns>
+            Size of RESULTS list.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SortResultsByName(Cvb.Minos.RESULTS)">
+            <summary>
+            Sorts a list of search results, as created by the functions 
+            SearchAll, ReadCharacterList and OptCorrelations, by alphabetical 
+            order of the ClassID.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SortResultsByQuality(Cvb.Minos.RESULTS)">
+            <summary>
+            Sorts a list of search results, as created by the functions 
+            SearchAll, ReadCharacterList and OptCorrelations, by decreasing 
+            order of quality.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SortResultsByPosition(Cvb.Minos.RESULTS,System.Double,System.Double)">
+            <summary>
+            Sorts a list of search results, as created by the functions 
+            SearchAll, ReadCharacterList and OptCorrelations, in the direction 
+            of a specified vector.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><param name="x">
+            x-component of vector specifying the sorting direction.
+            </param><param name="y">
+            y-component of vector specifying the sorting direction.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.TruncateResults(Cvb.Minos.RESULTS,System.Int32)">
+            <summary>
+            Truncates a list of search results, as created by the functions 
+            SearchAll, ReadCharacterList and OptCorrelations, to the first number 
+            of entries. If the list contains fewer or equal number entries, it 
+            is left unchanged.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><param name="number">
+            Number of entries to keep.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFSize(Cvb.Minos.CLF)">
+            <summary>
+            Returns the number of bytes required for the classifier clf. This is 
+            particularly important for serialization of a classifier.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            Number of bytes required for the classifier.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFExtent(Cvb.Minos.CLF,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Returns the Extent of the classifier in the reference parameters L, 
+            T, R and B. The Extent is by definition the smallest rectangle which 
+            the classifier requires to classify the point (0,0). An extent of 
+            (-5,-7,20,30) for example means, that the classifier needs to look 5 
+            pixels to the left, 7 pixels above, 20 pixels to the right and 30 
+            pixels below the point, which it is supposed to process.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="l">
+            Refers to variable to receive the Left of the Extent.
+            </param><param name="t">
+            Refers to variable to receive the Top of the Extent.
+            </param><param name="r">
+            Refers to variable to receive the Right of the Extent.
+            </param><param name="b">
+            Refers to variable to receive the Bottom of the Extent.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetCLFTrigger(Cvb.Minos.CLF,System.Int32)">
+            <summary>
+            Sets the Trigger-Contrast selected for pattern recognition with the 
+            classifier. The trigger specifies the minimal contrast amplitude 
+            required for the feature verification to respond. Only seasoned 
+            users of Minos should change the default value.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="ATrigger">
+            Selected trigger.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFTrigger(Cvb.Minos.CLF,System.Int32@)">
+            <summary>
+            Retrieves the Trigger-Contrast selected for pattern recognition with 
+            the classifier. The trigger specifies the minimal contrast amplitude 
+            required for the feature verification to respond.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="ATrigger">
+            Refers to a variable to receive the currently selected trigger.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetCLFThreshold(Cvb.Minos.CLF,System.Double)">
+            <summary>
+            Sets the quality-threshold selected for pattern recognition with the 
+            classifier. The threshold specifies the minimal quality (in terms of 
+            the selected quality type) required for recognition.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="threshold">
+            Double precision variable to receive the selected quality threshold.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFThreshold(Cvb.Minos.CLF,System.Double@)">
+            <summary>
+            Retrieves the quality-threshold selected for pattern recognition with 
+            the classifier. The threshold specifies the minimal quality (in terms 
+            of the selected quality type) required for recognition.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="threshold">
+            Refers to a double precision variable to receive the currently 
+            selected quality threshold.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetCLFQualityType(Cvb.Minos.CLF,Cvb.Minos.QualityMeasureMethod)">
+            <summary>
+            Sets the quality-type selected for pattern recognition with the 
+            classifier.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="quality">
+            Currently selected quality-type. See QualityMeasureMethod.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFQualityType(Cvb.Minos.CLF,Cvb.Minos.QualityMeasureMethod@)">
+            <summary>
+            Retrieves the quality-type selected for pattern recognition with the 
+            classifier.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="quality">
+            Refers to a variable to receive the currently selected quality type.
+            See QualityMeasureMethod
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFLCS(Cvb.Minos.CLF,Cvb.Minos.TLearnControlStructure@)">
+            <summary>
+            Retrieves the LCS (LearnControlStructure) associated with the 
+            creation of a classifier. See LearnCLFFromMTS.
+            Important: Deletes PrivateData pointer and CallBack-Function
+            pointer.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="lcs">
+            Refers to a structure of type TLearnControlStructure to receive 
+            the requested data.
+            </param><returns>
+            False on error or no TLearnControlStructure available; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetCLFComment(Cvb.Minos.CLF,System.String)">
+            <summary>
+            Sets the comment string associated with a classifier.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="comment">
+            String containing the desired comment.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.CLFComment(Cvb.Minos.CLF)">
+            <summary>
+            If CLF points to a valid Minos classifier, the function returns the 
+            classifiers comment string, otherwise it returns null.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            String containing comment String or null.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.CLFMTSName(Cvb.Minos.CLF)">
+            <summary>
+            If CLF points to a valid Minos classifier, the function returns the 
+            name of the MTS (training set) file, from which the classifier was 
+            created, otherwise it returns null.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            String containing MTS-filename String or null.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.CLFCreationDate(Cvb.Minos.CLF)">
+            <summary>
+            If CLF points to a valid Minos classifier, the function returns the 
+            classifiers creation date, otherwise it returns null.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            String containing creation date or null.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumCLFModels(Cvb.Minos.CLF)">
+            <summary>
+            Returns the number of different pattern models, for which the 
+            classifier was trained.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            Number of different pattern models for which the classifier was 
+            trained.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetMTSModified(Cvb.Minos.MTS,System.Boolean)">
+            <summary>
+            Set/reset the internal »modified«-flag of the training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="isModified">
+            Modified-flag for the training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSModified(Cvb.Minos.MTS,System.Boolean@)">
+            <summary>
+            Informs if the MTS has been modified since the last time it was 
+            saved to disk
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="isModified">
+            Refers to a variable to contain the modified-flag of the training
+            set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumMTSImages(Cvb.Minos.MTS)">
+            <summary>
+            Returns the number of MTS-images in the given training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><returns>
+            Number of MTS-images in the training set.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumMTSModels(Cvb.Minos.MTS)">
+            <summary>
+            Returns the number of pattern models in a given training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><returns>
+            Number of pattern models in the training set.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumMTSInstances(Cvb.Minos.MTS)">
+            <summary>
+            Returns the number of instances in the given training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><returns>
+            Number of instances in the training set.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumMTSClasses(Cvb.Minos.MTS)">
+            <summary>
+            Returns the number of classes in the training set. This is the 
+            number of distinct ClassIDs, and therefore always less than or 
+            equal to the number of models (NumMTSModels).
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><returns>
+            Number of classes in the training set.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSImage(Cvb.Minos.MTS,System.Int32)">
+            <summary>
+            Returns a handle to the MTS-Image of specified index (see 
+            NewMTSImage for the difference between MTS-images and ordinary 
+            image handles). 
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="index">
+            Zero-based: 0 refers to the first, NumMtsImages-1 to the last image 
+            in the MTS.
+            </param><returns>
+            MTS-Image specified by the index.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSModel(Cvb.Minos.MTS,System.Int32)">
+            <summary>
+            Returns a handle to the pattern model of specified index, relative 
+            to the entire training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="index">
+            Zero-based: 0 refers to the first, NumMtsModels-1 to the last image 
+            in the MTS.
+            </param><returns>
+            MTS-Model specified by the index.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSInstance(Cvb.Minos.MTS,System.Int32)">
+            <summary>
+            Returns a handle to the instance of specified index, relative to the 
+            entire training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="index">
+            Zero-based: 0 refers to the first, NumMtsInstances-1 to the last 
+            image in the MTS.
+            </param><returns>
+            MTS-Instance specified by the index.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSExtent(Cvb.Minos.MTS,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            Returns the geometric extent of the training set. This is by 
+            definition the smallest rectangle containing the feature windows 
+            of all models in the MTS.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="l">
+            Refers to variable to receive the Left of the Extent.
+            </param><param name="t">
+            Refers to variable to receive the Top of the Extent.
+            </param><param name="r">
+            Refers to variable to receive the Right of the Extent.
+            </param><param name="b">
+            Refers to variable to receive the Bottom of the Extent.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSLastFeatureWnd(Cvb.Minos.MTS,Cvb.Image.TArea@)">
+            <summary>
+            Returns the feature window of the last model created for the MTS, 
+            and can be used to provide a default for the feature window in an 
+            interactive training session.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="area">
+            Refers to a varable to contain the feature window.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetMTSComment(Cvb.Minos.MTS,System.String)">
+            <summary>
+            Used to change the comment string associated with the training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="comment">
+            String containing a comment for the training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSComment(Cvb.Minos.MTS)">
+            <summary>
+            Returns a pointer to the comment string associated with the training 
+            set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><returns>
+            String containing the comment.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetMTSCorelParams(Cvb.Minos.MTS,System.Double,System.Double)">
+            <summary>
+            Sets the correlation parameters.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="expRadius">
+            Expectation window radius. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><param name="corThresh">
+            Correlation threshold. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSCorelParams(Cvb.Minos.MTS,System.Double@,System.Double@)">
+            <summary>
+            Returns the correlation parameters.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="exRadius">
+            Expectation window radius. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><param name="corThresh">
+            Correlation threshold. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetMTSGlobalAdvance(Cvb.Minos.MTS,System.Boolean,System.Double,System.Double)">
+            <summary>
+            Set the global advance parameters relevant for the training of fixed 
+            pitch fonts.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="ga">
+            If true, then all the models advance vectors are identical and equal 
+            to (gaX,gaY). Any new model created for the training set will also 
+            obtain the advance vector (gaX,gaY). If false then gaX and gaY have 
+            no significance.
+            </param><param name="gaX">
+            x-component of the advance vector.
+            </param><param name="gaY">
+            y-component of the advance vector.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSGlobalAdvance(Cvb.Minos.MTS,System.Boolean@,System.Double@,System.Double@)">
+            <summary>
+            Returns the global advance parameters relevant for the training of 
+            fixed pitch fonts.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="ga">
+            Refers to a variable to contain the ga flag. If true, then all the 
+            models advance vectors are identical and equal to (gaX,gaY). Any 
+            new model created for the training set will also obtain the advance 
+            vector (gaX,gaY). If false then gaX and gaY have no significance.
+            </param><param name="gaX">
+            x-component of the advance vector.
+            </param><param name="gaY">
+            y-component of the advance vector.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSSize(Cvb.Minos.MTS)">
+            <summary>
+            Returns the size of the training set in bytes.
+            </summary><param name="mts">
+            Handle to an MTS training set.
+            </param><returns>
+            Size of the MTS in bytes.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSImageIndex(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns the index of the MTS-Image whose handle is specified (see 
+            NewMTSImage for the difference between MTS-images and ordinary image 
+            handles). 
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            Zero-based index: 0 refers to the first, NumMTSImages-1 to the last 
+            image in the MTS.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSFromImage(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns a handle to the training set, given the handle to one of the 
+            MTS-images (see NewMTSImage for the difference between MTS-images 
+            and ordinary image handles).
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            Handle to training set of given image handle.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetSharedMtsFromImage(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns a handle to the training set, given the handle to one of the 
+            MTS-images (see NewMTSImage for the difference between MTS-images 
+            and ordinary image handles).
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            Handle to training set of given image handle.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetImageFromImage(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns the image-handle corresponding to an MTS-Image (an MTS-Image 
+            is a more complex datastructure - see NewMTSImage for the difference 
+            between MTS-images and ordinary image handles). The function does 
+            not increase the objects reference count.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            Handle to an image object.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetSharedImageFromImage(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns the image-handle corresponding to an MTS-Image (an MTS-Image 
+            is a more complex datastructure - see NewMTSImage for the difference 
+            between MTS-images and ordinary image handles). The function does 
+            not increase the objects reference count.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            Handle to an image object.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumMTSImageInstances(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Returns the number of instances contained in a given MTS-image.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            Number of instances.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSImageInstance(Cvb.Minos.MTSIMAGE,System.Int32)">
+            <summary>
+            Returns a handle to the instance of specified index, relative to a 
+            given MTS-image.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><param name="index">
+            Zero-based index: 0 refers to the first, NumMTSImageInstances-1 to 
+            the last instance for this image
+            </param><returns>
+            MTS-Instance of specified index.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSModelIndex(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns the index of the pattern model whose handle is specified.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            Zero-based index: 0 refers to the first, NumMTSModels-1 to the last 
+            model in the MTS.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSFromModel(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns a handle to the training set, given the handle to one of the 
+            models.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            Handle to the training set of the model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetSharedMtsFromModel(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns a handle to the training set, given the handle to one of the 
+            models.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            Handle to the training set of the model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetImageFromModel(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns the handle to the image representing a specified pattern 
+            model. It does not increase the objects reference count.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            Handle to the image of a pattern model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetSharedImageFromModel(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns the handle to the image representing a specified pattern 
+            model. It does not increase the objects reference count.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            Handle to the image of a pattern model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetFeatureWindow(Cvb.Minos.MTSMODEL,Cvb.Image.TArea@)">
+            <summary>
+            Returns the feature window (AFW) of an MTS-model (pattern-class 
+            representing data structure).
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="featureWindow">
+            Reference to an area to contain the feature window. The feature 
+            window is the smallest rectangle sufficient to recognize the pattern 
+            on the basis of the contents. It must be an axis-parallel rectangle 
+            with integral coordinates containing the point (0,0) (because it 
+            will always be added to the instance positions).
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetFeatureWindow(Cvb.Minos.MTSMODEL,Cvb.Image.TArea)">
+            <summary>
+            Change or modify the feature window of a pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="featureWindow">
+            Specifying the new feature window. The feature window is the 
+            smallest rectangle sufficient to recognize the pattern on the basis 
+            of the contents. It must be an axis-parallel rectangle with integral 
+            coordinates containing the point (0,0) (because it will always be 
+            added to the instance positions).
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetModelName(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns a String containing the ClassID associated with a specified 
+            pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            String containing the ClassID.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetModelName(Cvb.Minos.MTSMODEL,System.String)">
+            <summary>
+            Changes the ClassID associated with a pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="name">
+            String containing the ClassID.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetModelAdvance(Cvb.Minos.MTSMODEL,System.Double@,System.Double@)">
+            <summary>
+            Returns the OCR-advance vector associated with a pattern model. The 
+            vector controls where the next feature window is positioned, once a 
+            pattern of this class is recognized.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="x">
+            x-component of the OCR-advance vector.
+            </param><param name="y">
+            y-component of the OCR-advance vector.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetModelAdvance(Cvb.Minos.MTSMODEL,System.Double,System.Double)">
+            <summary>
+            Changes the OCR-advance vector associated with a pattern-model. The 
+            vector, when added to the recognized pattern’s position, forms the 
+            basis for the construction of the expectation window for the next 
+            character. If the global advance mode (see SetMTSGlobalAdvance) is 
+            set to true, calls to the function have no effect.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="x">
+            x-component of the OCR-advance vector.
+            </param><param name="y">
+            y-component of the OCR-advance vector.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.NumMTSModelInstances(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Returns the number of instances representing a given pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            Number of instances representing a pattern model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSModelInstance(Cvb.Minos.MTSMODEL,System.Int32)">
+            <summary>
+            Returns a handle to the instance of specified index, relative to a 
+            given pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="index">
+            Zero-based index: 0 refers to the first, NumMTSModelInstances-1 to 
+            the last instance (sample) for this model.
+            </param><returns>
+            Handle to a pattern model instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.InstanceIndex(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns the ordinal number of an instance relative to the entire 
+            training set (not the model.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Ordinal number of an instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetMTSFromInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns a handle to the training set, given the handle to one of the 
+            instances.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Handle to the training set of an instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetSharedMtsFromInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns a handle to the training set, given the handle to one of the 
+            instances.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Handle to the training set of an instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetImageFromInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns a handle to the MTS-Image containing a specified pattern 
+            instance (see NewMTSImage for the difference between MTS-images and 
+            ordinary image handles).
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Handle to the MTS-Image of a pattern instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetModelFromInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns a handle to the pattern model associated with a specified 
+            pattern instance.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Handle to pattern model associated with pattern instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.InstanceX(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns the x-coordinate of an instances position within the image 
+            containing it.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            x-coordinate of the instances position.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.InstanceY(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Returns the y-coordinate of an instances position within the image 
+            containing it.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            y-coordinate of the instances position.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.GetCLFModelData(Cvb.Minos.CLF,System.Int32,System.String@,System.Int32@,System.Int32@)">
+            <summary>
+            Queries the model data as stored in the classifier. The model for 
+            which information should be retrieved is referred to by an index 
+            ranging from zero to the number returned by NumCLFModels.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="index">
+            Index of the class inside the classifier.
+            </param><param name="name">
+            Class name.
+            </param><param name="advanceX">
+            x-component of the advance vector.
+            </param><param name="advanceY">
+            y-component of the advance vector.
+            </param><returns>
+            True if a valid classifier and index are given; false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.SetCLFModelData(Cvb.Minos.CLF,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            Sets model data in the given classifier. The model for which 
+            information should be modified is referred to by an index ranging 
+            from zero to the number returned by NumCLFModels.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="index">
+            Index of the class inside the classifier.
+            </param><param name="name">
+            Class name.
+            </param><param name="advanceX">
+            x-component of the advance vector.
+            </param><param name="advanceY">
+            y-component of the advance vector.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ShareClf(Cvb.Minos.CLF)">
+            <summary>
+            Increments the reference counter for an CLF object. Reference counting 
+            is important if you use multiple threads accessing an object at the 
+            same time. If you use this function you can be sure that the object is 
+            not destroyed as long as you don't call ReleaseClf. Don't forget to 
+            call ReleaseClf for each call to ShareClf to prevent memory leaks.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            True if clf is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ShareClf(Cvb.SharedMinosClf)">
+            <summary>
+            Increments the reference counter for an CLF object. Reference counting 
+            is important if you use multiple threads accessing an object at the 
+            same time. If you use this function you can be sure that the object is 
+            not destroyed as long as you don't call ReleaseClf. Don't forget to 
+            call ReleaseClf for each call to ShareClf to prevent memory leaks.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><returns>
+            True if clf is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ReleaseClf(Cvb.Minos.CLF@)">
+            <summary>
+            Release (decrease the reference counter) of a CLF object. The memory 
+            buffer used to store the object data is freed when the reference 
+            counter becomes 0.
+            </summary><param name="clf">
+            Reference to a handle to a classifier.
+            </param><returns>
+            True if clf is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ReleaseClf(Cvb.SharedMinosClf@)">
+            <summary>
+            Release (decrease the reference counter) of a CLF object. The memory 
+            buffer used to store the object data is freed when the reference 
+            counter becomes 0.
+            </summary><param name="clf">
+            Reference to a handle to a classifier.
+            </param><returns>
+            True if clf is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ShareResults(Cvb.Minos.RESULTS)">
+            <summary>
+            Increments the reference counter for an RESULTS object. Reference 
+            counting is important if you use multiple threads accessing an object 
+            at the same time. If you use this function you can be sure that the 
+            object is not destroyed as long as you don't call ReleaseResults. 
+            Don't forget to call ReleaseResults for each call to ShareResults to 
+            prevent memory leaks.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><returns>
+            True if results is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ShareResults(Cvb.SharedMinosResults)">
+            <summary>
+            Increments the reference counter for an RESULTS object. Reference 
+            counting is important if you use multiple threads accessing an object 
+            at the same time. If you use this function you can be sure that the 
+            object is not destroyed as long as you don't call ReleaseResults. 
+            Don't forget to call ReleaseResults for each call to ShareResults to 
+            prevent memory leaks.
+            </summary><param name="results">
+            Handle to a RESULTS list.
+            </param><returns>
+            True if results is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ReleaseResults(Cvb.Minos.RESULTS@)">
+            <summary>
+            Release (decrease the reference counter) of a RESULTS object. The 
+            memory buffer used to store the object data is freed when the 
+            reference counter becomes 0.
+            </summary><param name="results">
+            Reference to a handle to a RESULTS list.
+            </param><returns>
+            True if results is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ReleaseResults(Cvb.SharedMinosResults@)">
+            <summary>
+            Release (decrease the reference counter) of a RESULTS object. The 
+            memory buffer used to store the object data is freed when the 
+            reference counter becomes 0.
+            </summary><param name="results">
+            Reference to a handle to a RESULTS list.
+            </param><returns>
+            True if results is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ShareMts(Cvb.Minos.MTS)">
+            <summary>
+            Increments the reference counter for an MTS object. Reference counting 
+            is important if you use multiple threads accessing an object at the 
+            same time. If you use this function you can be sure that the object is 
+            not destroyed as long as you don't call ReleaseMts. Don't forget to 
+            call ReleaseMts for each call to ShareMts to prevent memory leaks.
+            </summary><param name="mts">
+            Handle to a classifier.
+            </param><returns>
+            True if mts is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ShareMts(Cvb.SharedMts)">
+            <summary>
+            Increments the reference counter for an MTS object. Reference counting 
+            is important if you use multiple threads accessing an object at the 
+            same time. If you use this function you can be sure that the object is 
+            not destroyed as long as you don't call ReleaseMts. Don't forget to 
+            call ReleaseMts for each call to ShareMts to prevent memory leaks.
+            </summary><param name="mts">
+            Handle to a classifier.
+            </param><returns>
+            True if mts is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ReleaseMts(Cvb.Minos.MTS@)">
+            <summary>
+            Release (decrease the reference counter) of a MTS object. The memory 
+            buffer used to store the object data is freed when the reference 
+            counter becomes 0.
+            </summary><param name="mts">
+            Reference to a handle to a classifier.
+            </param><returns>
+            True if mts is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.ReleaseMts(Cvb.SharedMts@)">
+            <summary>
+            Release (decrease the reference counter) of a MTS object. The memory 
+            buffer used to store the object data is freed when the reference 
+            counter becomes 0.
+            </summary><param name="mts">
+            Reference to a handle to a classifier.
+            </param><returns>
+            True if mts is a valid handle, false otherwise.
+            </returns>
+        </member>
+        <member name="T:Cvb.Minos.MinosOBJ">
+            <summary>
+            Minos base Object type.
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.#ctor(System.Int32)">
+            <summary>
+            Creates a CVB Object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.#ctor(System.Int64)">
+            <summary>
+            Creates a CVB Object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.#ctor(System.IntPtr)">
+            <summary>
+            Creates a CVB Object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.#ctor(Cvb.Minos.MinosOBJ)">
+            <summary>
+            Creates a CVB Object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.op_Implicit(Cvb.Minos.MinosOBJ)~System.Int32">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="obj">Object to convert to handle.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.op_Implicit(Cvb.Minos.MinosOBJ)~System.Int64">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="obj">Object to convert to handle.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.op_Implicit(Cvb.Minos.MinosOBJ)~System.IntPtr">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="obj">Object to convert to handle.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.ToInt32">
+            <summary>
+            Returns a 32 Bit signed integer representation of this OBJ object.
+            </summary><returns>
+            32 Bit signed integer representation.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.ToInt64">
+            <summary>
+            Returns a 64 Bit signed integer representation of this OBJ object.
+            </summary><returns>
+            64 Bit signed integer representation.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.ToIntPtr">
+            <summary>
+            Returns a <code>IntPtr</code> representation of this OBJ object.
+            </summary><returns>
+            <code>IntPtr</code> representation.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.MinosOBJ.ToString">
+            <summary>
+            Gets the string representation of the handle.
+            </summary><returns>
+            <see cref="M:System.IntPtr.ToString"/>.
+            </returns>
+        </member>
+        <member name="T:Cvb.Minos.MTS">
+            <summary>
+            Minos Training Set (MTS)
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.MTS.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos MTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTS.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos MTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTS.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos MTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTS.#ctor(Cvb.Minos.MTS)">
+            <summary>
+            Creates a Minos MTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTS.op_Implicit(System.Int32)~Cvb.Minos.MTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTS</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTS.op_Implicit(System.Int64)~Cvb.Minos.MTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTS</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTS.op_Implicit(System.IntPtr)~Cvb.Minos.MTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTS</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.CLF">
+            <summary>
+            Minos Classifier (CLF)
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.CLF.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos CLF object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.CLF.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos CLF object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.CLF.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos CLF object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.CLF.#ctor(Cvb.Minos.CLF)">
+            <summary>
+            Creates a Minos CLF object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.CLF.op_Implicit(System.Int32)~Cvb.Minos.CLF">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>CLF</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.CLF.op_Implicit(System.Int64)~Cvb.Minos.CLF">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>CLF</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.CLF.op_Implicit(System.IntPtr)~Cvb.Minos.CLF">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>CLF</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.TPL">
+            <summary>
+            Minos Correlation Template (TPL)
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.TPL.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos TPL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.TPL.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos TPL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.TPL.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos TPL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.TPL.#ctor(Cvb.Minos.TPL)">
+            <summary>
+            Creates a Minos TPL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.TPL.#ctor(Cvb.Image.IMG)">
+            <summary>
+            Creates a Minos TPL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.TPL.op_Implicit(System.Int32)~Cvb.Minos.TPL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>TPL</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.TPL.op_Implicit(System.Int64)~Cvb.Minos.TPL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>TPL</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.TPL.op_Implicit(System.IntPtr)~Cvb.Minos.TPL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>TPL</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.TPL.op_Implicit(Cvb.Image.IMG)~Cvb.Minos.TPL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>TPL</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.TPL.op_Implicit(Cvb.Minos.TPL)~Cvb.Image.IMG">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>TPL</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.RESULTS">
+            <summary>
+            Minos Search Results object
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos RESULTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos RESULTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos RESULTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.#ctor(Cvb.Minos.RESULTS)">
+            <summary>
+            Creates a Minos RESULTS object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.op_Implicit(System.Int32)~Cvb.Minos.RESULTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>RESULTS</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.op_Implicit(System.Int64)~Cvb.Minos.RESULTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>RESULTS</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.RESULTS.op_Implicit(System.IntPtr)~Cvb.Minos.RESULTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>RESULTS</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.MTSMODEL">
+            <summary>
+            Minos MTS Model object
+            Note that MTSMODEL object are not publicly reference counted
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos MTSMODEL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos MTSMODEL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos MTSMODEL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.#ctor(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Creates a Minos MTSMODEL object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.op_Implicit(System.Int32)~Cvb.Minos.MTSMODEL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSMODEL</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.op_Implicit(System.Int64)~Cvb.Minos.MTSMODEL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSMODEL</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSMODEL.op_Implicit(System.IntPtr)~Cvb.Minos.MTSMODEL">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSMODEL</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.MTSIMAGE">
+            <summary>
+            Minos MTS Image object
+            Note that MTSIMAGE objects are not publicly reference counted
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos MTSIMAGE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos MTSIMAGE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos MTSIMAGE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.#ctor(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Creates a Minos MTSIMAGE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.op_Implicit(System.Int32)~Cvb.Minos.MTSIMAGE">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSIMAGE</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.op_Implicit(System.Int64)~Cvb.Minos.MTSIMAGE">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSIMAGE</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSIMAGE.op_Implicit(System.IntPtr)~Cvb.Minos.MTSIMAGE">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSIMAGE</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.MTSINSTANCE">
+            <summary>
+            Minos MTS Instance object
+            Note that MTSINSTANCE objects are not publicly reference counted
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.#ctor(System.Int32)">
+            <summary>
+            Creates a Minos MTSINSTANCE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.#ctor(System.Int64)">
+            <summary>
+            Creates a Minos MTSINSTANCE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.#ctor(System.IntPtr)">
+            <summary>
+            Creates a Minos MTSINSTANCE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.#ctor(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Creates a Minos MTSINSTANCE object.
+            </summary>
+            <param name="handle">Native handle.</param>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.op_Implicit(System.Int32)~Cvb.Minos.MTSINSTANCE">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSINSTANCE</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.op_Implicit(System.Int64)~Cvb.Minos.MTSINSTANCE">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSINSTANCE</c>.</returns>
+        </member>
+        <member name="M:Cvb.Minos.MTSINSTANCE.op_Implicit(System.IntPtr)~Cvb.Minos.MTSINSTANCE">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="handle">Native handle.</param>
+            <returns>New <c>MTSINSTANCE</c>.</returns>
+        </member>
+        <member name="T:Cvb.Minos.TFCallbackScan">
+            <summary>
+            Informs about the remaining number of scanlines (linesToDo). If the 
+            callback function returns false, execution terminates, otherwise it 
+            continues. privateData is a pointer to personal user data. 
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos.TFCheckProgress">
+            <summary>
+            Allows to display information about the progress of the function, or 
+            to terminate it prematurely (return false). The currentXXX parameters
+            refer to the current MTSIMAGE and MTSMODEL. linesToDo informs about 
+            the remaining number of scanlines.
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos.TFLearn">
+            <summary>
+            Is called for every instance being processed during learning. 
+            privateData is a pointer to a private memory area. instance is a 
+            handle to the MTS-instance being processed. total is the total 
+            number of instances to process. correct is the number of instances 
+            which have been correctly recognized on the basis of current knowledge 
+            of the classifier. current gives the current instances index. Execution
+            is terminated if true is returned.
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos.TFilterDef">
+            <summary>
+            Filter kernel (cXXYY) for the user defined filters FilterUser2x2, 
+            FilterUser3x3, FilterUser5x5. The coefficients are in units of 1/1000, 
+            e.g. 1000 means 1.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.reserved">
+            <summary>
+            Reserved for internal use.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cLLTT">
+            <summary>
+            Coefficient LLTT.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0LTT">
+            <summary>
+            Coefficient 0LTT.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c00TT">
+            <summary>
+            Coefficient 00TT.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0RTT">
+            <summary>
+            Coefficient 0RTT.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cRRTT">
+            <summary>
+            Coefficient RRTT.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cLL0T">
+            <summary>       
+            Coefficient LL0T.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0L0T">
+            <summary>
+            Coefficient 0L0T.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c000T">
+            <summary>
+            Coefficient 000T.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0R0T">
+            <summary>
+            Coefficient 0R0T.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cRR0T">
+            <summary>
+            Coefficient RR0T.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cLL00">
+            <summary>
+            Coefficient LL00.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0L00">
+            <summary>
+            Coefficient 0L00.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0000">
+            <summary>
+            Coefficient 0000.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0R00">
+            <summary>
+            Coefficient 0R00.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cRR00">
+            <summary>
+            Coefficient RR00.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cLL0B">
+            <summary>
+            Coefficient LL0B.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0L0B">
+            <summary>
+            Coefficient 0L0B.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c000B">
+            <summary>
+            Coefficient 000B.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0R0B">
+            <summary>
+            Coefficient 0R0B.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cRR0B">
+            <summary>
+            Coefficient RR0B.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cLLBB">
+            <summary>
+            Coefficient LLBB.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0LBB">
+            <summary>
+            Coefficient 0LBB.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c00BB">
+            <summary>
+            Coefficient 00BB.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.c0RBB">
+            <summary>
+            Coefficient 0RBB.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.cRRBB">
+            <summary>
+            Coefficient RRBB.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TFilterDef.offset">
+            <summary>
+            Offset to be added to the convolution result.
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos.TLearnControlStructure">
+            <summary>
+            Controls some details of the learning process (see LearnCLFFromMTS). 
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Param1">
+            <summary>
+            IndifferenceRadius. Default value = 6.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Param2">
+            <summary>
+            NegativesDensity. Default value = 1000.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Param3">
+            <summary>
+            Default value = 8.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Param4">
+            <summary>
+            Default value = 15.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Param5">
+            <summary>
+            Default value = 2.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Param6">
+            <summary>
+            Default value = 50.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.Reserved">
+            <summary>
+            Reserved for internal use. 
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.PrivateData">
+            <summary>
+            Pointer to the users private data, communicated back to the user in 
+            every call of the callback function TFLearn. 
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.TLearnControlStructure.ShowProgress">
+            <summary>
+            Callback function of type TFLearn.
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos.QualityMeasureMethod">
+            <summary>
+            Correspond to different quality types for the classifier.
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.QualityMeasureMethod.Quality_Unnormalized">
+            <summary>
+            Indicates unnormalized quality as in older versions of Minos (in 
+            units of contrast ranging from 0 to 255).
+            </summary>
+        </member>
+        <member name="F:Cvb.Minos.QualityMeasureMethod.Quality_ReturnCorrelation">
+            <summary>
+            Quality-computation by correlation (ranging from 0 to 1).
+            </summary>
+        </member>
+        <member name="T:Cvb.Minos.Correlation">
+            <summary>
+            Pattern recognition based on normalized grayvalue correlation with an 
+            image template.
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.Correlation.OptCorrelation(Cvb.Image.IMG,Cvb.Minos.TPL,System.Int32,System.Int32,System.Int32,Cvb.Image.TArea,System.Boolean,System.Double@,System.Double@,System.Double@)">
+            <summary>
+            Translates the template over the image, such that the templates 
+            coordinate origin assumes all positions in the search area Area, 
+            searches for the global maximum of the normalized grayvalue correlation 
+            between image and template and returns the corresponding data.
+            </summary><param name="image">
+            Handle to the image to be processed.
+            </param><param name="template">
+            Handle to the template to be compared (image handle). The coordinate 
+            origin of the template is the hotspot of recognition.
+            </param><param name="imagePlaneIndex">
+            Identifies the color-plane of the image to be processed.
+            There are two possibilities:
+            1) 0 not greater than IndexTemplate and 0 not greater than IndexImage. 
+               In this case the grayscale images of the corresponding color-planes 
+               are compared.
+            2) IndexTemplate = -1 and IndexImage = -1. In this case the correlation 
+               is computed for the full multi-plane images.
+            </param><param name="templatePlaneIndex">
+            Identifies the color-plane in the template image to be processed. 
+            There are two possibilities:
+            1) 0 not greater than IndexTemplate and 0 not greater than IndexImage. 
+               In this case the grayscale images of the corresponding color-planes 
+               are compared.
+            2) IndexTemplate = -1 and IndexImage = -1. In this case the correlation 
+               is computed for the full multi-plane images.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to be 
+            carried out. A value of 1000 means every pixel, 500 every other pixel 
+            in every other line. In the case of correlation a reduced density 
+            causes subsampling not only for the search, but also for the 
+            correlation itself. A density of 500 therefore implies a quarter of the 
+            computations being carried out for a quarter of the pixels, thus 
+            speeding things up by a factor of 16. Of course there is an unavoidable 
+            deterioration of the results.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="subPixel">
+            Flag which controls subpixel accuracy. If set to true, in addition to 
+            determination of the correlation maximum the following computations are 
+            carried out: If the Density was less than 1000 the position information 
+            for the maximum is refined to 1 pixel. Finally a quadratic fit to the 
+            surface of correlation values in the 3x3-neighbourhood of the maximum 
+            is used to make a subpixel estimate on the pattern position.
+            </param><param name="optCorrelation">
+            Refers to the maximal correlation.
+            </param><param name="x">
+            Refers to X-position of the maximum - corresponding to the templates 
+            coordinate origin.
+            </param><param name="y">
+            Refers to Y-position of the maximum - corresponding to the templates 
+            coordinate origin.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Correlation.OptCorrelations(Cvb.Image.IMG,Cvb.Minos.TPL,System.Int32,System.Int32,System.Int32,Cvb.Image.TArea,System.Double,System.Int32,System.Int32,Cvb.Minos.TFCallbackScan,System.IntPtr,Cvb.Minos.RESULTS@)">
+            <summary>
+            Translates the template over the image, such that the templates 
+            coordinate origin assumes all positions in the search area Area, 
+            searches for the local maxima of the normalized grayvalue correlation 
+            between image and template and returns the corresponding list of 
+            results.
+            </summary><param name="image">
+            Handle to the image to be processed.
+            </param><param name="template">
+            Handle to the template to be compared (image handle). The coordinate 
+            origin of the template is the hotspot of recognition.
+            </param><param name="imagePlaneIndex">
+            Identifies the color-plane of the image to be processed.
+            There are two possibilities:
+            1) 0 not greater than IndexTemplate and 0 not greater than IndexImage. 
+               In this case the grayscale images of the corresponding color-planes 
+               are compared.
+            2) IndexTemplate = -1 and IndexImage = -1. In this case the correlation 
+               is computed for the full multi-plane images.
+            </param><param name="templatePlaneIndex">
+            Identifies the color-plane in the template image to be processed. 
+            There are two possibilities:
+            1) 0 not greater than IndexTemplate and 0 not greater than IndexImage. 
+               In this case the grayscale images of the corresponding color-planes 
+               are compared.
+            2) IndexTemplate = -1 and IndexImage = -1. In this case the correlation 
+               is computed for the full multi-plane images.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to be 
+            carried out. A value of 1000 means every pixel, 500 every other pixel 
+            in every other line. In the case of correlation a reduced density 
+            causes subsampling not only for the search, but also for the 
+            correlation itself. A density of 500 therefore implies a quarter of the 
+            computations being carried out for a quarter of the pixels, thus 
+            speeding things up by a factor of 16. Of course there is an unavoidable 
+            deterioration of the results.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="AThreshold">
+            Minimum for the correlations. No points with a correlation below 
+            Threshold will be accepted as local maxima.
+            </param><param name="ARadius">
+            Locality for the local maxima: A solution is discarded if a solution 
+            with higher quality exists within the specified radius.
+            </param><param name="AMaxSearch">
+            Position of the maximum - corresponding to the templates coordinate 
+            origin.
+            </param><param name="progress">
+            Callback function of type TFCallbackScan, to be called for every 
+            scanline.
+            </param><param name="pProgress">
+            Pointer to the users private data, and is returned to the user with 
+            every call to TFCallbackScan above.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Correlation.OptCorrelations(Cvb.Image.IMG,Cvb.Minos.TPL,System.Int32,System.Int32,System.Int32,Cvb.Image.TArea,System.Double,System.Int32,System.Int32,Cvb.Minos.TFCallbackScan,System.IntPtr,Cvb.SharedMinosResults@)">
+            <summary>
+            Translates the template over the image, such that the templates 
+            coordinate origin assumes all positions in the search area Area, 
+            searches for the local maxima of the normalized grayvalue correlation 
+            between image and template and returns the corresponding list of 
+            results.
+            </summary><param name="image">
+            Handle to the image to be processed.
+            </param><param name="template">
+            Handle to the template to be compared (image handle). The coordinate 
+            origin of the template is the hotspot of recognition.
+            </param><param name="imagePlaneIndex">
+            Identifies the color-plane of the image to be processed.
+            There are two possibilities:
+            1) 0 not greater than IndexTemplate and 0 not greater than IndexImage. 
+               In this case the grayscale images of the corresponding color-planes 
+               are compared.
+            2) IndexTemplate = -1 and IndexImage = -1. In this case the correlation 
+               is computed for the full multi-plane images.
+            </param><param name="templatePlaneIndex">
+            Identifies the color-plane in the template image to be processed. 
+            There are two possibilities:
+            1) 0 not greater than IndexTemplate and 0 not greater than IndexImage. 
+               In this case the grayscale images of the corresponding color-planes 
+               are compared.
+            2) IndexTemplate = -1 and IndexImage = -1. In this case the correlation 
+               is computed for the full multi-plane images.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to be 
+            carried out. A value of 1000 means every pixel, 500 every other pixel 
+            in every other line. In the case of correlation a reduced density 
+            causes subsampling not only for the search, but also for the 
+            correlation itself. A density of 500 therefore implies a quarter of the 
+            computations being carried out for a quarter of the pixels, thus 
+            speeding things up by a factor of 16. Of course there is an unavoidable 
+            deterioration of the results.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="AThreshold">
+            Minimum for the correlations. No points with a correlation below 
+            Threshold will be accepted as local maxima.
+            </param><param name="ARadius">
+            Locality for the local maxima: A solution is discarded if a solution 
+            with higher quality exists within the specified radius.
+            </param><param name="AMaxSearch">
+            Position of the maximum - corresponding to the templates coordinate 
+            origin.
+            </param><param name="progress">
+            Callback function of type TFCallbackScan, to be called for every 
+            scanline.
+            </param><param name="pProgress">
+            Pointer to the users private data, and is returned to the user with 
+            every call to TFCallbackScan above.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="T:Cvb.Minos.Filter">
+            <summary>
+            Various frequently used filters. It also allows filtering with a user 
+            defined kernel of 2x2, 3x3 or 5x5.
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Laplace(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Laplace-Filter. An offset grayvalue of 128 is added to the result to 
+            reduce loss of information. Underflow and overflow grayvalues are 
+            truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Laplace(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Laplace-Filter. An offset grayvalue of 128 is added to the result to 
+            reduce loss of information. Underflow and overflow grayvalues are 
+            truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Sharpen(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Sharpens image. Underflow and overflow grayvalues are truncated to 
+            0 and 255 respectively. Although the function causes a visible de
+            -blurring of images it also amplifies noise and is therefore not 
+            recommended for preprocessing for the Minos classifier but may be 
+            valuable for other purposes.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Sharpen(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Sharpens image. Underflow and overflow grayvalues are truncated to 
+            0 and 255 respectively. Although the function causes a visible de
+            -blurring of images it also amplifies noise and is therefore not 
+            recommended for preprocessing for the Minos classifier but may be 
+            valuable for other purposes.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Low2x2(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            2x2 lowpass (smoothing) filter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Low2x2(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            2x2 lowpass (smoothing) filter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Low3x3(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            3x3 lowpass (smoothing) filter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Low3x3(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            3x3 lowpass (smoothing) filter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Low5x5(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            5x5 lowpass (smoothing) filter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Low5x5(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            5x5 lowpass (smoothing) filter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Dilate(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image by replacing the grayvalue of every pixel with the 
+            maximal grayvalue of the pixels in the surrounding 3x3 rectangle.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Dilate(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Creates an image by replacing the grayvalue of every pixel with the 
+            maximal grayvalue of the pixels in the surrounding 3x3 rectangle.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Erode(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image by replacing the grayvalue of every pixel with the 
+            minimal grayvalue of the pixels in the surrounding 3x3 rectangle.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Erode(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Creates an image by replacing the grayvalue of every pixel with the 
+            minimal grayvalue of the pixels in the surrounding 3x3 rectangle.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Edge2x2(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Corresponds to a Roberts type edge enhancement filter. Underflow and 
+            overflow grayvalues are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Edge2x2(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Corresponds to a Roberts type edge enhancement filter. Underflow and 
+            overflow grayvalues are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Edge3x3(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Corresponds to a 2nd order Roberts type edge enhancement filter, 
+            with a slightly better response than Filter.Edge2x2. Underflow and 
+            overflow grayvalues are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Edge3x3(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Corresponds to a 2nd order Roberts type edge enhancement filter, 
+            with a slightly better response than Filter.Edge2x2. Underflow and 
+            overflow grayvalues are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Pyramid3x3(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image by applying the binomial lowpass filter equivalent 
+            to FilterLow3x3 and simultaneously downscaling the image by a factor 
+            of 2.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Pyramid3x3(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Creates an image by applying the binomial lowpass filter equivalent 
+            to FilterLow3x3 and simultaneously downscaling the image by a factor 
+            of 2.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Pyramid4x4(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image by applying the binomial 4x4 lowpass filter and 
+            simultaneously downscaling the image by a factor of 2.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Pyramid4x4(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Creates an image by applying the binomial 4x4 lowpass filter and 
+            simultaneously downscaling the image by a factor of 2.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Pyramid5x5(Cvb.Image.IMG,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image by applying the binomial lowpass filter equivalent 
+            to FilterLow5x5 and simultaneously downscaling the image by a factor 
+            of 2.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.Pyramid5x5(Cvb.Image.IMG,Cvb.SharedImg@)">
+            <summary>
+            Creates an image by applying the binomial lowpass filter equivalent 
+            to FilterLow5x5 and simultaneously downscaling the image by a factor 
+            of 2.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.ButterWorth(Cvb.Image.IMG,System.Boolean,System.Double,System.Int32,System.Int32,System.Double,Cvb.Image.IMG@)">
+            <summary>
+            ButterWorth filter. Creates an image by applying a highpass- or 
+            lowpass-filter and multiplying gain and adding an offset afterwards. 
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="highPass">
+            True if high pass filter should be used; false for low pass filter.
+            </param><param name="gain">
+            Gain value for output image.
+            </param><param name="addOffset">
+            Offset added to output image.
+            </param><param name="order">
+            Order of the filter. Supports first(1) and second(2) order.
+            </param><param name="range">
+            Range which is taken into account. 
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.ButterWorth(Cvb.Image.IMG,System.Boolean,System.Double,System.Int32,System.Int32,System.Double,Cvb.SharedImg@)">
+            <summary>
+            ButterWorth filter. Creates an image by applying a highpass- or 
+            lowpass-filter and multiplying gain and adding an offset afterwards. 
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="highPass">
+            True if high pass filter should be used; false for low pass filter.
+            </param><param name="gain">
+            Gain value for output image.
+            </param><param name="addOffset">
+            Offset added to output image.
+            </param><param name="order">
+            Order of the filter. Supports first(1) and second(2) order.
+            </param><param name="range">
+            Range which is taken into account. 
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.User2x2(Cvb.Image.IMG,Cvb.Minos.TFilterDef@,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image through filtering with the user defined convolution 
+            kernel c0000 c0R00 c000B c0R0B (all entries divided by 1000 !!!) and 
+            subsequently adding the value Offst. The kernel coefficients cXXYY 
+            and the offset parameter Offst are fields of the FilterDef structure, 
+            which has to be supplied as a parameter. Underflow and overflow 
+            grayvalues are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="filterDef">
+            Refers to a TFilterDef structure containing the filters parameters.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.User2x2(Cvb.Image.IMG,Cvb.Minos.TFilterDef@,Cvb.SharedImg@)">
+            <summary>
+            Creates an image through filtering with the user defined convolution 
+            kernel c0000 c0R00 c000B c0R0B (all entries divided by 1000 !!!) and 
+            subsequently adding the value Offst. The kernel coefficients cXXYY 
+            and the offset parameter Offst are fields of the FilterDef structure, 
+            which has to be supplied as a parameter. Underflow and overflow 
+            grayvalues are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="filterDef">
+            Refers to a TFilterDef structure containing the filters parameters.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.User3x3(Cvb.Image.IMG,Cvb.Minos.TFilterDef@,Cvb.Image.IMG@)">
+            <summary>
+            Creates an image through filtering with the user defined convolution 
+            kernel c0L0T c000T c0R0T c0L00 c0000 c0R00 c0L0B c000B c0R0B (all 
+            entries divided by 1000 !!!) and subsequently adding the value Offst. 
+            The kernel coefficients cXXYY and the offset parameter Offst are 
+            fields of the FilterDef structure, which has to be supplied as a 
+            parameter. Underflow and overflow grayvalues are truncated to 0 and 
+            255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="filterDef">
+            Refers to a TFilterDef structure containing the filters parameters.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.User3x3(Cvb.Image.IMG,Cvb.Minos.TFilterDef@,Cvb.SharedImg@)">
+            <summary>
+            Creates an image through filtering with the user defined convolution 
+            kernel c0L0T c000T c0R0T c0L00 c0000 c0R00 c0L0B c000B c0R0B (all 
+            entries divided by 1000 !!!) and subsequently adding the value Offst. 
+            The kernel coefficients cXXYY and the offset parameter Offst are 
+            fields of the FilterDef structure, which has to be supplied as a 
+            parameter. Underflow and overflow grayvalues are truncated to 0 and 
+            255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="filterDef">
+            Refers to a TFilterDef structure containing the filters parameters.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.User5x5(Cvb.Image.IMG,Cvb.Minos.TFilterDef@,Cvb.Image.IMG@)">
+            <summary>
+            creates an image through filtering with the user defined convolution 
+            kernel using all coefficients (all entries are divided by 1000 !!!).
+            Offset is subsequently added. The kernel coefficients cXXYY and the 
+            offset parameter Offst are fields of the FilterDef structure, which 
+            has to be supplied as a parameter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="filterDef">
+            Refers to a TFilterDef structure containing the filters parameters.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Filter.User5x5(Cvb.Image.IMG,Cvb.Minos.TFilterDef@,Cvb.SharedImg@)">
+            <summary>
+            creates an image through filtering with the user defined convolution 
+            kernel using all coefficients (all entries are divided by 1000 !!!).
+            Offset is subsequently added. The kernel coefficients cXXYY and the 
+            offset parameter Offst are fields of the FilterDef structure, which 
+            has to be supplied as a parameter. Underflow and overflow grayvalues 
+            are truncated to 0 and 255 respectively.
+            </summary><param name="inputImage">
+            Input image.
+            </param><param name="filterDef">
+            Refers to a TFilterDef structure containing the filters parameters.
+            </param><param name="outputImage">
+            Output image.
+            </param><returns>
+            False on error, true otherwise.
+            </returns>
+        </member>
+        <member name="T:Cvb.Minos.Search">
+            <summary>
+            Pattern recognition based on the Minos classifier.
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.Search.SearchOptimum(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,System.Double@,System.Double@,System.Double@,System.Double@,System.Double@,System.String@)">
+            <summary>
+            Scans the search area for the global maximum of the quality surface 
+            and returns the corresponding data.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to an image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to 
+            be carried out. A value of 1000 means every pixel, 500 every other 
+            pixel in every other line.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="quality">
+            Refers to the pattern quality. It is set to zero if there is no 
+            pattern. 
+            </param><param name="xPos">
+            Refers to the x-position of the pattern. 
+            </param><param name="yPos">
+            Refers to the y-position of the pattern. 
+            </param><param name="dX">
+            Refers to the DeltaX of the model, which corresponds to the pattern 
+            found.
+            </param><param name="dY">
+            Refers to the DeltaY of the model, which corresponds to the pattern 
+            found.
+            </param><param name="name">
+            ClassID of the pattern. 
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.SubpixelOptimum(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,System.Double@,System.Double@,System.Double@,System.Double@,System.Double@,System.String@)">
+            <summary>
+            Scans the search area Area for the global maximum of the quality 
+            surface. If the Density was less than 1000 this position information 
+            is subsequently refined to 1 pixel. Finally a quadratic fit to the 
+            quality surface in the neighbourhood of the maximum is used to make 
+            a subpixel estimate on the pattern position. This function works 
+            only for classifiers created with the 16-bit version (see IsOldCLF).
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to 
+            be carried out. A value of 1000 means every pixel, 500 every other 
+            pixel in every other line.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="quality">
+            Refers to the pattern quality. It is set to zero if there is no 
+            pattern.
+            </param><param name="xPos">
+            Refers to the x-position of the pattern.
+            </param><param name="yPos">
+            Refers to the y-position of the pattern.
+            </param><param name="dX">
+            Refers to the DeltaX of the model, which corresponds to the pattern 
+            found.
+            </param><param name="dY">
+            Refers to the DeltaY of the model, which corresponds to the pattern 
+            found.
+            </param><param name="name">
+            ClassID of the pattern.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.SearchFirst(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,System.Double@,System.Double@,System.Double@,System.Double@,System.Double@,System.String@)">
+            <summary>
+            Scans the search area for the first position whose quality exceeds 
+            the current threshold and returns the corresponding data. This of 
+            course depends on the search direction implied by the Area parameter.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to 
+            be carried out. A value of 1000 means every pixel, 500 every other 
+            pixel in every other line
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="quality">
+            Refers to the pattern quality. It is set to zero if there is no 
+            pattern.
+            </param><param name="xPos">
+            Refers to the x-position of the pattern.
+            </param><param name="yPos">
+            Refers to the y-position of the pattern.
+            </param><param name="dX">
+            Refers to the DeltaX of the model, which corresponds to the pattern 
+            found.
+            </param><param name="dY">
+            Refers to the DeltaY of the model, which corresponds to the pattern 
+            found.
+            </param><param name="name">
+            ClassID of the pattern.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.SearchAll(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,System.Int32,System.Int32,Cvb.Minos.RESULTS@)">
+            <summary>
+            Scans the search area Area and inserts local maxima of the quality-
+            surface into a list of search-results.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to 
+            be carried out. A value of 1000 means every pixel, 500 every other 
+            pixel in every other line.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="radius">
+            Locality for the local maxima: A solution is discarded if a solution 
+            with higher quality exists within the specified radius
+            </param><param name="maxSearch">
+            Maximal number of results accepted.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.SearchAll(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,System.Int32,System.Int32,Cvb.SharedMinosResults@)">
+            <summary>
+            Scans the search area Area and inserts local maxima of the quality-
+            surface into a list of search-results.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the search is to 
+            be carried out. A value of 1000 means every pixel, 500 every other 
+            pixel in every other line.
+            </param><param name="area">
+            Area to be searched.
+            </param><param name="radius">
+            Locality for the local maxima: A solution is discarded if a solution 
+            with higher quality exists within the specified radius
+            </param><param name="maxSearch">
+            Maximal number of results accepted.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.ReadToken(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Int32,System.Double@,System.Double@,System.Double@,System.Double@,System.Double@,System.String@,System.Int32@,System.String@)">
+            <summary>
+            Scans the search area Area for the position with the best match to 
+            the classifier. If a pattern has been found, the pattern specific 
+            vector (DeltaX, DeltaY) and the coordinates defining the 
+            OCR-expectation window TranslatedArea are added to the position, to 
+            obtain a window for the next search. The searches are continued until 
+            no pattern is found in the expectation window. The ClassID’s of the 
+            various recognized patterns are concatenated to the result-string 
+            Token. The data pertaining to the last character read is returned in 
+            detail.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the searches are 
+            to be carried out. A value of 1000 means every pixel, 500 every 
+            other pixel in every other line.
+            </param><param name="area">
+            Area to be searched for the 1st character.
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="maxSearch">
+            Maximal number of characters accepted. The buffer Token to receive 
+            the concatenated result should have at least MaxSearch+1 byte.
+            </param><param name="quality">
+            Refers to the pattern quality of the last pattern found, or zero if 
+            there is no pattern.
+            </param><param name="xPos">
+            Refers to the x-position of the last pattern found.
+            </param><param name="yPos">
+            Refers to the y-position of the last pattern found.
+            </param><param name="dX">
+            Refers to the DeltaX of the pattern model, which corresponds to the 
+            last pattern found.
+            </param><param name="dY">
+            Refers to the DeltaY of the pattern model, which corresponds to the 
+            last pattern found.
+            </param><param name="name">
+            ClassID of the pattern model, which corresponds to the last pattern 
+            found.
+            </param><param name="charCount">
+            Number of patterns found.
+            </param><param name="token">
+            Concatenated String of the found patterns.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.ReadTokenFirst(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Int32,System.Double@,System.Double@,System.Double@,System.Double@,System.Double@,System.String@,System.Int32@,System.String@)">
+            <summary>
+            Equivalent to ReadToken, except that it returns the data pertaining 
+            to the first rather than the last pattern found. 
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the searches are 
+            to be carried out. A value of 1000 means every pixel, 500 every 
+            other pixel in every other line.
+            </param><param name="area">
+            Area to be searched for the 1st character.
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="maxSearch">
+            Maximal number of characters accepted. The buffer Token to receive 
+            the concatenated result should have at least MaxSearch+1 byte.
+            </param><param name="quality">
+            Refers to the pattern quality of the last pattern found, or zero if 
+            there is no pattern.
+            </param><param name="xPos">
+            Refers to the x-position of the last pattern found.
+            </param><param name="yPos">
+            Refers to the y-position of the last pattern found.
+            </param><param name="dX">
+            Refers to the DeltaX of the pattern model, which corresponds to the 
+            last pattern found.
+            </param><param name="dY">
+            Refers to the DeltaY of the pattern model, which corresponds to the 
+            last pattern found.
+            </param><param name="name">
+            ClassID of the pattern model, which corresponds to the last pattern 
+            found.
+            </param><param name="charCount">
+            Number of patterns found.
+            </param><param name="token">
+            Concatenated String of the found patterns.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.ReadVerifyToken(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Int32,Cvb.Minos.RESULTS@)">
+            <summary>
+            First scans the search area for the position with the best match to 
+            the classifier. If a pattern has been found, the pattern specific 
+            vector (DeltaX, DeltaY) and the coordinates defining the 
+            OCR-expectation window TranslatedArea are added to the position, to 
+            obtain a window for the next search. The searches are continued 
+            until no pattern is found in the expectation window. The different 
+            solutions are inserted into a list of search-results.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the searches are 
+            to be carried out. A value of 1000 means every pixel, 500 every 
+            other pixel in every other line.
+            </param><param name="area">
+            Area to be searched for the 1st character.
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="maxSearch">
+            Maximal number of results accepted.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.ReadVerifyToken(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Int32,Cvb.SharedMinosResults@)">
+            <summary>
+            First scans the search area for the position with the best match to 
+            the classifier. If a pattern has been found, the pattern specific 
+            vector (DeltaX, DeltaY) and the coordinates defining the 
+            OCR-expectation window TranslatedArea are added to the position, to 
+            obtain a window for the next search. The searches are continued 
+            until no pattern is found in the expectation window. The different 
+            solutions are inserted into a list of search-results.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the searches are 
+            to be carried out. A value of 1000 means every pixel, 500 every 
+            other pixel in every other line.
+            </param><param name="area">
+            Area to be searched for the 1st character.
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="maxSearch">
+            Maximal number of results accepted.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.ReadCharacterList(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Int32,Cvb.Minos.RESULTS@)">
+            <summary>
+            First scans the search area for the position with the best match to 
+            the classifier. If a pattern has been found, the pattern specific 
+            vector (DeltaX, DeltaY) and the coordinates defining the 
+            OCR-expectation window TranslatedArea are added to the position, to 
+            obtain a window for the next search. The searches are continued 
+            until no pattern is found in the expectation window. The different 
+            solutions are inserted into a list of search-results.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the searches are 
+            to be carried out. A value of 1000 means every pixel, 500 every 
+            other pixel in every other line.
+            </param><param name="area">
+            Area to be searched for the 1st character.
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="maxSearch">
+            Maximal number of results accepted.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Search.ReadCharacterList(Cvb.Minos.CLF,Cvb.Image.IMG,System.Int32,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Int32,Cvb.SharedMinosResults@)">
+            <summary>
+            First scans the search area for the position with the best match to 
+            the classifier. If a pattern has been found, the pattern specific 
+            vector (DeltaX, DeltaY) and the coordinates defining the 
+            OCR-expectation window TranslatedArea are added to the position, to 
+            obtain a window for the next search. The searches are continued 
+            until no pattern is found in the expectation window. The different 
+            solutions are inserted into a list of search-results.
+            </summary><param name="clf">
+            Handle to a classifier.
+            </param><param name="image">
+            Handle to the image to be processed.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="density">
+            Stands for the density (from 0 to 1000) with which the searches are 
+            to be carried out. A value of 1000 means every pixel, 500 every 
+            other pixel in every other line.
+            </param><param name="area">
+            Area to be searched for the 1st character.
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="maxSearch">
+            Maximal number of results accepted.
+            </param><param name="results">
+            Refers to a handle to the list of results created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="T:Cvb.Minos.Teach">
+            <summary>
+            Functions for training a Minos classifier.
+            </summary>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CreateMTS(System.Double,System.Double)">
+            <summary>
+            Creates a new, empty training set.
+            </summary><param name="expRadius">
+            Expectation window radius. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><param name="corThresh">
+            Correlation threshold. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><returns>
+            New training set.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CreateSharedMts(System.Double,System.Double)">
+            <summary>
+            Creates a new, empty training set.
+            </summary><param name="expRadius">
+            Expectation window radius. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><param name="corThresh">
+            Correlation threshold. Relevant for the creation of new 
+            instances and the geometric transformation of MTS-images.
+            </param><returns>
+            New training set.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.NewMTSImage(Cvb.Minos.MTS,Cvb.Image.IMG)">
+            <summary>
+            Uses an image handle to create a corresponding MTS-image, and 
+            inserts it into the training set. The function fails for color 
+            (multiplane) images, in which case NewMTSImageIndex should be used.
+            An MTS-image is a datastructure containing an image handle, a list 
+            of instance handles for the samples taken from the image above and 
+            the handle to the training set which owns it.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="image">
+            Handle to an image.
+            </param><returns>
+            New MTS-Image
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.NewMTSImageIndex(Cvb.Minos.MTS,Cvb.Image.IMG,System.Int32)">
+            <summary>
+            Same as NewMTSImage, except that an index identifying the 
+            color-plane may also be specified. 
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="image">
+            Handle to an image.
+            </param><param name="index">
+            Specifies the color-plane to be used.
+            </param><returns>
+            New MTS-Image.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.TransformMTSImage(Cvb.Minos.MTSIMAGE,Cvb.Image.TMatrix)">
+            <summary>
+            Geometrically transforms an MTS-image in the training set by a 2x2 
+            matrix and also transforms all the instances within the given image. 
+            The new image and instances are inserted in the MTS. If the 
+            prescribed correlation test fails for any of these new instances 
+            (see NewMTSInstance), new models with the same pattern names are 
+            automatically created for the new instances.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><param name="matrix">
+            Transformation matrix.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.RemoveMTSImage(Cvb.Minos.MTSIMAGE)">
+            <summary>
+            Removes an MTS-Image from the training set. All instances contained 
+            in the image are also removed. Models which in this way obtain empty 
+            instance lists are retained.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.NewMTSModel(Cvb.Minos.MTSIMAGE,System.String,System.Double,System.Double,Cvb.Image.TArea)">
+            <summary>
+            Creates a new pattern model.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image which will be first instance of the MTS-Model.
+            </param><param name="name">
+            Name of the new patter model.
+            </param><param name="x">
+            x-coordinate of the first instance. Even though of double precision, 
+            these values should be whole numbers.
+            </param><param name="y">
+            y-coordinate of the first instance. Even though of double precision, 
+            these values should be whole numbers.
+            </param><param name="area">
+            Specifying the feature window for the pattern model. The feature 
+            window is the smallest rectangle sufficient to recognize the pattern 
+            on the basis of the contents. It must be an axis-parallel rectangle 
+            with integral coordinates containing the point (0,0) (because it 
+            will always be added to the instance positions).
+            </param><returns>
+            New pattern model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.RemoveMTSModel(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Removes a pattern model from the training set. All instances 
+            representing the model are also removed.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.TranslateModelOrigin(Cvb.Minos.MTSMODEL)">
+            <summary>
+            Modifies the position of the recognition-hotspot of a pattern model, 
+            by first obtaining a handle to the models image (GetImageFromModel), 
+            changing the coordinate origin to the desired position and finally 
+            calling TranslateModelOrigin. The change causes corresponding 
+            changes in the positions of all the instances representing the model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.NewMTSInstance(Cvb.Minos.MTSIMAGE,System.String,System.Boolean,System.Double@,System.Double@,Cvb.Minos.MTSINSTANCE@)">
+            <summary>
+            Attempts to create a new sample instance for a pattern class whose 
+            name is specified. All models of the given ClassID are searched, to 
+            find the one which correlates best in the rectangle given by the 
+            specified position and the global parameter ExpRadius. The position 
+            of the sample is then modified to the point of optimal correlation, 
+            an instance is created and inserted into the instance list of the 
+            model with the highest correlation. If this correlation lies below 
+            the global parameter CorThresh, the function still returns true, but 
+            returns NULL as an instance handle. 
+            </summary><param name="image">
+            Handle to an MTS-Image.
+            </param><param name="name">
+            String specifying the ClassID.
+            </param><param name="askForce">
+            Flag controlling the response to a failed correlation test. If 
+            askForce is true, a messagebox appears asking if the user wants to 
+            force creation of a model, even though the sample has failed the 
+            correlation test.
+            </param><param name="x">
+            Specifies the initial x-position of the sample. Even though of 
+            double precision, these quantities should be whole numbers. These 
+            values may be modified by the correlation test.
+            </param><param name="y">
+            Specifies the initial y-position of the sample. Even though of 
+            double precision, these quantities should be whole numbers. These 
+            values may be modified by the correlation test.
+            </param><param name="instance">
+            Refers to a handle to the created instance where it is to be placed, 
+            if the function is successful.
+            </param><returns>
+            If there are no models with the specified ClassID, the function 
+            returns false, and the user should use NewMTSModel instead, to 
+            create a corresponding model.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.RemoveMTSInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Remove an instance from the training set. Models which in this way 
+            obtain empty instance lists are retained.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CreateImageFromInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Creates and returns an image representing an instance of the MTS.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Handle to a new image of an MTS-Instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CreateSharedImageFromInstance(Cvb.Minos.MTSINSTANCE)">
+            <summary>
+            Creates and returns an image representing an instance of the MTS.
+            </summary><param name="mtsInstance">
+            Handle to an MTS-Instance.
+            </param><returns>
+            Handle to a new image of an MTS-Instance.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSConsistencyCheck(Cvb.Minos.MTS,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.Minos.RESULTS@)">
+            <summary>
+            Scans all the images in the training set for any point which the user 
+            might have forgotten to mark as a positive instance for any of the 
+            pattern models.
+            </summary><param name="mts">
+            Handle to a training set
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models 
+            necessary for inclusion in the list of suspect points.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it 
+            prematurely.
+            </param><param name="pPrivate">
+            Pointer to private user data, which is communicated back to the user 
+            in progress.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSConsistencyCheck(Cvb.Minos.MTS,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.SharedMinosResults@)">
+            <summary>
+            Scans all the images in the training set for any point which the user 
+            might have forgotten to mark as a positive instance for any of the 
+            pattern models.
+            </summary><param name="mts">
+            Handle to a training set
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models 
+            necessary for inclusion in the list of suspect points.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it 
+            prematurely.
+            </param><param name="pPrivate">
+            Pointer to private user data, which is communicated back to the user 
+            in progress.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSImageCheck(Cvb.Minos.MTSIMAGE,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.Minos.RESULTS@)">
+            <summary>
+            Scans an image in the training set for any point which the user 
+            might have forgotten to mark as a positive instance for any of the 
+            pattern models.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models 
+            necessary for inclusion in the list of suspect points.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it 
+            prematurely.
+            </param><param name="pPrivate">
+            Pointer to private user data, which is communicated back to the user 
+            in progress.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSImageCheck(Cvb.Minos.MTSIMAGE,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.SharedMinosResults@)">
+            <summary>
+            Scans an image in the training set for any point which the user 
+            might have forgotten to mark as a positive instance for any of the 
+            pattern models.
+            </summary><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models 
+            necessary for inclusion in the list of suspect points.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it 
+            prematurely.
+            </param><param name="pPrivate">
+            Pointer to private user data, which is communicated back to the user 
+            in progress.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSModelCheck(Cvb.Minos.MTSMODEL,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.Minos.RESULTS@)">
+            <summary>
+            Scans all the images in the training set for any point which the 
+            user might have forgotten to mark as a positive instance for the 
+            given pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models.
+            necessary for inclusion in the list of suspect points.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it.
+            prematurely.
+            </param><param name="pPrivate">
+            Pointer to private user data, which is communicated back to the user 
+            in progress.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSModelCheck(Cvb.Minos.MTSMODEL,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.SharedMinosResults@)">
+            <summary>
+            Scans all the images in the training set for any point which the 
+            user might have forgotten to mark as a positive instance for the 
+            given pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models.
+            necessary for inclusion in the list of suspect points.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it.
+            prematurely.
+            </param><param name="pPrivate">
+            Pointer to private user data, which is communicated back to the user 
+            in progress.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSModelImageCheck(Cvb.Minos.MTSMODEL,Cvb.Minos.MTSIMAGE,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.Minos.RESULTS@)">
+            <summary>
+            Scans the specified image in the training set for any point which 
+            the user might have forgotten to mark as a positive instance for 
+            the specified pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it.
+            </param><param name="pPrivate">
+            Refers to a handle for the list of results which is to be created.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSModelImageCheck(Cvb.Minos.MTSMODEL,Cvb.Minos.MTSIMAGE,System.Double,System.Int32,Cvb.Minos.TFCheckProgress,System.IntPtr,Cvb.SharedMinosResults@)">
+            <summary>
+            Scans the specified image in the training set for any point which 
+            the user might have forgotten to mark as a positive instance for 
+            the specified pattern model.
+            </summary><param name="mtsModel">
+            Handle to an MTS-Model.
+            </param><param name="mtsImage">
+            Handle to an MTS-Image.
+            </param><param name="threshold">
+            Marks the minimal correlation of an image point to any of the models.
+            </param><param name="density">
+            Density parameter (0-1000) which allows to speed up the process.
+            </param><param name="progress">
+            Callback function of type TFCheckProgress, which allows to display 
+            information about the progress of the function, or to terminate it.
+            </param><param name="pPrivate">
+            Refers to a handle for the list of results which is to be created.
+            </param><param name="results">
+            Refers to a handle for the list of results which is to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.LearnCLFFromMTS(Cvb.Minos.MTS,System.String,Cvb.Minos.TLearnControlStructure,Cvb.Minos.CLF@)">
+            <summary>
+            Creates a classifier from a training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="mtsName">
+            String giving a name for the MTS (to be recorded in the classifier).
+            </param><param name="lcs">
+            TLearnControlStructure, specifying various parameters for the learning process.
+            </param><param name="clf">
+            Refers to the handle for the classifier to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.LearnCLFFromMTS(Cvb.Minos.MTS,System.String,Cvb.Minos.TLearnControlStructure,Cvb.SharedMinosClf@)">
+            <summary>
+            Creates a classifier from a training set.
+            </summary><param name="mts">
+            Handle to a training set.
+            </param><param name="mtsName">
+            String giving a name for the MTS (to be recorded in the classifier).
+            </param><param name="lcs">
+            TLearnControlStructure, specifying various parameters for the learning process.
+            </param><param name="clf">
+            Refers to the handle for the classifier to be created.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CLFSetGlobalAdvance(Cvb.Minos.CLF,System.Int32,System.Int32,Cvb.Minos.CLF@)">
+            <summary>
+            Sets the advance vectors for all classes in the InputCLF to the 
+            values provided to the function. For a more detailed discussion of 
+            advance vectors refer to the section "Guidelines for training font 
+            classifiers".
+            </summary><param name="inputCLF">
+            Classifier for whose classes the advance vectors are to be adjusted.
+            </param><param name="dX">
+            New value for the x-component of the new global advance vector.
+            </param><param name="dY">
+            New value for the y-component of the new global advance vector.
+            </param><param name="outputCLF">
+            Refers to the handle of the new classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CLFSetGlobalAdvance(Cvb.Minos.CLF,System.Int32,System.Int32,Cvb.SharedMinosClf@)">
+            <summary>
+            Sets the advance vectors for all classes in the InputCLF to the 
+            values provided to the function. For a more detailed discussion of 
+            advance vectors refer to the section "Guidelines for training font 
+            classifiers".
+            </summary><param name="inputCLF">
+            Classifier for whose classes the advance vectors are to be adjusted.
+            </param><param name="dX">
+            New value for the x-component of the new global advance vector.
+            </param><param name="dY">
+            New value for the y-component of the new global advance vector.
+            </param><param name="outputCLF">
+            Refers to the handle of the new classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CLFTransform(Cvb.Minos.CLF,Cvb.Image.TMatrix,Cvb.Minos.CLF@)">
+            <summary>
+            Creates a second classifier, geometrically transformed from the first 
+            one through a user specified 2x2 matrix.
+            </summary><param name="inputCLF">
+            Handle to the classifier to be transformed.
+            </param><param name="matrix">
+            Transformation matrix.
+            </param><param name="outputCLF">
+            Refers to the variable to receive the transformed classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.CLFTransform(Cvb.Minos.CLF,Cvb.Image.TMatrix,Cvb.SharedMinosClf@)">
+            <summary>
+            Creates a second classifier, geometrically transformed from the first 
+            one through a user specified 2x2 matrix.
+            </summary><param name="inputCLF">
+            Handle to the classifier to be transformed.
+            </param><param name="matrix">
+            Transformation matrix.
+            </param><param name="outputCLF">
+            Refers to the variable to receive the transformed classifier.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSTransform(Cvb.Minos.MTS,Cvb.Image.TMatrix,Cvb.Minos.MTS@)">
+            <summary>
+            Creates a second traning set, geometrically transformed from the 
+            first one through a user specified 2x2 matrix.
+            </summary><param name="inputMTS">
+            Handle to to training set to be transformed.
+            </param><param name="matrix">
+            Transformation matrix.
+            </param><param name="outputMTS">
+            Refers to a handle to the resulting training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSTransform(Cvb.Minos.MTS,Cvb.Image.TMatrix,Cvb.SharedMts@)">
+            <summary>
+            Creates a second traning set, geometrically transformed from the 
+            first one through a user specified 2x2 matrix.
+            </summary><param name="inputMTS">
+            Handle to to training set to be transformed.
+            </param><param name="matrix">
+            Transformation matrix.
+            </param><param name="outputMTS">
+            Refers to a handle to the resulting training set.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="M:Cvb.Minos.Teach.MTSVerifyToken(Cvb.Minos.MTS,Cvb.Image.IMG,System.Int32,Cvb.Image.TArea,Cvb.Image.TArea,System.Double,System.String@,System.Double@,System.Int32@)">
+            <summary>
+            Like ReadVerifyToken, but uses correlation.
+            </summary><param name="mts">
+            Handle to a training set
+            </param><param name="image">
+            Handle to an image.
+            </param><param name="index">
+            Identifies the color-plane to be processed.
+            </param><param name="area">
+            Area to be searched for the 1st character
+            </param><param name="translatedArea">
+            Relative expectation window for subsequent characters.
+            </param><param name="corThresh">
+            Correlation threshold. 
+            </param><param name="token">
+            Concatenated String of the found patterns.
+            </param><param name="minCor">
+            Reference to variable to contain minimal correlation found.
+            </param><param name="count">
+            Number of characters found.
+            </param><returns>
+            False on error; true otherwise.
+            </returns>
+        </member>
+        <member name="T:Cvb.SharedMts">
+            <summary>
+            Helper class to manage the reference count of a CVB reference counted 
+            MTS object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMts.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared MTS.
+            </summary><remarks>
+            Shares the given <paramref name="handle"/> if <paramref name="share"/> 
+            is <c>True</c>. Does nothing if <c>False</c>. The <c>False</c> case can
+            help to adopt the lifetime of a <paramref name="handle"/> from a 
+            p/invoke.
+            </remarks><param name="handle">
+            Handle of native CVB Object.
+            </param><param name="share">
+            <c>True</c> to increase the reference count of the CVB object at 
+            <paramref name="handle"/>; <c>False</c> to do nothing.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMts.#ctor(System.IntPtr)">
+            <summary>
+            Creates a shared MTS and shares the given 
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMts.#ctor(System.Int64)">
+            <summary>
+            Creates a shared MTS and shares the given 
+            <paramref name="handle"/>.
+            </summary><remarks>
+            Use this constructor when getting the handle from an ActiveX control.
+            </remarks><param name="handle">
+            Handle as a <c>long</c> integer.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMts.#ctor(Cvb.Minos.MTS,System.Boolean)">
+            <summary>
+            Creates a shared MTS from the given image <paramref name="handle"/>
+            and <paramref name="share"/> it if needed.
+            </summary><param name="handle">
+            Handle as a <see cref="T:Cvb.Image.IMG"/> handle.
+            </param><param name="share">
+            <c>True</c> to increase the reference count of the CVB object at 
+            <paramref name="handle"/>; <c>False</c> to do nothing.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMts.#ctor(Cvb.Minos.MTS)">
+            <summary>
+            Creates a shared image from the given image <paramref name="handle"/>
+            and shares it.
+            </summary><param name="handle">
+            Handle as a <see cref="T:Cvb.Image.IMG"/> handle.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMts.#ctor">
+            <summary>
+            Creates an unattached shared MTS.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMts.ShareObject">
+            <summary>
+            increment share count on an MTS handle
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMts.Dispose(System.Boolean)">
+            <summary>
+            Dispose method needs to be overridden because MTS uses RelesaeMTS
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Cvb.SharedMts.op_Implicit(Cvb.SharedMts)~Cvb.Minos.MTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="obj">Object to convert to handle.</param>
+            <returns>Handle as <see cref="T:Cvb.Image.OBJ"/>.</returns>
+        </member>
+        <member name="T:Cvb.SharedMinosClf">
+            <summary>
+            Helper class to manage the reference count of a CVB reference counted 
+            CLF object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared CLF.
+            </summary><remarks>
+            Shares the given <paramref name="handle"/> if <paramref name="share"/> 
+            is <c>True</c>. Does nothing if <c>False</c>. The <c>False</c> case can
+            help to adopt the lifetime of a <paramref name="handle"/> from a 
+            p/invoke.
+            </remarks><param name="handle">
+            Handle of native CVB Object.
+            </param><param name="share">
+            <c>True</c> to increase the reference count of the CVB object at 
+            <paramref name="handle"/>; <c>False</c> to do nothing.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.#ctor(System.IntPtr)">
+            <summary>
+            Creates a shared CLF and shares the given 
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.#ctor(System.Int64)">
+            <summary>
+            Creates a shared CLF and shares the given 
+            <paramref name="handle"/>.
+            </summary><remarks>
+            Use this constructor when getting the handle from an ActiveX control.
+            </remarks><param name="handle">
+            Handle as a <c>long</c> integer.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.#ctor(Cvb.Minos.CLF,System.Boolean)">
+            <summary>
+            Creates a shared CLF from the given image <paramref name="handle"/>
+            and <paramref name="share"/> it if needed.
+            </summary><param name="handle">
+            Handle as a <see cref="T:Cvb.Image.IMG"/> handle.
+            </param><param name="share">
+            <c>True</c> to increase the reference count of the CVB object at 
+            <paramref name="handle"/>; <c>False</c> to do nothing.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.#ctor(Cvb.Minos.CLF)">
+            <summary>
+            Creates a shared image from the given image <paramref name="handle"/>
+            and shares it.
+            </summary><param name="handle">
+            Handle as a <see cref="T:Cvb.Image.IMG"/> handle.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.#ctor">
+            <summary>
+            Creates an unattached shared CLF.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.ShareObject">
+            <summary>
+            increment share count on a CLF handle
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.Dispose(System.Boolean)">
+            <summary>
+            Dispose method needs to be overridden because CLF uses ReleaseClf
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Cvb.SharedMinosClf.op_Implicit(Cvb.SharedMinosClf)~Cvb.Minos.CLF">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="obj">Object to convert to handle.</param>
+            <returns>Handle as <see cref="T:Cvb.Image.OBJ"/>.</returns>
+        </member>
+        <member name="T:Cvb.SharedMinosResults">
+            <summary>
+            Helper class to manage the reference count of a CVB reference counted 
+            RESULTS object.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.#ctor(System.IntPtr,System.Boolean)">
+            <summary>
+            Creates a shared RESULTS.
+            </summary><remarks>
+            Shares the given <paramref name="handle"/> if <paramref name="share"/> 
+            is <c>True</c>. Does nothing if <c>False</c>. The <c>False</c> case can
+            help to adopt the lifetime of a <paramref name="handle"/> from a 
+            p/invoke.
+            </remarks><param name="handle">
+            Handle of native CVB Object.
+            </param><param name="share">
+            <c>True</c> to increase the reference count of the CVB object at 
+            <paramref name="handle"/>; <c>False</c> to do nothing.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.#ctor(System.IntPtr)">
+            <summary>
+            Creates a shared RESULTS and shares the given 
+            <paramref name="handle"/>.
+            </summary><param name="handle">
+            Handle of native CVB Object.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.#ctor(System.Int64)">
+            <summary>
+            Creates a shared RESULTS and shares the given 
+            <paramref name="handle"/>.
+            </summary><remarks>
+            Use this constructor when getting the handle from an ActiveX control.
+            </remarks><param name="handle">
+            Handle as a <c>long</c> integer.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.#ctor(Cvb.Minos.RESULTS,System.Boolean)">
+            <summary>
+            Creates a shared RESULTS from the given image <paramref name="handle"/>
+            and <paramref name="share"/> it if needed.
+            </summary><param name="handle">
+            Handle as a <see cref="T:Cvb.Image.IMG"/> handle.
+            </param><param name="share">
+            <c>True</c> to increase the reference count of the CVB object at 
+            <paramref name="handle"/>; <c>False</c> to do nothing.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.#ctor(Cvb.Minos.RESULTS)">
+            <summary>
+            Creates a shared image from the given image <paramref name="handle"/>
+            and shares it.
+            </summary><param name="handle">
+            Handle as a <see cref="T:Cvb.Image.IMG"/> handle.
+            </param>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.#ctor">
+            <summary>
+            Creates an unattached shared RESULTS.
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.ShareObject">
+            <summary>
+            increment share count on a results handle
+            </summary>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.Dispose(System.Boolean)">
+            <summary>
+            Dispose method needs to be overridden because RESULTS uses 
+            ReleaseResults
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Cvb.SharedMinosResults.op_Implicit(Cvb.SharedMinosResults)~Cvb.Minos.RESULTS">
+            <summary>
+            Implicit conversion.
+            </summary>
+            <param name="obj">Object to convert to handle.</param>
+            <returns>Handle as <see cref="T:Cvb.Image.OBJ"/>.</returns>
+        </member>
+    </members>
+</doc>

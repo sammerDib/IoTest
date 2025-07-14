@@ -1,0 +1,189 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Editors.DataWriterEditor.FileDataWriterEditor"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dataWriterEditor="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Editors.DataWriterEditor"
+    xmlns:library="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Library"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+	xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+	xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+	x:Name="This"
+	MinWidth="600"
+	mc:Ignorable="d">
+	<Grid>
+		<StackPanel
+			Margin="10,5"
+			Orientation="Vertical">
+			<StackPanel.Resources>
+				<Style
+					BasedOn="{StaticResource {x:Type TextBlock}}"
+					TargetType="{x:Type TextBlock}">
+					<Setter Property="Width" Value="240" />
+					<Setter Property="VerticalAlignment" Value="Center" />
+					<Setter Property="Margin" Value="0,0,5,0" />
+				</Style>
+				<Style
+					BasedOn="{StaticResource {x:Type ComboBox}}"
+					TargetType="{x:Type ComboBox}">
+					<Setter Property="MinWidth" Value="250" />
+				</Style>
+				<Style TargetType="{x:Type DockPanel}">
+					<Setter Property="Margin" Value="0,5" />
+				</Style>
+			</StackPanel.Resources>
+			<DockPanel>
+				<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.FILE_EXTENSION}" />
+				<ComboBox
+					x:Name="FileExtensionComboBox"
+					DisplayMemberPath="Key"
+					ItemsSource="{Binding ElementName=This, Path=AvailableFileExtensions}"
+					SelectedItem="{Binding ElementName=This, Path=SelectedFileExtension}" />
+			</DockPanel>
+			<DockPanel>
+				<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.FILE_NAME}" />
+				<TextBox Text="{Binding ElementName=This, Path=FileName, UpdateSourceTrigger=PropertyChanged}" />
+			</DockPanel>
+			<DockPanel>
+				<TextBlock
+					DockPanel.Dock="Left"
+					Text="{localize:Static library:DataCollectionLibraryResources.WRITING_TRIGGER}" />
+				<Path
+					x:Name="WritingStrategyInfo"
+					Width="25"
+					Margin="10,0,0,0"
+					Data="{StaticResource InfoIcon}"
+					DockPanel.Dock="Right"
+					Fill="{DynamicResource FlatButtonBaseForeground}"
+					MouseEnter="Info_OnMouseEnter"
+					MouseLeave="Info_OnMouseLeave"
+					Stretch="Uniform" />
+				<ComboBox
+					ItemsSource="{Binding ElementName=This, Path=AvailableFileWritingStrategies}"
+					SelectedItem="{Binding ElementName=This, Path=SelectedFileWriteStrategy}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate DataType="{x:Type system:Type}">
+							<TextBlock Text="{Binding Path=Name, Converter={StaticResource TextToHumanizedTextConverter}}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+			</DockPanel>
+			<DockPanel x:Name="FrequencyArea">
+				<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.WRITING_FREQUENCY}" />
+				<controls:UnitsNet
+					IsUnitFixed="True"
+					Quantity="{Binding ElementName=This, Path=FileWritingFrequency}" />
+			</DockPanel>
+			<DockPanel>
+				<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.STORAGE_STRATEGY}" />
+				<Path
+					x:Name="StorageStrategyInfo"
+					Width="25"
+					Margin="10,0,0,0"
+					Data="{StaticResource InfoIcon}"
+					DockPanel.Dock="Right"
+					Fill="{DynamicResource FlatButtonBaseForeground}"
+					MouseEnter="Info_OnMouseEnter"
+					MouseLeave="Info_OnMouseLeave"
+					Stretch="Uniform" />
+				<ComboBox
+					ItemsSource="{Binding ElementName=This, Path=AvailableFileStorageStrategies}"
+					SelectedItem="{Binding ElementName=This, Path=SelectedFileStorageStrategy}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate DataType="{x:Type system:Type}">
+							<TextBlock Text="{Binding Path=Name, Converter={StaticResource TextToHumanizedTextConverter}}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+			</DockPanel>
+			<DockPanel>
+				<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.STORAGE_FOLDER_PATH}" />
+				<Button
+					x:Name="ChooseStorageFolderButton"
+					dependencyObjects:Icon.Geometry="{DynamicResource OpenFolderIcon}"
+					Click="ChooseStorageFolderButton_Click"
+					DockPanel.Dock="Right"
+					Style="{StaticResource SquareIconifiedButtonStyle}"
+					ToolTip="{localize:Static dataWriterEditor:FileDataWriterResources.CHOOSE_FOLDER}" />
+				<TextBlock
+					Width="auto"
+					FontSize="12"
+					FontStyle="Italic"
+					Text="{Binding ElementName=This, Path=StorageFolderPath, FallbackValue='\\OutputFiles\\DataCollectionPlan\\CollectedData\\'}" />
+			</DockPanel>
+		</StackPanel>
+		<Popup
+			Name="WritingInfoPopup"
+			Margin="50"
+			AllowsTransparency="True"
+			HorizontalOffset="30"
+			IsOpen="False"
+			Placement="Relative"
+			PlacementTarget="{Binding ElementName=WritingStrategyInfo}"
+			StaysOpen="False">
+			<Border
+				Background="{DynamicResource FlatButtonBaseForeground}"
+				CornerRadius="2">
+				<StackPanel
+					Margin="10"
+					VerticalAlignment="Center"
+					Orientation="Vertical">
+					<StackPanel.Resources>
+						<Style
+							BasedOn="{StaticResource Body2TextStyle}"
+							TargetType="{x:Type TextBlock}">
+							<Setter Property="Foreground" Value="Black" />
+						</Style>
+					</StackPanel.Resources>
+					<TextBlock
+						Margin="0,0,0,10"
+						FontSize="16"
+						FontWeight="DemiBold"
+						Text="{localize:Static dataWriterEditor:FileDataWriterResources.WRITE_EVENT_TRIGGER_DETAILS}" />
+					<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.CYCLIC_INFO}" />
+					<TextBlock
+						Margin="0,10"
+						Text="{localize:Static dataWriterEditor:FileDataWriterResources.DIRECT_INFO}" />
+					<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.ON_DEMAND_INFO}" />
+				</StackPanel>
+			</Border>
+		</Popup>
+		<Popup
+			Name="StorageInfoPopup"
+			Margin="50"
+			AllowsTransparency="True"
+			HorizontalOffset="30"
+			IsOpen="False"
+			Placement="Relative"
+			PlacementTarget="{Binding ElementName=StorageStrategyInfo}"
+			StaysOpen="False">
+			<Border
+				Background="{DynamicResource FlatButtonBaseForeground}"
+				CornerRadius="2">
+				<StackPanel
+					Margin="10"
+					VerticalAlignment="Center"
+					Orientation="Vertical">
+					<StackPanel.Resources>
+						<Style
+							BasedOn="{StaticResource Body2TextStyle}"
+							TargetType="{x:Type TextBlock}">
+							<Setter Property="Foreground" Value="Black" />
+						</Style>
+					</StackPanel.Resources>
+					<TextBlock
+						Margin="0,0,0,10"
+						FontSize="16"
+						FontWeight="DemiBold"
+						Text="{localize:Static dataWriterEditor:FileDataWriterResources.STORAGE_STRATEGIES_DETAILS}" />
+					<TextBlock Text="{localize:Static dataWriterEditor:FileDataWriterResources.TIMESPAND_INFO}" />
+					<TextBlock
+						Margin="0,10"
+						Text="{localize:Static dataWriterEditor:FileDataWriterResources.SINGLE_INFO}" />
+				</StackPanel>
+			</Border>
+		</Popup>
+	</Grid>
+</UserControl>

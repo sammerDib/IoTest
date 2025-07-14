@@ -1,0 +1,38 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.UIComponents.Components.TagsSpy.TagsSpyView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tagsSpy="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.TagsSpy"
+    xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    d:DataContext="{d:DesignInstance tagsSpy:TagsSpyViewModel, IsDesignTimeCreatable=False}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Background="{DynamicResource BusinessPanelBackground}"
+    Foreground="{DynamicResource BusinessPanelForeground}"
+    mc:Ignorable="d">
+    <TabControl>
+        <TabItem
+            dependencyObjects:Icon.Geometry="{StaticResource SpyIcon}"
+            Header="{localize:Static tagsSpy:TagsSpyResources.S_GB_TAGLIST_HEADER}">
+            <tagsSpy:TagsSpyListView DataContext="{Binding TagsSpyList}" />
+        </TabItem>
+        <TabItem dependencyObjects:Icon.Geometry="{StaticResource ShowIcon}">
+            <TabItem.Header>
+                <TextBlock Style="{StaticResource TabItemTextBlockStyle}">
+                    <Run Text="Spy" />
+                    <Run
+                        FontWeight="Light"
+                        Text="(" /><Run
+                        FontWeight="Light"
+                        Text="{Binding TagsSpyList.SpiedTags.Count, Mode=OneWay, Converter={StaticResource ObjectToStringConverter}}" /><Run
+                        FontWeight="Light"
+                        Text=")" />
+                </TextBlock>
+            </TabItem.Header>
+            <tagsSpy:TagsSpyRealTimeView DataContext="{Binding TagsSpyRealTime}" />
+        </TabItem>
+    </TabControl>
+</UserControl>

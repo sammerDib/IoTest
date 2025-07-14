@@ -1,0 +1,96 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.DataDictionary.Reports.E30ReportsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e30="clr-namespace:Agileo.Semi.Gem.Abstractions.E30;assembly=Agileo.Semi.Gem.Abstractions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reports1="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.DataDictionary.Reports"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:dataDictionary="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.DataDictionary"
+    d:DataContext="{d:DesignInstance reports1:E30ReportsPanel, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <DockPanel>
+
+        <dataTables:DataTable
+            DataSource="{Binding Reports}"
+            SelectedItem="{Binding SelectedReport, Mode=TwoWay}">
+            <GridView AllowsColumnReorder="True">
+
+                <dataTables:DataTableColumn
+                    Width="160"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_ID}"
+                    SortKey="ID">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="e30:E30Report">
+                            <TextBlock
+                                Style="{StaticResource Body2TextStyle}"
+                                Text="{Binding ID}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="200"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_NAME}"
+                    SortKey="Name">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="e30:E30Report">
+                            <TextBlock
+                                Style="{StaticResource Body2TextStyle}"
+                                Text="{Binding Name}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="200"
+                    DisplayName="{localize:Static reports1:E30ReportsPanelResources.GEMPANELS_REPORT_VIDS}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="e30:E30Report">
+                            <Control x:Name="ContentPresenterVariables">
+                                <Control.Template>
+                                    <ControlTemplate>
+                                        <ItemsControl
+                                            AlternationCount="2"
+                                            ItemsSource="{Binding Variables}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Margin="0,0,0,2" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel
+                                                        HorizontalAlignment="Left"
+                                                        Orientation="Horizontal">
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource Body2TextStyle}">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0} - {1}">
+                                                                    <Binding Path="ID" />
+                                                                    <Binding Path="Name" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ControlTemplate>
+                                </Control.Template>
+                            </Control>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+            </GridView>
+        </dataTables:DataTable>
+    </DockPanel>
+</UserControl>
+

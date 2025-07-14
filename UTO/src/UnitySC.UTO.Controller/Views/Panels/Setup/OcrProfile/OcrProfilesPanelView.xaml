@@ -1,0 +1,236 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Setup.OcrProfile.OcrProfilesPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+    xmlns:jobDefinition="clr-namespace:UnitySC.Equipment.Devices.Controller.JobDefinition;assembly=UnitySC.Equipment"
+    xmlns:local="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Setup.OcrProfile"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox;assembly=UnitySC.GUI.Common"
+    d:DataContext="{d:DesignInstance local:OcrProfilesPanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+
+    <DockPanel>
+        <Expander
+            BorderThickness="1,0,0,0"
+            DockPanel.Dock="Right"
+            ExpandDirection="Left"
+            IsExpanded="{Binding DetailsIsExpanded, Mode=TwoWay}">
+            <Expander.Header>
+                <TextBlock Text="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_DETAILS}">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Expander.Header>
+            <Expander.Style>
+                <Style BasedOn="{StaticResource {x:Type Expander}}" TargetType="Expander">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                            <Setter Property="Template" Value="{StaticResource ExpanderWithoutHeaderTemplate}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Expander.Style>
+            <ContentControl
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}"
+                Margin="10"
+                Content="{Binding OcrProfileDetailsViewModel}"
+                IsEnabled="{Binding IsEditing}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate DataType="{x:Type local:OcrProfileDetailsViewModel}">
+                        <Grid Margin="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <controls:PropertyEditor
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_NAME}">
+                                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+
+                            <controls:PropertyEditor
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_AUTHOR}">
+                                <TextBox Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+
+                            <controls:PropertyEditor
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_SCRIBE_ANGLE}">
+                                <numericBox:DoubleBox StringFormat="F2" Value="{Binding ScribeAngle, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+
+                            <GroupBox Grid.Row="3" Visibility="{Binding SubstrateIdReaderFront, Converter={StaticResource NullToCollapsedConverter}}">
+                                <GroupBox.Header>
+                                    <controls:PropertyEditor
+                                        VerticalContentAlignment="Center"
+                                        Orientation="Horizontal"
+                                        PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_FRONT_READER}">
+                                        <CheckBox IsChecked="{Binding FrontReaderEnabled}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                    </controls:PropertyEditor>
+                                </GroupBox.Header>
+                                <UniformGrid
+                                    Columns="2"
+                                    IsEnabled="{Binding FrontReaderEnabled}"
+                                    Rows="1">
+                                    <controls:PropertyEditor PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_FRONT_RECIPE_NAME}">
+                                        <ComboBox ItemsSource="{Binding FrontReaderRecipes}" SelectedItem="{Binding FrontRecipeName, UpdateSourceTrigger=PropertyChanged}" />
+                                    </controls:PropertyEditor>
+                                    <Button
+                                        Margin="5,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        markupExtensions:Icon.Geometry="{DynamicResource RefreshIcon}"
+                                        Command="{Binding RefreshFrontReaderRecipesCommand}"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                </UniformGrid>
+                            </GroupBox>
+
+                            <GroupBox Grid.Row="4" Visibility="{Binding SubstrateIdReaderBack, Converter={StaticResource NullToCollapsedConverter}}">
+                                <GroupBox.Header>
+                                    <controls:PropertyEditor
+                                        VerticalContentAlignment="Center"
+                                        Orientation="Horizontal"
+                                        PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_BACK_READER}">
+                                        <CheckBox IsChecked="{Binding BackReaderEnabled}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                    </controls:PropertyEditor>
+                                </GroupBox.Header>
+                                <UniformGrid
+                                    Columns="2"
+                                    IsEnabled="{Binding BackReaderEnabled}"
+                                    Rows="1">
+                                    <controls:PropertyEditor PropertyName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_BACK_RECIPE_NAME}">
+                                        <ComboBox ItemsSource="{Binding BackReaderRecipes}" SelectedItem="{Binding BackRecipeName, UpdateSourceTrigger=PropertyChanged}" />
+                                    </controls:PropertyEditor>
+                                    <Button
+                                        Margin="5,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        markupExtensions:Icon.Geometry="{DynamicResource RefreshIcon}"
+                                        Command="{Binding RefreshBackReaderRecipesCommand}"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                </UniformGrid>
+                            </GroupBox>
+                        </Grid>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </Expander>
+
+        <dataTables:DataTable
+            DataSource="{Binding DataTableSource}"
+            IsEnabled="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}"
+            SelectedItem="{Binding SelectedOcrProfile}">
+            <dataTables:DataTable.BottomAdditionalContent>
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource AddIcon}"
+                        Command="{Binding AddProfileCommand}"
+                        IsEnabled="{Binding AddProfileCommand.IsEnabled}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_ADD}" />
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource DeleteIcon}"
+                        Command="{Binding DeleteProfileCommand}"
+                        IsEnabled="{Binding DeleteProfileCommand.IsEnabled}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_DELETE}" />
+                    <Button
+                        Margin="0,0,10,0"
+                        markupExtensions:Icon.Geometry="{DynamicResource EditIcon}"
+                        Command="{Binding EditProfileCommand}"
+                        IsEnabled="{Binding EditProfileCommand.IsEnabled}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_EDIT}" />
+                </StackPanel>
+            </dataTables:DataTable.BottomAdditionalContent>
+
+            <GridView AllowsColumnReorder="True">
+
+                <!--#region Name-->
+                <dataTables:DataTableColumn
+                    Width="380"
+                    DisplayName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_NAME}"
+                    SortKey="Id">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type jobDefinition:OcrProfile}">
+                            <TextBlock Text="{Binding Name}" TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Name-->
+
+                <!--#region Author-->
+                <dataTables:DataTableColumn
+                    Width="175"
+                    DisplayName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_AUTHOR}"
+                    SortKey="Author">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type jobDefinition:OcrProfile}">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                DataContext="{Binding}"
+                                Text="{Binding Author}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Author-->
+
+                <!--#region Creation Date Time-->
+                <dataTables:DataTableColumn
+                    Width="240"
+                    DisplayName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_CREATION_DATE}"
+                    SortKey="CreateDate">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type jobDefinition:OcrProfile}">
+                            <TextBlock Text="{Binding CreationDate, StringFormat='dd/MM/yyyy HH:mm:ss'}" TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Creation Date Time-->
+
+                <!--#region Last Modification Date Time-->
+                <dataTables:DataTableColumn
+                    Width="240"
+                    DisplayName="{localize:Static local:OcrProfilePanelResources.OCR_PROFILE_LAST_MODIFICATION}"
+                    SortKey="ModificationDate">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type jobDefinition:OcrProfile}">
+                            <TextBlock Text="{Binding ModificationDate, StringFormat='dd/MM/yyyy HH:mm:ss'}" TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Last Modification Date Time-->
+
+            </GridView>
+        </dataTables:DataTable>
+
+    </DockPanel>
+</UserControl>

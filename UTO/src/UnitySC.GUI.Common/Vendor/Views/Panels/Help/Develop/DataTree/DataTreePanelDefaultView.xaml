@@ -1,0 +1,103 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataTree.DataTreePanelDefaultView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTree.Controls"
+    xmlns:controls1="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataTree"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance local:DataTreePanel, IsDesignTimeCreatable=False}"
+    d:DesignHeight="800"
+    mc:Ignorable="d">
+    <controls:DataTree
+        DataSource="{Binding DataTreeSource}"
+        DockPanel.Dock="Left"
+        SelectedValue="{Binding SelectedValue}">
+
+        <controls:DataTree.BottomAdditionalContent>
+            <Border
+                BorderBrush="{DynamicResource ListViewBorderBrush}"
+                BorderThickness="0,1,0,0"
+                DockPanel.Dock="Bottom">
+                <StackPanel
+                    Margin="10"
+                    DataContext="{Binding DataTreeSource}"
+                    Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,0,0"
+                        markupExtensions:Icon.Geometry="{StaticResource TargetLocationIcon}"
+                        Command="{Binding SyncWithSelectedCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <Button
+                        Margin="10,0,0,0"
+                        markupExtensions:Icon.Geometry="{StaticResource CollapseAllIcon}"
+                        Command="{Binding CollapseAllCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <Button
+                        Margin="10,0,0,0"
+                        markupExtensions:Icon.Geometry="{StaticResource ExpandAllIcon}"
+                        Command="{Binding ExpandAllCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                </StackPanel>
+            </Border>
+        </controls:DataTree.BottomAdditionalContent>
+
+        <controls:DataTree.ItemTemplate>
+            <DataTemplate DataType="{x:Type local:MyModel}">
+                <DockPanel>
+                    <controls1:Icon
+                        x:Name="Icon"
+                        Margin="0,0,7,0"
+                        Data="{StaticResource ClosedFolderIcon}" />
+                    <Ellipse
+                        x:Name="Ellipse"
+                        Width="8"
+                        Height="8"
+                        Margin="5,0,20,0"
+                        DockPanel.Dock="Right"
+                        Fill="MediumVioletRed"
+                        Opacity="0.7" />
+                    <Button
+                        x:Name="DeleteButton"
+                        Margin="0,0,5,0"
+                        markupExtensions:Icon.Geometry="{StaticResource DeleteIcon}"
+                        Background="Transparent"
+                        Command="{Binding ElementName=UserControl, Path=DataContext.DeleteItemCommand}"
+                        CommandParameter="{Binding}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <Button
+                        x:Name="AddButton"
+                        Margin="0,0,5,0"
+                        markupExtensions:Icon.Geometry="{StaticResource AddIcon}"
+                        Background="Transparent"
+                        Command="{Binding ElementName=UserControl, Path=DataContext.AddItemCommand}"
+                        CommandParameter="{Binding}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="{Binding Index}" />
+                </DockPanel>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding IsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:DataTreeItem}}}" Value="True">
+                        <Setter TargetName="Icon" Property="Data" Value="{StaticResource OpenFolderIcon}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Children.Count}" Value="0">
+                        <Setter TargetName="Icon" Property="Data" Value="{StaticResource FileIcon}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static local:MyModelType.BType}">
+                        <Setter TargetName="Ellipse" Property="Fill" Value="MediumAquamarine" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:DataTreeItem}}, Path=IsMouseOver}" Value="False">
+                        <Setter TargetName="DeleteButton" Property="Visibility" Value="Collapsed" />
+                        <Setter TargetName="AddButton" Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </controls:DataTree.ItemTemplate>
+
+    </controls:DataTree>
+</UserControl>

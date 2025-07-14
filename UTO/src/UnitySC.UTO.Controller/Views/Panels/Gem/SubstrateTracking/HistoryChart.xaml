@@ -1,0 +1,40 @@
+<UserControl x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.SubstrateTracking.HistoryChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:substrateTracking="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.SubstrateTracking"
+             xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+             xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+             mc:Ignorable="d"
+             x:Name="HistoryChartUserControl"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid DataContext="{Binding ElementName=HistoryChartUserControl}">
+
+        <Button
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,5,5,0"
+            markupExtensions:Icon.Geometry="{DynamicResource RefreshIcon}"
+            Click="ResetZoomOnClick">
+            <Button.Style >
+                <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SubstrateToDisplay}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Hidden"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+        <wpf:CartesianChart x:Name="HistoryCartesianChart" Zoom="X" AxisX="{Binding IrregularAxis}" DisableAnimations="True"
+                            VisualElements="{Binding Durations}"
+                            Visibility="{Binding IsSubstrate, Converter={StaticResource FalseToHiddenConverter}}">
+            <wpf:CartesianChart.AxisY>
+                <wpf:Axis MinValue="0" Labels="{Binding Labels}" Title="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_LOCATIONS}" />
+            </wpf:CartesianChart.AxisY>
+        </wpf:CartesianChart>
+    </Grid>
+</UserControl>

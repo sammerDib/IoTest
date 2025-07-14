@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.LoadPorts.LoadPortsViewerPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:loadPorts="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.LoadPorts"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance loadPorts:LoadPortsViewerPanel, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    Background="Transparent"
+    mc:Ignorable="d">
+    <controls:UniformColumnItemsControl
+        Columns="3"
+        IsSelectionEnabled="True"
+        ItemsSource="{Binding LoadPortViewers}"
+        SelectedItem="{Binding SelectedE87LoadPort}">
+        <controls:UniformColumnItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type loadPorts:LoadPortViewer}">
+                <loadPorts:LoadPortViewerView />
+            </DataTemplate>
+        </controls:UniformColumnItemsControl.ItemTemplate>
+    </controls:UniformColumnItemsControl>
+</UserControl>

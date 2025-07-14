@@ -1,0 +1,59 @@
+﻿<UserControl
+	x:Class="UnitySC.Result.CommonUI.View.LotWafer.LotWaferSlotView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	xmlns:lotWafer="clr-namespace:UnitySC.Result.CommonUI.ViewModel.LotWafer"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    d:DataContext="{d:DesignInstance lotWafer:LotWaferSlotVM}"
+	d:DesignHeight="100"
+	d:DesignWidth="100"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Result.CommonUI;component/View/ResultResource.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<ContentControl
+		HorizontalAlignment="Stretch"
+		VerticalAlignment="Stretch"
+		Background="Red">
+		<Grid Background="White">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Viewbox
+				Margin="0,2,0,2"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				RenderTransformOrigin="0.5,0.5"
+				Stretch="Uniform">
+				<Image
+					x:Name="Thumbnail"
+					Height="50"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					IsEnabled="{Binding StopRotate}"
+					Source="{Binding ImageThumbnail, IsAsync=True}"
+					Style="{StaticResource ImageSpinner}" />
+			</Viewbox>
+			<TextBlock
+				Grid.Row="1"
+				Margin="0,2,0,2"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Bottom"
+				Text="{Binding WaferName}"
+				TextWrapping="Wrap" />
+		</Grid>
+		<i:Interaction.Triggers>
+			<i:EventTrigger EventName="MouseDoubleClick">
+				<i:InvokeCommandAction Command="{Binding Source={StaticResource Locator}, Path=MainResultVM.DisplayVM.SelectedWaferDetail}" />
+			</i:EventTrigger>
+		</i:Interaction.Triggers>
+	</ContentControl>
+</UserControl>

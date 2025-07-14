@@ -1,0 +1,281 @@
+<UserControl
+    x:Class="UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation.Controls.LoadPortControlView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:simulation="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation"
+    xmlns:userControls="clr-namespace:Agileo.UserControls;assembly=Agileo.UserControls"
+    d:DataContext="{d:DesignInstance Type=simulation:LoadPortSimulationViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:BooleansOrToBooleanMultiConverter x:Key="BooleansOrToBooleanMultiConverter" />
+        <converters:StringToBoolean x:Key="StringToBoolean" />
+        <converters:LedStateToForegroundConverter x:Key="LedStateToForeground" />
+    </UserControl.Resources>
+    <StackPanel>
+
+        <ComboBox
+            Margin="5"
+            IsEnabled="{Binding LoadPortControlViewModel.IsAbsentChecked}"
+            ItemsSource="{Binding LoadPortControlViewModel.CarrierConfigNames}"
+            SelectedItem="{Binding LoadPortControlViewModel.SelectedCarrierConfig, Mode=OneWayToSource}" />
+
+        <!--  Region Sensor Simulation  -->
+        <GroupBox Header="Sensors">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <RadioButton
+                    Grid.Column="0"
+                    Width="100"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Content="Absent"
+                    IsChecked="{Binding LoadPortControlViewModel.IsAbsentChecked}"
+                    IsEnabled="{Binding LoadPortControlViewModel.IsAbsentEnabled}" />
+                <RadioButton
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Width="100"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Content="Incorrect"
+                    IsChecked="{Binding LoadPortControlViewModel.IsIncorrectChecked}"
+                    IsEnabled="{Binding LoadPortControlViewModel.IsIncorrectEnabled}" />
+                <RadioButton
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Width="100"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Content="Correct"
+                    IsChecked="{Binding LoadPortControlViewModel.IsCorrectChecked}"
+                    IsEnabled="{Binding LoadPortControlViewModel.IsCorrectEnabled}" />
+            </Grid>
+        </GroupBox>
+        <!--  EndRegion Sensor Simulation  -->
+
+        <Separator />
+
+        <!--  Region Button Simulation  -->
+        <GroupBox Header="Buttons">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <userControls:LabelLed
+                    Grid.Column="0"
+                    Margin="5"
+                    Panel.ZIndex="0"
+                    ColorOff="Black"
+                    ColorOn="Orange"
+                    State="{Binding LoadPortControlViewModel.HandOffModeLed}">
+                    <userControls:LabelLed.IsEnabled>
+                        <MultiBinding Converter="{StaticResource BooleansOrToBooleanMultiConverter}">
+                            <Binding
+                                Converter="{StaticResource StringToBoolean}"
+                                ConverterParameter="Cassette"
+                                Path="LoadPortControlViewModel.CassetteType" />
+                            <Binding
+                                Converter="{StaticResource StringToBoolean}"
+                                ConverterParameter="Foup"
+                                Path="LoadPortControlViewModel.CassetteType" />
+                        </MultiBinding>
+                    </userControls:LabelLed.IsEnabled>
+                </userControls:LabelLed>
+            </Grid>
+        </GroupBox>
+
+        <!--  EndRegion Button Simulation  -->
+
+        <Separator />
+
+        <!--  Region Indicators  -->
+        <GroupBox Header="Indicators">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <userControls:LabelLed
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="5"
+                    ColorOff="Black"
+                    ColorOn="LimeGreen"
+                    Foreground="{Binding Path=LoadPortControlViewModel.LoadModeLed, Converter={StaticResource LedStateToForeground}}"
+                    Label="Load"
+                    State="{Binding LoadPortControlViewModel.LoadModeLed}" />
+                <userControls:LabelLed
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5"
+                    ColorOff="Black"
+                    ColorOn="Blue"
+                    Foreground="{Binding Path=LoadPortControlViewModel.UnloadModeLed, Converter={StaticResource LedStateToForeground}}"
+                    Label="Unload"
+                    State="{Binding LoadPortControlViewModel.UnloadModeLed}" />
+                <userControls:LabelLed
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="5"
+                    ColorOff="Black"
+                    ColorOn="Orange"
+                    Foreground="{Binding Path=LoadPortControlViewModel.ManualModeLed, Converter={StaticResource LedStateToForeground}}"
+                    Label="Manual"
+                    State="{Binding LoadPortControlViewModel.ManualModeLed}" />
+                <userControls:LabelLed
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Margin="5"
+                    ColorOff="Black"
+                    ColorOn="Blue"
+                    Foreground="{Binding Path=LoadPortControlViewModel.AutoModeLed, Converter={StaticResource LedStateToForeground}}"
+                    Label="Auto"
+                    State="{Binding LoadPortControlViewModel.AutoModeLed}" />
+                <userControls:LabelLed
+                    Grid.Row="0"
+                    Grid.Column="4"
+                    Margin="5"
+                    ColorOff="Black"
+                    ColorOn="Orange"
+                    Foreground="{Binding Path=LoadPortControlViewModel.ReserveModeLed, Converter={StaticResource LedStateToForeground}}"
+                    Label="Reserve"
+                    State="{Binding LoadPortControlViewModel.ReserveModeLed}" />
+                <userControls:LabelLed
+                    Grid.Row="0"
+                    Grid.Column="5"
+                    Margin="5"
+                    ColorOff="Black"
+                    ColorOn="Red"
+                    Foreground="{Binding Path=LoadPortControlViewModel.AlarmModeLed, Converter={StaticResource LedStateToForeground}}"
+                    Label="Alarm"
+                    State="{Binding LoadPortControlViewModel.AlarmModeLed}" />
+
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="4"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="Carrier state :" />
+                    <TextBlock
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        Text="{Binding LoadPortControlViewModel.LoadPortState, Mode=OneWay}" />
+                </StackPanel>
+
+            </Grid>
+        </GroupBox>
+        <!--  EndRegion Indicators  -->
+
+        <Separator />
+
+        <!--  Region Physical Sensors  -->
+        <GroupBox Header="Physical Sensors">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <CheckBox
+                    Grid.Column="0"
+                    Content="Clamped"
+                    IsChecked="{Binding LoadPortControlViewModel.IsClamped}" />
+                <CheckBox
+                    Grid.Column="1"
+                    Content="Docked"
+                    IsChecked="{Binding LoadPortControlViewModel.IsDocked}" />
+                <CheckBox
+                    Grid.Column="2"
+                    Content="Door closed"
+                    IsChecked="{Binding LoadPortControlViewModel.IsDoorClosed}" />
+            </Grid>
+        </GroupBox>
+        <!--  EndRegion Physical Sensors  -->
+
+        <Separator />
+
+        <!--  Region TagReader  -->
+        <GroupBox Header="TagReader">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <CheckBox
+                    Name="TagReaderAvailableCheckBox"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="5"
+                    Content="Is Tag Reader Available"
+                    IsChecked="{Binding LoadPortControlViewModel.IsTagReaderAvailableChecked, Mode=TwoWay}" />
+                <CheckBox
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Margin="5"
+                    Command="{Binding LoadPortControlViewModel.ReadWriteFailedCommand}"
+                    Content="Is Read/Write Failed"
+                    IsChecked="{Binding LoadPortControlViewModel.IsReadWriteFailChecked}"
+                    IsEnabled="{Binding IsChecked, ElementName=TagReaderAvailableCheckBox}" />
+
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="Carrier tag :" />
+                    <TextBox
+                        Width="200"
+                        Margin="5"
+                        VerticalAlignment="Center"
+                        IsEnabled="{Binding IsChecked, ElementName=TagReaderAvailableCheckBox}"
+                        Text="{Binding LoadPortControlViewModel.CarrierTagReadResult, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+            </Grid>
+        </GroupBox>
+        <!--  Region TagReader  -->
+
+        <Separator />
+
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="ADCConfiguration.View.MainMenuView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ADCConfiguration.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{Binding Source={StaticResource Locator}, Path=MainMenuViewModel}"
+    d:DesignHeight="500"
+    d:DesignWidth="1000"
+    mc:Ignorable="d">
+    <Grid>
+
+        <ItemsControl x:Name="ItemsControlGroups"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            ItemsSource="{Binding Groups}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid Margin="5" IsEnabled="{Binding IsEnabled}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                           Style="{StaticResource MainMenuTitle1}"
+                            Text="{Binding Name}" />
+
+                        <Border Grid.Row="0" Grid.RowSpan="3"
+                            Background="Black"
+                            BorderThickness="0"
+                            Opacity="0.2" />
+
+                        <ItemsControl Grid.Row="1"
+                            Padding="5"
+                            VerticalAlignment="Stretch"
+                            ItemsSource="{Binding MenuItems}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Width="250" Margin="5" IsEnabled="{Binding IsEnabled}">
+
+                                        <!--<Button.Background>
+                                                <SolidColorBrush Color="{Binding Color, Converter={StaticResource MenuColorEnumColorConverter}}" />
+                                            </Button.Background>-->
+                                        <Button
+                                            HorizontalContentAlignment="Left"
+                                            Command="{Binding NavigateToCommand}"
+                                            Background="{StaticResource MainMenuBackground}">
+                                        
+                                            <Grid Margin="5">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Viewbox Height="25">
+                                                        <ContentControl ContentTemplate="{Binding ImageResourceKey, Converter={StaticResource FindResourceFromStringConverter}}"/>
+                                                    </Viewbox>
+                                                    <TextBlock VerticalAlignment="Center" 
+                                                    Style="{StaticResource MainMenuTitle2}"
+                                                    Margin="6,0,0,0"
+                                                    Text="{Binding Name}" />
+                                                </StackPanel>                                                
+                                                <TextBlock Grid.Row="1"
+                                                    Text="{Binding Description}"
+                                                    Style="{StaticResource MainMenuDescription}" Margin="2"/>
+                                            </Grid>
+                                        </Button>
+                                    </Border>
+                                </DataTemplate>
+
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </DataTemplate>
+
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,766 @@
+<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Recipes.Library.RecipeLibraryPanelView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:components="clr-namespace:Agileo.Recipes.Components;assembly=Agileo.Recipes"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:recipesFolder="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Recipes"
+	xmlns:library="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Recipes.Library"
+	xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+	xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+	xmlns:scenarios="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.Scenarios"
+	xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+	xmlns:recipes="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes"
+	xmlns:userInformation="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.UserInformation"
+	xmlns:userInteraction="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.UserInteraction"
+	xmlns:wait="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.Wait"
+	xmlns:waitStatusThreshold="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.WaitStatusThreshold"
+	xmlns:waitProcessModuleStatusThreshold="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.WaitProcessModuleStatusThreshold"
+	xmlns:instructions="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions"
+	xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+	xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+	xmlns:groupSelector="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.GroupSelector"
+	x:Name="RecipeLibrary"
+	d:DataContext="{d:DesignInstance library:RecipeLibraryPanel, IsDesignTimeCreatable=False}"
+	d:DesignHeight="{StaticResource DesignHeight}"
+	d:DesignWidth="{StaticResource DesignWidth}"
+	Style="{StaticResource BusinessPanelViewStyle}"
+	mc:Ignorable="d">
+
+	<DockPanel>
+
+		<Expander
+			BorderThickness="1,0,0,0"
+			DockPanel.Dock="Right"
+			ExpandDirection="Left"
+			IsExpanded="{Binding DetailsIsExpanded, Mode=TwoWay}">
+			<Expander.Header>
+				<TextBlock Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_DETAIL_EXPANDER}">
+					<TextBlock.LayoutTransform>
+						<RotateTransform Angle="90" />
+					</TextBlock.LayoutTransform>
+				</TextBlock>
+			</Expander.Header>
+			<Expander.Style>
+				<Style
+					BasedOn="{StaticResource {x:Type Expander}}"
+					TargetType="Expander">
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding IsEditing}" Value="True">
+							<Setter Property="Template" Value="{StaticResource ExpanderWithoutHeaderTemplate}" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Expander.Style>
+			<ContentControl
+				x:Name="ContentControl"
+				Width="1005"
+				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}"
+				Content="{Binding RecipeDetailsViewModel}">
+				<ContentControl.ContentTemplate>
+					<DataTemplate DataType="{x:Type library:RecipeDetailsViewModel}">
+						<GroupBox Header="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_HEADER}">
+							<Grid>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*" />
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								<DockPanel LastChildFill="True">
+									<DockPanel Dock="Top">
+										<StackPanel
+											Margin="{StaticResource HorizontalStackPropertyMargin}"
+											Orientation="Horizontal">
+											<controls:PropertyEditor
+												x:Name="NamePropertyEditor"
+												Width="315"
+												Focusable="False"
+												PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_NAME}">
+												<TextBox Text="{Binding RecipeId, UpdateSourceTrigger=PropertyChanged}" />
+											</controls:PropertyEditor>
+											<controls:PropertyEditor
+												x:Name="RecipeGroupPropertyEditor"
+												Width="315"
+												Margin="10,0,0,0"
+												Focusable="False"
+												PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_GROUP_NAME}">
+												<ComboBox
+													x:Name="RecipeGroupComboBox"
+													DisplayMemberPath="Name"
+													ItemsSource="{Binding OwnerPanel.GroupSelector.Groups}"
+													SelectedItem="{Binding RecipeGroup, Mode=TwoWay}" />
+											</controls:PropertyEditor>
+											<controls:PropertyEditor
+												x:Name="ModificationPropertyEditor"
+												Margin="10,0,0,0"
+												Focusable="False"
+												FontStyle="Italic"
+												PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_MODIFICATION_DATE}">
+												<TextBlock VerticalAlignment="Center">
+													<controls:OneWayRun Value="{Binding RecipeLocalizedModificationDate.Value}" />
+													<controls:OneWayRun Value="{localize:Static scenarios:ScenarioResources.SCENARIO_BY}" />
+													<controls:OneWayRun
+														FontWeight="Bold"
+														Value="{Binding Recipe.Header.Author}" />
+												</TextBlock>
+											</controls:PropertyEditor>
+										</StackPanel>
+									</DockPanel>
+									<DockPanel Dock="Top">
+										<StackPanel
+											Margin="{StaticResource HorizontalStackPropertyMargin}"
+											Orientation="Horizontal">
+											<controls:PropertyEditor
+												x:Name="VersionIdPropertyEditor"
+												Width="315"
+												Focusable="False"
+												PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_VERSION_ID}">
+												<TextBox Text="{Binding RecipeVersionId, UpdateSourceTrigger=PropertyChanged}" />
+											</controls:PropertyEditor>
+											<controls:PropertyEditor
+												x:Name="EquipmentIdPropertyEditor"
+												Width="315"
+												Margin="10,0,0,0"
+												Focusable="False"
+												PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_EQUIPMENT_ID}">
+												<TextBox Text="{Binding RecipeEquipmentId, UpdateSourceTrigger=PropertyChanged}" />
+											</controls:PropertyEditor>
+											<controls:PropertyEditor
+												x:Name="SecurityIdPropertyEditor"
+												Width="315"
+												Margin="10,0,0,0"
+												Focusable="False"
+												PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_SECURITY_ID}">
+												<TextBox Text="{Binding RecipeSecurityId, UpdateSourceTrigger=PropertyChanged}" />
+											</controls:PropertyEditor>
+										</StackPanel>
+									</DockPanel>
+
+									<DockPanel Dock="Top">
+										<controls:PropertyEditor
+											x:Name="DescriptionPropertyEditor"
+											Height="100"
+											Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+											Focusable="False"
+											PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_DESCRIPTION}">
+											<TextBox
+												VerticalContentAlignment="Top"
+												AcceptsReturn="True"
+												Text="{Binding RecipeDescription, UpdateSourceTrigger=PropertyChanged}" />
+										</controls:PropertyEditor>
+									</DockPanel>
+
+									<DockPanel Dock="Top">
+										<!--#region New Step-->
+										<controls:PropertyEditor
+											Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+											Style="{StaticResource BorderedPropertyEditorStyle}">
+											<StackPanel>
+												<Grid>
+													<Grid.ColumnDefinitions>
+														<ColumnDefinition Width="*" />
+														<ColumnDefinition Width="*" />
+													</Grid.ColumnDefinitions>
+
+													<controls:ButtonsBox
+														x:Name="ButtonsBoxStep"
+														Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+														HorizontalAlignment="Left"
+														VerticalAlignment="Top"
+														dependencyObjects:Icon.Geometry="{StaticResource AddIcon}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_ADD_STEP}">
+														<Button
+															HorizontalContentAlignment="Left"
+															Background="Transparent"
+															Command="{Binding AddStepCommand}"
+															CommandParameter="{x:Type recipes:PreProcess}"
+															Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_STEP_PRE_PROCESS}" />
+														<Button
+															HorizontalContentAlignment="Left"
+															Background="Transparent"
+															Command="{Binding AddStepCommand}"
+															CommandParameter="{x:Type recipes:Process}"
+															Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_STEP_PROCESS}" />
+														<Button
+															HorizontalContentAlignment="Left"
+															Background="Transparent"
+															Command="{Binding AddStepCommand}"
+															CommandParameter="{x:Type recipes:PostProcess}"
+															Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_STEP_POST_PROCESS}" />
+													</controls:ButtonsBox>
+
+													<Button
+														x:Name="ButtonDeleteStep"
+														Grid.Column="1"
+														Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+														HorizontalAlignment="Left"
+														VerticalAlignment="Top"
+														dependencyObjects:Icon.Geometry="{StaticResource DeleteIcon}"
+														Command="{Binding DeleteStepCommand}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_DELETESTEP}" />
+												</Grid>
+
+												<ListView
+													ItemsSource="{Binding Recipe.Steps}"
+													SelectedItem="{Binding SelectedStep}">
+													<ListView.ItemContainerStyle>
+														<Style
+															BasedOn="{StaticResource GridViewItemStyle}"
+															TargetType="{x:Type ListViewItem}">
+															<Setter Property="BorderBrush" Value="Transparent" />
+														</Style>
+													</ListView.ItemContainerStyle>
+													<ListView.View>
+														<GridView AllowsColumnReorder="True">
+
+															<GridViewColumn
+																DisplayMemberBinding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource ListViewItemToIndexConverter}}"
+																Header="Number" />
+
+															<!--#region Step Name-->
+															<GridViewColumn
+																x:Name="NameColumn"
+																Width="175">
+																<GridViewColumn.CellTemplate>
+																	<DataTemplate DataType="components:RecipeComponent">
+																		<TextBlock Text="{Binding Id}" />
+																	</DataTemplate>
+																</GridViewColumn.CellTemplate>
+																<GridViewColumnHeader>
+																	<TextBlock
+																		Margin="8,0"
+																		Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_STEPS}" />
+																</GridViewColumnHeader>
+															</GridViewColumn>
+															<!--#endregion Step Name-->
+
+															<!--#region Instruction Count-->
+															<GridViewColumn
+																x:Name="InstructionCountColumn"
+																Width="100">
+																<GridViewColumn.CellTemplate>
+																	<DataTemplate DataType="components:RecipeComponent">
+																		<TextBlock
+																			Text="{Binding Instructions.Count}"
+																			TextAlignment="Center" />
+																	</DataTemplate>
+																</GridViewColumn.CellTemplate>
+																<GridViewColumnHeader>
+																	<GridViewColumnHeader.Resources>
+																		<Style
+																			BasedOn="{StaticResource {x:Type GridViewColumnHeader}}"
+																			TargetType="{x:Type GridViewColumnHeader}">
+																			<Setter Property="HorizontalContentAlignment" Value="Center" />
+																		</Style>
+																	</GridViewColumnHeader.Resources>
+																	<TextBlock Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_INSTRUCTION_COUNT}" />
+																</GridViewColumnHeader>
+															</GridViewColumn>
+															<!--#endregion Instruction Count-->
+														</GridView>
+													</ListView.View>
+												</ListView>
+											</StackPanel>
+										</controls:PropertyEditor>
+										<!--#endregion New Step-->
+
+										<!--#region New Instruction-->
+										<controls:PropertyEditor
+											Margin="10,0,0,10"
+											Style="{StaticResource BorderedPropertyEditorStyle}">
+											<StackPanel>
+												<controls:ButtonsBox
+													x:Name="ButtonsBoxInstruction"
+													Margin="{StaticResource HorizontalStackPropertyMargin}"
+													HorizontalAlignment="Left"
+													VerticalAlignment="Top"
+													dependencyObjects:Icon.Geometry="{StaticResource AddIcon}"
+													Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_ADD_INSTRUCTION}">
+													<Button
+														HorizontalContentAlignment="Left"
+														dependencyObjects:Icon.Geometry="{StaticResource UserInterfaceControlIcon}"
+														Background="Transparent"
+														Command="{Binding AddInstructionCommand}"
+														CommandParameter="{x:Type userInformation:UserInformationInstruction}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_USER_INFORMATION_INSTRUCTION}" />
+													<Button
+														HorizontalContentAlignment="Left"
+														dependencyObjects:Icon.Geometry="{StaticResource UserInterfaceControlIcon}"
+														Background="Transparent"
+														Command="{Binding AddInstructionCommand}"
+														CommandParameter="{x:Type userInteraction:UserInteractionInstruction}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_USER_INTERACTION_INSTRUCTION}" />
+													<Button
+														HorizontalContentAlignment="Left"
+														dependencyObjects:Icon.Geometry="{StaticResource WaitTimeIcon}"
+														Background="Transparent"
+														Command="{Binding AddInstructionCommand}"
+														CommandParameter="{x:Type wait:WaitForTimeInstruction}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_WAIT_TIME}" />
+													<Button
+														HorizontalContentAlignment="Left"
+														dependencyObjects:Icon.Geometry="{StaticResource WaitDataIcon}"
+														Background="Transparent"
+														Command="{Binding AddInstructionCommand}"
+														CommandParameter="{x:Type waitStatusThreshold:WaitStatusThresholdInstruction}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_WAIT_THRESHOLD}" />
+													<Button
+														HorizontalContentAlignment="Left"
+														dependencyObjects:Icon.Geometry="{StaticResource WaitDataIcon}"
+														Background="Transparent"
+														Command="{Binding AddInstructionCommand}"
+														CommandParameter="{x:Type waitProcessModuleStatusThreshold:WaitProcessModuleStatusThresholdInstruction}"
+														Content="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_WAIT_PM_STATUS_THRESHOLD}" />
+												</controls:ButtonsBox>
+												<ListView
+													x:Name="ListView"
+													Width="570"
+													FocusVisualStyle="{x:Null}"
+													ItemsSource="{Binding ListViewInstructionByStep}"
+													ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+													SelectedIndex="{Binding SelectedRecipeInstruction}">
+													<ListView.ItemContainerStyle>
+														<Style
+															BasedOn="{StaticResource {x:Type ListBoxItem}}"
+															TargetType="{x:Type ListViewItem}">
+															<Setter Property="MinHeight" Value="38" />
+															<Setter Property="MaxHeight" Value="200" />
+															<Setter Property="VerticalContentAlignment" Value="Stretch" />
+															<Style.Triggers>
+																<Trigger Property="IsSelected" Value="True">
+																	<Setter Property="Height" Value="Auto" />
+																</Trigger>
+															</Style.Triggers>
+														</Style>
+													</ListView.ItemContainerStyle>
+													<ListView.ItemTemplate>
+														<DataTemplate DataType="{x:Type instructions:BaseRecipeInstruction}">
+															<DockPanel
+																x:Name="DockPanel"
+																Background="Transparent"
+																TextElement.Foreground="{DynamicResource BusinessPanelForeground}">
+																<TextBlock
+																	HorizontalAlignment="Left"
+																	VerticalAlignment="Center"
+																	Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource ListViewItemToIndexConverter}}" />
+																<ContentPresenter
+																	Width="18"
+																	Height="18"
+																	Margin="7,8,7,2"
+																	VerticalAlignment="Top"
+																	Content="{Binding}"
+																	ContentTemplateSelector="{StaticResource InstructionIconTemplateSelector}"
+																	DockPanel.Dock="Left" />
+																<StackPanel
+																	x:Name="ControlsPanel"
+																	Margin="5,2,0,2"
+																	VerticalAlignment="Top"
+																	DockPanel.Dock="Right"
+																	Orientation="Horizontal"
+																	Visibility="Collapsed">
+																	<Button
+																		Margin="0,0,5,0"
+																		dependencyObjects:Icon.Geometry="{StaticResource ArrowUpIcon}"
+																		Background="Transparent"
+																		Command="{Binding DataContext.MoveUpCommand, ElementName=ListView}"
+																		CommandParameter="{Binding}"
+																		Style="{StaticResource SquareIconifiedButtonStyle}"
+																		ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_MOVE_UP}" />
+																	<Button
+																		Margin="0,0,5,0"
+																		dependencyObjects:Icon.Geometry="{StaticResource ArrowDownIcon}"
+																		Background="Transparent"
+																		Command="{Binding DataContext.MoveDownCommand, ElementName=ListView}"
+																		CommandParameter="{Binding}"
+																		Style="{StaticResource SquareIconifiedButtonStyle}"
+																		ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_MOVE_DOWN}" />
+																	<Button
+																		Margin="0,0,5,0"
+																		dependencyObjects:Icon.Geometry="{StaticResource EditIcon}"
+																		Background="Transparent"
+																		Command="{Binding DataContext.EditInstructionCommand, ElementName=ListView}"
+																		CommandParameter="{Binding}"
+																		Style="{StaticResource SquareIconifiedButtonStyle}"
+																		ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_EDIT}" />
+																	<Button
+																		Margin="0,0,5,0"
+																		dependencyObjects:Icon.Geometry="{StaticResource DeleteIcon}"
+																		Background="Transparent"
+																		Command="{Binding DataContext.RemoveCommand, ElementName=ListView}"
+																		CommandParameter="{Binding}"
+																		Style="{StaticResource SquareIconifiedButtonStyle}"
+																		ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_DELETE}" />
+																</StackPanel>
+																<TextBlock
+																	x:Name="DescriptionBlock"
+																	VerticalAlignment="Center"
+																	behaviors:AdvancedStringFormatTextBlockBehavior.Definitions="{Binding FormattedLabel}"
+																	TextTrimming="CharacterEllipsis"
+																	ToolTip="{Binding PrettyLabel}" />
+
+															</DockPanel>
+															<DataTemplate.Triggers>
+																<DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+																	<Setter TargetName="DescriptionBlock" Property="TextWrapping" Value="Wrap" />
+																	<Setter TargetName="ControlsPanel" Property="Visibility" Value="Visible" />
+																</DataTrigger>
+																<DataTrigger Binding="{Binding ElementName=DockPanel, Path=IsMouseOver}" Value="True">
+																	<Setter TargetName="ControlsPanel" Property="Visibility" Value="Visible" />
+																</DataTrigger>
+																<DataTrigger Binding="{Binding DataContext.IsEditing, ElementName=ListView}" Value="False">
+																	<Setter TargetName="ControlsPanel" Property="Visibility" Value="Collapsed" />
+																</DataTrigger>
+															</DataTemplate.Triggers>
+														</DataTemplate>
+													</ListView.ItemTemplate>
+												</ListView>
+											</StackPanel>
+										</controls:PropertyEditor>
+										<!--#endregion New Instruction-->
+									</DockPanel>
+								</DockPanel>
+
+								<Expander
+									Grid.Row="1"
+									BorderThickness="0,0,0,1"
+									ExpandDirection="Down"
+									Header="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_RELATED_RECIPE}"
+									IsExpanded="False">
+									<controls:PropertyEditor
+										PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_SUB_RECIPES}"
+										Style="{StaticResource BorderedPropertyEditorStyle}">
+										<StackPanel>
+											<StackPanel
+												DockPanel.Dock="Bottom"
+												Orientation="Horizontal">
+												<Button
+													x:Name="ButtonSubRecipe"
+													Margin="5,5"
+													dependencyObjects:Icon.Geometry="{DynamicResource AddIcon}"
+													Command="{Binding AddRelatedRecipeCommand}"
+													CommandParameter="SubRecipe"
+													Style="{StaticResource SquareIconifiedButtonStyle}"
+													ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EDITOR_ADD_SUBRECIPE}" />
+											</StackPanel>
+											<ListView
+												x:Name="SubRecipesListView"
+												Width="950"
+												FocusVisualStyle="{x:Null}"
+												ItemsSource="{Binding ListViewRelatedRecipe}"
+												ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+												SelectedItem="{Binding SelectedSubRecipe}">
+												<ListView.ItemContainerStyle>
+													<Style
+														BasedOn="{StaticResource {x:Type ListBoxItem}}"
+														TargetType="{x:Type ListViewItem}">
+														<Setter Property="MinHeight" Value="38" />
+														<Setter Property="MaxHeight" Value="200" />
+														<Setter Property="VerticalContentAlignment" Value="Stretch" />
+														<Style.Triggers>
+															<Trigger Property="IsSelected" Value="True">
+																<Setter Property="Height" Value="Auto" />
+															</Trigger>
+														</Style.Triggers>
+													</Style>
+												</ListView.ItemContainerStyle>
+												<ListView.ItemTemplate>
+													<DataTemplate DataType="{x:Type components:RecipeReference}">
+														<DockPanel
+															x:Name="DockPanel"
+															Background="Transparent"
+															TextElement.Foreground="{DynamicResource BusinessPanelForeground}">
+															<TextBlock
+																HorizontalAlignment="Left"
+																VerticalAlignment="Center"
+																Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Converter={StaticResource ListViewItemToIndexConverter}}" />
+															<StackPanel
+																x:Name="ControlsPanel"
+																Margin="5,2,0,2"
+																VerticalAlignment="Top"
+																DockPanel.Dock="Right"
+																Orientation="Horizontal"
+																Visibility="Collapsed">
+																<Button
+																	Margin="0,0,5,0"
+																	dependencyObjects:Icon.Geometry="{StaticResource ArrowUpIcon}"
+																	Background="Transparent"
+																	Command="{Binding DataContext.MoveUpCommand, ElementName=ListView}"
+																	CommandParameter="{Binding}"
+																	Style="{StaticResource SquareIconifiedButtonStyle}"
+																	ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_MOVE_UP}" />
+																<Button
+																	Margin="0,0,5,0"
+																	dependencyObjects:Icon.Geometry="{StaticResource ArrowDownIcon}"
+																	Background="Transparent"
+																	Command="{Binding DataContext.MoveDownCommand, ElementName=ListView}"
+																	CommandParameter="{Binding}"
+																	Style="{StaticResource SquareIconifiedButtonStyle}"
+																	ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_MOVE_DOWN}" />
+																<Button
+																	Margin="0,0,5,0"
+																	dependencyObjects:Icon.Geometry="{StaticResource DeleteIcon}"
+																	Background="Transparent"
+																	Command="{Binding DataContext.RemoveCommand, ElementName=ListView}"
+																	CommandParameter="{Binding}"
+																	Style="{StaticResource SquareIconifiedButtonStyle}"
+																	ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_DELETE}" />
+															</StackPanel>
+															<TextBlock
+																HorizontalAlignment="Left"
+																VerticalAlignment="Center"
+																Text="  "
+																TextTrimming="CharacterEllipsis" />
+															<TextBlock
+																x:Name="DescriptionBlock"
+																HorizontalAlignment="Left"
+																VerticalAlignment="Center"
+																Text="{Binding RecipeId}"
+																TextTrimming="CharacterEllipsis" />
+														</DockPanel>
+														<DataTemplate.Triggers>
+															<DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+																<Setter TargetName="DescriptionBlock" Property="TextWrapping" Value="Wrap" />
+																<Setter TargetName="ControlsPanel" Property="Visibility" Value="Visible" />
+															</DataTrigger>
+															<DataTrigger Binding="{Binding ElementName=DockPanel, Path=IsMouseOver}" Value="True">
+																<Setter TargetName="ControlsPanel" Property="Visibility" Value="Visible" />
+															</DataTrigger>
+															<DataTrigger Binding="{Binding DataContext.IsEditing, ElementName=ListView}" Value="False">
+																<Setter TargetName="ControlsPanel" Property="Visibility" Value="Collapsed" />
+															</DataTrigger>
+														</DataTemplate.Triggers>
+													</DataTemplate>
+												</ListView.ItemTemplate>
+											</ListView>
+										</StackPanel>
+									</controls:PropertyEditor>
+								</Expander>
+							</Grid>
+						</GroupBox>
+						<DataTemplate.Triggers>
+							<DataTrigger Value="True">
+								<DataTrigger.Binding>
+									<MultiBinding Converter="{StaticResource OrOperatorMultiValueConverter}">
+										<Binding
+											Converter="{StaticResource NullToTrueConverter}"
+											Path="." />
+										<Binding
+											Converter="{StaticResource InvertedBoolConverter}"
+											Path="IsEditing" />
+									</MultiBinding>
+								</DataTrigger.Binding>
+								<Setter TargetName="NamePropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="NamePropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding RecipeId}" />
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="RecipeGroupPropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="RecipeGroupPropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding RecipeGroup.Name}" />
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="DescriptionPropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="DescriptionPropertyEditor" Property="HorizontalContentAlignment" Value="Stretch" />
+								<Setter TargetName="DescriptionPropertyEditor" Property="Content">
+									<Setter.Value>
+										<ScrollViewer
+											MaxHeight="200"
+											HorizontalScrollBarVisibility="Disabled"
+											VerticalScrollBarVisibility="Auto">
+											<TextBlock
+												IsEnabled="False"
+												Text="{Binding RecipeDescription}"
+												TextWrapping="Wrap" />
+										</ScrollViewer>
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="VersionIdPropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="VersionIdPropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding RecipeVersionId}" />
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="EquipmentIdPropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="EquipmentIdPropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding RecipeEquipmentId}" />
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="SecurityIdPropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="SecurityIdPropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding RecipeSecurityId}" />
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="ButtonsBoxInstruction" Property="Visibility" Value="Collapsed" />
+								<Setter TargetName="ButtonsBoxStep" Property="Visibility" Value="Collapsed" />
+								<Setter TargetName="ButtonDeleteStep" Property="Visibility" Value="Collapsed" />
+								<Setter TargetName="ButtonSubRecipe" Property="Visibility" Value="Collapsed" />
+							</DataTrigger>
+						</DataTemplate.Triggers>
+					</DataTemplate>
+				</ContentControl.ContentTemplate>
+			</ContentControl>
+		</Expander>
+
+		<dataTables:DataTable
+			DataSource="{Binding Recipes}"
+			IsEnabled="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}"
+			SelectedItem="{Binding SelectedRecipe}">
+
+			<dataTables:DataTable.LeftAdditionalContent>
+				<Border
+					BorderBrush="{DynamicResource ListViewBorderBrush}"
+					BorderThickness="0,0,1,0">
+					<Expander
+						VerticalContentAlignment="Stretch"
+						ExpandDirection="Right"
+						IsExpanded="True">
+						<Expander.Header>
+							<TextBlock Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_GROUPS}">
+								<TextBlock.LayoutTransform>
+									<RotateTransform Angle="-90" />
+								</TextBlock.LayoutTransform>
+							</TextBlock>
+						</Expander.Header>
+						<groupSelector:GroupSelectorView DataContext="{Binding GroupSelector}">
+							<groupSelector:GroupSelectorView.GroupTemplate>
+								<DataTemplate DataType="{x:Type components:RecipeGroup}">
+									<DockPanel>
+										<TextBlock
+											VerticalAlignment="Center"
+											Style="{StaticResource Subtitle2TextStyle}"
+											Text="{Binding Name}" />
+									</DockPanel>
+								</DataTemplate>
+							</groupSelector:GroupSelectorView.GroupTemplate>
+						</groupSelector:GroupSelectorView>
+					</Expander>
+				</Border>
+			</dataTables:DataTable.LeftAdditionalContent>
+
+			<dataTables:DataTable.BottomAdditionalContent>
+				<StackPanel
+					Margin="10"
+					Orientation="Horizontal">
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource AddIcon}"
+						Command="{Binding AddRecipeCommand}"
+						IsEnabled="{Binding AddRecipeCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_ADD}" />
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource DeleteIcon}"
+						Command="{Binding DeleteRecipeCommand}"
+						IsEnabled="{Binding DeleteRecipeCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_DELETE}" />
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource DuplicateIcon}"
+						Command="{Binding DuplicateRecipeCommand}"
+						IsEnabled="{Binding DuplicateRecipeCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_CLONE_RECIPE}" />
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource EditIcon}"
+						Command="{Binding EditRecipeCommand}"
+						IsEnabled="{Binding EditRecipeCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_EDIT_RECIPE}" />
+				</StackPanel>
+			</dataTables:DataTable.BottomAdditionalContent>
+
+			<GridView AllowsColumnReorder="True">
+
+				<!--#region GroupName-->
+				<dataTables:DataTableColumn
+					Width="150"
+					DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_GROUP}"
+					SortKey="Header.GroupName">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="components:RecipeComponent">
+							<TextBlock Text="{Binding Header.GroupName}" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion GroupName-->
+
+				<!--#region Name-->
+				<dataTables:DataTableColumn
+					Width="380"
+					DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_NAME}"
+					SortKey="Id">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="components:RecipeComponent">
+							<TextBlock
+								Text="{Binding Id}"
+								TextAlignment="Left" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion Name-->
+
+				<!--#region Author-->
+				<dataTables:DataTableColumn
+					x:Name="AuthorColumn"
+					Width="175"
+					DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_AUTHOR}"
+					SortKey="Header.Author">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="components:RecipeComponent">
+							<TextBlock
+								x:Name="TextBlock"
+								Text="{Binding Header.Author}" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion Author-->
+
+				<!--#region Creation Date Time-->
+				<dataTables:DataTableColumn
+					Width="240"
+					DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_CREATION_DATE}"
+					SortKey="Header.CreateDate">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="components:RecipeComponent">
+							<TextBlock
+								Text="{Binding Header.CreateDate, StringFormat='dd/MM/yyyy HH:mm:ss'}"
+								TextAlignment="Left" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion Creation Date Time-->
+
+				<!--#region Last Modification Date Time-->
+				<dataTables:DataTableColumn
+					Width="240"
+					DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_MODIFICATION_DATE}"
+					SortKey="Header.ModificationDate">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="components:RecipeComponent">
+							<TextBlock
+								Text="{Binding Header.ModificationDate, StringFormat='dd/MM/yyyy HH:mm:ss'}"
+								TextAlignment="Left" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion Last Modification Date Time-->
+
+			</GridView>
+		</dataTables:DataTable>
+
+	</DockPanel>
+
+</UserControl>

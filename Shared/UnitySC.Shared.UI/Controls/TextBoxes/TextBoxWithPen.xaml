@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="UnitySC.Shared.UI.Controls.TextBoxWithPen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions"
+             xmlns:xamlbehaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviors="clr-namespace:UnitySC.Shared.UI.Behaviors"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters"
+             xmlns:helpers="clr-namespace:UnitySC.Shared.UI.Helper" 
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="TextBoxWithPenControl">
+    <UserControl.Resources>
+        <!-- Unity Styles New -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </UserControl.Resources>
+   
+    <Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="19" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="TextBlockMaxPlaceHolder" Visibility="Hidden" />
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" MaxWidth="{Binding ElementName=TextBlockMaxPlaceHolder, Path=ActualWidth}" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="{Binding Text,ElementName=TextBoxWithPenControl}" TextTrimming="CharacterEllipsis" helpers:TextBlockUtils.AutoTooltip="True" VerticalAlignment="Center" HorizontalAlignment="Stretch" MaxWidth="{Binding ElementName=TextBlockMaxPlaceHolder, Path=ActualWidth}"></TextBlock>
+
+            <ToggleButton x:Name="EditButton" Style="{StaticResource ToggleButtonChromelessStyle}" Margin="5,0,0,0" Grid.Column="1"  Cursor="Hand" BorderBrush="Transparent" Background="Transparent" IsChecked="{Binding IsEditing, ElementName=TextBoxWithPenControl}" Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked, Converter={converters:InvertedBooleanToVisibilityConverter}}" HorizontalAlignment="{Binding Path=PenAlignment , ElementName=TextBoxWithPenControl}">
+                <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource PencilGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource ButtonForegroundBrush}" Width="14" Height="14"></Image>
+            </ToggleButton>
+        </Grid>
+        <TextBox x:Name="TexBoxEdit"  LostFocus="TexBoxEdit_LostFocus"  VerticalContentAlignment="Center" Text="{Binding Text, ElementName=TextBoxWithPenControl}">
+            <xamlbehaviors:Interaction.Behaviors>
+                <behaviors:TextboxEnterBehaviour />
+            </xamlbehaviors:Interaction.Behaviors>
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Visibility" Value="Hidden" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsEditing, ElementName=TextBoxWithPenControl}" Value="true">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TexBoxEdit}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+    </Grid>
+</UserControl>

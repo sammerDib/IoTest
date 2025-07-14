@@ -1,0 +1,97 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.UIComponents.Components.SeverityMessageViewer.SeverityMessageViewerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:severityMessageViewer="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.SeverityMessageViewer"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    d:DataContext="{d:DesignInstance severityMessageViewer:SeverityMessageViewerViewModel}"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <DockPanel>
+        <Button
+            Margin="0,5,0,0"
+            Command="{Binding ShowAllCommand}"
+            Content="Show all..."
+            DockPanel.Dock="Bottom"
+            Visibility="{Binding MoreIsDisplayed}" />
+        <Button
+            Margin="0,5,0,0"
+            Command="{Binding ReduceCommand}"
+            Content="Reduce..."
+            DockPanel.Dock="Bottom"
+            Visibility="{Binding ReduceIsDisplayed}" />
+
+        <ItemsControl
+            ItemsSource="{Binding MessagesViewers}"
+            Style="{StaticResource VirtualizedItemsControlStyle}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate
+                    x:Name="DataTemplate"
+                    DataType="{x:Type severityMessageViewer:SeverityMessageViewerItem}">
+                    <Grid
+                        Height="Auto"
+                        MinHeight="25"
+                        Visibility="{Binding AnyDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <controls:Icon
+                            x:Name="Icon"
+                            Grid.Column="0"
+                            Margin="0,5,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                            <controls:Icon.Style>
+                                <Style
+                                    BasedOn="{StaticResource {x:Type controls:Icon}}"
+                                    TargetType="{x:Type controls:Icon}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Severity}" Value="{x:Static severityMessageViewer:SeverityMessageViewerItem+SeverityEnum.Error}">
+                                            <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                            <Setter Property="Data" Value="{StaticResource AbortIcon}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Severity}" Value="{x:Static severityMessageViewer:SeverityMessageViewerItem+SeverityEnum.Warning}">
+                                            <Setter Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                                            <Setter Property="Data" Value="{StaticResource CautionIcon}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Severity}" Value="{x:Static severityMessageViewer:SeverityMessageViewerItem+SeverityEnum.Info}">
+                                            <Setter Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                            <Setter Property="Data" Value="{StaticResource InfoIcon}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:Icon.Style>
+                        </controls:Icon>
+
+                        <Rectangle
+                            Grid.Column="1"
+                            Width="2"
+                            Margin="6,0"
+                            Fill="{Binding ElementName=Icon, Path=Foreground}" />
+
+                        <ItemsControl
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            Foreground="{Binding ElementName=Icon, Path=Foreground}"
+                            ItemsSource="{Binding Path=DisplayedMessages}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock
+                                        Text="{Binding}"
+                                        TextWrapping="WrapWithOverflow" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</UserControl>
+

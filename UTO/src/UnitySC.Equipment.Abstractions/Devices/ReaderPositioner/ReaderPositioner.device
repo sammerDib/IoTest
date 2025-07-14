@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="ReaderPositioner">
+                  <Types>
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.SampleDimension, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <DeviceType Name="ReaderPositioner" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\ReaderPositioner\ReaderPositioner.device|UnitySC.Equipment.Abstractions.Devices.ReaderPositioner.ReaderPositioner" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ReaderPositioner.ReaderPositioner, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="SetPosition" Type="Void" Timeout="60 s">
+                          <Documentation>Set the position of the reader.</Documentation>
+                          <Parameters>
+                            <Parameter Name="dimension" Type="UnitySC.Equipment.Abstractions.Devices.ReaderPositioner.SampleDimension" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="CurrentPosition" Type="UnitySC.Equipment.Abstractions.Devices.ReaderPositioner.SampleDimension" />
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module Type="EFEM" Name="EFEM" Config="Connected" Version="2">
+  <Device Type="WaferAligner" Name="Model5X" Config="Connected">
+    <ConfigParameters>
+      <Param Name="ARMN" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Default unit number of robot">
+        <Range>
+          <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+          <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="ARMP" Type="RangeType" Value="Discrete" Unit="NA" Description="End effector to be used">
+        <Range>
+          <Param Name="UpperEndEffector" Type="Int" Value="1" Unit="NA" Description="Upper end effector" />
+          <Param Name="LowerEndEffector" Type="Int" Value="2" Unit="NA" Description="Lower end effector" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="RobotUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+              <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="ARMR" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Distance between the arm rotation center and the center of the pre-aligner chuck">
+        <Range>
+          <Param Name="MinimumDistance" Type="NumberWithUnit" Value="0.0" Unit="mm" Description="Minimum distance" />
+          <Param Name="MaximumDistance" Type="NumberWithUnit" Value="1000.0" Unit="mm" Description="Maximum distance" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="RobotUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+              <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="ARMS" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Robot station number">
+        <Range>
+          <Param Name="FirstRobotStationNumber" Type="Int" Value="0" Unit="NA" Description="First robot station number" />
+          <Param Name="LastRobotStationNumber" Type="Int" Value="40" Unit="NA" Description="Last robot station number" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="RobotUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+              <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="ARMT" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="The CCW angle made between a line thru the CCD array and the pre-aligner chuck, and a line thru the arm center of rotation and the pre-aligner chuck">
+        <Range>
+          <Param Name="MinimumAngle" Type="NumberWithUnit" Value="-360.0" Unit="degree" Description="Minimum angle" />
+          <Param Name="MaximumAngle" Type="NumberWithUnit" Value="360.0" Unit="degree" Description="Maximum angle" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="RobotUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+              <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="ELIM" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Motor error limit">
+        <Range>
+          <Param Name="MinimumEncoderCount" Type="Int" Value="0" Unit="NA" Description="Minimum encoder count" />
+          <Param Name="MaximumEncoderCount" Type="Int" Value="32767" Unit="NA" Description="Maximum encoder count" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="Axis" RangeType="Discrete">
+            <Range>
+              <Param Name="Axis" Type="String" Value="R" Unit="NA" Description="Axis" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="PERR" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Autocalibration iteration error limit">
+        <Range>
+          <Param Name="MinimumError" Type="NumberWithUnit" Value="0.0" Unit="inch" Description="Minimum error" />
+          <Param Name="MaximumError" Type="NumberWithUnit" Value="0.005" Unit="inch" Description="Maximum error" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="RMAX" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Maximum acceptable radial offset value">
+        <Range>
+          <Param Name="MinimumAcceptableRadialOffsetValue" Type="NumberWithUnit" Value="0.0" Unit="degree" Description="Minimum acceptable radial offset value" />
+          <Param Name="MaximumAcceptableRadialOffsetValue" Type="NumberWithUnit" Value="0.4" Unit="degree" Description="Maximum acceptable radial offset value" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="ST" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Pre-aligner station theta offset value">
+        <Range>
+          <Param Name="MinimumThetaOffsetValue" Type="NumberWithUnit" Value="-360.0" Unit="degree" Description="Minimum theta offset value" />
+          <Param Name="MaximumThetaOffsetValue" Type="NumberWithUnit" Value="360.0" Unit="degree" Description="Maximum theta offset value" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="RobotUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+              <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+            </Range>
+          </Argument>
+          <Argument Name="AlignerUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstAlignerStationNumber" Type="Int" Value="1" Unit="NA" Description="First aligner station number" />
+              <Param Name="LastAlignerStationNumber" Type="Int" Value="10" Unit="NA" Description="Last aligner station number" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="SWA" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Notch offset angle">
+        <Range>
+          <Param Name="MinimumNotchOffsetValue" Type="NumberWithUnit" Value="-360.0" Unit="degree" Description="Minimum notch offset value" />
+          <Param Name="MaximumNotchOffsetValue" Type="NumberWithUnit" Value="360.0" Unit="degree" Description="Maximum notch offset value" />
+        </Range>
+        <ArgumentList>
+          <Argument Name="RobotUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstRobotUnitNumber" Type="Int" Value="0" Unit="NA" Description="First robot unit number" />
+              <Param Name="LastRobotUnitNumber" Type="Int" Value="7" Unit="NA" Description="Last robot unit number" />
+            </Range>
+          </Argument>
+          <Argument Name="AlignerUnit" RangeType="NonDiscrete">
+            <Range>
+              <Param Name="FirstAlignerStationNumber" Type="Int" Value="1" Unit="NA" Description="First aligner station number" />
+              <Param Name="LastAlignerStationNumber" Type="Int" Value="10" Unit="NA" Description="Last aligner station number" />
+            </Range>
+          </Argument>
+        </ArgumentList>
+      </Param>
+      <Param Name="VACDLY" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Vacuum delay time before and after alignment in ms">
+        <Range>
+          <Param Name="MinimumDelayValue" Type="IntWithUnit" Value="0" Unit="ms" Description="Minimum delay value" />
+          <Param Name="MaximumDelayValue" Type="IntWithUnit" Value="30000" Unit="ms" Description="Maximum delay value" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="WTYP" Type="RangeType" Value="Discrete" Unit="NA" Description="Wafer type">
+        <Range>
+          <Param Name="NotchedWafer" Type="String" Value="N" Unit="NA" Description="Notched wafer" />
+          <Param Name="FlattedWafer" Type="String" Value="F" Unit="NA" Description="Flatted wafer" />
+          <Param Name="Double-NotchedWafer" Type="String" Value="N2" Unit="NA" Description="Double-notched wafer" />
+          <Param Name="Double-FlattedWafer" Type="String" Value="F2" Unit="NA" Description="Double-flatted wafer" />
+          <Param Name="SquareWafer(NoChamfer)" Type="String" Value="S" Unit="NA" Description="Square wafer (no chamfer)" />
+          <Param Name="SquareWaferWithChamferedCornerr" Type="String" Value="C" Unit="NA" Description="Square wafer with chamfered cornerr" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="WSIZ" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Wafer size in inches">
+        <Range>
+          <Param Name="MinimumWaferSize" Type="NumberWithUnit" Value="0.0" Unit="mm" Description="Minimum wafer size" />
+          <Param Name="MaximumWaferSize" Type="NumberWithUnit" Value="100.0" Unit="mm" Description="Maximum wafer size" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="VCHK" Type="RangeType" Value="Discrete" Unit="NA" Description="Vacuum check state">
+        <Range>
+          <Param Name="VacuumCheckIsOff" Type="String" Value="OFF" Unit="NA" Description="Vacuum check is OFF" />
+          <Param Name="VacuumCheckIsOn" Type="String" Value="ON" Unit="NA" Description="Vacuum check is ON" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+    </ConfigParameters>
+  </Device>
+  <Device Type="WaferAligner" Name="EG300A" Config="NotConnected">
+    <ConfigParameters>
+      <Param Name="VCT" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Alignment angle">
+        <Range>
+          <Param Name="MinimumAlignementAngle" Type="IntWithUnit" Value="0" Unit="degree" Description="Minimum alignement angle" />
+          <Param Name="MaximumAlignmentAngle" Type="IntWithUnit" Value="9999" Unit="degree" Description="Maximum alignment angle" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="GSP" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Wafer withdrawing speed">
+        <Range>
+          <Param Name="MinimumWithdrawingSpeed" Type="IntWithUnit" Value="1" Unit="mm/s" Description="Minimum withdrawing speed" />
+          <Param Name="MaximumWithdrawingSpeed" Type="IntWithUnit" Value="100" Unit="mm/s" Description="Maximum withdrawing speed" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="PSP" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Wafer storing speed">
+        <Range>
+          <Param Name="MinimumStoringSpeed" Type="IntWithUnit" Value="1" Unit="mm/s" Description="Minimum storing speed" />
+          <Param Name="MaximumStoringSpeed" Type="IntWithUnit" Value="100" Unit="mm/s" Description="Maximum storing speed" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="ORA" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="OCR speed">
+        <Range>
+          <Param Name="MinimumOcrSpeed" Type="IntWithUnit" Value="0" Unit="mm/s" Description="Minimum OCR speed" />
+          <Param Name="MaximumOcrSpeed" Type="IntWithUnit" Value="9999" Unit="mm/s" Description="Maximum OCR speed" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="OCR" Type="RangeType" Value="Discrete" Unit="NA" Description="OCR operation specification">
+        <Range>
+          <Param Name="ReadingOcrFromTheTop" Type="Int" Value="0" Unit="NA" Description="Reading OCR from the top" />
+          <Param Name="ReadingOcrFromTheTop" Type="Int" Value="1" Unit="NA" Description="Reading OCR from the top" />
+          <Param Name="ReadingOcrFromTheBottom" Type="Int" Value="2" Unit="NA" Description="Reading OCR from the bottom" />
+          <Param Name="ReadingOcrFromTheBottom" Type="Int" Value="3" Unit="NA" Description="Reading OCR from the bottom" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="THR" Type="RangeType" Value="Discrete" Unit="NA" Description="Reverse home position">
+        <Range>
+          <Param Name="NormalHomePosition" Type="IntWithUnit" Value="0" Unit="mm" Description="Normal home position" />
+          <Param Name="FreverseHomePosition" Type="IntWithUnit" Value="1" Unit="mm" Description="FReverse home position" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="HPO" Type="RangeType" Value="Discrete" Unit="NA" Description="OCR sequence specification">
+        <Range>
+          <Param Name="NormalSequence" Type="Int" Value="0" Unit="NA" Description="Normal sequence" />
+          <Param Name="NormalSequence" Type="Int" Value="1" Unit="NA" Description="Normal sequence" />
+          <Param Name="Precision-FirstSequence" Type="Int" Value="2" Unit="NA" Description="Precision-first sequence" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="HPA" Type="RangeType" Value="Discrete" Unit="NA" Description="Alignment sequence specification">
+        <Range>
+          <Param Name="Speed-FirstSequence" Type="Int" Value="0" Unit="NA" Description="Speed-first sequence" />
+          <Param Name="NormalSequence" Type="Int" Value="1" Unit="NA" Description="Normal sequence" />
+          <Param Name="Precision-FirstSequence" Type="Int" Value="2" Unit="NA" Description="Precision-first sequence" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="OEA" Type="RangeType" Value="Discrete" Unit="NA" Description="OCR arm shunting operation specification">
+        <Range>
+          <Param Name="WithoutShunting" Type="Int" Value="0" Unit="NA" Description="Without shunting" />
+          <Param Name="WithShunting" Type="Int" Value="1" Unit="NA" Description="With shunting" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="RAA" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Robot access angle specification">
+        <Range>
+          <Param Name="MinimumRobotAccessAngle" Type="IntWithUnit" Value="-1112" Unit="degree" Description="Minimum robot access angle" />
+          <Param Name="MaximumRobotAccessAngle" Type="IntWithUnit" Value="1112" Unit="degree" Description="Maximum robot access angle" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="SCW" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Scribe width in mm">
+        <Range>
+          <Param Name="MinimumScribeWidth" Type="IntWithUnit" Value="0" Unit="mm" Description="Minimum scribe width" />
+          <Param Name="MaximumRobotAccessAngle" Type="IntWithUnit" Value="20" Unit="degree" Description="Maximum robot access angle" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="GAW" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Gripper arm width in mm">
+        <Range>
+          <Param Name="MinimumGripperArmWidth" Type="IntWithUnit" Value="0" Unit="mm" Description="Minimum gripper arm width" />
+          <Param Name="MaximumGripperArmWidth" Type="IntWithUnit" Value="10" Unit="mm" Description="Maximum gripper arm width" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="SOA" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Scribe offset angle">
+        <Range>
+          <Param Name="MinimumScribeOffsetAngle" Type="IntWithUnit" Value="0" Unit="degree" Description="Minimum scribe offset angle" />
+          <Param Name="MaximumScribeOffsetAngle" Type="IntWithUnit" Value="9999" Unit="degree" Description="Maximum scribe offset angle" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+      <Param Name="REA" Type="RangeType" Value="NonDiscrete" Unit="NA" Description="Retry angle in degrees">
+        <Range>
+          <Param Name="MinimumRetryAngle" Type="Int" Value="-10" Unit="NA" Description="Minimum retry angle" />
+          <Param Name="MaximumRetryAngle" Type="Int" Value="0" Unit="NA" Description="Maximum retry angle" />
+        </Range>
+        <ArgumentList>
+        </ArgumentList>
+      </Param>
+    </ConfigParameters>
+  </Device>
+</Module>

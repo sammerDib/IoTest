@@ -1,0 +1,65 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls.WidthLengthViewer"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+	x:Name="UserControl"
+	d:DesignHeight="100"
+	d:DesignWidth="200"
+	mc:Ignorable="d">
+
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<Grid>
+		<Viewbox
+			x:Name="Viewbox"
+			Margin="3"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			Stretch="Uniform">
+			<Grid>
+				<FrameworkElement
+					Width="{Binding ElementName=UserControl, Path=LengthValue}"
+					Height="{Binding ElementName=UserControl, Path=WidthValue}" />
+			</Grid>
+		</Viewbox>
+        <Rectangle
+			Width="{Binding ElementName=Viewbox, Path=ActualWidth}"
+			Height="{Binding ElementName=Viewbox, Path=ActualHeight}"
+			Fill="DarkGray"
+			Stroke="{StaticResource ButtonForegroundBrush}"
+			StrokeThickness="3" 
+            Visibility="{Binding ElementName=UserControl, Path=IsRectShaped, Converter={StaticResource BooleanToHiddenVisibilityConverter}}" />
+        <Ellipse
+			Width="{Binding ElementName=Viewbox, Path=ActualWidth}"
+			Height="{Binding ElementName=Viewbox, Path=ActualHeight}"
+			Fill="DarkGray"
+			Stroke="{StaticResource ButtonForegroundBrush}"
+			StrokeThickness="3" 
+            Visibility="{Binding ElementName=UserControl, Path=IsRectShaped, Converter={StaticResource InvertedBooleanToHiddenVisibilityConverter}}" />
+        <Grid
+			Width="{Binding ElementName=Viewbox, Path=ActualWidth}"
+			Height="{Binding ElementName=Viewbox, Path=ActualHeight}">
+			<userControls:Arrow
+				Margin="3"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Center"
+				Foreground="{StaticResource ButtonForegroundBrushHover}" />
+			<userControls:Arrow
+				Margin="3"
+				HorizontalAlignment="Center"
+				VerticalAlignment="Stretch"
+				Angle="90"
+				Foreground="{StaticResource ButtonForegroundBrush}"
+                Visibility="{Binding ElementName=UserControl, Path=IsCircleShaped, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+		</Grid>
+	</Grid>
+</UserControl>

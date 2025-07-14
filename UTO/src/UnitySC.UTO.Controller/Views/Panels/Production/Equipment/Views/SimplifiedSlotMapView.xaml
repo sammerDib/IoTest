@@ -1,0 +1,112 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Production.Equipment.Views.SimplifiedSlotMapView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment"
+    x:Name="SlotMapControl"
+    d:DataContext="{d:DesignInstance equipment:SlotMapViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="450"
+    mc:Ignorable="d">
+
+    <Grid IsSharedSizeScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding Slots}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="1" IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type equipment:Slot}">
+                    <Grid x:Name="Grid" ShowGridLines="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="B" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Ellipse
+                            x:Name="IndexEllipse"
+                            Grid.Column="0"
+                            Width="5"
+                            Height="5"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Right"
+                            Fill="#939393"
+                            Visibility="{Binding Index, Converter={StaticResource Int5ModuloToVisibilityConverter}}" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="3,0,2,0"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource SlotMapTextBlockStyle}"
+                            Text="{Binding Index}" />
+                        <Rectangle
+                            x:Name="WaferState"
+                            Grid.Column="2"
+                            Width="100"
+                            Height="12"
+                            Margin="2,0,0,0" />
+                        <TextBlock
+                            x:Name="SubstrateIdText"
+                            Grid.Column="2"
+                            Margin="5,0,0,0"
+                            FontSize="13"
+                            Style="{StaticResource SlotMapTextBlockStyle}"
+                            Text="{Binding SubstrateId}" />
+                    </Grid>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static e87:SlotState.Undefined}">
+                            <Setter TargetName="WaferState" Property="Fill" Value="{DynamicResource BusinessPanelForeground}" />
+                            <Setter TargetName="SubstrateIdText" Property="Foreground" Value="{DynamicResource BusinessPanelBackground}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static e87:SlotState.Empty}">
+                            <Setter TargetName="WaferState" Property="Fill" Value="Transparent" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static e87:SlotState.NotEmpty}">
+                            <Setter TargetName="WaferState" Property="Fill" Value="{DynamicResource BusinessPanelForeground}" />
+                            <Setter TargetName="SubstrateIdText" Property="Foreground" Value="{DynamicResource BusinessPanelBackground}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static e87:SlotState.CorrectlyOccupied}">
+                            <Setter TargetName="WaferState" Property="Fill" Value="{DynamicResource SeveritySuccessBrush}" />
+                            <Setter TargetName="SubstrateIdText" Property="Foreground" Value="White" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static e87:SlotState.DoubleSlotted}">
+                            <Setter TargetName="WaferState" Property="Fill" Value="{DynamicResource SeverityErrorBrush}" />
+                            <Setter TargetName="SubstrateIdText" Property="Foreground" Value="White" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding State}" Value="{x:Static e87:SlotState.CrossSlotted}">
+                            <Setter TargetName="WaferState" Property="Fill" Value="{DynamicResource SeverityErrorBrush}" />
+                            <Setter TargetName="SubstrateIdText" Property="Foreground" Value="White" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            FontSize="{StaticResource FontSizeSmall}">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{} Wafers : {0} / {1}">
+                    <Binding
+                        ElementName="SlotMapControl"
+                        FallbackValue="0"
+                        Mode="OneWay"
+                        Path="Carrier.SubstrateCount" />
+                    <Binding
+                        ElementName="SlotMapControl"
+                        FallbackValue="0"
+                        Mode="OneWay"
+                        Path="Carrier.Capacity" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+    </Grid>
+
+</UserControl>

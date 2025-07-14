@@ -1,0 +1,53 @@
+﻿<Window x:Class="ADC.View.Parameters.ParametersExportDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Simplified View Configuration"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="600"
+    d:DesignHeight="300"
+    Height="400"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d"
+    xmlns:controls="clr-namespace:ADC.Controls">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue" />
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="IsSelected" Value="True" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0"
+            Text="{Binding DisplayName, StringFormat=Module: {0}}" Style="{StaticResource ModulePanelTitle}" Margin="4,10" />
+        <TextBlock Grid.Row="1"
+            Text="Select the parameters that are visible in the Simplified View:"  Style="{StaticResource PanelFieldName}" Margin="4"/>
+        <ListView x:Name="listViewParams" Grid.Row="2" Margin="2"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{Binding ExportableParameterList}"
+            Style="{StaticResource ListViewParameters}">
+                <ListView.ItemTemplate>
+                <DataTemplate>
+                    <UserControl MinHeight="27" Content="{Binding ParameterExportView}" GotFocus="UserControl_GotFocus"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+         </ListView>       
+
+        <!-- Buttons-->
+        <Button Grid.Row="3" Click="ButtonOK_Click" IsDefault="true" Margin="4" HorizontalAlignment="Center">
+            <TextBlock Text="Ok" VerticalAlignment="Center" Margin="20,2"/>
+        </Button>
+
+    </Grid>
+</Window>

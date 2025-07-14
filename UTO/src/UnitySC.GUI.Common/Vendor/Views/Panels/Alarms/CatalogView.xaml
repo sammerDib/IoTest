@@ -1,0 +1,98 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Alarms.CatalogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:alarmModeling="clr-namespace:Agileo.AlarmModeling;assembly=Agileo.AlarmModeling"
+    xmlns:alarms="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Alarms"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    d:DataContext="{d:DesignInstance alarms:Catalog, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <dataTables:DataTable
+        DataSource="{Binding Alarms}"
+        SelectedItem="{Binding SelectedAlarm}">
+
+		<GridView AllowsColumnReorder="True">
+
+			<!--#region Id-->
+			<dataTables:DataTableColumn
+				Width="100"
+				DisplayName="{localize:Static alarms:AlarmsResources.ALARMS_ID}"
+				SortKey="Id">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="alarmModeling:Alarm">
+						<TextBlock
+							x:Name="TextBlock"
+							Text="{Binding Id}"
+							TextAlignment="Left" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion Id-->
+
+			<!--#region Source-->
+			<dataTables:DataTableColumn
+				Width="150"
+				DisplayName="{localize:Static alarms:AlarmsResources.ALARMS_SOURCE}"
+				SortKey="ProviderName">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="alarmModeling:Alarm">
+						<TextBlock
+							x:Name="TextBlock"
+							Text="{Binding ProviderName}" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+			</dataTables:DataTableColumn>
+			<!--#endregion Source-->
+
+			<!--#region Description-->
+			<dataTables:DataTableColumn
+				Width="900"
+				DisplayName="{localize:Static alarms:AlarmsResources.ALARMS_DESCRIPTION}"
+				HeaderContainerStyle="{StaticResource AlarmStretchedHeaderStyle}"
+				SortKey="Description">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="alarmModeling:Alarm">
+						<TextBlock
+							x:Name="TextBlock"
+							Text="{Binding Description}" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+				<GridViewColumnHeader>
+					<TextBlock
+						VerticalAlignment="Center"
+						Text="{localize:Static alarms:AlarmsResources.ALARMS_DESCRIPTION}"
+						TextAlignment="Center" />
+				</GridViewColumnHeader>
+			</dataTables:DataTableColumn>
+			<!--#endregion Description-->
+
+			<!--#region Active-->
+			<dataTables:DataTableColumn
+				Width="300"
+				DisplayName="{localize:Static alarms:AlarmsResources.ALARMS_KEY}"
+				SortKey="Name">
+				<GridViewColumn.CellTemplate>
+					<DataTemplate DataType="alarmModeling:Alarm">
+						<TextBlock
+							x:Name="TextBlock"
+							Text="{Binding Name}" />
+					</DataTemplate>
+				</GridViewColumn.CellTemplate>
+				<GridViewColumnHeader>
+					<TextBlock
+						Text="{localize:Static alarms:AlarmsResources.ALARMS_KEY}"
+						TextAlignment="Center" />
+				</GridViewColumnHeader>
+			</dataTables:DataTableColumn>
+			<!--#endregion Active-->
+
+		</GridView>
+
+	</dataTables:DataTable>
+</UserControl>

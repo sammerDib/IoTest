@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="DefectFeatureLearning.ClassificationByFeatureLearning.LayerSelectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DefectFeatureLearning.ClassificationByFeatureLearning"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <!-- With CMC-->
+        <ListView ItemsSource="{Binding DefectClasses}" Visibility="{Binding WithCMC, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Stretch" Margin="5,10">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header ="Defect class" DisplayMemberBinding="{Binding DefectLabel}" Width="150"/>
+                        <GridViewColumn Header="Characteristic" Width="200">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox 
+                                        ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}, Path=DataContext.AvailableCharacteristics}" 
+                                        SelectedItem="{Binding Characteristic}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Without CMC-->
+        <ListView ItemsSource="{Binding DefectClasses}" Visibility="{Binding WithCMC, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" HorizontalAlignment="Stretch" Margin="5,10">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header ="Defect class in classifier" DisplayMemberBinding="{Binding DefectLabel}" Width="200"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

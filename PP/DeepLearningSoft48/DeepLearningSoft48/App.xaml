@@ -1,0 +1,54 @@
+﻿<Application x:Class="DeepLearningSoft48.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DeepLearningSoft48"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Images -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageGeometries.xaml"/>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type ButtonBase}}" >
+                <Setter Property="Background" Value="{StaticResource IconsColor}" />
+                <Setter Property="Foreground" Value="{StaticResource HighlightButtonForegroundBrush}" />
+            </Style>
+
+            <Style x:Key="ErrorMessage" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="10" />
+                <Setter Property="Foreground" Value="Red" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+            </Style>
+
+            <Style x:Key="PrimaryImageButton" TargetType="{x:Type sharedControls:ImageButton}" BasedOn="{StaticResource {x:Type sharedControls:ImageButton}}">
+                <Setter Property="Background" Value="{StaticResource IconsColor}" />
+                <Setter Property="Foreground" x:Name="ButtonForegroundBrush" Value="{StaticResource HighlightButtonForegroundBrush}" />
+                <Setter Property="ImageGeometryBrush" Value="{StaticResource HighlightButtonForegroundBrush}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="ImageGeometryBrush" Value="{StaticResource ImageMainColor}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="PrimaryImageToggleButton" TargetType="{x:Type sharedControls:ImageToggleButton}" BasedOn="{StaticResource {x:Type sharedControls:ImageToggleButton}}">
+                <Setter Property="ImageGeometry" Value="{StaticResource LockOpenSolidGeometry}" />
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="ImageCheckedGeometry" Value="{StaticResource LockSolidGeometry}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="DeleteImageButton" TargetType="{x:Type sharedControls:ImageButton}" BasedOn="{StaticResource {x:Type sharedControls:ImageButton}}">
+                <Setter Property="ImageGeometryBrush" Value="Red" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

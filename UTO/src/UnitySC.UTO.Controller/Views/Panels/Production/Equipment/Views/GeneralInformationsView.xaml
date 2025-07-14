@@ -1,0 +1,82 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Production.Equipment.Views.GeneralInformationsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Production.Equipment"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="UserControl"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <controls:Card>
+
+        <GroupBox Padding="0,10,0,0" Header="{localize:Static equipment:ProductionEquipmentResources.EQUIPMENT_GENERALINFORMATIONS}">
+
+            <Grid ShowGridLines="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <controls:PropertyEditor
+                    Grid.Row="0"
+                    Margin="5"
+                    Orientation="Vertical"
+                    PropertyName="{localize:Static equipment:ProductionEquipmentResources.EQUIPMENT_GENERALINFORMATIONS_EQPNAME}">
+                    <controls:Displayer
+                        MinWidth="200"
+                        Margin="5,0,0,0"
+                        FontSize="{StaticResource FontSizeNormal}"
+                        Value="{Binding ElementName=UserControl, Path=EquipmentName}" />
+                </controls:PropertyEditor>
+
+                <controls:PropertyEditor
+                    Grid.Row="1"
+                    Margin="5"
+                    Orientation="Vertical"
+                    PropertyName="{localize:Static equipment:ProductionEquipmentResources.EQUIPMENT_PROCESSEDSUBSTRATECOUNT}">
+                    <controls:Displayer
+                        MinWidth="200"
+                        Margin="5,0,0,0"
+                        Command="{Binding ElementName=UserControl, Path=ResetCommand}"
+                        CommandIcon="{StaticResource CancelIcon}"
+                        FontSize="{StaticResource FontSizeNormal}"
+                        Value="{Binding ElementName=UserControl, Path=SubstrateCount}" />
+                </controls:PropertyEditor>
+
+                <controls:PropertyEditor
+                    Grid.Row="2"
+                    Margin="5"
+                    Orientation="Vertical"
+                    PropertyName="{localize:Static equipment:ProductionEquipmentResources.CONTROLLER_CURRENT_ACTIVITY_STEP}">
+                    <controls:Displayer
+                        MinWidth="200"
+                        Margin="5,0,0,0"
+                        FontSize="{StaticResource FontSizeNormal}"
+                        Value="{Binding ElementName=UserControl, Path=CurrentActivityStep, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                </controls:PropertyEditor>
+
+                <controls:PropertyEditor
+                    Grid.Row="3"
+                    Margin="5"
+                    Orientation="Vertical"
+                    PropertyName="{localize:Static equipment:ProductionEquipmentResources.CONTROLLER_THROUGHPUT}"
+                    Visibility="{Binding ElementName=UserControl, Path=ThroughputVisibility}">
+                    <controls:Displayer
+                        MinWidth="200"
+                        Margin="5,0,0,0"
+                        FontSize="{StaticResource FontSizeNormal}"
+                        Value="{Binding ElementName=UserControl, Path=Throughput, StringFormat=F1}" />
+                </controls:PropertyEditor>
+            </Grid>
+
+        </GroupBox>
+
+    </controls:Card>
+
+</UserControl>

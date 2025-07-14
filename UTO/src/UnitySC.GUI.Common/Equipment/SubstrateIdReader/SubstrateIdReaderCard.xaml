@@ -1,0 +1,139 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Equipment.SubstrateIdReader.SubstrateIdReaderCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.Resources"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:substrateIdReader="clr-namespace:UnitySC.GUI.Common.Equipment.SubstrateIdReader"
+    MaxWidth="300"
+    d:DataContext="{d:DesignInstance substrateIdReader:SubstrateIdReaderCardViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <controls:Card>
+        <GroupBox
+            Margin="0,0,0,10"
+            Padding="20,10,20,0"
+            VerticalAlignment="Top">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="10,0,10,0"
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Top"
+                        Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                        Text="{Binding SubstrateIdReader.Name}" />
+
+                    <Button
+                        Grid.Row="0"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        Command="{Binding Path=DataContext.ToggleDeviceConnectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Card}}}"
+                        CommandParameter="{Binding SubstrateIdReader}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                                <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource DisconnectedIcon}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SubstrateIdReader.IsCommunicating}" Value="True">
+                                        <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource ConnectedIcon}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <ContentPresenter
+                        Grid.Row="1"
+                        Content="{Binding SubstrateIdReader.State}"
+                        ContentTemplate="{StaticResource StatusDisplayerTemplate}" />
+                </Grid>
+            </GroupBox.Header>
+
+            <StackPanel>
+
+                <StackPanel VerticalAlignment="Top" Orientation="Vertical">
+
+                    <controls:PropertyEditor Orientation="Horizontal" PropertyName="{localize:Static equipment:EquipmentResources.EQUIPMENT_SUBSTRATE_ID_READER_SUBSTRATE_ID}">
+                        <controls:Displayer
+                            Width="150"
+                            Margin="10,0,0,5"
+                            Padding="10,0,10,0"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding SubstrateIdReader.SubstrateId}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        x:Name="PropertyEditorAlignType"
+                        Orientation="Horizontal"
+                        PropertyName="{localize:Static equipment:EquipmentResources.EQUIPMENT_SUBSTRATE_ID_READER_RECIPE_NAME}">
+                        <ComboBox
+                            Width="150"
+                            Margin="10,0,0,5"
+                            Padding="10,0,10,0"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            ItemsSource="{Binding Recipes}"
+                            SelectedValue="{Binding SelectedRecipe}" />
+                    </controls:PropertyEditor>
+
+                    <Button
+                        Margin="0,0,0,10"
+                        HorizontalContentAlignment="Stretch"
+                        markupExtensions:Icon.Geometry="{StaticResource DownloadIcon}"
+                        Command="{Binding GetRecipesCommand}"
+                        FontSize="{StaticResource FontSizeBig}">
+                        <Button.Content>
+                            <TextBlock HorizontalAlignment="Center" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_SUBSTRATE_ID_READER_GET_RECIPES}" />
+                        </Button.Content>
+                    </Button>
+
+                    <Button
+                        Margin="0,0,0,10"
+                        HorizontalContentAlignment="Stretch"
+                        markupExtensions:Icon.Geometry="{StaticResource PlayIcon}"
+                        Command="{Binding ReadCommand}"
+                        FontSize="{StaticResource FontSizeBig}">
+                        <Button.Content>
+                            <TextBlock HorizontalAlignment="Center" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_SUBSTRATE_ID_READER_READ}" />
+                        </Button.Content>
+                    </Button>
+
+                    <UniformGrid Columns="2">
+                        <Button
+                            Margin="0,0,5,0"
+                            HorizontalContentAlignment="Stretch"
+                            markupExtensions:Icon.Geometry="{StaticResource RefreshIcon}"
+                            Command="{Binding InitCommand}"
+                            FontSize="{StaticResource FontSizeBig}">
+                            <Button.Content>
+                                <TextBlock HorizontalAlignment="Center" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_SUBSTRATE_ID_READER_INIT}" />
+                            </Button.Content>
+                        </Button>
+
+                        <Button
+                            Margin="5,0,0,0"
+                            HorizontalContentAlignment="Stretch"
+                            markupExtensions:Icon.Geometry="{StaticResource AbortIcon}"
+                            Command="{Binding AbortCommand}"
+                            FontSize="{StaticResource FontSizeBig}">
+                            <Button.Content>
+                                <TextBlock HorizontalAlignment="Center" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_ABORT}" />
+                            </Button.Content>
+                        </Button>
+                    </UniformGrid>
+
+                </StackPanel>
+
+            </StackPanel>
+        </GroupBox>
+    </controls:Card>
+</UserControl>

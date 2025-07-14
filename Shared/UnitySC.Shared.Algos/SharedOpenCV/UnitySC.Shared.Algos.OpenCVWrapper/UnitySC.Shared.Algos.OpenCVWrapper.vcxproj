@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{582714e4-2903-4937-b7f5-cb027cb45f87}</ProjectGuid>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>UnitySCSharedAlgosOpenCVWrapper</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)..\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)..\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>true</VcpkgEnabled>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgTriplet>
+    </VcpkgTriplet>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgTriplet>
+    </VcpkgTriplet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GenerateSourceDependencies>true</GenerateSourceDependencies>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <GenerateSourceDependencies>true</GenerateSourceDependencies>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>4793</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies />
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BareWaferAlignment.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="BareWaferAlignmentImageData.h" />
+    <ClInclude Include="Convertor.h" />
+    <ClInclude Include="DieDetector.h" />
+    <ClInclude Include="DistortionCalibration.h" />
+    <ClInclude Include="EdgeDetector.h" />
+    <ClInclude Include="Filter.h" />
+    <ClInclude Include="ImageType.h" />
+    <ClInclude Include="MetroCDCircle.h" />
+    <ClInclude Include="NanoTopography.h" />
+    <ClInclude Include="PhaseShiftingDeflectometry.h" />
+    <ClInclude Include="PositionImageData.h" />
+    <ClInclude Include="ImageData.h" />
+    <ClInclude Include="ImageOperators.h" />
+    <ClInclude Include="ManagedEventQueue.h" />
+    <ClInclude Include="NotchDetector.h" />
+    <ClInclude Include="PhaseShiftingInterferometry.h" />
+    <ClInclude Include="PointsDetector.h" />
+    <ClInclude Include="PixelSize.h" />
+    <ClInclude Include="PSDCalibration.h" />
+    <ClInclude Include="PSDMat.h" />
+    <ClInclude Include="Registration.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ShapeDetector.h" />
+    <ClInclude Include="SpikeDetector.h" />
+    <ClInclude Include="Stitcher.h" />
+    <ClInclude Include="Tools.h" />
+    <ClInclude Include="TypeAdapters.h" />
+    <ClInclude Include="WaferDetector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BareWaferAlignment.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Convertor.cpp" />
+    <ClCompile Include="DieDetector.cpp" />
+    <ClCompile Include="DistortionCalibration.cpp" />
+    <ClCompile Include="EdgeDetector.cpp" />
+    <ClCompile Include="Filter.cpp" />
+    <ClCompile Include="ImageOperators.cpp" />
+    <ClCompile Include="ManagedEventQueue.cpp" />
+    <ClCompile Include="MetroCDCircle.cpp" />
+    <ClCompile Include="NanoTopography.cpp" />
+    <ClCompile Include="NotchDetector.cpp" />
+    <ClCompile Include="PhaseShiftingDeflectometry.cpp" />
+    <ClCompile Include="PhaseShiftingInterferometry.cpp" />
+    <ClCompile Include="PointsDetector.cpp" />
+    <ClCompile Include="PSDCalibration.cpp" />
+    <ClCompile Include="PSDMat.cpp" />
+    <ClCompile Include="Registration.cpp" />
+    <ClCompile Include="ShapeDetector.cpp" />
+    <ClCompile Include="SpikeDetector.cpp" />
+    <ClCompile Include="Stitcher.cpp" />
+    <ClCompile Include="Tools.cpp" />
+    <ClCompile Include="TypeAdapters.cpp" />
+    <ClCompile Include="WaferDetector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UnitySC.Shared.Algos.OpenCVWrapper.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnitySC.Shared.Algos.OpenCVNative\UnitySC.Shared.Algos.OpenCVNative.vcxproj">
+      <Project>{09b652fb-7833-4b0a-84cf-72ac8b6b806d}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

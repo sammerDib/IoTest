@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="ADC.View.Operator.WaferInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ADC.View.Operator"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="{StaticResource PanelBackground}">
+    <Grid VerticalAlignment="Top" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Wafer information" Style="{StaticResource ModulePanelTitle}"/>
+        <ListView Grid.Row="1" x:Name="listBox" ItemsSource="{Binding Infos}" HorizontalAlignment="Left"  Visibility="{Binding HasInfos, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Key}" MinWidth="130" Style="{StaticResource PanelFieldName}"/>
+                        <TextBlock Text="{Binding Value}" Style="{StaticResource PanelFieldValue}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="false"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <TextBlock Text="Waiting for a wafer .." Grid.Row="1" Visibility="{Binding HasInfos, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" Margin="10"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="ADCConfiguration.View.Users.EditUserView"
+             xmlns:behavior="clr-namespace:ADCConfiguration.Behaviors"             
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ADCConfiguration.View.Users"
+             mc:Ignorable="d" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:view="clr-namespace:Utils.View;assembly=Utils"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Background="{StaticResource GlobalBackground}">
+        <Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <!-- User list-->
+                <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Style="{StaticResource BorderPanel}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!-- Search-->
+                        <Grid Background="{StaticResource GlobalPanelTitleBackground}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <xctk:WatermarkTextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Watermark="Search user (Login, First Name, Last Name)" />
+                            <Viewbox Grid.Column="1" Height="15" Stretch="Uniform" Margin="2">
+                                <ContentControl ContentTemplate="{StaticResource SearchADCImage}"/>
+                            </Viewbox>
+                        </Grid>
+                        <!-- List-->
+                        <ListView ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}" Grid.Row="1" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Viewbox Stretch="Uniform" Height="18" Margin="3,0" Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <ContentControl ContentTemplate="{StaticResource UserADCImage}"/>
+                                        </Viewbox>
+                                        <Viewbox Stretch="Uniform" Height="18" Margin="3,0" Visibility="{Binding IsEnabled, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                                            <ContentControl ContentTemplate="{StaticResource DisabledUserADCImage}"/>
+                                        </Viewbox>
+                                        <TextBlock Grid.Column="1" Text="{Binding Login}" Style="{StaticResource Title2Error}" Visibility="{Binding HasErrors, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Login}" Style="{StaticResource Title2}" Visibility="{Binding HasErrors, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                                        <TextBlock  Grid.Column="2" Text="*" Visibility="{Binding HasChanged, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource Title2}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                    </Grid>
+                </Border>
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+                <!-- User detail-->
+                <Border Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource BorderPanel}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto" ></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid Background="{StaticResource GlobalPanelTitleBackground}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Viewbox Stretch="Uniform" Height="18" Margin="3,0" Visibility="{Binding SelectedUser.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <ContentControl ContentTemplate="{StaticResource UserADCImage}"/>
+                            </Viewbox>
+                            <Viewbox Stretch="Uniform" Height="18" Margin="3,0" Visibility="{Binding SelectedUser.IsEnabled, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                                <ContentControl ContentTemplate="{StaticResource DisabledUserADCImage}"/>
+                            </Viewbox>
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedUser.Login}" Style="{StaticResource PanelTitle}" TextAlignment="Left"/>
+                        </Grid>
+                        <ContentControl Content="{Binding SelectedUser}" Grid.Row="1" Margin="20" HorizontalAlignment="Left" MinWidth="500"/>
+                        <!-- Erros-->
+                        <view:ErrorView Grid.Row="2" VerticalAlignment="Top"/>
+                    </Grid>
+                </Border>
+            </Grid>
+            <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true"/>
+        </Grid>
+    </Grid>
+</UserControl>

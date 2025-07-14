@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Equipment.LoadPort.Popup.SetAccessModePopupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:popup="clr-namespace:UnitySC.GUI.Common.Equipment.LoadPort.Popup"
+    xmlns:resources="clr-namespace:UnitySC.GUI.Common.Resources"
+    d:DataContext="{d:DesignInstance popup:SetAccessModePopup}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <StackPanel>
+        <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static resources:EquipmentResources.LOADPORT_ACCESS_MODE}">
+            <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection {x:Type e87:AccessMode}}" SelectedItem="{Binding AccessMode, UpdateSourceTrigger=PropertyChanged}">
+                <controls:ChipsSelector.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+                    </DataTemplate>
+                </controls:ChipsSelector.ItemTemplate>
+            </controls:ChipsSelector>
+        </controls:PropertyEditor>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,96 @@
+﻿<Window x:Class="ADC.View.RenderingView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Title="Rendering" Height="900" Width="800" 
+        Closing="Window_Closing" WindowStartupLocation="Manual" Left="800"
+		DataContext="{Binding Source={StaticResource Locator}, Path=MainWindowViewModel.MainViewViewModel}" >
+
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Style="{StaticResource UnityGridStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="299*"/>
+                <ColumnDefinition Width="540*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                <ToolBarTray >
+                    <!-- File-->
+                    <ToolBar Loaded="ToolBar_Loaded">
+                        <Button Command="{Binding SaveRenderingCommand}" ToolTip="Save Image Ctrl+S" Style="{StaticResource ButtonToolBar}">
+                            <Viewbox>
+                                <ContentControl ContentTemplate="{StaticResource SaveADCImage}"/>
+                            </Viewbox>
+                        </Button>
+                    </ToolBar>
+
+                    <!-- Execution-->
+                    <ToolBar Loaded="ToolBar_Loaded">
+                        <Separator />
+                        <Button Command="{Binding RunRenderingGraphCommand}" ToolTip="Run To" Style="{StaticResource ButtonToolBar}">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox>
+                                    <ContentControl>
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsRecipeRunning}" Value="True">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource StopADCImage}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsRecipeRunning}" Value="False">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource PlayADCImage}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                                </Viewbox>
+                                <TextBlock VerticalAlignment="Center" Margin="2,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{StaticResource MenuForeground}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsRecipeRunning}" Value="True">
+                                                    <Setter Property="Text" Value="Abort" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsRecipeRunning}" Value="False">
+                                                    <Setter Property="Text" Value="Run" />
+                                                </DataTrigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Opacity" Value="0.4" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding UnmergeCommand}" ToolTip="Unmerge the recipe from ada" Style="{StaticResource ButtonToolBar}">
+                            <Viewbox>
+                                <ContentControl ContentTemplate="{StaticResource UnmergeADCImage}"/>
+                            </Viewbox>
+                        </Button>
+                    </ToolBar>
+                </ToolBarTray>
+                <Label Content="Module:" HorizontalAlignment="Left" Margin="10,2,0,0"   VerticalAlignment="Top" Foreground="White"/>
+                <TextBox HorizontalAlignment="Left" Height="23" Margin="0,5,0,0"  TextWrapping="Wrap" Text="{Binding SelectedModule.DisplayName, Mode=OneWay}" VerticalAlignment="Top" Width="179" IsReadOnly="True" />
+                <CheckBox Content="Only this module" Margin="10,8,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top" Foreground="White" IsChecked="{Binding RenderingOnlySelectedNode}" IsEnabled="{Binding IsRecipeRunning, Converter={StaticResource InvertedBooleanConverter}}" />
+                <Separator Margin="10" Width="10"/>
+                <Label HorizontalAlignment="Left" Margin="5,0,0,0" Content="{Binding RenderingInfo}" VerticalAlignment="Top"  Foreground="GreenYellow"/>
+
+            </StackPanel>
+
+        </Grid>
+
+        <Label Grid.Row="2" Content="This module has no preview" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
+        <ContentPresenter x:Name="Rendering" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+            Content="{Binding ModuleRenderingUI}" />
+
+    </Grid>
+</Window>

@@ -1,0 +1,123 @@
+<equipment:MachineModuleView
+    x:Class="UnitySC.GUI.Common.UIComponents.Components.Equipment.Modules.LoadPort.LoadPortModule"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment"
+    xmlns:loadPort="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment.Modules.LoadPort"
+    xmlns:locationSourceDestination="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment.LocationSourceDestination"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vendorControls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    x:Name="UserControlLoadPort"
+    d:DataContext="{d:DesignInstance loadPort:LoadPortModuleViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="500"
+    Style="{StaticResource MachineModuleViewStyle}"
+    mc:Ignorable="d">
+    <controls:AdornedControl
+        HorizontalAdornerPlacement="Inside"
+        IsAdornerVisible="True"
+        VerticalAdornerPlacement="Outside">
+        <controls:AdornedControl.AdornerContent>
+            <Grid Margin="-23" IsHitTestVisible="False">
+                <locationSourceDestination:LocationSourceDestination
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    IsSlotNumberDisplayed="True"
+                    RenderTransformOrigin="0.5,0.5"
+                    SelectionState="{Binding ElementName=UserControlLoadPort, Path=SelectionState}"
+                    SlotNumber="{Binding SelectedSlotNumber}" />
+                <StackPanel
+                    Margin="0,35,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Orientation="Vertical">
+                    <vendorControls:Icon Margin="0,0,0,5">
+                        <vendorControls:Icon.Style>
+                            <Style BasedOn="{StaticResource {x:Type vendorControls:Icon}}" TargetType="{x:Type vendorControls:Icon}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Module.IsClamped}" Value="True">
+                                        <Setter Property="Data" Value="{StaticResource LockIcon}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Module.IsClamped}" Value="False">
+                                        <Setter Property="Data" Value="{StaticResource LockOpenedIcon}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </vendorControls:Icon.Style>
+                    </vendorControls:Icon>
+                    <vendorControls:Icon Foreground="{DynamicResource SeverityErrorBrush}">
+                        <vendorControls:Icon.Style>
+                            <Style BasedOn="{StaticResource {x:Type vendorControls:Icon}}" TargetType="{x:Type vendorControls:Icon}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Module.IsCommunicating}" Value="False">
+                                        <Setter Property="Data" Value="{StaticResource DisconnectedIcon}" />
+                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Module.IsCommunicating}" Value="True" />
+                                            <Condition Binding="{Binding Module.State}" Value="Maintenance" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Data" Value="{StaticResource WarningIcon}" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </vendorControls:Icon.Style>
+                    </vendorControls:Icon>
+                </StackPanel>
+            </Grid>
+        </controls:AdornedControl.AdornerContent>
+
+        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Rectangle Height="3" Fill="Black">
+                    <Rectangle.Style>
+                        <Style TargetType="{x:Type Rectangle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Module.IsDoorOpen}" Value="True">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Module.IsDoorOpen}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Rectangle.Style>
+                </Rectangle>
+
+                <Control
+                    x:Name="ControlLoadPortOpen"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Template="{StaticResource LoadPortOpenTemplate}" />
+
+                <!--#region Adapter-->
+                <ContentPresenter
+                    Grid.Row="1"
+                    Content="{Binding Module}"
+                    ContentTemplateSelector="{StaticResource AdapterTemplateSelector}"
+                    RenderTransformOrigin="0.5,0.5" />
+                <!--#endregion-->
+
+                <!--#region Carrier-->
+                <ContentPresenter
+                    Grid.Row="1"
+                    Content="{Binding Module}"
+                    ContentTemplateSelector="{StaticResource CarrierTemplateSelector}" />
+                <!--#endregion-->
+
+                <locationSourceDestination:RectangleSourceDestination Grid.Row="1" SelectionState="{Binding ElementName=UserControlLoadPort, Path=SelectionState}" />
+
+            </Grid>
+        </Viewbox>
+
+    </controls:AdornedControl>
+</equipment:MachineModuleView>

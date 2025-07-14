@@ -1,0 +1,176 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.UserControls.ColorPicker.Core">
+
+    <Style x:Key="ColorSliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Rectangle
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Fill="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="ColorSliderThumbTemplate" TargetType="{x:Type Control}">
+        <Grid
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            SnapsToDevicePixels="True"
+            UseLayoutRounding="True">
+            <Ellipse
+                Width="12"
+                Height="12"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                ClipToBounds="False"
+                Fill="Transparent"
+                Opacity="0.3"
+                Stroke="Black"
+                StrokeThickness="3" />
+            <Ellipse
+                Width="11"
+                Height="11"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                ClipToBounds="False"
+                Effect="{StaticResource ThinControlsShadow}"
+                Fill="Transparent"
+                Stroke="White"
+                StrokeThickness="2" />
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="PreviewColorSliderTemplate" TargetType="{x:Type local:PreviewColorSlider}">
+        <Border
+            x:Name="border"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="5"
+            SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border
+                    Grid.RowSpan="3"
+                    Width="6"
+                    Height="12"
+                    HorizontalAlignment="Left"
+                    Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Path=LeftCapColor}"
+                    CornerRadius="6,0,0,6" />
+                <Border
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Width="6"
+                    Height="12"
+                    HorizontalAlignment="Right"
+                    Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay, Path=RightCapColor}"
+                    CornerRadius="0,6,6,0" />
+                <Border
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Margin="6,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="{TemplateBinding Background}" />
+                <TickBar
+                    x:Name="TopTick"
+                    Grid.Row="0"
+                    Height="4"
+                    Margin="0,0,0,2"
+                    Fill="{TemplateBinding Foreground}"
+                    Placement="Top"
+                    Visibility="Collapsed" />
+                <TickBar
+                    x:Name="BottomTick"
+                    Grid.Row="2"
+                    Height="4"
+                    Margin="0,2,0,0"
+                    Fill="{TemplateBinding Foreground}"
+                    Placement="Bottom"
+                    Visibility="Collapsed" />
+                <Border
+                    x:Name="TrackBackground"
+                    Grid.Row="1"
+                    Height="0"
+                    Margin="5,0"
+                    VerticalAlignment="center"
+                    Background="Transparent"
+                    BorderThickness="0">
+                    <Canvas Margin="-6,-1">
+                        <Rectangle
+                            x:Name="PART_SelectionRange"
+                            Height="4.0"
+                            Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                            Visibility="Hidden" />
+                    </Canvas>
+                </Border>
+                <Track x:Name="PART_Track" Grid.Row="1">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource ColorSliderRepeatButtonStyle}" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource ColorSliderRepeatButtonStyle}" />
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb
+                            x:Name="Thumb"
+                            Width="12"
+                            Height="12"
+                            VerticalAlignment="Center"
+                            Focusable="False"
+                            OverridesDefaultStyle="True"
+                            Template="{StaticResource ColorSliderThumbTemplate}" />
+                    </Track.Thumb>
+                </Track>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                <Setter TargetName="PART_SelectionRange" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="true">
+                <Setter TargetName="Thumb" Property="Foreground" Value="Blue" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style TargetType="{x:Type local:HsvColorSlider}">
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="255" />
+        <Setter Property="SmallChange" Value="1" />
+        <Setter Property="LargeChange" Value="10" />
+        <Setter Property="MinHeight" Value="12" />
+        <Setter Property="Template" Value="{StaticResource PreviewColorSliderTemplate}" />
+    </Style>
+
+    <Style TargetType="{x:Type local:RgbColorSlider}">
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="255" />
+        <Setter Property="SmallChange" Value="1" />
+        <Setter Property="LargeChange" Value="10" />
+        <Setter Property="MinHeight" Value="12" />
+        <Setter Property="Template" Value="{StaticResource PreviewColorSliderTemplate}" />
+    </Style>
+
+    <Style TargetType="{x:Type local:HslColorSlider}">
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="255" />
+        <Setter Property="SmallChange" Value="1" />
+        <Setter Property="LargeChange" Value="10" />
+        <Setter Property="MinHeight" Value="12" />
+        <Setter Property="Template" Value="{StaticResource PreviewColorSliderTemplate}" />
+    </Style>
+
+</ResourceDictionary>

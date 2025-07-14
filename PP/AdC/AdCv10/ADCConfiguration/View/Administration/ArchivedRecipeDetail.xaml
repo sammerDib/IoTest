@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="ADCConfiguration.View.Administration.ArchivedRecipeDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ADCConfiguration.View.Administration"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="600"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Check the versions to enable " Style="{StaticResource Title}"/>
+        <ListView  Grid.Row="1"  ItemsSource="{Binding AllRecipeVersions}"
+            IsSynchronizedWithCurrentItem="True"
+            AdcTools:GridViewSort.AutoSort="True">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="Auto" Header="State" AdcTools:GridViewSort.PropertyName="IsArchived">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Stretch="Uniform" Height="20" Margin="0,0,4,0">
+                                        <ContentControl>
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsArchived}" Value="true">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource ArchivedRecipeADCImage}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsArchived}" Value="false">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource RecipeFileADCImage}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                    </Viewbox>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="User" AdcTools:GridViewSort.PropertyName="Recipe.User.Login">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Stretch="Uniform" Height="20" Margin="0,0,4,0">
+                                        <ContentControl ContentTemplate="{StaticResource UserADCImage}"/>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding Recipe.User}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="Created" AdcTools:GridViewSort.PropertyName="Recipe.Created">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Recipe.Created}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="Version" AdcTools:GridViewSort.PropertyName="Recipe.Version">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Recipe.Version}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="Auto" Header="Is enabled" AdcTools:GridViewSort.PropertyName="IsArchived">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsArchived,Converter={StaticResource InvertedBooleanConverter}}" Content="Is enabled"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>                   
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel  Grid.Column="1" VerticalAlignment="Top" Grid.Row="1" Orientation="Vertical">
+            <Button Margin="5" Command="{Binding EnableAllCommand}" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Viewbox Stretch="Uniform" Height="18">
+                        <ContentControl ContentTemplate="{StaticResource CheckedADCImage}"/>
+                    </Viewbox>
+                    <TextBlock Text="Enable all" VerticalAlignment="Center" Margin="4,2" ToolTip="Check all version for the current recipe" MinWidth="60"/>
+                </StackPanel>
+            </Button>
+            <Button Margin="5" Command="{Binding DisableAllCommand}" HorizontalAlignment="Center" >
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Viewbox Stretch="Uniform" Height="18">
+                        <ContentControl ContentTemplate="{StaticResource NotCheckedADCImage}"/>
+                    </Viewbox>
+                    <TextBlock Text="Disable all" VerticalAlignment="Center" Margin="4,2" ToolTip="Uncheck all version for the current recipe"  MinWidth="60"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+       
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" DisplayAfter="0" Grid.RowSpan="3" Grid.ColumnSpan="2"/>       
+    </Grid>
+</UserControl>

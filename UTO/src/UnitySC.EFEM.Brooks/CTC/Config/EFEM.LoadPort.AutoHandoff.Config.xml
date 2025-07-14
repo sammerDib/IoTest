@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Module Name="EFEM" Type="EFEM" Config="Connected" Version="2">
+  <Device Name="LoadPort*" Type="LoadPort" Config="Connected">
+    <HwComps>
+      <HwComp Type="AutoHandoffPio" Name="Overhead" Config="Connected" />
+      <HwComp Type="AutoHandoffPio" Name="Floor" Config="NotConnected" />
+      <HwComp Type="SafetyShield" Name="LightCurtain" Config="NotConnected" />
+    </HwComps>
+    <SwComps>
+      <SwComp Name="AutoHandoffPassiveDeviceOp.SEMI" Type="AutoHandoffPassiveDeviceOp" Control="ApiCtrl" Config="Connected">
+        <OpParams Category="HandoffAvailable">
+          <Param Name="AutoControl" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="AllowedState" Type="String" Value="Clamped" Unit="NA" />
+          <Param Name="SignalsAtoP" Type="String" Value="Any" Unit="NA" />
+          <Param Name="AllowTurnOffInTP1" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="EndStateDesired" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="StateWhenDocked" Type="Boolean" Value="false" Unit="NA" />
+        </OpParams>
+        <OpParams Category="HandoffCompletion">
+          <Param Name="WaitForCompOff" Type="Boolean" Value="false" Unit="NA" />
+        </OpParams>
+        <OpParams Category="CarrierControl">
+          <Param Name="AutoClamp" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="AutoDock" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="AutoUnclamp" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="AutoUndock" Type="Boolean" Value="false" Unit="NA" />
+        </OpParams>
+        <OpParams Category="CarrierDetection">
+          <Param Name="Idle.Load.ErrorOnSensorChange" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="Idle.Unload.ErrorOnSensorChange" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="TA1.Load.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TA1.Unload.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP1.Load.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP1.Unload.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP2.Load.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP2.Unload.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP4.Load.ErrorOnSensorChange" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="TP4.Unload.ErrorOnSensorChange" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="TP5.Load.ErrorOnSensorChange" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="TP5.Unload.ErrorOnSensorChange" Type="Boolean" Value="false" Unit="NA" />
+          <Param Name="TP6.Load.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP6.Unload.ErrorOnSensorChange" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="TP3.Load.Attempts" Type="Int" Value="50" Unit="NA" />
+          <Param Name="TP3.Unload.Attempts" Type="Int" Value="50" Unit="NA" />
+        </OpParams>
+        <OpParams Category="Timeouts">
+          <Param Name="TP1.Setpoint" Type="IntWithUnit" Value="2" Unit="s" />
+          <Param Name="TP2.Setpoint" Type="IntWithUnit" Value="2" Unit="s" />
+          <Param Name="TP3.Setpoint" Type="IntWithUnit" Value="60" Unit="s" />
+          <Param Name="TP4.Setpoint" Type="IntWithUnit" Value="60" Unit="s" />
+          <Param Name="TP5.Setpoint" Type="IntWithUnit" Value="2" Unit="s" />
+          <Param Name="TP6.Setpoint" Type="IntWithUnit" Value="2" Unit="s" />
+        </OpParams>
+        <OpParams Category="Delays">
+          <Param Name="TD0.Setpoint" Type="IntWithUnit" Value="100" Unit="ms" />
+          <Param Name="TD1.Setpoint" Type="IntWithUnit" Value="1" Unit="s" />
+          <Param Name="TD3.Setpoint" Type="IntWithUnit" Value="10" Unit="s" />
+        </OpParams>
+        <OpParams Category="Debounce">
+          <Param Name="Idle.Setpoint" Type="IntWithUnit" Value="200" Unit="ms" />
+          <Param Name="TC1.Setpoint" Type="IntWithUnit" Value="200" Unit="ms" />
+          <Param Name="TC2.Setpoint" Type="IntWithUnit" Value="200" Unit="ms" />
+        </OpParams>
+        <OpParams Category="ErrorConditions">
+          <Param Name="Idle.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP1.Timeout.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP2.Timeout.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP3.Timeout.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP4.Timeout.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP5.Timeout.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP6.Timeout.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TD0.Early.Alarm" Type="String" Value="None" Unit="NA" />
+          <Param Name="TD1.Early.Alarm" Type="String" Value="None" Unit="NA" />
+          <Param Name="TD3.Timeout.Alarm" Type="String" Value="None" Unit="NA" />
+        </OpParams>
+        <OpParams Category="ErrorHandling">
+          <Param Name="Fatal.RestOfSignalPtoA" Type="String" Value="Off" Unit="NA" />
+          <Param Name="Warning.RestOfSignalPtoA" Type="String" Value="Off" Unit="NA" />
+        </OpParams>
+        <OpParams Category="ErrorRecovery">
+          <Param Name="HandoffAvailable.AutoReset" Type="Boolean" Value="false" Unit="NA" />
+        </OpParams>
+        <OpParams Category="EmsHandling">
+          <Param Name="Fatal.HandoffAvailable" Type="String" Value="Off" Unit="NA" />
+          <Param Name="Fatal.RestOfSignalPtoA" Type="String" Value="Off" Unit="NA" />
+        </OpParams>
+        <OpParams Category="EmsRecovery">
+          <Param Name="HandoffAvailable.AutoReset" Type="Boolean" Value="true" Unit="NA" />
+          <Param Name="Ems.AutoReset" Type="Boolean" Value="true" Unit="NA" />
+        </OpParams>
+        <ConfigParams Category="ErrorConditions">
+          <Param Name="TP1.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP2.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP3.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP4.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP5.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="TP6.CarrierError.Alarm" Type="String" Value="Fatal" Unit="NA" />
+          <Param Name="CompOn.Before.BusyOff.Alarm" Type="String" Value="None" Unit="NA" />
+          <Param Name="CompOff.Late.Alarm" Type="String" Value="None" Unit="NA" />
+          <Param Name="TranferReqOff.Late.Alarm" Type="String" Value="None" Unit="NA" />
+          <Param Name="CS0Off.Late.Alarm" Type="String" Value="None" Unit="NA" />
+        </ConfigParams>
+        <ConfigParams Category="ErrorHandling">
+          <Param Name="Fatal.HandoffAvailable" Type="String" Value="Off" Unit="NA" />
+          <Param Name="Warning.HandoffAvailable" Type="String" Value="Hold" Unit="NA" />
+        </ConfigParams>
+        <ConfigParams Category="ErrorRecovery">
+        </ConfigParams>
+        <ConfigParams Category="EmsConditions">
+          <Param Name="ES.Off.Alarm" Type="String" Value="Fatal" Unit="NA" />
+        </ConfigParams>
+        <ConfigParams Category="EmsHandling">
+        </ConfigParams>
+        <ConfigParams Category="EmsRecovery">
+        </ConfigParams>
+      </SwComp>
+    </SwComps>
+  </Device>
+</Module>

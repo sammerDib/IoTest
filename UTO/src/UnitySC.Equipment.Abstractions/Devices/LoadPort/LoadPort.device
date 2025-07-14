@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="LoadPort">
+                  <Types>
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.LoadPort.Configuration.LoadPortLightRoleType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.LightState, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.LoadingType, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.CassettePresence, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.LoadPortState, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.LoadPort.E84Errors, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <DeviceType Name="LoadPort" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\LoadPort\LoadPort.device|UnitySC.Equipment.Abstractions.Devices.LoadPort.LoadPort" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.LoadPort, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="GetStatuses" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Clamp" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Unclamp" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInUnclampPosition, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Dock" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Undock" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Open" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="performMapping" Type="Boolean" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="PrepareForTransfer" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="PostTransfer" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Close" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Map" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsMappingSupported, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="ReadCarrierId" Type="Void" Timeout="60 s" Category="Identification">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierIdSupported, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="ReleaseCarrier" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetLight" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="role" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LoadPortLightRoleType" />
+                            <Parameter Name="lightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetDateAndTime" Type="Void" Timeout="60 s">
+                          <Documentation>Send current date and time to hardware in order to synchronize logs.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetAccessMode" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="accessMode" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LoadingType" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.IsCarrierCorrectlyPlacedOrAbsent, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsE84Enabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="RequestLoad" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsE84Enabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="RequestUnload" Type="Void" Timeout="60 s">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsE84Enabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetCarrierType" Type="Void" Timeout="60 s">
+                          <Parameters>
+                            <Parameter Name="carrierType" Type="UInt32" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsCarrierCorrectlyPlaced, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.IsCarrierUndocked, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.IsManualCarrierTypeEnabled, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="EnableE84" Type="Void" Timeout="60 s" Category="E84">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="DisableE84" Type="Void" Timeout="60 s" Category="E84">
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="ManageEsSignal" Type="Void" Timeout="60 s" Category="E84">
+                          <Parameters>
+                            <Parameter Name="isActive" Type="Boolean" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetE84Timeouts" Type="Void" Timeout="60 s" Category="E84">
+                          <Documentation>TP in seconds</Documentation>
+                          <Parameters>
+                            <Parameter Name="tp1" Type="Int32" />
+                            <Parameter Name="tp2" Type="Int32" />
+                            <Parameter Name="tp3" Type="Int32" />
+                            <Parameter Name="tp4" Type="Int32" />
+                            <Parameter Name="tp5" Type="Int32" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LoadPort.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="CarrierPresence" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.CassettePresence" />
+                        <Status Name="PhysicalState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LoadPortState" />
+                        <Status Name="AccessMode" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LoadingType" />
+                        <Status Name="IsInService" Type="Boolean" />
+                        <Status Name="IsClamped" Type="Boolean" Category="Sensors status" />
+                        <Status Name="IsDocked" Type="Boolean" Category="Sensors status" />
+                        <Status Name="IsDoorOpen" Type="Boolean" Category="Sensors status" />
+                        <Status Name="IsHandOffButtonPressed" Type="Boolean" Category="Sensors status" />
+                        <Status Name="LoadLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="UnloadLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="ManualModeLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="AutoModeLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="ReservedLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="ErrorLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="HandOffLightState" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.LightState" Category="Indicators status" />
+                        <Status Name="CarrierTypeNumber" Type="UInt32" />
+                        <Status Name="CarrierTypeName" Type="String" />
+                        <Status Name="CarrierTypeDescription" Type="String" />
+                        <Status Name="CarrierTypeIndex" Type="UInt32" />
+                        <Status Name="CarrierProfileName" Type="String" />
+                        <Status Name="I_VALID" Type="Boolean" Category="E84" />
+                        <Status Name="I_CS_0" Type="Boolean" Category="E84" />
+                        <Status Name="I_CS_1" Type="Boolean" Category="E84" />
+                        <Status Name="I_TR_REQ" Type="Boolean" Category="E84" />
+                        <Status Name="I_BUSY" Type="Boolean" Category="E84" />
+                        <Status Name="I_COMPT" Type="Boolean" Category="E84" />
+                        <Status Name="I_CONT" Type="Boolean" Category="E84" />
+                        <Status Name="O_L_REQ" Type="Boolean" Category="E84" />
+                        <Status Name="O_U_REQ" Type="Boolean" Category="E84" />
+                        <Status Name="O_READY" Type="Boolean" Category="E84" />
+                        <Status Name="O_HO_AVBL" Type="Boolean" Category="E84" />
+                        <Status Name="O_ES" Type="Boolean" Category="E84" />
+                        <Status Name="E84TransferInProgress" Type="Boolean" Category="E84" />
+                        <Status Name="CurrentE84Error" Type="UnitySC.Equipment.Abstractions.Devices.LoadPort.E84Errors" Category="E84" />
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

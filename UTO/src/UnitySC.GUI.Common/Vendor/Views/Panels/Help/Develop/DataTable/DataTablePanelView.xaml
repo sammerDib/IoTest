@@ -1,0 +1,172 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataTable.DataTablePanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:dataTable="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataTable"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance dataTable:DataTablePanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <Grid>
+
+        <GroupBox Header="DataTable">
+            <DockPanel>
+                <TextBlock Margin="{StaticResource HorizontalStackPropertyMargin}" DockPanel.Dock="Top">
+                    <Run Text="The DataTree is an Mvvm component allowing to display a list of models with integrated functionalities such as sorting, filtering or searching." />
+                    <LineBreak />
+                    <Run Text="The Xaml part is handled like a classic ListView, the elements are customized using DataTemplate or DataTemplateSelector." />
+                    <LineBreak />
+                    <Run Text="The ViewModel part (the DataTableSource) allows the use of sorts, filters and search." />
+                </TextBlock>
+
+                <DockPanel>
+                    <controls:Card DockPanel.Dock="Left" Style="{StaticResource OutlinedCardStyle}">
+
+                        <dataTables:DataTable
+                            Width="900"
+                            DataSource="{Binding DataTableSource}"
+                            DockPanel.Dock="Left"
+                            SelectedItem="{Binding SelectedValue}">
+
+                            <dataTables:DataTable.BottomAdditionalContent>
+                                <Border
+                                    BorderBrush="{DynamicResource ListViewBorderBrush}"
+                                    BorderThickness="0,1,0,0"
+                                    DockPanel.Dock="Bottom">
+                                    <StackPanel Margin="10" Orientation="Horizontal">
+                                        <Button
+                                            dependencyObjects:Icon.Geometry="{StaticResource AddIcon}"
+                                            Command="{Binding AddItemCommand}"
+                                            Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                        <Button
+                                            Margin="10,0,0,0"
+                                            dependencyObjects:Icon.Geometry="{StaticResource DeleteIcon}"
+                                            Command="{Binding DeleteItemCommand}"
+                                            Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                    </StackPanel>
+                                </Border>
+                            </dataTables:DataTable.BottomAdditionalContent>
+
+                            <GridView>
+
+                                <dataTables:DataTableColumn
+                                    Width="100"
+                                    DisplayName="{localize:Static dataTable:DataTablePanelResources.TYPE}"
+                                    SortKey="Type">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type dataTable:MyModel}">
+                                            <Ellipse
+                                                x:Name="Ellipse"
+                                                Width="8"
+                                                Height="8"
+                                                Margin="5,0,20,0"
+                                                DockPanel.Dock="Right"
+                                                Fill="MediumVioletRed"
+                                                Opacity="0.7"
+                                                ToolTip="A Type" />
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static dataTable:MyModelType.BType}">
+                                                    <Setter TargetName="Ellipse" Property="Fill" Value="MediumAquamarine" />
+                                                    <Setter TargetName="Ellipse" Property="ToolTip" Value="B Type" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="160"
+                                    DisplayName="{localize:Static dataTable:DataTablePanelResources.ID}"
+                                    SortKey="Id">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type dataTable:MyModel}">
+                                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Id}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="160"
+                                    DisplayName="{localize:Static dataTable:DataTablePanelResources.NAME}"
+                                    SortKey="Name">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type dataTable:MyModel}">
+                                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="300"
+                                    DisplayName="{localize:Static dataTable:DataTablePanelResources.VALUE}"
+                                    SortKey="Value">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type dataTable:MyModel}">
+                                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Value}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                            </GridView>
+
+                        </dataTables:DataTable>
+
+                    </controls:Card>
+
+                    <DockPanel Margin="10,0,0,0" Dock="Top">
+
+                        <GroupBox DockPanel.Dock="Top" Header="Build options">
+                            <StackPanel Margin="{StaticResource HalfHorizontalStackPropertyMargin}" Orientation="Horizontal">
+                                <controls:PropertyEditor PropertyName="Items">
+                                    <ComboBox
+                                        Width="150"
+                                        ItemsSource="{Binding IntSource}"
+                                        SelectedItem="{Binding ItemCount, Mode=TwoWay}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor Margin="10,0,0,0" PropertyName="Build Time">
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding PopulateTimeSpan}" />
+                                </controls:PropertyEditor>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox HorizontalAlignment="Stretch" Header="Selected Item">
+                            <StackPanel Orientation="Vertical">
+                                <controls:PropertyEditor
+                                    Content="{Binding SelectedValue.Id}"
+                                    Orientation="Horizontal"
+                                    PropertyName="Id" />
+                                <controls:PropertyEditor
+                                    Content="{Binding SelectedValue.Name}"
+                                    Orientation="Horizontal"
+                                    PropertyName="Name" />
+                                <controls:PropertyEditor
+                                    Content="{Binding SelectedValue.Type}"
+                                    Orientation="Horizontal"
+                                    PropertyName="Type" />
+                                <controls:PropertyEditor
+                                    Content="{Binding SelectedValue.Value}"
+                                    Orientation="Horizontal"
+                                    PropertyName="Value" />
+                            </StackPanel>
+                        </GroupBox>
+
+                    </DockPanel>
+
+                </DockPanel>
+
+            </DockPanel>
+        </GroupBox>
+
+    </Grid>
+</UserControl>
+

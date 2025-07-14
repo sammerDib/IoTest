@@ -1,0 +1,366 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <SolidColorBrush x:Key="ButtonMask" Color="{DynamicResource SelectionBackground}" />
+
+    <!--#region FlatButtonBase-->
+
+    <SolidColorBrush x:Key="FlatButtonBaseForeground" Color="{DynamicResource ControlActionForeground}" />
+    <SolidColorBrush x:Key="FlatButtonBaseBackground" Color="{DynamicResource ControlActionBackground}" />
+    <SolidColorBrush x:Key="FlatButtonBaseBorderBrush" Color="Transparent" />
+
+    <Style x:Key="FlatBaseButtonStyle" TargetType="{x:Type ButtonBase}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Background" Value="{DynamicResource FlatButtonBaseBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FlatButtonBaseBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource FlatButtonBaseForeground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Border.CornerRadius" Value="3" />
+        <Setter Property="Padding" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border
+                        x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true">
+                        <Grid>
+                            <Border
+                                x:Name="mask"
+                                Background="{DynamicResource ButtonMask}"
+                                CornerRadius="{TemplateBinding Border.CornerRadius}"
+                                Opacity="0" />
+                            <ContentPresenter
+                                x:Name="contentPresenter"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Focusable="False"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="mask" Property="Opacity" Value="{StaticResource MouseOverOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="mask" Property="Opacity" Value="{StaticResource ClickedOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion FlatButtonBase-->
+
+    <!--#region RepeatButton-->
+    <Style BasedOn="{StaticResource FlatBaseButtonStyle}" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
+    </Style>
+
+    <Style x:Key="InvisibleRepeatButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Rectangle
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Fill="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion RepeatButton-->
+
+    <!--#region ButtonBase-->
+
+    <SolidColorBrush x:Key="NormalButtonForeground" Color="{DynamicResource ControlActionForeground}" />
+    <SolidColorBrush x:Key="NormalButtonBackground" Color="{DynamicResource ControlActionBackground}" />
+
+    <Style TargetType="{x:Type ButtonBase}">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Background" Value="{DynamicResource NormalButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource NormalButtonForeground}" />
+        <Setter Property="dependencyObjects:Icon.Margin" Value="0" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="MinWidth" Value="64" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border>
+                        <Grid>
+                            <Border
+                                x:Name="bckgRect"
+                                Grid.Column="0"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="2"
+                                Effect="{StaticResource ControlsShadow}" />
+                            <Border
+                                x:Name="mask"
+                                Grid.Column="0"
+                                Background="{DynamicResource ButtonMask}"
+                                CornerRadius="2"
+                                Opacity="0" />
+
+                            <Grid
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="col0" Width="Auto" />
+                                    <ColumnDefinition x:Name="col1" Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid
+                                    x:Name="IconContainer"
+                                    Grid.Column="0"
+                                    Margin="0,0,8,0">
+                                    <Path
+                                        x:Name="Icon"
+                                        Width="18"
+                                        Height="18"
+                                        Margin="{TemplateBinding dependencyObjects:Icon.Margin}"
+                                        Data="{TemplateBinding dependencyObjects:Icon.Geometry}"
+                                        Fill="{TemplateBinding Foreground}"
+                                        RenderTransform="{TemplateBinding dependencyObjects:Icon.Transform}"
+                                        RenderTransformOrigin="0.5,0.5"
+                                        Stretch="Uniform" />
+                                </Grid>
+                                <ContentPresenter
+                                    x:Name="Content"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    IsHitTestVisible="True"
+                                    TextBlock.FontFamily="{TemplateBinding FontFamily}"
+                                    TextBlock.FontSize="{TemplateBinding FontSize}"
+                                    TextBlock.Foreground="{TemplateBinding Foreground}">
+                                    <ContentPresenter.Resources>
+                                        <Style BasedOn="{StaticResource Body1TextStyle}" TargetType="{x:Type TextBlock}" />
+                                    </ContentPresenter.Resources>
+                                </ContentPresenter>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="dependencyObjects:Icon.Geometry" Value="{x:Null}">
+                            <Setter TargetName="IconContainer" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter TargetName="IconContainer" Property="Margin" Value="0" />
+                            <Setter TargetName="Content" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="col0" Property="Width" Value="*" />
+                            <Setter TargetName="col1" Property="Width" Value="0" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="mask" Property="Opacity" Value="{StaticResource MouseOverOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="mask" Property="Opacity" Value="{StaticResource ClickedOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="bckgRect" Property="Effect" Value="{x:Null}" />
+                            <Setter Property="Opacity" Value="{DynamicResource DisabledOpacity}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="SquareIconifiedButtonStyle"
+        BasedOn="{StaticResource {x:Type ButtonBase}}"
+        TargetType="{x:Type ButtonBase}">
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Padding" Value="2" />
+    </Style>
+    <!--#endregion ButtonBase-->
+
+    <!--#region Button-->
+    <Style BasedOn="{StaticResource {x:Type ButtonBase}}" TargetType="{x:Type Button}" />
+    <!--#endregion Button-->
+
+    <!--#region ToggleButton-->
+
+    <SolidColorBrush x:Key="ToggleButtonCheckedBackground" Color="{DynamicResource SelectionBackground}" />
+    <SolidColorBrush x:Key="ToggleButtonCheckedForeground" Color="{DynamicResource SelectionForeground}" />
+
+    <Style BasedOn="{StaticResource {x:Type ButtonBase}}" TargetType="{x:Type ToggleButton}">
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ToggleButtonCheckedBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource ToggleButtonCheckedForeground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="SquareIconifiedToggleButtonStyle"
+        BasedOn="{StaticResource SquareIconifiedButtonStyle}"
+        TargetType="{x:Type ToggleButton}">
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ToggleButtonCheckedBackground}" />
+                <Setter Property="Foreground" Value="{DynamicResource ToggleButtonCheckedForeground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--#endregion ToggleButton-->
+
+    <!--#region Radio Button-->
+
+    <SolidColorBrush x:Key="RadioButtonCheckIconColor" Color="{DynamicResource SelectionForeground}" />
+    <SolidColorBrush x:Key="RadioButtonUncheckIconColor" Color="{DynamicResource ControlActionForeground}" />
+
+    <Style TargetType="{x:Type RadioButton}">
+        <Setter Property="Foreground" Value="{DynamicResource RadioButtonUncheckIconColor}" />
+        <Setter Property="Background" Value="{DynamicResource RadioButtonCheckIconColor}" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <BulletDecorator x:Name="bulletDecorator" Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Grid
+                                x:Name="container"
+                                Width="Auto"
+                                Height="20"
+                                SnapsToDevicePixels="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Path
+                                    x:Name="CheckIcon"
+                                    Grid.Column="0"
+                                    Data="M255,127.5c-71.4,0-127.5,56.1-127.5,127.5c0,71.4,56.1,127.5,127.5,127.5c71.4,0,127.5-56.1,127.5-127.5    C382.5,183.6,326.4,127.5,255,127.5z M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255s255-114.75,255-255S395.25,0,255,0z     M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z"
+                                    Fill="{TemplateBinding Background}"
+                                    Stretch="Fill" />
+                                <ContentPresenter
+                                    x:Name="RadBtnLabel"
+                                    Grid.Column="1"
+                                    Margin="5,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="center"
+                                    RecognizesAccessKey="True"
+                                    SnapsToDevicePixels="True" />
+                            </Grid>
+                        </BulletDecorator.Bullet>
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="container" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="CheckIcon" Property="Data" Value="M 255,0 C 114.75,0 0,114.75 0,255 0,395.25 114.75,510 255,510 395.25,510 510,395.25 510,255 510,114.75 395.25,0 255,0 Z m 0,459 C 142.8,459 51,367.2 51,255 51,142.8 142.8,51 255,51 c 112.2,0 204,91.8 204,204 0,112.2 -91.8,204 -204,204 z" />
+                            <Setter TargetName="CheckIcon" Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <SolidColorBrush x:Key="ChipsRadioButtonBackground" Color="{DynamicResource PanelBackground}" />
+    <SolidColorBrush x:Key="ChipsRadioButtonForeground" Color="{DynamicResource ControlActionForeground}" />
+    <SolidColorBrush
+        x:Key="ChipsRadioButtonBorderBrush"
+        Opacity="{StaticResource ClickedOpacity}"
+        Color="{DynamicResource ControlActionForeground}" />
+
+    <SolidColorBrush
+        x:Key="ChipsRadioButtonMouseOverBackground"
+        Opacity="0.1"
+        Color="{DynamicResource ControlActionForeground}" />
+
+    <SolidColorBrush
+        x:Key="ChipsRadioButtonSelectedBackground"
+        Opacity="0.2"
+        Color="{DynamicResource SelectionForeground}" />
+    <SolidColorBrush x:Key="ChipsRadioButtonSelectedForeground" Color="{DynamicResource SelectionForeground}" />
+    <SolidColorBrush x:Key="ChipsRadioButtonSelectedBorderBrush" Color="{DynamicResource SelectionForeground}" />
+
+    <Style x:Key="ChipsRadioButtonStyle" TargetType="{x:Type RadioButton}">
+        <Setter Property="Foreground" Value="{DynamicResource ChipsRadioButtonForeground}" />
+        <Setter Property="Background" Value="{DynamicResource ChipsRadioButtonBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ChipsRadioButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <Grid>
+                        <Border
+                            x:Name="BackgroundBorder"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="15" />
+                        <Border
+                            x:Name="Border"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="15" />
+                        <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter.Resources>
+                                <Style BasedOn="{StaticResource Body1TextStyle}" TargetType="{x:Type TextBlock}" />
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ChipsRadioButtonMouseOverBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="BackgroundBorder" Property="Effect" Value="{StaticResource PressedControlsShadow}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ChipsRadioButtonSelectedBackground}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ChipsRadioButtonSelectedBorderBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ChipsRadioButtonSelectedBorderBrush}" />
+                            <Setter TargetName="BackgroundBorder" Property="Effect" Value="{x:Null}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion Radio Button-->
+
+</ResourceDictionary>

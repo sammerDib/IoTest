@@ -1,0 +1,115 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors"
+    xmlns:deviceCommandInstruction="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.DeviceCommand"
+    xmlns:deviceCommands="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.DeviceCommands"
+    xmlns:executionConfiguration="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.Scenarios.Runner.ExecutionConfiguration"
+    xmlns:instructions1="clr-namespace:UnitySC.GUI.Common.Vendor.ProcessExecution.Instructions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:recipeInstructions="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions"
+    xmlns:userInformation="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.UserInformation"
+    xmlns:userInformationInstruction="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.UserInformation"
+    xmlns:userInteraction="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.UserInteraction"
+    xmlns:userInteractionInstruction="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.UserInteraction"
+    xmlns:waitForTime="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitForTime"
+    xmlns:waitInstruction="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.Wait"
+    xmlns:waitProcessModuleStatusThreshold="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.WaitProcessModuleStatusThreshold"
+    xmlns:waitProcessModuleStatusThresholdInstruction="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitProcessModuleStatusThreshold"
+    xmlns:waitStatusThreshold="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.WaitStatusThreshold"
+    xmlns:waitStatusThresholdInstruction="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitStatusThreshold"
+    mc:Ignorable="d">
+
+    <!--#region Templates-->
+
+    <!--#region Editors-->
+
+    <DataTemplate DataType="{x:Type deviceCommands:DeviceCommandEditorViewModel}">
+        <deviceCommands:DeviceCommandInstructionEditor />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type waitProcessModuleStatusThresholdInstruction:WaitProcessModuleStatusThresholdInstructionEditor}">
+        <waitProcessModuleStatusThresholdInstruction:WaitProcessModuleStatusThresholdInstructionEditorView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type waitStatusThresholdInstruction:WaitStatusThresholdInstructionEditor}">
+        <waitStatusThresholdInstruction:WaitStatusThresholdInstructionEditorView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type userInteraction:UserInteractionEditor}">
+        <userInteraction:UserInteractionEditorView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type recipeInstructions:GenericRecipeInstructionViewModel}">
+        <ContentPresenter Content="{Binding Model}" />
+    </DataTemplate>
+
+
+    <DataTemplate DataType="{x:Type userInformationInstruction:UserInformationInstruction}">
+        <userInformation:UserInformationStepEditorView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type waitInstruction:WaitForTimeInstruction}">
+        <waitForTime:WaitForTimeStepEditorView />
+    </DataTemplate>
+
+    <!--#endregion Editors-->
+
+    <dataTemplateSelectors:GenericDataTemplateSelector x:Key="InstructionIconTemplateSelector">
+        <DataTemplate DataType="{x:Type deviceCommandInstruction:DeviceCommandInstruction}">
+            <controls:Icon Data="{StaticResource OutgoingDataIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type userInformationInstruction:UserInformationInstruction}">
+            <controls:Icon Data="{StaticResource InfoMessageIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type userInteractionInstruction:UserInteractionInstruction}">
+            <controls:Icon Data="{StaticResource UserInterfaceControlIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type waitInstruction:WaitForTimeInstruction}">
+            <controls:Icon Data="{StaticResource WaitTimeIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type waitProcessModuleStatusThreshold:WaitProcessModuleStatusThresholdInstruction}">
+            <controls:Icon Data="{StaticResource WaitDataIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type waitStatusThreshold:WaitStatusThresholdInstruction}">
+            <controls:Icon Data="{StaticResource WaitDataIcon}" />
+        </DataTemplate>
+    </dataTemplateSelectors:GenericDataTemplateSelector>
+
+    <dataTemplateSelectors:GenericDataTemplateSelector x:Key="ProcessingInstructionIconTemplateSelector">
+        <DataTemplate DataType="{x:Type instructions1:DeviceCommandProcessInstruction}">
+            <controls:Icon Data="{StaticResource OutgoingDataIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type instructions1:UserInformationProcessInstruction}">
+            <controls:Icon Data="{StaticResource InfoMessageIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type instructions1:UserInteractionProcessInstruction}">
+            <controls:Icon Data="{StaticResource UserInterfaceControlIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type instructions1:WaitProcessInstruction}">
+            <controls:Icon Data="{StaticResource WaitTimeIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type instructions1:WaitProcessModuleStatusThresholdProcessInstruction}">
+            <controls:Icon Data="{StaticResource WaitDataIcon}" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type instructions1:WaitStatusThresholdProcessInstruction}">
+            <controls:Icon Data="{StaticResource WaitDataIcon}" />
+        </DataTemplate>
+    </dataTemplateSelectors:GenericDataTemplateSelector>
+
+    <!--#region Panels-->
+
+    <DataTemplate DataType="{x:Type executionConfiguration:ExecutionConfigurationPopup}">
+        <executionConfiguration:ExecutionConfigurationPopupView />
+    </DataTemplate>
+
+    <!--#endregion Panels-->
+
+    <!--#endregion Templates-->
+
+</ResourceDictionary>
+
+
+

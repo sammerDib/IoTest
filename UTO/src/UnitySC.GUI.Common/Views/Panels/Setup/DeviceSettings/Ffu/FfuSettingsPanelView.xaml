@@ -1,0 +1,93 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Ffu.FfuSettingsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox"
+    xmlns:deviceSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings"
+    xmlns:ffuSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Ffu"
+    d:DataContext="{d:DesignInstance ffuSettings:FfuSettingsPanel, IsDesignTimeCreatable=True}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <Grid>
+        <controls:Card Visibility="{Binding ErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource Headline4TextStyle}"
+                Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_ERROR}" />
+        </controls:Card>
+        <UniformGrid
+            Columns="2"
+            Visibility="{Binding SettingsVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer
+                    behaviors:ScrollViewerAssist.IsAutoHideEnabled="True"
+                    VerticalScrollBarVisibility="Auto">
+                    <DockPanel>
+                        <GroupBox
+                            DockPanel.Dock="Top"
+                            Header="{localize:Static ffuSettings:FfuSettingsResources.BP_FFU_SETTINGS}">
+                            <StackPanel Orientation="Vertical">
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyName="{localize:Static ffuSettings:FfuSettingsResources.S_SETUP_DEVICE_SETTINGS_SPEED_SETPOINT}">
+                                    <DockPanel VerticalAlignment="Top">
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Right"
+                                            Text="{localize:Static ffuSettings:FfuSettingsResources.S_SETUP_DEVICE_SETTINGS_RPM}" />
+                                        <numericBox:DoubleBox
+                                            HorizontalContentAlignment="Left"
+                                            Value="{Binding FfuSpeedSetPoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DockPanel>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyName="{localize:Static ffuSettings:FfuSettingsResources.S_SETUP_DEVICE_SETTINGS_SPEED_THRESHOLD}">
+                                    <DockPanel VerticalAlignment="Top">
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Right"
+                                            Text="{localize:Static ffuSettings:FfuSettingsResources.S_SETUP_DEVICE_SETTINGS_RPM}" />
+                                        <numericBox:DoubleBox
+                                            HorizontalContentAlignment="Left"
+                                            Value="{Binding LowSpeedThresholdValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DockPanel>
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyName="{localize:Static ffuSettings:FfuSettingsResources.S_SETUP_DEVICE_SETTINGS_PRESSURE_THRESHOLD}">
+                                    <DockPanel VerticalAlignment="Top">
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Right"
+                                            Text="{localize:Static ffuSettings:FfuSettingsResources.S_SETUP_DEVICE_SETTINGS_PASCAL}" />
+                                        <numericBox:DoubleBox
+                                            HorizontalContentAlignment="Left"
+                                            Value="{Binding LowPressureThresholdValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DockPanel>
+                                </controls:PropertyEditor>
+                            </StackPanel>
+                        </GroupBox>
+                    </DockPanel>
+                </ScrollViewer>
+            </controls:Card>
+        </UniformGrid>
+    </Grid>
+</UserControl>

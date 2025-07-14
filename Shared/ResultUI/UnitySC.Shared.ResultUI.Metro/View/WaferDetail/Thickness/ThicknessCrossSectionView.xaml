@@ -1,0 +1,387 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Thickness.ThicknessCrossSectionView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:heatMap="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common.HeatMap"
+	xmlns:markups="clr-namespace:UnitySC.Shared.ResultUI.Common.Markups;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:thickness="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Thickness"
+	xmlns:thickness1="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Thickness"
+	x:Name="UserControl"
+	d:DataContext="{d:DesignInstance thickness:ThicknessCrossSectionVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	Background="White"
+	mc:Ignorable="d">
+
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<heatMap:MetroHeatMapView
+			Grid.Row="0"
+			Grid.Column="0"
+			Margin="0,0,5,0"
+			Background="White"
+			DataContext="{Binding CrossSectionHeatMap}" />
+
+		<DockPanel
+			x:Name="ToolsPanel"
+			Grid.Row="0"
+			Grid.RowSpan="2"
+			Grid.Column="1"
+			VerticalAlignment="Top">
+
+			<WrapPanel
+				Margin="0,5,0,0"
+				HorizontalAlignment="Right"
+				VerticalAlignment="Top"
+				Orientation="Vertical">
+
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+
+					<GroupBox
+						Grid.RowSpan="2"
+						Margin="0,0,5,5"
+						Header="Layer">
+						<ListView
+							BorderThickness="0"
+							ItemsSource="{Binding LayerMode}"
+							SelectedItem="{Binding CurrentLayer}">
+							<ListView.ItemTemplate>
+								<DataTemplate DataType="{x:Type system:String}">
+									<RadioButton
+										Content="{Binding}"
+										IsChecked="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}"
+										IsHitTestVisible="False" />
+								</DataTemplate>
+							</ListView.ItemTemplate>
+						</ListView>
+					</GroupBox>
+
+					<GroupBox
+						Grid.Row="0"
+						Grid.Column="1"
+						Margin="0,0,5,5"
+						Header="Cross-Section Mode">
+						<ListView
+							BorderThickness="0"
+							ItemsSource="{markups:EnumCollection {x:Type thickness:ThicknessCrossSectionMode}}"
+							SelectedItem="{Binding CurrentMode}">
+							<ListView.ItemTemplate>
+								<DataTemplate DataType="{x:Type thickness:ThicknessCrossSectionMode}">
+									<RadioButton
+										Content="{Binding}"
+										IsChecked="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}"
+										IsHitTestVisible="False" />
+								</DataTemplate>
+							</ListView.ItemTemplate>
+						</ListView>
+					</GroupBox>
+
+					<GroupBox
+						Grid.Row="1"
+						Grid.Column="1"
+						MinWidth="250"
+						Margin="0,0,5,5"
+						VerticalAlignment="Center"
+						DockPanel.Dock="Right"
+						Header="Profile">
+
+						<StackPanel
+							Grid.IsSharedSizeScope="True"
+							Orientation="Vertical">
+
+							<!--#region Horizontal, Vertical & Radial-->
+							<Grid>
+								<Grid.Style>
+									<Style TargetType="{x:Type Grid}">
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding CurrentMode}" Value="{x:Static thickness:ThicknessCrossSectionMode.Manual}">
+												<Setter Property="Visibility" Value="Collapsed" />
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Grid.Style>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition
+										Width="Auto"
+										SharedSizeGroup="LabelColumn" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<TextBlock
+									Grid.Column="0"
+									Margin="0,5,0,0"
+									VerticalAlignment="Center">
+									<TextBlock.Style>
+										<Style TargetType="{x:Type TextBlock}">
+											<Setter Property="Text" Value="Y" />
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding CurrentMode}" Value="{x:Static thickness:ThicknessCrossSectionMode.Vertical}">
+													<Setter Property="Text" Value="X" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding CurrentMode}" Value="{x:Static thickness:ThicknessCrossSectionMode.Radial}">
+													<Setter Property="Text" Value="Angle" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</TextBlock.Style>
+								</TextBlock>
+								<controls:TextBoxUnit
+									Grid.Column="1"
+									Margin="5,5,0,0">
+									<controls:TextBoxUnit.Style>
+										<Style
+											BasedOn="{StaticResource {x:Type controls:TextBoxUnit}}"
+											TargetType="{x:Type controls:TextBoxUnit}">
+											<Setter Property="Text" Value="{Binding CrossSectionHeatMap.HorizontalProfileValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" />
+											<Setter Property="Unit" Value="mm" />
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding CurrentMode}" Value="{x:Static thickness:ThicknessCrossSectionMode.Vertical}">
+													<Setter Property="Text" Value="{Binding CrossSectionHeatMap.VerticalProfileValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" />
+												</DataTrigger>
+												<DataTrigger Binding="{Binding CurrentMode}" Value="{x:Static thickness:ThicknessCrossSectionMode.Radial}">
+													<Setter Property="Text" Value="{Binding CrossSectionHeatMap.RadialeProfileAngle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}" />
+													<Setter Property="Unit" Value="°" />
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</controls:TextBoxUnit.Style>
+								</controls:TextBoxUnit>
+							</Grid>
+							<!--#endregion Horizontal, Vertical & Radial-->
+
+							<!--#region Manual-->
+							<Grid>
+								<Grid.Style>
+									<Style TargetType="{x:Type Grid}">
+										<Setter Property="Visibility" Value="Collapsed" />
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding CurrentMode}" Value="{x:Static thickness:ThicknessCrossSectionMode.Manual}">
+												<Setter Property="Visibility" Value="Visible" />
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</Grid.Style>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition
+										Width="Auto"
+										SharedSizeGroup="LabelColumn" />
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition />
+									<RowDefinition />
+									<RowDefinition />
+								</Grid.RowDefinitions>
+								<TextBlock
+									Grid.Row="0"
+									Grid.Column="1"
+									Margin="5,0,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Text="X" />
+								<TextBlock
+									Grid.Row="0"
+									Grid.Column="2"
+									Margin="5,0,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Text="Y" />
+								<TextBlock
+									Grid.Row="1"
+									Grid.Column="0"
+									Margin="0,5,0,0"
+									VerticalAlignment="Center"
+									Text="Start Point" />
+								<TextBlock
+									Grid.Row="2"
+									Grid.Column="0"
+									Margin="0,5,0,0"
+									VerticalAlignment="Center"
+									Text="End Point" />
+								<controls:TextBoxUnit
+									Grid.Row="1"
+									Grid.Column="1"
+									Margin="5,5,0,0"
+									Text="{Binding CrossSectionHeatMap.StartManualX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
+									Unit="mm" />
+								<controls:TextBoxUnit
+									Grid.Row="1"
+									Grid.Column="2"
+									Margin="5,5,0,0"
+									Text="{Binding CrossSectionHeatMap.StartManualY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
+									Unit="mm" />
+								<controls:TextBoxUnit
+									Grid.Row="2"
+									Grid.Column="1"
+									Margin="5,5,0,0"
+									Text="{Binding CrossSectionHeatMap.EndManualX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
+									Unit="mm" />
+								<controls:TextBoxUnit
+									Grid.Row="2"
+									Grid.Column="2"
+									Margin="5,5,0,0"
+									Text="{Binding CrossSectionHeatMap.EndManualY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
+									Unit="mm" />
+							</Grid>
+							<!--#endregion Manual-->
+
+							<Separator Margin="0,5" />
+
+							<!--#region Tracker-->
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition
+										Width="Auto"
+										SharedSizeGroup="LabelColumn" />
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition />
+									<RowDefinition />
+								</Grid.RowDefinitions>
+								<TextBlock
+									Grid.Row="0"
+									Grid.Column="1"
+									Margin="5,0,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Text="X" />
+								<TextBlock
+									Grid.Row="0"
+									Grid.Column="2"
+									Margin="5,0,0,0"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center"
+									Text="Y" />
+								<TextBlock
+									Grid.Row="1"
+									Grid.Column="0"
+									Margin="0,5,0,0"
+									VerticalAlignment="Center"
+									Text="Tracker" />
+								<controls:TextBoxUnit
+									Grid.Row="1"
+									Grid.Column="1"
+									Margin="5,5,0,0"
+									IsReadOnly="True"
+									Text="{Binding CrossSectionHeatMap.TrackerX, Mode=OneWay, StringFormat={}{0:F3}}"
+									Unit="mm" />
+								<controls:TextBoxUnit
+									Grid.Row="1"
+									Grid.Column="2"
+									Margin="5,5,0,0"
+									IsReadOnly="True"
+									Text="{Binding CrossSectionHeatMap.TrackerY, Mode=OneWay, StringFormat={}{0:F3}}"
+									Unit="mm" />
+							</Grid>
+							<!--#endregion Tracker-->
+
+						</StackPanel>
+
+					</GroupBox>
+
+				</Grid>
+
+				<GroupBox
+					Margin="0,0,5,5"
+					VerticalAlignment="Top"
+					DockPanel.Dock="Top"
+					Header="Profile Tracking data">
+					<thickness1:ThicknessLayersInfoView
+						Width="500"
+						HorizontalAlignment="Center"
+						DataContext="{Binding ThicknessLayersInfo}" />
+				</GroupBox>
+
+			</WrapPanel>
+
+		</DockPanel>
+
+		<Expander
+			Grid.Row="1"
+			Grid.Column="0"
+			Margin="5"
+			ExpandDirection="Up"
+			Header="Stacked Area Plot">
+			<Grid.ColumnSpan>
+				<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+					<Binding
+						ElementName="UserControl"
+						Path="DataContext.GetChartColumnSpanFunc" />
+					<Binding
+						ElementName="UserControl"
+						Path="ActualHeight" />
+					<Binding
+						ElementName="ToolsPanel"
+						Path="ActualHeight" />
+					<Binding
+						Path="ActualHeight"
+						RelativeSource="{RelativeSource Self}" />
+				</MultiBinding>
+			</Grid.ColumnSpan>
+			<DockPanel>
+				<StackPanel
+					Margin="0,5,0,0"
+					DockPanel.Dock="Top"
+					Orientation="Horizontal">
+					<ToggleButton
+						Margin="5,0"
+						Content="Normalized Thickness"
+						IsChecked="{Binding NormalizedModeEnabled, Mode=TwoWay}"
+						IsEnabled="{Binding CurrentLayer, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static thickness:ThicknessResultVM.TotalLayerName}}"
+						Style="{StaticResource ToggleAnimatedSwitchNew}" />
+					<TextBlock
+						VerticalAlignment="Center"
+						Text="Normalized Thickness" />
+				</StackPanel>
+				<ContentPresenter
+					MaxHeight="450"
+					Margin="1"
+					Content="{Binding StackedAreaChart.Chart}">
+					<ContentPresenter.Height>
+						<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+							<Binding
+								ElementName="UserControl"
+								Path="DataContext.GetChartWidthFunc" />
+							<Binding
+								ElementName="UserControl"
+								Path="ActualHeight" />
+						</MultiBinding>
+					</ContentPresenter.Height>
+				</ContentPresenter>
+			</DockPanel>
+		</Expander>
+
+	</Grid>
+
+</UserControl>

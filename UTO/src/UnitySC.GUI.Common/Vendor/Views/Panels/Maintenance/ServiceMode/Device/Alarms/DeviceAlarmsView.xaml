@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.Device.Alarms.DeviceAlarmsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:alarmModeling="clr-namespace:Agileo.AlarmModeling;assembly=Agileo.AlarmModeling"
+    xmlns:alarms="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.Device.Alarms"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    d:DataContext="{d:DesignInstance alarms:DeviceAlarmsViewModel}"
+    d:DesignHeight="700"
+    d:DesignWidth="700"
+    mc:Ignorable="d">
+
+    <dataTables:DataTable DataSource="{Binding AlarmSource}">
+        <GridView>
+            <dataTables:DataTableColumn
+                DisplayName="Name"
+                SortKey="Name">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:Alarm}">
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn
+                DisplayName="Description"
+                SortKey="Description">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:Alarm}">
+                        <TextBlock Text="{Binding Description}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn
+                DisplayName="Id"
+                SortKey="Id">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:Alarm}">
+                        <TextBlock Text="{Binding Id}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn
+                DisplayName="State"
+                SortKey="State">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:Alarm}">
+                        <TextBlock Text="{Binding State}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn
+                DisplayName="Acknowledged"
+                SortKey="Acknowledged">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:Alarm}">
+                        <CheckBox
+                            Focusable="False"
+                            IsChecked="{Binding Acknowledged, Mode=OneWay}"
+                            IsHitTestVisible="False" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+        </GridView>
+
+    </dataTables:DataTable>
+
+</UserControl>

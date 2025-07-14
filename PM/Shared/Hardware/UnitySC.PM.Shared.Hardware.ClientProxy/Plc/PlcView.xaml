@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="UnitySC.PM.Shared.Hardware.ClientProxy.Plc.PlcView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:UnitySC.PM.Shared.Hardware.ClientProxy.Plc"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="5">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="93*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <controls:ImageGroupBox Image="{StaticResource Info}" Header="Info" Grid.Row="0" Grid.ColumnSpan="2" Margin="1,1,1.301,0.509" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Server status" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2" Width="60" Text="{Binding Name}" IsEnabled="False"></TextBox>
+                        <TextBlock Grid.Column="3" Grid.Row="0" Text="Serial number" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="4" Grid.Row="0" Margin="0,2" Width="60" Text="{Binding GetId}" IsEnabled="False"></TextBox>
+                        <TextBlock Grid.Column="6" Grid.Row="0" Text="Status" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="7" Grid.Row="0" Margin="0,2" Width="60" Text="{Binding State}" IsEnabled="False"></TextBox>
+                        
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="OPC connection" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2" Width="60" Text="{Binding CamMireSizeX}" IsEnabled="False"></TextBox>
+                        <TextBlock Grid.Column="3" Grid.Row="1" Text="Current time" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="4" Grid.Row="1" Margin="0,2" Width="60" Text="{Binding GetId}" IsEnabled="False"></TextBox>
+                    </Grid>
+                </controls:ImageGroupBox>
+                <controls:ImageGroupBox Image="{StaticResource Running}" Header="Management" Grid.Row="1" Grid.ColumnSpan="2" Margin="1,1.491,1.301,1.679" >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <controls:ImageButton Grid.Column="2" Margin="5,0,0,0" Image="{StaticResource Replay}" Content="Restart" Command="{Binding RestartCommand}" MinWidth="100"/>
+                        <controls:ImageButton Grid.Column="2" Margin="5,0,0,0" Image="{StaticResource Replay}" Content="Reboot" Command="{Binding RebootCommand}" MinWidth="100"/>
+                    </StackPanel>
+                </controls:ImageGroupBox>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

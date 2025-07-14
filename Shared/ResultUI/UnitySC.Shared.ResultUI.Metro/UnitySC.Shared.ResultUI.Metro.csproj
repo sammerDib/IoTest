@@ -1,0 +1,917 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{12DF032C-7C49-4161-B698-1533C4EAEF7C}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>UnitySC.Shared.ResultUI.Metro</RootNamespace>
+    <AssemblyName>UnitySC.Shared.ResultUI.Metro</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- other property settings -->
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\WarpMeasureVisibilityConverter.cs" />
+    <Compile Include="Converters\MultiValuesToVisibilityConverter.cs" />
+    <Compile Include="Converters\ValueToVisibilityConverter.cs" />
+    <Compile Include="PointSelector\BowPointSelector.cs" />
+    <Compile Include="PointSelector\PeriodicStructPointSelector.cs" />
+    <Compile Include="PointSelector\EdgeTrimPointSelector.cs" />
+    <Compile Include="PointSelector\WarpPointSelector.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="AttachedProperties\GridViewColumnAttachedProperties.cs" />
+    <Compile Include="Converters\MeasureStateToToleranceDisplayerConverter.cs" />
+    <Compile Include="MetroHelper.cs" />
+    <Compile Include="PointSelector\PointSelectorBase.cs" />
+    <Compile Include="PointSelector\NanotopoPointSelector.cs" />
+    <Compile Include="PointSelector\PillarPointSelector.cs" />
+    <Compile Include="PointSelector\StepPointSelector.cs" />
+    <Compile Include="PointSelector\ThicknessPointSelector.cs" />
+    <Compile Include="PointSelector\TopographyPointSelector.cs" />
+    <Compile Include="PointSelector\TrenchPointSelector.cs" />
+    <Compile Include="PointSelector\TsvPointSelector.cs" />
+    <Compile Include="Utilities\BindingHelper.cs" />
+    <Compile Include="Utilities\ColorHelper.cs" />
+    <Compile Include="Utilities\ColumnGenerator.cs" />
+    <Compile Include="Utilities\GeneratedColumn.cs" />
+    <Compile Include="ViewModel\Common\PointLocation\PointsLocationVM.cs" />
+    <Compile Include="ViewModel\Common\PointLocation\PointLocationVM.cs" />
+    <Compile Include="ViewModel\Common\MeasureType\MeasureTypeCategoriesVM.cs" />
+    <Compile Include="ViewModel\Common\MeasureType\MeasureTypeCategoryVM.cs" />
+    <Compile Include="ViewModel\Common\MetroDieStatsVM.cs" />
+    <Compile Include="ViewModel\Common\HeatMap\BaseDieMapVM.cs" />
+    <Compile Include="ViewModel\Common\HeatMap\MetroDieMapVM.cs" />
+    <Compile Include="ViewModel\Common\HeatMap\MetroHeatMapVM.cs" />
+    <Compile Include="ViewModel\Common\Interpolation\InterpolationEngine.cs" />
+    <Compile Include="ViewModel\Common\RawSignal\RawFFTSignalChart.cs" />
+    <Compile Include="ViewModel\Common\RawSignal\RawSignalChart.cs" />
+    <Compile Include="ViewModel\Stats\Bow\BowStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\EdgeTrim\EdgeTrimStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\MetroStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Nanotopo\NanotopoStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\PeriodicStruct\PeriodicStructStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Pillar\PillarStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Step\StepStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Thickness\ThicknessStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Topography\TopographyStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Trench\TrenchStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Tsv\TsvStatsVM.cs" />
+    <Compile Include="ViewModel\Stats\Warp\WarpStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Bow\BowDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Bow\BowDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Bow\BowGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Bow\BowPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Bow\BowResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\DieDetails\EdgeTrimDieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\DieDetails\EdgeTrimDieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\EdgeTrimPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\EdgeTrimResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\EdgeTrimMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\EdgeTrimDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\EdgeTrim\EdgeTrimGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\MetroPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\MetroResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\NanotopoReportVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\Thumbnail3DChartVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\PeriodicStructDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\PeriodicStructDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\PeriodicStructGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\PeriodicStructPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\PeriodicStructResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\PeriodicStructStructListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\PeriodicStruct\StructDetails\PeriodicStructListStructure.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\PillarDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\PillarDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\PillarGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\PillarPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Pillar\PillarResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\ReportVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\StepDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\StepDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\StepGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\StepPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Step\StepResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\SummaryChart.cs" />
+    <Compile Include="ViewModel\WaferDetail\GlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\MetroDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\MetroDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\LayerDetailInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessLayersInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\ThumbnailViewerVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\NanotopoGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\NanotopoPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\NanotopoDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\MatrixThumbnailViewerVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\NanotopoDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Nanotopo\NanotopoResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\CrossSection\ProfileChangedEventArgs.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\CrossSection\ThicknessCrossSectionHeatMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\DieDetails\ThicknessDieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\DieDetails\ThicknessDieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessCrossSectionVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Thickness\ThicknessResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyReportVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyThumbnailViewerVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Topography\TopographyResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\TrenchDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\TrenchDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\TrenchGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\TrenchPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Trench\TrenchResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\Copla\BestFitPlaneViewModel.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\DieDetails\DieMapVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\DieDetails\DieStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvLengthWidthRepetaChart.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvResultVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Tsv\TsvThumbnailViewerVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Warp\WarpDataRepetaVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Warp\WarpDetailMeasureInfoVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Warp\WarpGlobalStatsVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Warp\WarpPointsListVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Warp\WarpDisplayVM.cs" />
+    <Compile Include="ViewModel\WaferDetail\Warp\WarpResultVM.cs" />
+    <Compile Include="View\GeneratedColumnListViewBase.cs" />
+    <Compile Include="View\Stats\Bow\BowStatsListView.xaml.cs">
+      <DependentUpon>BowStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Bow\BowStatsView.xaml.cs">
+      <DependentUpon>BowStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\EdgeTrim\EdgeTrimStatsListView.xaml.cs">
+      <DependentUpon>EdgeTrimStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\EdgeTrim\EdgeTrimStatsView.xaml.cs">
+      <DependentUpon>EdgeTrimStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Nanotopo\NanotopoStatsListView.xaml.cs">
+      <DependentUpon>NanotopoStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Nanotopo\NanotopoStatsView.xaml.cs">
+      <DependentUpon>NanotopoStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\PeriodicStruct\PeriodicStructStatsListView.xaml.cs">
+      <DependentUpon>PeriodicStructStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\PeriodicStruct\PeriodicStructStatsView.xaml.cs">
+      <DependentUpon>PeriodicStructStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Pillar\PillarStatsListView.xaml.cs">
+      <DependentUpon>PillarStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Pillar\PillarStatsView.xaml.cs">
+      <DependentUpon>PillarStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Step\StepStatsListView.xaml.cs">
+      <DependentUpon>StepStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Step\StepStatsView.xaml.cs">
+      <DependentUpon>StepStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Thickness\ThicknessStatsListView.xaml.cs">
+      <DependentUpon>ThicknessStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Thickness\ThicknessStatsView.xaml.cs">
+      <DependentUpon>ThicknessStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Topography\TopographyStatsListView.xaml.cs">
+      <DependentUpon>TopographyStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Topography\TopographyStatsView.xaml.cs">
+      <DependentUpon>TopographyStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Trench\TrenchStatsListView.xaml.cs">
+      <DependentUpon>TrenchStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Trench\TrenchStatsView.xaml.cs">
+      <DependentUpon>TrenchStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Tsv\TsvStatsView.xaml.cs">
+      <DependentUpon>TsvStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Warp\WarpStatsListView.xaml.cs">
+      <DependentUpon>WarpStatsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Stats\Warp\WarpStatsView.xaml.cs">
+      <DependentUpon>WarpStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Bow\BowDataRepetaView.xaml.cs">
+      <DependentUpon>BowDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Bow\BowMeasureInfoView.xaml.cs">
+      <DependentUpon>BowMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Bow\BowPointsListView.xaml.cs">
+      <DependentUpon>BowPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Bow\BowResultView.xaml.cs">
+      <DependentUpon>BowResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\PointLocation\PointLocationView.xaml.cs">
+      <DependentUpon>PointLocationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\MeasureType\MeasureTypeCategoriesView.xaml.cs">
+      <DependentUpon>MeasureTypeCategoriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\MetroMeasureInfoHeaderView.xaml.cs">
+      <DependentUpon>MetroMeasureInfoHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\PointNavigationView.xaml.cs">
+      <DependentUpon>PointNavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\EdgeTrim\EdgeTrimResultView.xaml.cs">
+      <DependentUpon>EdgeTrimResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\EdgeTrim\EdgeTrimMeasureInfoView.xaml.cs">
+      <DependentUpon>EdgeTrimMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\EdgeTrim\EdgeTrimDataRepetaView.xaml.cs">
+      <DependentUpon>EdgeTrimDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\EdgeTrim\EdgeTrimPointsListView.xaml.cs">
+      <DependentUpon>EdgeTrimPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Nanotopo\NanotopoPointsListView.xaml.cs">
+      <DependentUpon>NanotopoPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Nanotopo\NanotopoResultView.xaml.cs">
+      <DependentUpon>NanotopoResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Nanotopo\NanotopoMeasureInfoView.xaml.cs">
+      <DependentUpon>NanotopoMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Nanotopo\NanotopoDataRepetaView.xaml.cs">
+      <DependentUpon>NanotopoDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\PeriodicStruct\PeriodicStructDataRepetaView.xaml.cs">
+      <DependentUpon>PeriodicStructDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\PeriodicStruct\PeriodicStructMeasureInfoView.xaml.cs">
+      <DependentUpon>PeriodicStructMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\PeriodicStruct\PeriodicStructPointsListView.xaml.cs">
+      <DependentUpon>PeriodicStructPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\PeriodicStruct\PeriodicStructResultView.xaml.cs">
+      <DependentUpon>PeriodicStructResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\PeriodicStruct\PeriodicStructStructListView.xaml.cs">
+      <DependentUpon>PeriodicStructStructListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Pillar\PillarDataRepetaView.xaml.cs">
+      <DependentUpon>PillarDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Pillar\PillarMeasureInfoView.xaml.cs">
+      <DependentUpon>PillarMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Pillar\PillarPointsListView.xaml.cs">
+      <DependentUpon>PillarPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Pillar\PillarResultView.xaml.cs">
+      <DependentUpon>PillarResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\ReportView.xaml.cs">
+      <DependentUpon>ReportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Step\StepDataRepetaView.xaml.cs">
+      <DependentUpon>StepDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Step\StepMeasureInfoView.xaml.cs">
+      <DependentUpon>StepMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Step\StepPointsListView.xaml.cs">
+      <DependentUpon>StepPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Step\StepResultView.xaml.cs">
+      <DependentUpon>StepResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Thickness\ThicknessCrossSectionView.xaml.cs">
+      <DependentUpon>ThicknessCrossSectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Thickness\ThicknessDataRepetaView.xaml.cs">
+      <DependentUpon>ThicknessDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Thickness\ThicknessLayersInfoView.xaml.cs">
+      <DependentUpon>ThicknessLayersInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Thickness\ThicknessPointsListView.xaml.cs">
+      <DependentUpon>ThicknessPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Thickness\ThicknessResultView.xaml.cs">
+      <DependentUpon>ThicknessResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Topography\TopographyPointsListView.xaml.cs">
+      <DependentUpon>TopographyPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Topography\TopographyResultView.xaml.cs">
+      <DependentUpon>TopographyResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Topography\TopographyMeasureInfoView.xaml.cs">
+      <DependentUpon>TopographyMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Topography\TopographyDataRepetaView.xaml.cs">
+      <DependentUpon>TopographyDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Trench\TrenchDataRepetaView.xaml.cs">
+      <DependentUpon>TrenchDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Trench\TrenchMeasureInfoView.xaml.cs">
+      <DependentUpon>TrenchMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Trench\TrenchPointsListView.xaml.cs">
+      <DependentUpon>TrenchPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Trench\TrenchResultView.xaml.cs">
+      <DependentUpon>TrenchResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Tsv\Copla\BestFitPlaneView.xaml.cs">
+      <DependentUpon>BestFitPlaneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\HeatMap\DieMapView.xaml.cs">
+      <DependentUpon>DieMapView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Tsv\TsvPointsListView.xaml.cs">
+      <DependentUpon>TsvPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Tsv\TsvDataRepetaView.xaml.cs">
+      <DependentUpon>TsvDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Tsv\TsvDetailMeasureInfoView.xaml.cs">
+      <DependentUpon>TsvDetailMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\HeatMap\MetroHeatMapView.xaml.cs">
+      <DependentUpon>MetroHeatMapView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Tsv\TsvResultView.xaml.cs">
+      <DependentUpon>TsvResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Common\ThumbnailViewerView.xaml.cs">
+      <DependentUpon>ThumbnailViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\Arrow.xaml.cs">
+      <DependentUpon>Arrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\BowViewer.xaml.cs">
+      <DependentUpon>BowViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\ScanDirectionViewer.xaml.cs">
+      <DependentUpon>ScanDirectionViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\SimpleArrow.xaml.cs">
+      <DependentUpon>SimpleArrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\StepViewer.xaml.cs">
+      <DependentUpon>StepViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\DepthViewer.xaml.cs">
+      <DependentUpon>DepthViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Thickness\ThicknessMeasureInfoView.xaml.cs">
+      <DependentUpon>ThicknessMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Warp\WarpDisplay.xaml.cs">
+      <DependentUpon>WarpDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\WarpViewer.xaml.cs">
+      <DependentUpon>WarpViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\UserControls\WidthLengthViewer.xaml.cs">
+      <DependentUpon>WidthLengthViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Warp\RpdMeasureInfoView.xaml.cs">
+      <DependentUpon>RpdMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Warp\WarpDataRepetaView.xaml.cs">
+      <DependentUpon>WarpDataRepetaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Warp\WarpMeasureInfoView.xaml.cs">
+      <DependentUpon>WarpMeasureInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Warp\WarpPointsListView.xaml.cs">
+      <DependentUpon>WarpPointsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\WaferDetail\Warp\WarpResultView.xaml.cs">
+      <DependentUpon>WarpResultView.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Stats\Bow\BowStatsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Stats\Bow\BowStatsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Stats\EdgeTrim\EdgeTrimStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\EdgeTrim\EdgeTrimStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Nanotopo\NanotopoStatsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Stats\Nanotopo\NanotopoStatsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Stats\PeriodicStruct\PeriodicStructStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\PeriodicStruct\PeriodicStructStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Pillar\PillarStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Pillar\PillarStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Step\StepStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Step\StepStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Thickness\ThicknessStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Thickness\ThicknessStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Topography\TopographyStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Topography\TopographyStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Trench\TrenchStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Trench\TrenchStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Tsv\TsvStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Warp\WarpStatsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Stats\Warp\WarpStatsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Bow\BowDataRepetaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Bow\BowMeasureInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Bow\BowPointsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Bow\BowResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Common\PointLocation\PointLocationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Common\MeasureType\MeasureTypeCategoriesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Common\MetroMeasureInfoHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Common\PointNavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\EdgeTrim\EdgeTrimResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\EdgeTrim\EdgeTrimMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\EdgeTrim\EdgeTrimDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\EdgeTrim\EdgeTrimPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Nanotopo\NanotopoPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Nanotopo\NanotopoResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Nanotopo\NanotopoMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Nanotopo\NanotopoDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\PeriodicStruct\PeriodicStructDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\PeriodicStruct\PeriodicStructMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\PeriodicStruct\PeriodicStructPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\PeriodicStruct\PeriodicStructResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\PeriodicStruct\PeriodicStructStructListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Pillar\PillarDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Pillar\PillarMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Pillar\PillarPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Pillar\PillarResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\ReportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Step\StepDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Step\StepMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Step\StepPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Step\StepResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Thickness\ThicknessCrossSectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Thickness\ThicknessDataRepetaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Thickness\ThicknessLayersInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Thickness\ThicknessPointsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Thickness\ThicknessResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Topography\TopographyPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Topography\TopographyResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Topography\TopographyMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Topography\TopographyDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Trench\TrenchDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Trench\TrenchMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Trench\TrenchPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Trench\TrenchResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Tsv\Copla\BestFitPlaneView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Common\HeatMap\DieMapView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Tsv\TsvPointsListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Tsv\TsvDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Tsv\TsvDetailMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Common\HeatMap\MetroHeatMapView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Tsv\TsvResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Common\ThumbnailViewerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\Arrow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\BowViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\ScanDirectionViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\SimpleArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\StepViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\DepthViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Thickness\ThicknessMeasureInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Warp\WarpDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\WarpViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\UserControls\WidthLengthViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Warp\RpdMeasureInfoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Warp\WarpDataRepetaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\WaferDetail\Warp\WarpMeasureInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Warp\WarpPointsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\WaferDetail\Warp\WarpResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Format\UnitySC.Shared.Display.Metro\UnitySC.Shared.Display.Metro.csproj">
+      <Project>{bd4440f5-8d16-4609-88c0-f643f583921b}</Project>
+      <Name>UnitySC.Shared.Display.Metro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Format\UnitySC.Shared.Format.Base\UnitySC.Shared.Format.Base.csproj">
+      <Project>{9c64dc4b-5dfb-4e28-8c2e-c5907b6d729f}</Project>
+      <Name>UnitySC.Shared.Format.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Format\UnitySC.Shared.Format.Metro\UnitySC.Shared.Format.Metro.csproj">
+      <Project>{79893de6-6fe7-4dc0-b5c0-d451f8628a98}</Project>
+      <Name>UnitySC.Shared.Format.Metro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Format\UnitySC.Shared.Format.Helper\UnitySC.Shared.Format.Helper.csproj">
+      <Project>{35911960-2ea5-4505-ab61-c98d8b5345f7}</Project>
+      <Name>UnitySC.Shared.Format.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.Shared.ResultUI.Common\UnitySC.Shared.ResultUI.Common.csproj">
+      <Project>{6c556f34-16df-41df-badf-4fa14e52e1a2}</Project>
+      <Name>UnitySC.Shared.ResultUI.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="LightningChart">
+      <Version>12.0.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmDialogs">
+      <Version>9.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="UnitySC.Shared.Algos.CppWrapper">
+      <Version>1.0.1.6</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

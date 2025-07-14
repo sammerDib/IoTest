@@ -1,0 +1,52 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:viewLotWafer="clr-namespace:UnitySC.Result.CommonUI.View.LotWafer"
+	xmlns:viewMainResult="clr-namespace:UnitySC.Result.CommonUI.View"
+	xmlns:viewSearch="clr-namespace:UnitySC.Result.CommonUI.View.Search"
+	xmlns:viewWindowWafer="clr-namespace:UnitySC.Result.CommonUI.View.Wafers"
+	xmlns:vm="clr-namespace:UnitySC.Result.CommonUI.ViewModel"
+	xmlns:vmLotWafer="clr-namespace:UnitySC.Result.CommonUI.ViewModel.LotWafer"
+	xmlns:vmMainResult="clr-namespace:UnitySC.Result.CommonUI.ViewModel"
+	xmlns:vmSearch="clr-namespace:UnitySC.Result.CommonUI.ViewModel.Search"
+	xmlns:vmWafers="clr-namespace:UnitySC.Result.CommonUI.ViewModel.Wafers">
+
+	<ResourceDictionary.MergedDictionaries>
+		<!--  Converters  -->
+		<ResourceDictionary Source="Converter/ResultConverter.xaml" />
+
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.ASO;component/DataTemplates.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.HAZE;component/DataTemplates.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Klarf;component/DataTemplates.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/DataTemplates.xaml" />
+
+	</ResourceDictionary.MergedDictionaries>
+
+	<DataTemplate DataType="{x:Type vmMainResult:MainResultVM}">
+		<viewMainResult:MainResultView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vmLotWafer:LotWafersVM}">
+		<viewLotWafer:LotWafersView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vmWafers:WaferPageVM}">
+		<viewWindowWafer:WaferPageView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vmSearch:SearchViewModel}">
+		<viewSearch:SearchView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vmSearch:DisplayViewModel}">
+		<viewSearch:DisplayView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vmSearch:SettingsPageVM}">
+		<viewSearch:ViewerSettings />
+	</DataTemplate>
+
+	<vm:ViewModelLocator x:Key="Locator" />
+
+</ResourceDictionary>

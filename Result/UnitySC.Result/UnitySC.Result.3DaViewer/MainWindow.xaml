@@ -1,0 +1,82 @@
+﻿<Window
+	x:Class="UnitySC.Result._3DaViewer.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:imageViewer="clr-namespace:UnitySC.Shared.ResultUI.Common.View.ImageViewer;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:local="clr-namespace:UnitySC.Result._3DaViewer"
+    xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	x:Name="Window"
+	Title="3Da Viewer"
+	Width="1024"
+	Height="768"
+	d:DataContext="{d:DesignInstance local:MainWindowVM}"
+    md:DialogServiceViews.IsRegistered="True"
+	mc:Ignorable="d">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid>
+		<Grid IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBooleanConverter}}">
+			<imageViewer:MatrixViewerView DataContext="{Binding MatrixViewer}">
+				<imageViewer:MatrixViewerView.AdditionalContent>
+					<GroupBox
+						Margin="0,0,5,5"
+						DataContext="{Binding Source={x:Static local:App.Instance}, Path=MainWindowViewModel}"
+						Header="File">
+						<DockPanel>
+							<controls:ImageButton
+								Width="30"
+								Height="30"
+								Padding="2"
+								Command="{Binding OpenPreviousFileCommand}"
+								DockPanel.Dock="Left"
+								ImageGeometry="{StaticResource ArrowLeftGeometry}"
+								ImageGeometryBrush="{StaticResource IconsColor}"
+								Style="{StaticResource LeftImageButton}" />
+							<controls:ImageButton
+								Width="30"
+								Height="30"
+								Padding="2"
+								Command="{Binding OpenNextFileCommand}"
+								DockPanel.Dock="Right"
+								ImageGeometry="{StaticResource ArrowRightGeometry}"
+								ImageGeometryBrush="{StaticResource IconsColor}"
+								Style="{StaticResource RightImageButton}" />
+							<Grid>
+								<Button
+									Margin="0,0"
+									Background="Transparent"
+									BorderThickness="0,1"
+									Command="{Binding OpenFileCommand}"
+									Content="{Binding CurrentFileName}">
+									<Button.Style>
+										<Style
+											BasedOn="{StaticResource {x:Type ButtonBase}}"
+											TargetType="{x:Type Button}">
+											<Setter Property="Border.CornerRadius" Value="0,0,0,0" />
+										</Style>
+									</Button.Style>
+								</Button>
+							</Grid>
+
+						</DockPanel>
+					</GroupBox>
+				</imageViewer:MatrixViewerView.AdditionalContent>
+			</imageViewer:MatrixViewerView>
+		</Grid>
+		<xctk:BusyIndicator
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			d:IsHidden="true"
+			BusyContent="{Binding BusyReason}"
+			IsBusy="{Binding IsBusy, FallbackValue=True}" />
+	</Grid>
+</Window>

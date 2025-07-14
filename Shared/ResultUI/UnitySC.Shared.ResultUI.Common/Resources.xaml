@@ -1,0 +1,107 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:acquisitionView="clr-namespace:UnitySC.Shared.ResultUI.Common.View.Acquisition"
+	xmlns:acquisitionViewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.Acquisition"
+	xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Common.Converters"
+	xmlns:defectView="clr-namespace:UnitySC.Shared.ResultUI.Common.View.Defect"
+	xmlns:defectViewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.Defect"
+	xmlns:dummyView="clr-namespace:UnitySC.Shared.ResultUI.Common.View.Dummy"
+	xmlns:dummyViewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.Dummy"
+	xmlns:enum="clr-namespace:UnitySC.DataAccess.Dto.ModelDto.Enum;assembly=UnitySC.DataAccess.Dto"
+	xmlns:imageViewerView="clr-namespace:UnitySC.Shared.ResultUI.Common.View.ImageViewer"
+	xmlns:imageViewerViewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.ImageViewer"
+	xmlns:view="clr-namespace:UnitySC.Shared.ResultUI.Common.View"
+	xmlns:viewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel">
+
+	<ResourceDictionary.MergedDictionaries>
+		<!--  Styles  -->
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+		<!--  New Styles  -->
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources/ZoomBoxResources.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Controls/WaferResultHeader.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Controls/LotStatsHeader.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Controls/AdvancedTabControl.xaml" />
+
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Components/Generic/Search/Controls/SearchBar.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Components/Generic/Sort/Controls/SortingButton.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Components/Generic/Filters/Controls/FilterBox.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Components/Generic/Filters/Filters.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Components/DataTree/DataTree.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<converters:LotViewTypeToImageResourceConverter x:Key="LotViewTypeToImageResourceConverter" />
+	<converters:InvokeFuncMultiConverter x:Key="InvokeFuncMultiConverter" />
+	<converters:EqualityConverter x:Key="EqualityConverter" />
+	<converters:NullableIntegerToDoubleConverter x:Key="NullableIntegerToDoubleConverter" />
+	<converters:CountIsZeroToVisibilityConverter x:Key="CountIsZeroToVisibilityConverter" />
+
+	<DataTemplate
+		x:Key="ResultStateCellTemplate"
+		DataType="{x:Type enum:ResultState}">
+		<StackPanel Orientation="Horizontal">
+			<Ellipse
+				x:Name="Ellipse"
+				Width="7"
+				Height="7"
+				Margin="0,0,5,0" />
+			<TextBlock Text="{Binding}" />
+		</StackPanel>
+		<DataTemplate.Triggers>
+			<DataTrigger Binding="{Binding}" Value="{x:Static enum:ResultState.Error}">
+				<Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource WaferErrorColor}" />
+			</DataTrigger>
+			<DataTrigger Binding="{Binding}" Value="{x:Static enum:ResultState.NotProcess}">
+				<Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource WaferBackgroundColor}" />
+			</DataTrigger>
+			<DataTrigger Binding="{Binding}" Value="{x:Static enum:ResultState.Ok}">
+				<Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource HighLightBrush}" />
+			</DataTrigger>
+			<DataTrigger Binding="{Binding}" Value="{x:Static enum:ResultState.Partial}">
+				<Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource PartialResultBorderColor}" />
+			</DataTrigger>
+			<DataTrigger Binding="{Binding}" Value="{x:Static enum:ResultState.Rework}">
+				<Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource ReworkResultBorderColor}" />
+			</DataTrigger>
+			<DataTrigger Binding="{Binding}" Value="{x:Static enum:ResultState.Reject}">
+				<Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource RejectResultBorderColor}" />
+			</DataTrigger>
+		</DataTemplate.Triggers>
+	</DataTemplate>
+
+	<!--  Result Wafer View  -->
+	<DataTemplate DataType="{x:Type dummyViewModel:DummyResultVM}">
+		<dummyView:DummyResultView />
+	</DataTemplate>
+
+	<!--  Lot Stats View  -->
+	<DataTemplate DataType="{x:Type dummyViewModel:DummyStatsVM}">
+		<dummyView:DummyStatsView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type acquisitionViewModel:FullImageVM}">
+		<acquisitionView:FullImageView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type defectViewModel:DefectCategoryVM}">
+		<defectView:DefectCategoriesView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type viewModel:ImageZoneVM}">
+		<view:ImageZoneView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type viewModel:ThumbnailsDefectsVM}">
+		<view:ThumbnailsDefectsView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type imageViewerViewModel:ImageViewerViewModel}">
+		<imageViewerView:ImageViewerView />
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type imageViewerViewModel:MatrixViewerViewModel}">
+		<imageViewerView:MatrixViewerView />
+	</DataTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,178 @@
+<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:dataTemplateSelectors="clr-namespace:UnitySC.Shared.ResultUI.Common.DataTemplateSelectors"
+	xmlns:filterControls="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.Generic.Filters.Controls"
+	xmlns:filters="clr-namespace:UnitySC.Shared.ResultUI.Common.Components.Generic.Filters"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Converters/BasicConverter.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<DataTemplate
+		x:Key="FilterCollectionTemplate"
+		DataType="{x:Type filters:IFilterCollection}">
+		<filterControls:FilterBox
+			Title="{Binding Name}"
+			Margin="0,5,0,10"
+			ItemsSource="{Binding PossibleValues}"
+			SelectedItems="{Binding SelectedValues}">
+			<filterControls:FilterBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock
+						IsEnabled="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"
+						IsHitTestVisible="False"
+						Text="{Binding}" />
+				</DataTemplate>
+			</filterControls:FilterBox.ItemTemplate>
+			<filterControls:FilterBox.SelectedItemTemplate>
+				<DataTemplate>
+					<DockPanel>
+						<Path
+							Height="10"
+							Margin="5,0"
+							Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+							DockPanel.Dock="Right"
+							Fill="{Binding Path=(TextElement.Foreground), RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+							Stretch="Uniform" />
+						<TextBlock
+							Margin="5,2"
+							VerticalAlignment="Center"
+							IsHitTestVisible="True"
+							Text="{Binding}"
+							TextTrimming="CharacterEllipsis"
+							ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+					</DockPanel>
+				</DataTemplate>
+			</filterControls:FilterBox.SelectedItemTemplate>
+		</filterControls:FilterBox>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="FilterPeriodTemplate"
+		DataType="{x:Type filters:IFilterPeriod}">
+		<StackPanel Margin="0,5,0,10">
+			<TextBlock
+				Name="Header"
+				Padding="5,4,5,0"
+				VerticalAlignment="Top"
+				Background="White"
+				Foreground="Black"
+				IsHitTestVisible="False"
+				Text="{Binding Name}" />
+			<TextBlock
+				Padding="5,4,5,0"
+				VerticalAlignment="Top"
+				Foreground="Black"
+				IsHitTestVisible="False"
+				Text="From" />
+			<DockPanel>
+				<CheckBox
+					Margin="15,0,0,0"
+					VerticalAlignment="Center"
+					DockPanel.Dock="Right"
+					IsChecked="{Binding StartDateUsed}" />
+				<StackPanel
+					IsEnabled="{Binding StartDateUsed}"
+					Orientation="Vertical">
+					<DatePicker SelectedDate="{Binding StartDate}" />
+					<xctk:TimePicker
+						Margin="0,2,0,0"
+						Visibility="{Binding UseHoursAndMinutes, Converter={StaticResource BooleanToVisibilityConverter}}"
+						Value="{Binding StartTime}" />
+				</StackPanel>
+			</DockPanel>
+			<TextBlock
+				Padding="5,4,5,0"
+				VerticalAlignment="Top"
+				Foreground="Black"
+				IsHitTestVisible="False"
+				Text="to" />
+			<DockPanel>
+				<CheckBox
+					Margin="15,0,0,0"
+					VerticalAlignment="Center"
+					DockPanel.Dock="Right"
+					IsChecked="{Binding EndDateUsed}" />
+				<StackPanel
+					IsEnabled="{Binding EndDateUsed}"
+					Orientation="Vertical">
+					<DatePicker SelectedDate="{Binding EndDate}" />
+					<xctk:TimePicker
+						Margin="0,2,0,0"
+						Visibility="{Binding UseHoursAndMinutes, Converter={StaticResource BooleanToVisibilityConverter}}"
+						Value="{Binding EndTime}" />
+				</StackPanel>
+			</DockPanel>
+		</StackPanel>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="FilterRangeTemplate"
+		DataType="{x:Type filters:IFilterRange}">
+		<Grid Margin="0,5,0,10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="150" />
+			</Grid.ColumnDefinitions>
+			<TextBlock
+				Name="Header"
+				VerticalAlignment="Center"
+				Background="White"
+				Foreground="Black"
+				IsHitTestVisible="False"
+				Text="{Binding Name}"
+				TextTrimming="CharacterEllipsis" />
+			<UniformGrid
+				Grid.Column="1"
+				Rows="1">
+				<!--  dependencyObjects:Watermark.Text="{Binding TheoreticalMinimumValue}"  -->
+				<TextBox
+					Margin="10,0,0,0"
+					HorizontalAlignment="Stretch"
+					DockPanel.Dock="Top"
+					Text="{Binding MinimumValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+				<!--  dependencyObjects:Watermark.Text="{Binding TheoreticalMaximumValue}"  -->
+				<TextBox
+					Margin="10,0,0,0"
+					HorizontalAlignment="Stretch"
+					DockPanel.Dock="Top"
+					Text="{Binding MaximumValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+			</UniformGrid>
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="FilterSwitchTemplate"
+		DataType="{x:Type filters:IFilterSwitch}">
+		<DockPanel
+			x:Name="DockPanel"
+			Margin="0,5,0,10">
+			<CheckBox
+				HorizontalAlignment="Right"
+				VerticalAlignment="Center"
+				DockPanel.Dock="Right"
+				Foreground="Black"
+				IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+			<TextBlock
+				Padding="0,0,5,0"
+				VerticalAlignment="Center"
+				IsHitTestVisible="False"
+				Text="{Binding Name}" />
+		</DockPanel>
+		<DataTemplate.Triggers>
+			<DataTrigger Binding="{Binding IsConstant}" Value="True">
+				<Setter TargetName="DockPanel" Property="Visibility" Value="Collapsed" />
+			</DataTrigger>
+		</DataTemplate.Triggers>
+	</DataTemplate>
+
+	<dataTemplateSelectors:GenericDataTemplateSelector x:Key="FilterDataTemplateSelector">
+		<StaticResource ResourceKey="FilterCollectionTemplate" />
+		<StaticResource ResourceKey="FilterPeriodTemplate" />
+		<StaticResource ResourceKey="FilterRangeTemplate" />
+		<StaticResource ResourceKey="FilterSwitchTemplate" />
+	</dataTemplateSelectors:GenericDataTemplateSelector>
+
+</ResourceDictionary>

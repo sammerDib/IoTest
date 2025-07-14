@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FAE3F3BC-BCEA-44A0-A253-8EECB04AF633}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>UnitySC.PP.AdC.Service.Host</RootNamespace>
+    <AssemblyName>UnitySC.PP.AdC.Service.Host</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdCServer.cs" />
+    <Compile Include="AdCWindowsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AdCWindowsService.Designer.cs">
+      <DependentUpon>AdCWindowsService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Configuration\ToolCommander\UnitySc.acc" />
+    <None Include="Configuration\ToolCommander\UnitySC.vdkx" />
+    <None Include="log.AdC.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="log.ADCServiceHost.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configuration\PPConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\PMConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5c0a-4f7e-a355-8d03680b3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Dataflow\Service\UnitySC.Dataflow.Service.Interface\UnitySC.Dataflow.Service.Interface.csproj">
+      <Project>{629DB6A1-8A0E-40A5-B1B4-E2F5017D2672}</Project>
+      <Name>UnitySC.Dataflow.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Implementation\UnitySC.PM.Shared.UserManager.Service.Implementation.csproj">
+      <Project>{72d98d6f-3dc3-4148-a141-b2ad4c17c9db}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Interface\UnitySC.PM.Shared.UserManager.Service.Interface.csproj">
+      <Project>{606809FE-7DFF-4ED0-82A9-EEB525A97BD8}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PP.Shared\UnitySC.PP.Shared.csproj">
+      <Project>{0823cc91-c37b-4afa-8b42-9395592b1844}</Project>
+      <Name>UnitySC.PP.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdCv10\ADC.Ressources\ADC.Ressources.csproj">
+      <Project>{ea3291cc-3303-4703-983d-3bd499a7e49e}</Project>
+      <Name>ADC.Ressources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdCv10\ADCConfiguration\ADCConfiguration.csproj">
+      <Project>{1b2d19f7-32c6-4e62-aa13-6d8a8c169c13}</Project>
+      <Name>ADCConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdCv10\ADCEngine\ADCEngine.csproj">
+      <Project>{52513f8e-c8b8-4663-b1ff-bec743e9a14c}</Project>
+      <Name>ADCEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdCv10\MergeContext\AcquisitionAdcExchange\AcquisitionAdcExchange.csproj">
+      <Project>{3c26d6d9-8b32-447f-8e21-e65e81b5ed29}</Project>
+      <Name>AcquisitionAdcExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdCv10\MergeContext\MergeContext\MergeContext.csproj">
+      <Project>{1cc7cc6a-8d00-4ded-9277-b63422938c1d}</Project>
+      <Name>MergeContext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PP.AdC.Service.Implementation\UnitySC.PP.ADC.Service.Implementation.csproj">
+      <Project>{fbe63115-a78e-49c3-a3dd-e5c5c3aa61f3}</Project>
+      <Name>UnitySC.PP.ADC.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PP.AdC.Service.Interface\UnitySC.PP.ADC.Service.Interface.csproj">
+      <Project>{e26aedf5-7b90-4610-a77c-cca2207308f5}</Project>
+      <Name>UnitySC.PP.ADC.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

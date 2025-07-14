@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="EFEM">
+      <Types />
+      <Packages>
+        <Package Name="Rorze">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="IoModule">
+                  <Types />
+                  <Packages>
+                    <Package Name="RC550">
+                      <Types />
+                      <Packages>
+                        <Package Name="Dio0">
+                          <Types>
+                            <CSharpType PlatformType="UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.Driver.Enums.IoModuleInError, UnitySC.EFEM.Rorze, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                            <CSharpType PlatformType="UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.Driver.Enums.ErrorCode, UnitySC.EFEM.Rorze, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                            <DeviceType Name="Dio0" IsAbstract="false" Uri="UnitySC.EFEM.Rorze|Devices\IoModule\RC550\Dio0\Dio0.device|UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.Dio0" SuperTypeUri="UnitySC.EFEM.Rorze|Devices\IoModule\GenericRC5xx\GenericRC5xx.device|UnitySC.EFEM.Rorze.Devices.IoModule.GenericRC5xx.GenericRC5xx" BehaviorImplementation="UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.Dio0, UnitySC.EFEM.Rorze">
+                              <Interruptions />
+                              <Commands>
+                                <Command Name="SetFfuSpeed" Type="Void" Timeout="60 s">
+                                  <Documentation>Range is 300 ~ 1650 rpm, or 0 to stop FFU</Documentation>
+                                  <Parameters>
+                                    <Parameter Name="setPoint" Type="RotationalSpeed" Unit="UnitsNet.Units.RotationalSpeedUnit.RevolutionPerMinute" />
+                                  </Parameters>
+                                  <PreConditions>
+                                    <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                                    <Condition BehaviorImplementation="UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.Conditions.IsFfuSpeedInRange, UnitySC.EFEM.Rorze" />
+                                  </PreConditions>
+                                  <PostConditions />
+                                </Command>
+                              </Commands>
+                              <Statuses>
+                                <Status Name="IoModuleInErrorDescription" Type="UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.IoModuleInError" />
+                                <Status Name="ErrorDescription" Type="UnitySC.EFEM.Rorze.Devices.IoModule.RC550.Dio0.ErrorCode" />
+                                <Status Name="MeanPressure" Type="Pressure" IsLoggingActivated="false">
+                                  <Documentation>Mean of all pressure sensors</Documentation>
+                                </Status>
+                                <Status Name="I_DvrAlarm" Type="Boolean" />
+                                <Status Name="FanSpeed" Type="RotationalSpeed" Unit="UnitsNet.Units.RotationalSpeedUnit.RevolutionPerMinute" Category="FFU">
+                                  <Documentation>Average value of all fans connected to FFU</Documentation>
+                                </Status>
+                                <Status Name="I_FANDetection1" Type="Boolean" Category="FFU" />
+                                <Status Name="I_FANDetection2" Type="Boolean" Category="FFU" />
+                                <Status Name="I_FAN1Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN2Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN3Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN4Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN5Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN6Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN7Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN8Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN9Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN10Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN11Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN12Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN13Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN14Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN15Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN16Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN17Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN18Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN19Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN20Rotating" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN1AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN2AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN3AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN4AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN5AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN6AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN7AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN8AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN9AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN10AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN11AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN12AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN13AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN14AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN15AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN16AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN17AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN18AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN19AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_FAN20AlarmOccurred" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor1_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor1_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor2_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor2_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor3_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor3_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor4_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor4_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor5_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor5_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor6_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor6_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor7_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor7_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor8_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor8_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor9_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor9_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor10_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor10_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor11_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor11_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor12_WithinUpperLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_Sensor12_WithinLowerLimitThresholdValue" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_ControllerDirectInput_IN0" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_ControllerDirectInput_IN1" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_ControllerDirectInput_IN2" Type="Boolean" Category="General Inputs" />
+                                <Status Name="I_ControllerDirectInput_IN3" Type="Boolean" Category="General Inputs" />
+                                <Status Name="O_SystemIsReady" Type="Boolean" Category="General Outputs" />
+                                <Status Name="O_BatchAlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" />
+                                <Status Name="O_Fan_OperationStop_AllUsingFans_1ShotOutput" Type="Boolean" Category="General Outputs" />
+                                <Status Name="O_Fan_OperationStart_AllUsingFans_1ShotOutput" Type="Boolean" Category="General Outputs" />
+                                <Status Name="O_FAN1_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN2_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN3_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN4_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN5_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN6_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN7_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN8_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN9_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN10_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN11_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN12_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN13_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN14_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN15_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN16_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN17_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN18_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN19_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN20_OperationStart_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN1_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN2_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN3_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN4_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN5_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN6_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN7_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN8_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN9_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN10_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN11_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN12_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN13_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN14_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN15_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN16_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN17_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN18_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN19_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN20_AlarmClear_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN1_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN2_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN3_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN4_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN5_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN6_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN7_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN8_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN9_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN10_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN11_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN12_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN13_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN14_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN15_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN16_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN17_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN18_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN19_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="O_FAN20_OperationStop_1ShotOutput" Type="Boolean" Category="General Outputs" IsLoggingActivated="false" />
+                                <Status Name="I_Lp1_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp1_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp1_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp1_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp1_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp1_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp1_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp2_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp3_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp4_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp5_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp6_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp7_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Valid" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Cs_0" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Cs_1" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Tr_Req" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Busy" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Compt" Type="Boolean" Category="E84" />
+                                <Status Name="I_Lp8_Cont" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp1_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp1_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp1_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp1_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp1_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp2_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp2_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp2_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp2_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp2_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp3_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp3_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp3_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp3_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp3_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp4_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp4_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp4_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp4_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp4_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp5_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp5_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp5_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp5_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp5_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp6_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp6_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp6_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp6_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp6_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp7_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp7_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp7_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp7_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp7_Es" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp8_L_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp8_U_Req" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp8_Ready" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp8_Ho_Avbl" Type="Boolean" Category="E84" />
+                                <Status Name="O_Lp8_Es" Type="Boolean" Category="E84" />
+                                <Status Name="PlacementSensorALoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorBLoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorCLoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorDLoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor1LoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor2LoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor3LoadPort1" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorALoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorBLoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorCLoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorDLoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor1LoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor2LoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor3LoadPort2" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorALoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorBLoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorCLoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorDLoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor1LoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor2LoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor3LoadPort3" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorALoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorBLoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorCLoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="PlacementSensorDLoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor1LoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor2LoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="WaferProtrudeSensor3LoadPort4" Type="Boolean" Category="Load Ports" />
+                                <Status Name="Alarm" Type="Boolean" />
+                              </Statuses>
+                              <Alarms />
+                              <Interlocks />
+                            </DeviceType>
+                          </Types>
+                          <Packages />
+                          <Equipments />
+                        </Package>
+                      </Packages>
+                      <Equipments />
+                    </Package>
+                  </Packages>
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

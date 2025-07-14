@@ -1,0 +1,432 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6C556F34-16DF-41DF-BADF-4FA14E52E1A2}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>UnitySC.Shared.ResultUI.Common</RootNamespace>
+    <AssemblyName>UnitySC.Shared.ResultUI.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\DataTree\Controls\DataTree.cs" />
+    <Compile Include="Components\DataTree\Controls\DataTreeItem.cs" />
+    <Compile Include="Components\DataTree\Controls\DataTreeItemsControl.cs" />
+    <Compile Include="Components\DataTree\DataTreeSource.cs" />
+    <Compile Include="Components\DataTree\DragDrop\DragDropAction.cs" />
+    <Compile Include="Components\DataTree\DragDrop\DragDropActionParameter.cs" />
+    <Compile Include="Components\DataTree\DragDrop\DragDropEngine.cs" />
+    <Compile Include="Components\DataTree\Events\KeyGestureAction.cs" />
+    <Compile Include="Components\DataTree\Factory\DelegateTreeNodeFactory.cs" />
+    <Compile Include="Components\DataTree\Factory\TreeNodeFactory.cs" />
+    <Compile Include="Components\DataTree\Interfaces\IDataTreeSource.cs" />
+    <Compile Include="Components\DataTree\Interfaces\ITreeNode.cs" />
+    <Compile Include="Components\DataTree\TreeNode.cs" />
+    <Compile Include="Components\DataTree\TreeNodeBase.cs" />
+    <Compile Include="Components\DataTree\Utilities\Converters\ITreeNodeToLeftMarginConverter.cs" />
+    <Compile Include="Components\DataTree\Utilities\Extensions\ItemsControlExtensions.cs" />
+    <Compile Include="Components\Generic\Filters\Controls\FilterBox.cs" />
+    <Compile Include="Components\Generic\Filters\Filter.cs" />
+    <Compile Include="Components\Generic\Filters\FilterCollection.cs" />
+    <Compile Include="Components\Generic\Filters\FilterEngine.cs" />
+    <Compile Include="Components\Generic\Filters\FilterPeriod.cs" />
+    <Compile Include="Components\Generic\Filters\FilterRange.cs" />
+    <Compile Include="Components\Generic\Filters\FiltersView.xaml.cs">
+      <DependentUpon>FiltersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Generic\Filters\FilterSwitch.cs" />
+    <Compile Include="Components\Generic\Search\Controls\SearchBar.cs" />
+    <Compile Include="Components\Generic\Search\SearchDefinition.cs" />
+    <Compile Include="Components\Generic\Search\SearchEngine.cs" />
+    <Compile Include="Components\Generic\Sort\Controls\SortingButton.cs" />
+    <Compile Include="Components\Generic\Sort\SortDefinition.cs" />
+    <Compile Include="Components\Generic\Sort\SortEngine.cs" />
+    <Compile Include="Controls\LotStatsHeader.cs" />
+    <Compile Include="Controls\AdvancedTabControl.cs" />
+    <Compile Include="Controls\WaferResultHeader.cs" />
+    <Compile Include="Converters\DoubleToPercentConverter.cs" />
+    <Compile Include="Converters\EqualityConverter.cs" />
+    <Compile Include="Converters\InvokeFuncMultiConverter.cs" />
+    <Compile Include="Converters\LenghtToStringMultiConverter.cs" />
+    <Compile Include="Converters\LengthToStringConverter.cs" />
+    <Compile Include="Converters\LengthToleranceToStringConverter.cs" />
+    <Compile Include="Converters\LotViewTypeToImageResourceConverter.cs" />
+    <Compile Include="Converters\MarkupConvert.cs" />
+    <Compile Include="Converters\MarkupMultiConvert.cs" />
+    <Compile Include="Converters\MultiplyDoubleConverter.cs" />
+    <Compile Include="Converters\NullableIntegerToDoubleConverter.cs" />
+    <Compile Include="Converters\CountIsZeroToVisibilityConverter.cs" />
+    <Compile Include="Converters\ToleranceToStringConverter.cs" />
+    <Compile Include="DataTemplateSelectors\EqualityDataTemplateSelector.cs" />
+    <Compile Include="DataTemplateSelectors\GenericDataTemplateSelector.cs" />
+    <Compile Include="Enums\HistogramType.cs" />
+    <Compile Include="Enums\LotView.cs" />
+    <Compile Include="Helpers\MatrixDefinitionHelper.cs" />
+    <Compile Include="Helpers\LineHelper.cs" />
+    <Compile Include="Helpers\ScreenshotHelper.cs" />
+    <Compile Include="Helpers\StringFormatHelper.cs" />
+    <Compile Include="Markups\EnumCollectionExtension.cs" />
+    <Compile Include="Message\DefectActionMessage.cs" />
+    <Compile Include="Message\DisplayErrorMessage.cs" />
+    <Compile Include="Message\DisplayJobRunIterNameMessage.cs" />
+    <Compile Include="Message\DisplayManageLotViewMessage.cs" />
+    <Compile Include="Message\DisplaySelectedResultFullNameMessage.cs" />
+    <Compile Include="Message\DisplaySelectedWaferDetaillNameMessage.cs" />
+    <Compile Include="Message\ResultsDisplayChangedMessage.cs" />
+    <Compile Include="Message\UpdateHiliteMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="StatsFactory.cs" />
+    <Compile Include="UserControls\StatsContainerView.xaml.cs">
+      <DependentUpon>StatsContainerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\Charts\Histograms\ColorMapHistogramChartVM.cs" />
+    <Compile Include="ViewModel\Charts\Profile\ProfileChart.cs" />
+    <Compile Include="ViewModel\Charts\ThreeDimensions\ThreeDimensionsChartVM.cs" />
+    <Compile Include="ViewModel\Charts\BarsAndLineCharts.cs" />
+    <Compile Include="ViewModel\Charts\DataInToleranceLineChart.cs" />
+    <Compile Include="ViewModel\Charts\DataInToleranceSeries.cs" />
+    <Compile Include="ViewModel\Charts\Histograms\AverageHistogramVM.cs" />
+    <Compile Include="ViewModel\Charts\Histograms\SlotDefectClassesHistogramVM.cs" />
+    <Compile Include="ViewModel\Charts\Histograms\TotalCumulationHistogramVM.cs" />
+    <Compile Include="ViewModel\Charts\Histograms\CumulationBySlotsHistogramVM.cs" />
+    <Compile Include="ViewModel\Charts\StackedArea\BoxWhiskerChart.cs" />
+    <Compile Include="ViewModel\Charts\StackedArea\StackedAreaChart.cs" />
+    <Compile Include="ViewModel\Defect\DefectCategoriesVM.cs" />
+    <Compile Include="ViewModel\Defect\DefectCategoryVM.cs" />
+    <Compile Include="ViewModel\Defect\DefectVM.cs" />
+    <Compile Include="ViewModel\Defect\DefectVMBase.cs" />
+    <Compile Include="ViewModel\Dialogs\GenericMvvmDialog.xaml.cs">
+      <DependentUpon>GenericMvvmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\Dialogs\GenericMvvmDialogViewModel.cs" />
+    <Compile Include="ViewModel\Dummy\DummyResultVM.cs" />
+    <Compile Include="ViewModel\Dummy\DummyStatsVM.cs" />
+    <Compile Include="ViewModel\Acquisition\FullImageVM.cs" />
+    <Compile Include="ViewModel\Export\ExportEntry.cs" />
+    <Compile Include="ViewModel\Export\ExportSimpleVM.cs" />
+    <Compile Include="ViewModel\ImageViewer\BaseMatrixViewerVM.cs" />
+    <Compile Include="ViewModel\ImageViewer\ImageViewerViewModel.cs" />
+    <Compile Include="ViewModel\ImageViewer\MatrixDefinition.cs" />
+    <Compile Include="ViewModel\ImageViewer\MatrixViewFinderVM.cs" />
+    <Compile Include="ViewModel\ImageViewer\ThreeDimensionsMatrixViewerVM.cs" />
+    <Compile Include="ViewModel\ImageViewer\TwoDimensionsMatrixViewerVM.cs" />
+    <Compile Include="Converters\DoubleMultiplyMultiConverter.cs" />
+    <Compile Include="Converters\DoubleSubstractionMultiConverer.cs" />
+    <Compile Include="ViewModel\Thumbnail.cs" />
+    <Compile Include="View\Export\ExportSimpleView.xaml.cs">
+      <DependentUpon>ExportSimpleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageViewer\TwoDimensionsMatrixProfileView.xaml.cs">
+      <DependentUpon>TwoDimensionsMatrixProfileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\ImageViewer\MatrixProfileVM.cs" />
+    <Compile Include="ViewModel\ImageViewer\MatrixRange.cs" />
+    <Compile Include="ViewModel\ImageViewer\MatrixViewerViewModel.cs" />
+    <Compile Include="ViewModel\LotViewHeaderVM.cs" />
+    <Compile Include="View\Acquisition\FullImageView.xaml.cs">
+      <DependentUpon>FullImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Export\ExportResultView.xaml.cs">
+      <DependentUpon>ExportResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\Export\ExportResultVM.cs" />
+    <Compile Include="View\GridStatsView.xaml.cs">
+      <DependentUpon>GridStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\GridStatsVM.cs" />
+    <Compile Include="ViewModel\HistogramVMBase.cs" />
+    <Compile Include="View\ImageViewer\MatrixViewerView.xaml.cs">
+      <DependentUpon>MatrixViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageViewer\MatrixViewFinderView.xaml.cs">
+      <DependentUpon>MatrixViewFinderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageViewer\ThreeDimensionsMatrixViewerView.xaml.cs">
+      <DependentUpon>ThreeDimensionsMatrixViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageViewer\TwoDimensionsMatrixViewerView.xaml.cs">
+      <DependentUpon>TwoDimensionsMatrixViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageZoneView.xaml.cs">
+      <DependentUpon>ImageZoneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\ImageZoneVM.cs" />
+    <Compile Include="ViewModel\LotStatsVM.cs" />
+    <Compile Include="ViewModel\ResultWaferVM.cs" />
+    <Compile Include="View\ThumbnailsDefectsView.xaml.cs">
+      <DependentUpon>ThumbnailsDefectsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\ThumbnailsDefectsVM.cs" />
+    <Compile Include="View\ThumbnailView.xaml.cs">
+      <DependentUpon>ThumbnailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\ThumbnailVM.cs" />
+    <Compile Include="View\Defect\DefectCategoriesView.xaml.cs">
+      <DependentUpon>DefectCategoriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Defect\DefectView.xaml.cs">
+      <DependentUpon>DefectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dummy\DummyResultView.xaml.cs">
+      <DependentUpon>DummyResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dummy\DummyStatsView.xaml.cs">
+      <DependentUpon>DummyStatsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImageViewer\ImageViewerView.xaml.cs">
+      <DependentUpon>ImageViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WaferStatsData.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Components\DataTree\DataTree.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\Generic\Filters\Controls\FilterBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\Generic\Filters\FiltersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\Generic\Filters\Filters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\Generic\Search\Controls\SearchBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\Generic\Sort\Controls\SortingButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AdvancedTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\LotStatsHeader.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\WaferResultHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ZoomBoxResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\StatsContainerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewModel\Dialogs\GenericMvvmDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Export\ExportSimpleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ImageViewer\TwoDimensionsMatrixProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Acquisition\FullImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Export\ExportResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\GridStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ImageViewer\MatrixViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageViewer\MatrixViewFinderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageViewer\ThreeDimensionsMatrixViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageViewer\TwoDimensionsMatrixViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ImageZoneView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ThumbnailsDefectsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ThumbnailView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Defect\DefectCategoriesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Defect\DefectView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Dummy\DummyResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Dummy\DummyStatsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ImageViewer\ImageViewerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Format\UnitySC.Shared.Format.Base\UnitySC.Shared.Format.Base.csproj">
+      <Project>{9c64dc4b-5dfb-4e28-8c2e-c5907b6d729f}</Project>
+      <Name>UnitySC.Shared.Format.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Format\UnitySC.Shared.Format.Helper\UnitySC.Shared.Format.Helper.csproj">
+      <Project>{35911960-2EA5-4505-AB61-C98D8B5345F7}</Project>
+      <Name>UnitySC.Shared.Format.Helper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="LightningChart">
+      <Version>12.0.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmDialogs">
+      <Version>9.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="VirtualizingWrapPanel">
+      <Version>2.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ViewModel\Dialogs\readme.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

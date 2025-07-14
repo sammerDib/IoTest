@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{97C741A4-6213-470B-9EB1-F19F61DF281C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.Shared.UI</RootNamespace>
+    <AssemblyName>UnitySC.PM.Shared.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Administration\DBMaintenance\AvailableDBBackupVM.cs" />
+    <Compile Include="Administration\DBMaintenance\DBMaintenanceView.xaml.cs">
+      <DependentUpon>DBMaintenanceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\DBMaintenance\DBMaintenanceVM.cs" />
+    <Compile Include="Administration\DBMaintenance\Menu.cs" />
+    <Compile Include="Administration\FDC\FDCMenu.cs" />
+    <Compile Include="Administration\FDC\FDCView.xaml.cs">
+      <DependentUpon>FDCView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\FDC\FDCItemViewModel.cs" />
+    <Compile Include="Administration\FDC\FDCActorViewModel.cs" />
+    <Compile Include="Administration\FDC\FDCViewModel.cs" />
+    <Compile Include="Administration\Log\LogAreaToImageConverter.cs" />
+    <Compile Include="Administration\Log\LogMenu.cs" />
+    <Compile Include="Administration\Log\LogToActionConverter.cs" />
+    <Compile Include="Administration\Log\LogView.xaml.cs">
+      <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Log\LogViewModel.cs" />
+    <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Connection\ConnectionWindow.xaml.cs">
+      <DependentUpon>ConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Connection\ConnectionViewModel.cs" />
+    <Compile Include="Main\ConnexionStateForActor.cs" />
+    <Compile Include="Main\IBusy.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Proxy\ClientFDCsSupervisor.cs" />
+    <Compile Include="Proxy\ControllersSupervisor.cs" />
+    <Compile Include="Hardware\Controller\ControllersVM.cs" />
+    <Compile Include="Converters\ActorTypeToColorConverter.cs" />
+    <Compile Include="Converters\ActorTypeToImageDictionaryConverter.cs" />
+    <Compile Include="Converters\RecipeStateToImageDictionaryConverter.cs" />
+    <Compile Include="Proxy\DBMaintenanceSupervisor.cs" />
+    <Compile Include="Recipes\Management\RecipeRunLiveManagementView.xaml.cs">
+      <DependentUpon>RecipeRunLiveManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\RecipeRunLiveManagementViewModel.cs" />
+    <Compile Include="ViewModels\DFViewModelBase.cs" />
+    <Compile Include="DummyPM\DummyRecipeEditor.xaml.cs">
+      <DependentUpon>DummyRecipeEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DummyPM\DummyRecipeEditorViewModel.cs" />
+    <Compile Include="DummyPM\DummySummary.xaml.cs">
+      <DependentUpon>DummySummary.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Hardware\GlobalStatus\GlobalStatusMenu.cs" />
+    <Compile Include="Hardware\GlobalStatus\GlobalStatusView.xaml.cs">
+      <DependentUpon>GlobalStatusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Hardware\GlobalStatus\GlobalStatusViewModel.cs" />
+    <Compile Include="Main\ApplicationMode.cs" />
+    <Compile Include="Main\Bootstrapper.cs" />
+    <Compile Include="Main\ExternalUserControls.cs" />
+    <Compile Include="Main\UIGlobalStateToImageConverter.cs" />
+    <Compile Include="Main\GroupViewModel.cs" />
+    <Compile Include="Main\IMenuContentViewModel.cs" />
+    <Compile Include="Main\IMenuItem.cs" />
+    <Compile Include="Main\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Main\MainMenuViewModel.cs" />
+    <Compile Include="Main\PMView.xaml.cs">
+      <DependentUpon>PMView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Main\PMViewModel.cs" />
+    <Compile Include="Proxy\IUserSupervisor.cs" />
+    <Compile Include="Proxy\PMUserSupervisor.cs" />
+    <Compile Include="Proxy\SharedSupervisors.cs" />
+    <Compile Include="Proxy\UserSupervisor.cs" />
+    <Compile Include="Recipes\Management\Converter\LayerThicknessToHeightConverter.cs" />
+    <Compile Include="Recipes\Management\DataflowManagementView.xaml.cs">
+      <DependentUpon>DataflowManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\DataflowManagementViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\CanQuitJobDialogViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\Graph\DataflowGraphViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\Graph\DataflowNodeViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\InsertModule\ActorTypeViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\InsertModule\InsertModuleViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\LayersEditorViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\LayerViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\DataflowItemViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\DataflowSummaryViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\DataflowViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\RecipeRunLiveViewModel.cs" />
+    <Compile Include="Recipes\Management\View\CanQuitJobDialogView.xaml.cs">
+      <DependentUpon>CanQuitJobDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\Graph\Arrow.cs" />
+    <Compile Include="Recipes\Management\View\Graph\ConnectionBadIndicator.cs" />
+    <Compile Include="Recipes\Management\View\Graph\ConnectionOkIndicator.cs" />
+    <Compile Include="Recipes\Management\View\Graph\CurvedArrow.cs" />
+    <Compile Include="Recipes\Management\View\Graph\GraphView.xaml.cs">
+      <DependentUpon>GraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\Graph\MouseHandlingMode.cs" />
+    <Compile Include="Recipes\Management\View\InsertModuleWindow.xaml.cs">
+      <DependentUpon>InsertModuleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\LayersEditorControl.xaml.cs">
+      <DependentUpon>LayersEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\MainStateView.xaml.cs">
+      <DependentUpon>MainStateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\DataflowItemView.xaml.cs">
+      <DependentUpon>DataflowItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\DataflowSummary.xaml.cs">
+      <DependentUpon>DataflowSummary.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\DataflowView.xaml.cs">
+      <DependentUpon>DataflowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\RecipeRunLiveView.xaml.cs">
+      <DependentUpon>RecipeRunLiveView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Proxy\GlobalStatusSupervisor.cs" />
+    <Compile Include="Main\UIGlobalStates.cs" />
+    <Compile Include="Recipes\Management\RecipesManagementMenu.cs" />
+    <Compile Include="Recipes\Management\RecipesManagementView.xaml.cs">
+      <DependentUpon>RecipesManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\RecipesManagementViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\ProductViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\RecipeViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\RootTreeViewModel.cs" />
+    <Compile Include="Recipes\Management\ViewModel\StepViewModel.cs" />
+    <Compile Include="Recipes\Management\View\ProductView.xaml.cs">
+      <DependentUpon>ProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\RecipeTreeView.xaml.cs">
+      <DependentUpon>RecipeTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\RecipeView.xaml.cs">
+      <DependentUpon>RecipeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\RootTreeView.xaml.cs">
+      <DependentUpon>RootTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipes\Management\View\StepView.xaml.cs">
+      <DependentUpon>StepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\TabViewModelBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Administration\DBMaintenance\DBMaintenanceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Administration\FDC\FDCView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Administration\Log\LogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Connection\ConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Converters\Converter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DummyPM\DummyRecipeEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DummyPM\DummySummary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Hardware\GlobalStatus\GlobalStatusView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Main\MainMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Main\PMView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\DataflowManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\RecipeRunLiveManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\RecipesManagementView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\CanQuitJobDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\Graph\GraphView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\View\InsertModuleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\View\LayersEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\MainStateView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\View\ProductView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\RecipeRunLiveView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\RecipeTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\RecipeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\RootTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\StepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Recipes\Management\View\DataflowItemView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\View\DataflowSummary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Recipes\Management\View\DataflowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5c0a-4f7e-a355-8d03680b3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.PM.Service.Interface\UnitySC.Shared.Dataflow.PM.Service.Interface.csproj">
+      <Project>{2f5f6fb2-6dfc-4fac-891e-3ba88f3b7a33}</Project>
+      <Name>UnitySC.Shared.Dataflow.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj">
+      <Project>{097a017c-ab63-42bd-987b-6bc537ee36f2}</Project>
+      <Name>UnitySC.Shared.Dataflow.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj">
+      <Project>{468db3cc-73cb-46b8-94f2-5829d24af3aa}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{47755544-9444-4bd8-a03c-5158801a733c}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.FDC.Interface\UnitySC.Shared.FDC.Interface.csproj">
+      <Project>{8A288ABB-F8C5-40B3-ABEC-051409043B7F}</Project>
+      <Name>UnitySC.Shared.FDC.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.FDC\UnitySC.Shared.FDC.csproj">
+      <Project>{3F3CC7E4-7DE0-40B8-8C4F-096B5F1E0CDA}</Project>
+      <Name>UnitySC.Shared.FDC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{eee94f55-381c-4fce-a35c-3aeae3ec7c63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53bd49c3-c5ce-4ead-8261-a95c2a003a5e}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManager\UnitySC.PM.Shared.UserManager.Service.Interface\UnitySC.PM.Shared.UserManager.Service.Interface.csproj">
+      <Project>{606809fe-7dff-4ed0-82a9-eeb525a97bd8}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Recipes\History\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

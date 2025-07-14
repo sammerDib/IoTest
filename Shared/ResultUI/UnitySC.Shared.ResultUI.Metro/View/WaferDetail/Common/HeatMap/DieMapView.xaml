@@ -1,0 +1,50 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common.HeatMap.DieMapView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dieDetails="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Tsv.DieDetails"
+	xmlns:heatMap="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.Common.HeatMap"
+    xmlns:sharedUIChart="clr-namespace:UnitySC.Shared.UI.Chart;assembly=UnitySC.Shared.UI"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DataContext="{d:DesignInstance dieDetails:DieMapVM, IsDesignTimeCreatable=False}"
+	d:DesignHeight="300"
+	d:DesignWidth="300"
+	Background="White"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<ContentPresenter
+			Content="{Binding Chart}"
+			SizeChanged="OnChartSizeChanged" />
+
+		<StackPanel
+			Grid.Row="1"
+			HorizontalAlignment="Right"
+			Orientation="Horizontal">
+			<Button
+				Margin="0,0,5,0"
+				Command="{Binding UpdatePaletteCommand}"
+				CommandParameter="{x:Static sharedUIChart:HeatMapPaletteType.TargetTolerance}"
+				Content="Target Tolerance"
+				Visibility="{Binding HasTolerance, Converter={StaticResource BooleanToVisibilityConverter}}" />
+			<Button
+				Command="{Binding UpdatePaletteCommand}"
+				CommandParameter="{x:Static sharedUIChart:HeatMapPaletteType.MinMax}"
+				Content="Min - Max"
+				Visibility="{Binding HasTarget, Converter={StaticResource BooleanToVisibilityConverter}}" />
+		</StackPanel>
+
+	</Grid>
+</UserControl>

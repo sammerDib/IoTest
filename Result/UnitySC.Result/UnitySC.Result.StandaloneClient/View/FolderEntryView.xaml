@@ -1,0 +1,108 @@
+﻿<UserControl
+	x:Class="UnitySC.Result.StandaloneClient.View.FolderEntryView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:view="clr-namespace:UnitySC.Result.StandaloneClient.View"
+	xmlns:viewModel="clr-namespace:UnitySC.Result.StandaloneClient.ViewModel"
+	xmlns:wpftk="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+	d:DataContext="{d:DesignInstance viewModel:FolderEntryVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Result.StandaloneClient;component/View/ResultResource.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
+
+		<ListView
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			ItemsSource="{Binding Slots, IsAsync=True}"
+			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+			ScrollViewer.IsDeferredScrollingEnabled="False"
+			ScrollViewer.VerticalScrollBarVisibility="Auto"
+			SelectedItem="{Binding SelectedFile}"
+			VirtualizingPanel.CacheLengthUnit="Page"
+			VirtualizingPanel.ScrollUnit="Item">
+
+			<ListView.ItemsPanel>
+				<ItemsPanelTemplate>
+					<wpftk:VirtualizingWrapPanel
+						ItemSize="200,150"
+						MouseWheelDeltaItem="1"
+						Orientation="Vertical"
+						SpacingMode="None"
+						StretchItems="False" />
+				</ItemsPanelTemplate>
+			</ListView.ItemsPanel>
+
+			<ListView.ItemContainerStyle>
+				<Style TargetType="ListViewItem">
+					<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+					<Setter Property="VerticalContentAlignment" Value="Stretch" />
+					<Setter Property="Margin" Value="5" />
+					<Setter Property="Padding" Value="0" />
+					<Setter Property="BorderThickness" Value="2" />
+				</Style>
+			</ListView.ItemContainerStyle>
+
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<view:FileEntryView />
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+
+		<controls:ImageButton
+			Height="30"
+			Margin="10"
+			Padding="5"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Bottom"
+			Command="{Binding RefreshThumbnailsCommand}"
+			Image="{StaticResource Redo}"
+			ToolTip="Refresh Thumbnails">
+			<controls:ImageButton.Style>
+				<Style
+					BasedOn="{StaticResource TransparentImageButton}"
+					TargetType="{x:Type controls:ImageButton}">
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Slots.Count}" Value="0">
+							<Setter Property="Visibility" Value="Collapsed" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</controls:ImageButton.Style>
+			<controls:ImageButton.Background>
+				<SolidColorBrush Opacity="0.8" Color="White" />
+			</controls:ImageButton.Background>
+		</controls:ImageButton>
+
+		<TextBlock
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			FontSize="14"
+			Text="Select a folder containing results.">
+			<TextBlock.Style>
+				<Style
+					BasedOn="{StaticResource {x:Type TextBlock}}"
+					TargetType="{x:Type TextBlock}">
+					<Setter Property="Visibility" Value="Collapsed" />
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Slots.Count}" Value="0">
+							<Setter Property="Visibility" Value="Visible" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</TextBlock.Style>
+		</TextBlock>
+
+	</Grid>
+</UserControl>

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="EFEM">
+      <Types />
+      <Packages>
+        <Package Name="Rorze">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="Robot">
+                  <Types />
+                  <Packages>
+                    <Package Name="MapperRR75x">
+                      <Types>
+                        <CSharpType PlatformType="Agileo.EquipmentModeling.IMaterialLocationContainer, Agileo.EquipmentModeling, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                        <CSharpType PlatformType="Agileo.SemiDefinitions.TransferLocation, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                        <DeviceType Name="MapperRR75x" IsAbstract="false" Uri="UnitySC.EFEM.Rorze|Devices\Robot\MapperRR75x\MapperRR75x.device|UnitySC.EFEM.Rorze.Devices.Robot.MapperRR75x.MapperRR75x" SuperTypeUri="UnitySC.EFEM.Rorze|Devices\Robot\RR75x\RR75x.device|UnitySC.EFEM.Rorze.Devices.Robot.RR75x.RR75x" BehaviorImplementation="UnitySC.EFEM.Rorze.Devices.Robot.MapperRR75x.MapperRR75x, UnitySC.EFEM.Rorze">
+                          <Interruptions />
+                          <Commands>
+                            <Command Name="MapLocation" Type="Void" Timeout="60 s">
+                              <Parameters>
+                                <Parameter Name="location" Type="UnitySC.EFEM.Rorze.Devices.Robot.MapperRR75x.IMaterialLocationContainer" />
+                              </Parameters>
+                              <PreConditions>
+                                <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                                <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                              </PreConditions>
+                              <PostConditions />
+                            </Command>
+                            <Command Name="MapTransferLocation" Type="Void" Timeout="60 s">
+                              <Parameters>
+                                <Parameter Name="location" Type="UnitySC.EFEM.Rorze.Devices.Robot.MapperRR75x.TransferLocation" />
+                              </Parameters>
+                              <PreConditions>
+                                <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                                <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                              </PreConditions>
+                              <PostConditions />
+                            </Command>
+                          </Commands>
+                          <Statuses>
+                            <Status Name="RobotPositionReverted" Type="Boolean" />
+                          </Statuses>
+                          <Alarms />
+                          <Interlocks />
+                        </DeviceType>
+                      </Types>
+                      <Packages />
+                      <Equipments />
+                    </Package>
+                  </Packages>
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

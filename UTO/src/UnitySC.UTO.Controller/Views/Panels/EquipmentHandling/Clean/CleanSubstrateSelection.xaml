@@ -1,0 +1,42 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.EquipmentHandling.Clean.CleanSubstrateSelection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:material="clr-namespace:UnitySC.Equipment.Abstractions.Material;assembly=UnitySC.Equipment.Abstractions"
+    x:Name="UserControlCleanSubstrateSelection"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <DockPanel>
+        <Grid
+            x:Name="SlotListContainer"
+            Margin="0,0,0,10"
+            IsSharedSizeScope="True"
+            SizeChanged="OnSizeChanged">
+            <ListView
+                x:Name="SlotList"
+                VerticalAlignment="Bottom"
+                AlternationCount="5"
+                ItemTemplate="{StaticResource OriginalSlotItemTemplate}"
+                ItemsSource="{Binding ElementName=UserControlCleanSubstrateSelection, Path=Slots}"
+                SelectionChanged="Selector_OnSelectionChanged"
+                SelectionMode="Single">
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource {x:Type ListBoxItem}}" TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Height" Value="{Binding ElementName=UserControlCleanSubstrateSelection, Path=ItemHeight}" />
+                        <Setter Property="Padding" Value="0,0.5,5,0.5" />
+                        <Setter Property="Focusable" Value="False" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding State}" Value="{x:Static material:SlotState.NoWafer}">
+                                <Setter Property="Focusable" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+
+    </DockPanel>
+</UserControl>

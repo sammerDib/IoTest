@@ -1,0 +1,140 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Tools.TerminalMessages.TerminalMessagesToolView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:terminalMessages="clr-namespace:UnitySC.UTO.Controller.Views.Tools.TerminalMessages"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    x:Name="UserControl"
+    Width="600"
+    Height="800"
+    d:DataContext="{d:DesignInstance terminalMessages:TerminalMessagesTool}"
+    mc:Ignorable="d">
+    <GroupBox>
+        <DockPanel>
+
+            <DockPanel
+                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                Dock="Top">
+                <Button
+                    markupExtensions:Icon.Geometry="{StaticResource AlarmAcknowledgedIcon}"
+                    Command="{Binding AcknowledgeCommand}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource SquareIconifiedButtonStyle}"
+                    ToolTip="{localize:Static terminalMessages:TerminalMessagesToolResource.TERMINAL_MESSAGES_ACKNOWLEDGE}" />
+                <TextBlock
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Top"
+                    Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                    Text="{localize:Static terminalMessages:TerminalMessagesToolResource.TERMINAL_MESSAGES}" />
+            </DockPanel>
+
+            <DockPanel Dock="Bottom">
+                <Button
+                    Width="{Binding ElementName=TextBox, Path=MinHeight}"
+                    Height="{Binding ElementName=TextBox, Path=MinHeight}"
+                    VerticalAlignment="Bottom"
+                    markupExtensions:Icon.Geometry="{StaticResource SendMessageIcon}"
+                    Command="{Binding SendMessageCommand}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource SquareIconifiedButtonStyle}"
+                    ToolTip="{localize:Static terminalMessages:TerminalMessagesToolResource.TERMINAL_MESSAGES_SEND}" />
+                <TextBox
+                    x:Name="TextBox"
+                    MaxHeight="200"
+                    Margin="0,0,10,0"
+                    VerticalContentAlignment="Center"
+                    markupExtensions:Watermark.Text="{localize:Static terminalMessages:TerminalMessagesToolResource.TERMINAL_MESSAGES_REPLY}"
+                    AcceptsReturn="True"
+                    DockPanel.Dock="Bottom"
+                    Text="{Binding Path=MessageToSend, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    TextWrapping="Wrap">
+                    <TextBox.InputBindings>
+                        <KeyBinding
+                            Key="Enter"
+                            Command="{Binding SendMessageCommand}" />
+                    </TextBox.InputBindings>
+                </TextBox>
+            </DockPanel>
+
+            <ScrollViewer
+                Margin="{DynamicResource HorizontalStackPropertyMargin}"
+                behaviors:ScrollViewerAssist.IsAutoHideEnabled="True"
+                ScrollChanged="ScrollViewerOnScrollChanged">
+                <ItemsControl
+                    Margin="0,0,10,0"
+                    ItemsSource="{Binding Messages}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch">
+                                <Border
+                                    x:Name="MessageContainer"
+                                    MinWidth="200"
+                                    Margin="0,10,50,0"
+                                    HorizontalAlignment="Left"
+                                    CornerRadius="2">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="{DynamicResource SelectionBackground}" />
+                                    </Border.Background>
+                                    <DockPanel Margin="5">
+                                        <DockPanel
+                                            Margin="0,0,0,5"
+                                            Dock="Top"
+                                            LastChildFill="False">
+                                            <TextBlock
+                                                DockPanel.Dock="Left"
+                                                FontWeight="SemiBold"
+                                                Style="{StaticResource OverlineTextStyle}"
+                                                Text="{Binding SourceName.Value}" />
+                                            <TextBlock
+                                                Margin="5,0,0,0"
+                                                DockPanel.Dock="Left"
+                                                Style="{StaticResource OverlineTextStyle}"
+                                                Text="{Binding DateTime.Value}" />
+                                            <Path
+                                                x:Name="Icon"
+                                                Width="12"
+                                                Height="12"
+                                                Margin="10,0,0,0"
+                                                Data="{StaticResource AboutIcon}"
+                                                DockPanel.Dock="Right"
+                                                Fill="{DynamicResource SeverityInformationBrush}"
+                                                Stretch="Uniform"
+                                                ToolTip="{localize:Static terminalMessages:TerminalMessagesToolResource.TERMINAL_MESSAGES_NOT_ACKNOWLEDGED}" />
+                                        </DockPanel>
+                                        <TextBlock
+                                            x:Name="TextBlock"
+                                            Style="{StaticResource Body1TextStyle}"
+                                            Text="{Binding Content}"
+                                            TextWrapping="Wrap" />
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Source}" Value="FromEquipment">
+                                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="MessageContainer" Property="HorizontalAlignment" Value="Right" />
+                                    <Setter TargetName="MessageContainer" Property="Margin" Value="50,10,0,0" />
+                                    <Setter TargetName="MessageContainer" Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource HeaderBackground}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Acknowledged}" Value="True">
+                                    <Setter TargetName="Icon" Property="Fill" Value="{Binding ElementName=TextBlock, Path=Foreground}" />
+                                    <Setter TargetName="Icon" Property="Data" Value="{StaticResource CheckedIcon}" />
+                                    <Setter TargetName="Icon" Property="ToolTip" Value="{localize:Static terminalMessages:TerminalMessagesToolResource.TERMINAL_MESSAGES_ACKNOWLEDGED}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+        </DockPanel>
+    </GroupBox>
+</UserControl>

@@ -1,0 +1,572 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.Controls.WpfControlsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:controlsPanel="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance controlsPanel:WpfControlsPanel, IsDesignTimeCreatable=False}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Orientation="Vertical">
+
+            <GroupBox Header="Button">
+                <StackPanel Orientation="Vertical">
+
+                    <GroupBox Header="A simple Button with text content">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <Button
+                                    HorizontalAlignment="Left"
+                                    Content="Standard XAML button"
+                                    DockPanel.Dock="Left"
+                                    IsEnabled="{Binding ElementName=DisableButtonCheckBox, Path=IsChecked, Converter={StaticResource InvertedBoolConverter}}" />
+                                <CheckBox
+                                    x:Name="DisableButtonCheckBox"
+                                    VerticalAlignment="Center"
+                                    Content="Disable button"
+                                    DockPanel.Dock="Right" />
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+
+                    <GroupBox Header="A Button with icon content">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <Button
+                                    HorizontalAlignment="Left"
+                                    markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+
+                    <GroupBox Header="Wrapping Buttons with large content">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <TextBlock
+                                    DockPanel.Dock="Top"
+                                    TextWrapping="Wrap">
+                                    <Run Text="The following buttons' content may get clipped if we don't pay careful attention to their layout containers." />
+                                    <LineBreak />
+                                    <Run Text="One option to mitigate clipped content is to place Buttons underneath each other, allowing for more space to grow horizontally:" />
+                                </TextBlock>
+                                <Button
+                                    Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Stretch"
+                                    markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                    Content="This is some text that is too long and will get cut off"
+                                    DockPanel.Dock="Top" />
+                                <Button
+                                    Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Stretch"
+                                    Content="This is another text that would result in being cut off"
+                                    DockPanel.Dock="Top" />
+                                <TextBlock
+                                    Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin}}"
+                                    DockPanel.Dock="Top">
+                                    <Run Text="Another option is to explicitly wrap the Button's content:" />
+                                </TextBlock>
+                                <StackPanel
+                                    Margin="{behaviors:MarginAssist Top={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Center"
+                                    DockPanel.Dock="Top"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Height="Auto"
+                                        MaxWidth="240"
+                                        Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                        Padding="12,7"
+                                        HorizontalAlignment="Left"
+                                        DockPanel.Dock="Left">
+                                        <TextBlock
+                                            Text="This is some text that is too long and will get cut off"
+                                            TextWrapping="Wrap" />
+                                    </Button>
+                                    <Button
+                                        Height="Auto"
+                                        MaxWidth="240"
+                                        Padding="12,7"
+                                        HorizontalAlignment="Left"
+                                        DockPanel.Dock="Left">
+                                        <TextBlock
+                                            Text="This is another text that would result in being cut off"
+                                            TextWrapping="Wrap" />
+                                    </Button>
+                                </StackPanel>
+
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+
+                    <GroupBox Header="Accent style applied to Button">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <Button
+                                    Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Left"
+                                    Background="{DynamicResource ToggleButtonCheckedForeground}"
+                                    Content="Accent style button"
+                                    DockPanel.Dock="Left"
+                                    Foreground="White" />
+                                <Button
+                                    HorizontalAlignment="Left"
+                                    Background="Transparent"
+                                    Content="Flat style button"
+                                    DockPanel.Dock="Left" />
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+
+                    <GroupBox Header="Toggle Button">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <ToggleButton
+                                    Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Left"
+                                    Content="Toggle button"
+                                    DockPanel.Dock="Left" />
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+
+                    <GroupBox Header="Repeat Button">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <RepeatButton
+                                    Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Left"
+                                    Content="Click and hold"
+                                    DockPanel.Dock="Left" />
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="ComboBox">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="ComboBox with items defined inline">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DockPanel LastChildFill="False">
+                                <ComboBox
+                                    Width="200"
+                                    HorizontalAlignment="Left">
+                                    <ComboBoxItem Content="Send" />
+                                    <ComboBoxItem Content="Reply" />
+                                    <ComboBoxItem Content="Reply All" />
+                                    <ComboBox.Style>
+                                        <Style
+                                            BasedOn="{StaticResource {x:Type ComboBox}}"
+                                            TargetType="{x:Type ComboBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ElementName=ComboBoxUseIconCheckBox, Path=IsChecked}" Value="True">
+                                                    <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource AgileoIcon}" />
+                                                    <Setter Property="markupExtensions:Icon.Margin" Value="0,6,7,6" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.Style>
+                                </ComboBox>
+                                <CheckBox
+                                    x:Name="ComboBoxUseIconCheckBox"
+                                    VerticalAlignment="Center"
+                                    Content="Use icon"
+                                    DockPanel.Dock="Right" />
+                            </DockPanel>
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="ComboBox with its ItemsSource set">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <ComboBox
+                                Width="200"
+                                HorizontalAlignment="Left"
+                                ItemsSource="{markupExtensions:EnumCollection {x:Type Visibility}}" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="An editable ComboBox">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <ComboBox
+                                Width="200"
+                                HorizontalAlignment="Left"
+                                IsEditable="True">
+                                <ComboBox.ItemsSource>
+                                    <x:Array Type="{x:Type system:Int32}">
+                                        <system:Int32>8</system:Int32>
+                                        <system:Int32>12</system:Int32>
+                                        <system:Int32>18</system:Int32>
+                                        <system:Int32>24</system:Int32>
+                                    </x:Array>
+                                </ComboBox.ItemsSource>
+                            </ComboBox>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="TextBox">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="A simple TextBox">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <TextBox
+                                Width="200"
+                                HorizontalAlignment="Left" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="A TextBox with Icon">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <TextBox
+                                Width="200"
+                                HorizontalAlignment="Left"
+                                markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="A TextBox with a clear button">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <TextBox
+                                Width="200"
+                                HorizontalAlignment="Left"
+                                behaviors:TextBoxAssist.HasClearButton="True"
+                                Text="Clear" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="A TextBox with a watermark">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <TextBox
+                                Width="200"
+                                HorizontalAlignment="Left"
+                                markupExtensions:Watermark.Text="Watermark" />
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="CheckBox">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="A two-state CheckBox">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <CheckBox
+                                HorizontalAlignment="Left"
+                                Content="Two-state CheckBox" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="A three-state CheckBox">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <CheckBox
+                                HorizontalAlignment="Left"
+                                Content="Three-state CheckBox"
+                                IsThreeState="True" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="A CheckBox with Switch style">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    x:Name="SwitchStyleCheckBox"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="{Binding ElementName=SwitchStyleCheckBox, Path=IsChecked}" />
+                            </StackPanel>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Hyperlink">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="A hyperlink that navigates to a URI">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <TextBlock>
+                                <Hyperlink
+                                    NavigateUri="https://www.agileo.com"
+                                    TextDecorations="{x:Null}">
+                                    <Run
+                                        FontStyle="Italic"
+                                        FontWeight="SemiBold"
+                                        Foreground="{DynamicResource AboutHyperlinkLabelForeground}"
+                                        Text="Agileo.com" />
+                                </Hyperlink>
+                            </TextBlock>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Radio Button">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="A group of RadioButton controls">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton
+                                    Content="Option 1"
+                                    IsChecked="True" />
+                                <RadioButton Content="Option 2" />
+                                <RadioButton Content="Option 3" />
+                            </StackPanel>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Slider">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="A simple Slider">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Slider
+                                    x:Name="SimpleSlider"
+                                    Width="200"
+                                    Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    AutomationProperties.Name="simple slider"
+                                    Maximum="100"
+                                    Minimum="0" />
+                                <TextBlock VerticalAlignment="Center">
+                                    <Run Text="Value:" />
+                                    <Run Text="{Binding ElementName=SimpleSlider, Path=Value, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="A Slider with ticks">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Slider
+                                    x:Name="TickSlider"
+                                    Width="200"
+                                    Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    IsSnapToTickEnabled="True"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    TickFrequency="10"
+                                    TickPlacement="Both" />
+                                <TextBlock VerticalAlignment="Center">
+                                    <Run Text="Value:" />
+                                    <Run Text="{Binding ElementName=TickSlider, Path=Value, Mode=OneWay}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Date and Time">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="DatePicker">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <DatePicker
+                                Width="140"
+                                HorizontalAlignment="Left" />
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="Calendar">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <Calendar HorizontalAlignment="Left" />
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Menu and Toolbars">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="ToolBarTray">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <ToolBarTray Background="Transparent">
+                                <ToolBar
+                                    Band="1"
+                                    BandIndex="1">
+                                    <Button>
+                                        <controls:Icon Data="{StaticResource AgileoIcon}" />
+                                    </Button>
+                                    <Button>
+                                        <controls:Icon Data="{StaticResource CopyIcon}" />
+                                    </Button>
+                                </ToolBar>
+                                <ToolBar
+                                    Band="1"
+                                    BandIndex="1">
+                                    <Button>
+                                        <controls:Icon Data="{StaticResource AboutIcon}" />
+                                    </Button>
+                                    <Separator />
+                                    <Button>
+                                        <controls:Icon Data="{StaticResource SetupIcon}" />
+                                    </Button>
+                                </ToolBar>
+                            </ToolBarTray>
+                        </controls:Card>
+                    </GroupBox>
+                    <GroupBox Header="Menu">
+                        <controls:Card
+                            Padding="20"
+                            Style="{StaticResource FilledCardStyle}">
+                            <Menu>
+                                <MenuItem Header="File">
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="New">
+                                        <MenuItem markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}">
+                                            <MenuItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <controls:Icon
+                                                        Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                                        Data="{StaticResource FileIcon}" />
+                                                    <TextBlock Text="File" />
+                                                </StackPanel>
+                                            </MenuItem.Header>
+                                        </MenuItem>
+                                        <MenuItem markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}">
+                                            <MenuItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <controls:Icon
+                                                        Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+                                                        Data="{StaticResource FolderIcon}" />
+                                                    <TextBlock Text="Folder" />
+                                                </StackPanel>
+                                            </MenuItem.Header>
+                                        </MenuItem>
+                                    </MenuItem>
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Open..." />
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Save" />
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Exit" />
+                                </MenuItem>
+                                <MenuItem Header="Edit">
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Undo" />
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Cut" />
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Copy" />
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="Paste" />
+                                </MenuItem>
+                                <MenuItem Header="Help">
+                                    <MenuItem
+                                        markupExtensions:Icon.Geometry="{StaticResource AgileoIcon}"
+                                        Header="About" />
+                                </MenuItem>
+                            </Menu>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="TabControl">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox Header="A Classic TabControl">
+                        <controls:Card Style="{StaticResource FilledCardStyle}">
+                            <TabControl>
+                                <TabItem Header="All">
+                                    <TextBlock
+                                        Margin="0,20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="All content" />
+                                </TabItem>
+                                <TabItem Header="Unread">
+                                    <TextBlock
+                                        Margin="0,20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="Unread content" />
+                                </TabItem>
+                                <TabItem Header="Flagged">
+                                    <TextBlock
+                                        Margin="0,20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="Flagged content" />
+                                </TabItem>
+                                <TabItem Header="Urgent">
+                                    <TextBlock
+                                        Margin="0,20"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="Urgent content" />
+                                </TabItem>
+                            </TabControl>
+                        </controls:Card>
+                    </GroupBox>
+                </StackPanel>
+            </GroupBox>
+
+
+        </StackPanel>
+
+    </ScrollViewer>
+</UserControl>
+

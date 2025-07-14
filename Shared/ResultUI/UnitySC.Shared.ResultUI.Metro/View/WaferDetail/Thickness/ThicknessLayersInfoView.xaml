@@ -1,0 +1,276 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Thickness.ThicknessLayersInfoView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:system="clr-namespace:System;assembly=mscorlib"
+	xmlns:thickness="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.Thickness"
+	xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+	x:Name="UserControl"
+	d:DataContext="{d:DesignInstance thickness:ThicknessLayersInfoVM, IsDesignTimeCreatable=True}"
+	Background="White"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<DockPanel HorizontalAlignment="Center">
+
+		<Grid>
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<!--  Wafer Thickness  -->
+			<Grid
+				Background="Transparent"
+				ToolTip="{Binding LeftSideTooltip}">
+				<Grid.Style>
+					<Style TargetType="Grid">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding WaferThickness}" Value="{x:Static system:String.Empty}">
+								<Setter Property="Visibility" Value="Collapsed" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Grid.Style>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<TextBlock
+					Margin="5,0,5,0"
+					HorizontalAlignment="Center"
+					DockPanel.Dock="Top"
+					FontSize="14"
+					FontWeight="SemiBold"
+					Text="W.Thickness" />
+				<TextBlock
+					Grid.Row="1"
+					Grid.Column="0"
+					Margin="0,0,5,0"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Text="{Binding WaferThickness}"
+					TextAlignment="Right" />
+				<Border
+					Grid.Row="1"
+					Grid.Column="1"
+					Height="120"
+					Margin="0,0,2,0"
+					VerticalAlignment="Bottom"
+					BorderBrush="Black"
+					BorderThickness="0,1"
+					DockPanel.Dock="Right">
+					<userControls:Arrow
+						Margin="2,0,2,0"
+						Angle="90" />
+				</Border>
+			</Grid>
+
+			<!--  Total  -->
+			<Grid
+				Grid.Column="1"
+				Background="Transparent"
+				ToolTip="{Binding LeftSideTooltip}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<TextBlock
+					Margin="5,0,5,0"
+					HorizontalAlignment="Center"
+					DockPanel.Dock="Top"
+					FontSize="14"
+					FontWeight="SemiBold"
+					Text="{Binding Title}" />
+				<TextBlock
+					Grid.Row="1"
+					Grid.Column="0"
+					Margin="0,0,5,0"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Text="{Binding Value}"
+					TextAlignment="Right" />
+				<Border
+					Grid.Row="1"
+					Grid.Column="1"
+					Height="120"
+					Margin="0,0,0,0"
+					VerticalAlignment="Bottom"
+					BorderBrush="Black"
+					BorderThickness="0,1"
+					DockPanel.Dock="Right"
+					Visibility="{Binding ShowTotalArrow, Converter={StaticResource BooleanToVisibilityConverter}}">
+					<userControls:Arrow
+						Margin="2,0,2,0"
+						Angle="90" />
+				</Border>
+			</Grid>
+
+			<!--  Layers  -->
+			<DockPanel
+				Grid.Column="2"
+				Grid.IsSharedSizeScope="True">
+
+				<!--  Header  -->
+				<Grid
+					HorizontalAlignment="Left"
+					DockPanel.Dock="Top">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition
+							Width="Auto"
+							SharedSizeGroup="SymbolColumn" />
+						<ColumnDefinition
+							Width="Auto"
+							SharedSizeGroup="ValueColumn" />
+						<ColumnDefinition
+							Width="Auto"
+							SharedSizeGroup="DeviationColumn" />
+					</Grid.ColumnDefinitions>
+					<TextBlock
+						Grid.Column="1"
+						Margin="5,0"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						FontSize="14"
+						FontWeight="SemiBold"
+						Text="Value" />
+					<TextBlock
+						Grid.Column="2"
+						Margin="5,0"
+						HorizontalAlignment="Center"
+						VerticalAlignment="Center"
+						FontSize="14"
+						FontWeight="SemiBold"
+						Text="Deviation" />
+				</Grid>
+
+				<!--  Layers  -->
+				<ItemsControl
+					Height="120"
+					HorizontalAlignment="Left"
+					AlternationCount="2"
+					ItemsSource="{Binding LayersDetails}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<VirtualizingStackPanel
+								IsVirtualizing="True"
+								VirtualizationMode="Recycling" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.Template>
+						<ControlTemplate TargetType="ItemsControl">
+							<ScrollViewer
+								CanContentScroll="True"
+								Focusable="False"
+								VerticalScrollBarVisibility="Auto">
+								<ItemsPresenter />
+							</ScrollViewer>
+						</ControlTemplate>
+					</ItemsControl.Template>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate DataType="{x:Type thickness:LayerDetailInfoVM}">
+
+							<Grid
+								x:Name="DockPanel"
+								Height="{Binding DataContext.ItemHeight, ElementName=UserControl}">
+
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition
+										Width="*"
+										SharedSizeGroup="SymbolColumn" />
+									<ColumnDefinition
+										Width="Auto"
+										SharedSizeGroup="ValueColumn" />
+									<ColumnDefinition
+										Width="Auto"
+										SharedSizeGroup="DeviationColumn" />
+								</Grid.ColumnDefinitions>
+
+								<DockPanel
+									Grid.Column="0"
+									LastChildFill="False">
+									<Border
+										x:Name="LayerBorder"
+										Width="70"
+										Background="{Binding Background}"
+										BorderBrush="Black"
+										BorderThickness="1,0,1,1"
+										DockPanel.Dock="Left"
+										ToolTip="{Binding ToolTip}">
+										<Viewbox
+											MaxHeight="15"
+											Stretch="Uniform">
+											<TextBlock
+												Margin="5,0"
+												HorizontalAlignment="Center"
+												VerticalAlignment="Center"
+												Foreground="{Binding Foreground}"
+												Text="{Binding LayerName}" />
+										</Viewbox>
+									</Border>
+									<Border
+										x:Name="ArrowBorder"
+										BorderBrush="Black"
+										BorderThickness="0,0,0,1"
+										DockPanel.Dock="Left">
+										<userControls:Arrow
+											Margin="10,0,2,0"
+											Angle="90"
+											DockPanel.Dock="Right" />
+									</Border>
+								</DockPanel>
+
+								<TextBlock
+									Grid.Column="1"
+									Margin="5,0"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Center"
+									Text="{Binding Value}" />
+								<TextBlock
+									Grid.Column="2"
+									Margin="5,0"
+									HorizontalAlignment="Right"
+									VerticalAlignment="Center"
+									Text="{Binding Deviation}" />
+
+							</Grid>
+
+							<DataTemplate.Triggers>
+								<DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+									<Setter TargetName="LayerBorder" Property="BorderThickness" Value="1" />
+									<Setter TargetName="ArrowBorder" Property="BorderThickness" Value="0,1" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding IsMeasured}" Value="False">
+									<Setter TargetName="DockPanel" Property="Opacity" Value="0.4" />
+								</DataTrigger>
+							</DataTemplate.Triggers>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+			</DockPanel>
+
+		</Grid>
+
+	</DockPanel>
+
+
+</UserControl>

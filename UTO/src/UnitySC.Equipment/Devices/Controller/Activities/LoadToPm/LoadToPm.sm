@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="402fb130-b48e-4c33-9ca7-41daf07ec906" name="LoadToPm" access="Internal" usings="using UnitySC.Equipment.Abstractions.Vendor.Devices.Activities;" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <vertexContainerHasVertices Id="c00d5eed-2bd0-432e-838f-0545bcdcebbe">
+      <initial Id="654a33e0-8cb1-4ce3-be2a-96bd0569410b" name="Initial" nameSpace="LoadToPm">
+        <successors>
+          <transition Id="3dddd1ef-77c9-4d3e-b4c0-6ebe3102811a" source="LoadToPm.Initial" destination="LoadToPm.Activity.PickFromLoadPort" nameSpace="LoadToPm">
+            <stateMoniker name="/LoadToPm/Activity/PickFromLoadPort" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="44224f6f-c67b-499a-b762-c2ec9ac105d1">
+      <finalState Id="d4878a6b-ebb2-4630-986a-ec7a5a501f9d" name="FinalState" nameSpace="LoadToPm" kind="Final" />
+    </stateMachineHasStates>
+    <stateMachineHasStates Id="896013f9-b779-408e-9124-530d9310feca">
+      <state Id="dc21e096-21d3-4708-b443-390b3c639948" name="Activity" nameSpace="LoadToPm" entryAction="ActivityEntry" exitAction="ActivityExit" kind="Normal" entryActionLabel="Entry/ ActivityEntry" exitActionLabel="Exit/ ActivityExit">
+        <vertices>
+          <stateHasNestedStates Id="9417a8e3-eba9-400e-b49d-40656b93ba46">
+            <state Id="8b082c1c-e023-4468-8e8a-28e640a14ada" name="Align" nameSpace="LoadToPm.Activity" entryAction="AlignEntry" kind="Normal" entryActionLabel="Entry/ AlignEntry">
+              <successors>
+                <transition Id="663518db-adf1-4088-9ee0-84ab86185cf2" event="AlignerDone" label="AlignerDone" source="LoadToPm.Activity.Align" destination="LoadToPm.Activity.PrepareAlignerPick" nameSpace="LoadToPm.Activity">
+                  <stateMoniker name="/LoadToPm/Activity/PrepareAlignerPick" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="0a26f540-a76b-424e-8c3b-6a2c1e6ad262">
+            <state Id="7b4b6c5c-d7cd-4a81-aab6-b87f711ccc0e" name="TransferToPm" nameSpace="LoadToPm.Activity" kind="Normal">
+              <vertices>
+                <stateHasNestedStates Id="85a1888a-0e52-45b6-b5b0-6d256605d9d9">
+                  <state Id="c8238b1e-9080-4e7a-a0bb-f3c72afb0854" name="PickFromAligner" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="PickFromAlignerEntry" kind="Normal" entryActionLabel="Entry/ PickFromAlignerEntry">
+                    <successors>
+                      <transition Id="0ab341e6-0f43-4c3f-b674-dd9a0ae871c4" event="RobotDone" label="RobotDone" source="LoadToPm.Activity.TransferToPm.PickFromAligner" destination="LoadToPm.Activity.TransferToPm.State1" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/PrepareForTransfer" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="ca87bba4-1b73-41c4-8de9-6757189a38f1">
+                  <state Id="64f574ac-75f9-4395-ac4e-7c5fe6dcfe1b" name="GoInFrontOfPm" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="GoInFrontOfPmEntry" kind="Normal" entryActionLabel="Entry/ GoInFrontOfPmEntry">
+                    <successors>
+                      <transition Id="16c6c18f-faa9-4487-915a-4227273ac404" event="RobotDone" label="RobotDone" source="LoadToPm.Activity.TransferToPm.GoInFrontOfPm" destination="LoadToPm.Activity.TransferToPm.WaitReadyForTransfer" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/PrepareTransferOnPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="854d087d-3349-45f8-8298-307a8a743fa4">
+                  <state Id="1ec2a693-7a2c-4273-aa9e-2fbce245a3ba" name="PlaceToPm" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="PlaceToPmEntry" kind="Normal" entryActionLabel="Entry/ PlaceToPmEntry">
+                    <successors>
+                      <transition Id="676da3ec-feab-4809-936f-b35f8a793f89" event="RobotDone" label="RobotDone" source="LoadToPm.Activity.TransferToPm.PlaceToPm" destination="LoadToPm.Activity.TransferToPm.PostTransfer" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/PostTransfer" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="91b87fba-e2a7-4abe-9886-652af32cc196">
+                  <state Id="cdb1d99e-5e0d-419d-80f2-d5725ff89536" name="PrepareForTransfer" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="PrepareForTransferEntry" kind="Normal" entryActionLabel="Entry/ PrepareForTransferEntry">
+                    <successors>
+                      <transition Id="a5656cc4-89ce-41db-9ee5-10d2419328cd" event="PMDone" label="PMDone" source="LoadToPm.Activity.TransferToPm.PrepareForTransfer" destination="LoadToPm.Activity.TransferToPm.GoInFrontOfPm" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/GoInFrontOfPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="cd10a291-89b5-49d7-a5f5-f0df2c3d062f">
+                  <state Id="759cf494-e1dc-48ce-8a05-6e8b38e02d5b" name="PrepareTransferOnPm" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="PrepareTransferOnPmEntry" kind="Normal" entryActionLabel="Entry/ PrepareTransferOnPmEntry">
+                    <successors>
+                      <transition Id="f48dd863-bc64-4fae-9c3e-850cad2c02fb" event="ReadyToTransfer" label="ReadyToTransfer" source="LoadToPm.Activity.TransferToPm.PrepareTransferOnPm" destination="LoadToPm.Activity.TransferToPm.PlaceToPm" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/PlaceToPm" />
+                      </transition>
+                      <transition Id="96d958c2-8805-4df4-97b4-0d18ec4b828c" event="NotReadyToTransfer" label="NotReadyToTransfer" source="LoadToPm.Activity.TransferToPm.PrepareTransferOnPm" destination="LoadToPm.Activity.TransferToPm.WaitReadyToTransfer" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/WaitReadyToTransfer" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="1c5bc761-6d7d-42d7-a0a4-e6770211b192">
+                  <state Id="d93acd45-da42-42bd-bead-3ac618e28250" name="PostTransfer" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="PostTransferEntry" kind="Normal" entryActionLabel="Entry/ PostTransferEntry">
+                    <successors>
+                      <transition Id="467be932-4882-4b68-ab3b-94b5d121cc4b" event="PMDone" label="PMDone" source="LoadToPm.Activity.TransferToPm.PostTransfer" destination="LoadToPm.FinalState" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <finalStateMoniker name="/LoadToPm/FinalState" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="f8f0eebe-bd1f-41a7-b516-939b3ecbb919">
+                  <state Id="d8cfeeb6-7ed9-4ac9-9b81-59dd4fe25059" name="WaitReadyToTransfer" nameSpace="LoadToPm.Activity.TransferToPm" entryAction="WaitReadyToTransferEntry" kind="Normal" entryActionLabel="Entry/ WaitReadyToTransferEntry">
+                    <successors>
+                      <transition Id="ef930dbd-3ba9-4b71-9bf4-be82a06d5eee" event="ReadyToTransfer" label="ReadyToTransfer" source="LoadToPm.Activity.TransferToPm.WaitReadyToTransfer" destination="LoadToPm.Activity.TransferToPm.PrepareTransferOnPm" nameSpace="LoadToPm.Activity.TransferToPm">
+                        <stateMoniker name="/LoadToPm/Activity/TransferToPm/PrepareTransferOnPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+              </vertices>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="8437be8a-2af8-4a43-8571-a968ad589a8e">
+            <state Id="abbfb069-711d-4671-be3f-411be1262724" name="PickFromLoadPort" nameSpace="LoadToPm.Activity" entryAction="PickFromLoadPortEntry" kind="Normal" entryActionLabel="Entry/ PickFromLoadPortEntry">
+              <successors>
+                <transition Id="f1ee7547-b387-497c-869b-0bd0bace7d58" event="RobotDone" label="RobotDone" source="LoadToPm.Activity.PickFromLoadPort" destination="LoadToPm.Activity.State1" nameSpace="LoadToPm.Activity">
+                  <stateMoniker name="/LoadToPm/Activity/PrepareAlignerPlace" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="5e08c5b6-e961-4373-ab84-5b39119bf76b">
+            <state Id="2d3458f8-8696-4c3e-bf48-27959265e50c" name="PrepareAlignerPlace" nameSpace="LoadToPm.Activity" entryAction="PrepareAlignerPlaceEntry" kind="Normal" entryActionLabel="Entry/ PrepareAlignerPlaceEntry">
+              <successors>
+                <transition Id="f697edb5-c3a3-474f-8253-cb56882cc7ad" event="AlignerDone" label="AlignerDone" source="LoadToPm.Activity.PrepareAlignerPlace" destination="LoadToPm.Activity.PlaceToAligner" nameSpace="LoadToPm.Activity">
+                  <stateMoniker name="/LoadToPm/Activity/PlaceToAligner" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="5923fa1d-453a-464b-b352-c61736ec9421">
+            <state Id="136a9916-00cc-4c4f-99fd-f57740b73796" name="PlaceToAligner" nameSpace="LoadToPm.Activity" entryAction="PlaceToAlignerEntry" kind="Normal" entryActionLabel="Entry/ PlaceToAlignerEntry">
+              <successors>
+                <transition Id="eb95de4a-7a94-49cc-b5f2-7c4bace23541" event="RobotDone" label="RobotDone" source="LoadToPm.Activity.PlaceToAligner" destination="LoadToPm.Activity.Align" nameSpace="LoadToPm.Activity">
+                  <stateMoniker name="/LoadToPm/Activity/Align" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="1041c494-2f0b-4a77-b801-d5956e4ccee5">
+            <state Id="d10e7431-0d40-4817-85b0-d451aa0277f8" name="PrepareAlignerPick" nameSpace="LoadToPm.Activity" entryAction="PrepareAlignerPickEntry" kind="Normal" entryActionLabel="Entry/ PrepareAlignerPickEntry">
+              <successors>
+                <transition Id="84b62dab-b022-4829-a93f-3a2e63429ffe" event="AlignerDone" label="AlignerDone" source="LoadToPm.Activity.PrepareAlignerPick" destination="LoadToPm.Activity.TransferToPm.PickFromAligner" nameSpace="LoadToPm.Activity">
+                  <stateMoniker name="/LoadToPm/Activity/TransferToPm/PickFromAligner" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+        </vertices>
+        <successors>
+          <transition Id="1bc5d0ca-c672-4500-9b8b-39f4d1d1f964" event="ActivityDoneEvent" label="ActivityDoneEvent" source="LoadToPm.Activity" destination="LoadToPm.FinalState" nameSpace="LoadToPm">
+            <finalStateMoniker name="/LoadToPm/FinalState" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+  </vertices>
+</stateMachine>

@@ -1,0 +1,40 @@
+﻿<UserControl
+    x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls.ScanDirectionViewer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.UserControls"
+    x:Name="UserControl"
+    d:DesignHeight="30"
+    d:DesignWidth="30"
+    mc:Ignorable="d">
+    <Grid RenderTransformOrigin="0.5,0.5">
+        <Ellipse
+            Margin="1"
+            Fill="Transparent"
+            Stroke="#d70116" />
+
+        <Rectangle
+            Width="2"
+            Height="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Fill="#d70116" />
+        <Viewbox
+            Margin="2"
+            RenderTransformOrigin="0.5,0.5">
+            <Path
+                Margin="2,0,1,1"
+                Data="M 12 2 L 16 4 L 12 6 M 0 4 L 16 4"
+                Stroke="{Binding ElementName=UserControl, Path=Foreground}"
+                StrokeThickness="2" />
+            <Viewbox.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="{Binding ElementName=UserControl, Path=Angle}" />
+                    <ScaleTransform ScaleY="-1" />
+                </TransformGroup>
+            </Viewbox.RenderTransform>
+        </Viewbox>
+    </Grid>
+</UserControl>

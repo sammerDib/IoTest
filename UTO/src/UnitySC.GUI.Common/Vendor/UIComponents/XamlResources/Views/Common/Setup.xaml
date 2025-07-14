@@ -1,0 +1,72 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!--#region Toggle Setting CheckBox-->
+
+    <SolidColorBrush
+        x:Key="SetupToggleSettingCheckBoxUncheckedVariantColor"
+        Opacity="{StaticResource MouseOverOpacity}"
+        Color="{DynamicResource HeaderForeground}" />
+    <SolidColorBrush x:Key="SetupToggleSettingCheckBoxUncheckedColor" Color="{DynamicResource ControlActionForeground}" />
+    <SolidColorBrush x:Key="SetupToggleSettingCheckBoxCheckedColor" Color="{DynamicResource SelectionForeground}" />
+
+    <Style x:Key="ToggleSettingCheckBoxStyle" TargetType="{x:Type CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Foreground" Value="{DynamicResource SetupToggleSettingCheckBoxUncheckedColor}" />
+        <Setter Property="Background" Value="{DynamicResource SetupToggleSettingCheckBoxCheckedColor}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <BulletDecorator x:Name="bulletDecorator" Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Path
+                                    x:Name="CheckIcon"
+                                    Grid.Column="0"
+                                    Width="30"
+                                    Height="20"
+                                    Margin="7,0"
+                                    Data="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                                    Fill="{TemplateBinding Background}"
+                                    Stretch="Uniform" />
+                                <Rectangle
+                                    x:Name="ForegroundCache"
+                                    Grid.Column="0"
+                                    Fill="{TemplateBinding Foreground}"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </BulletDecorator.Bullet>
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="CheckIcon" Property="Data" Value="M 15,0 H 5 C 2.24,0 0,2.24 0,5 0,7.76 2.24,10 5,10 H 15 C 17.76,10 20,7.76 20,5 20,2.24 17.76,0 15,0 Z M 10,8 C 8.34,8 7,6.66 7,5 7,3.34 8.34,2 10,2 c 1.66,0 3,1.34 3,3 0,1.66 -1.34,3 -3,3 z" />
+                            <Setter TargetName="CheckIcon" Property="Fill" Value="{Binding Fill, ElementName=ForegroundCache}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="CheckIcon" Property="Data" Value="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zM7 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                            <Setter TargetName="CheckIcon" Property="Fill" Value="{Binding Fill, ElementName=ForegroundCache}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="bulletDecorator" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                            <Setter TargetName="CheckIcon" Property="Fill" Value="{Binding Fill, ElementName=ForegroundCache}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion Toggle Setting CheckBox-->
+
+</ResourceDictionary>
+
+
+

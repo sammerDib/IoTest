@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="UnitySC.Shared.DieCutUpUI.Common.Controls.DieCutUpZoomableImage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:zb="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage;assembly=UnitySC.Shared.UI"
+             xmlns:cz="clr-namespace:UnitySC.Shared.DieCutUpUI.Common.Controls"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="dieCutUpZoomableImageView"
+             Foreground="#FFACACFD">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Width="{Binding ElementName=customZoomableImage, Path=Width}" Height="{Binding ElementName=customZoomableImage, Path=Height}">
+        <cz:CustomZoomableImage x:Name="customZoomableImage"
+                                ImageSource="{Binding ElementName=dieCutUpZoomableImageView,Path=ImageSource}"
+                                Scale="{Binding ElementName=dieCutUpZoomableImageView, Path=Scale, Mode=OneWayToSource}"
+                                ImageTopLeftPosition="{Binding ElementName=dieCutUpZoomableImageView, Path=ImagePosition, Mode=OneWayToSource}"/>
+        <Canvas x:Name="gridCanvas">
+        </Canvas>
+        <Canvas x:Name="highlightedReticlesCanvas">
+        </Canvas>
+        <Canvas x:Name="selectedReticlesCanvas">
+        </Canvas>
+    </Grid>
+    
+
+
+
+
+    
+</UserControl>

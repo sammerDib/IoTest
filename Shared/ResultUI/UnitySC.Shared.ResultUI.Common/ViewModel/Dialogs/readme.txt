@@ -1,0 +1,2 @@
+For the GenericMvvmDialogViewModel class to work, the associated view must respect the naming imposed by MvvmDialog and must have the same namespace.
+That's why these two classes are together in this folder.

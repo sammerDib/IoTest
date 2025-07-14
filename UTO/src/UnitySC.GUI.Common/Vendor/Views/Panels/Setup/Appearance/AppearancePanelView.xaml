@@ -1,0 +1,308 @@
+<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Setup.Appearance.AppearancePanelView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:appearance="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Setup.Appearance"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:controller="clr-namespace:UnitySC.GUI.Common"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    x:Name="UserControl"
+	Style="{StaticResource BusinessPanelViewStyle}"
+	d:DataContext="{d:DesignInstance appearance:AppearancePanelViewModel, IsDesignTimeCreatable=True}"
+	d:DesignHeight="{StaticResource DesignHeight}"
+	d:DesignWidth="{StaticResource DesignWidth}"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+
+		<DataTemplate
+			x:Key="ThemeTemplate"
+			DataType="{x:Type appearance:ThemeViewModel}">
+			<Button
+				x:Name="Button"
+				Margin="0,10,0,0"
+				HorizontalContentAlignment="Stretch"
+				VerticalContentAlignment="Stretch"
+				Command="{Binding ApplyThemeCommand}">
+				<DockPanel IsHitTestVisible="False">
+					<CheckBox
+						Margin="{behaviors:MarginAssist Left={StaticResource PanelMargin}}"
+						VerticalAlignment="Center"
+						IsChecked="{Binding IsSelected, Mode=OneWay}" />
+					<TextBlock
+						Margin="{behaviors:MarginAssist Left={StaticResource PanelMargin}}"
+						VerticalAlignment="Center"
+						Text="{Binding Theme}" />
+				</DockPanel>
+			</Button>
+			<DataTemplate.Triggers>
+				<DataTrigger Binding="{Binding IsSelected}" Value="True">
+					<Setter TargetName="Button" Property="Background" Value="{DynamicResource ToggleButtonCheckedBackground}" />
+					<Setter TargetName="Button" Property="Foreground" Value="{DynamicResource ToggleButtonCheckedForeground}" />
+				</DataTrigger>
+			</DataTemplate.Triggers>
+		</DataTemplate>
+
+		<DataTemplate
+			x:Key="CustomSliderTickTemplate"
+			DataType="{x:Type appearance:RateViewModel}">
+			<Grid Height="30">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<TextBlock
+					x:Name="Display"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+					Opacity="{DynamicResource ClickedOpacity}"
+					Text="{Binding Name}" />
+				<Rectangle
+					Grid.Row="1"
+					Width="2"
+					Height="10"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Stretch"
+					Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+					Opacity="{DynamicResource DisabledOpacity}" />
+			</Grid>
+			<DataTemplate.Triggers>
+				<DataTrigger Binding="{Binding IsSelected}" Value="True">
+					<DataTrigger.Setters>
+						<Setter TargetName="Display" Property="Opacity" Value="1" />
+						<Setter TargetName="Display" Property="FontFamily" Value="{DynamicResource RobotoMediumFont}" />
+						<Setter TargetName="Display" Property="Foreground" Value="{DynamicResource ToggleButtonCheckedForeground}" />
+					</DataTrigger.Setters>
+				</DataTrigger>
+			</DataTemplate.Triggers>
+		</DataTemplate>
+
+	</UserControl.Resources>
+
+	<ScrollViewer
+		HorizontalScrollBarVisibility="Disabled"
+		VerticalScrollBarVisibility="Auto">
+
+		<StackPanel>
+
+			<GroupBox Header="{localize:Static appearance:AppearancePanelResources.PREVIEW}">
+				<Border
+					x:Name="PreviewElement"
+					Height="200"
+					Margin="0,0,0,0"
+					BorderBrush="{DynamicResource SeparatorBackground}"
+					BorderThickness="1"
+					ClipToBounds="True"
+					CornerRadius="5"
+					Focusable="False"
+					IsHitTestVisible="False"
+					TextElement.Foreground="{DynamicResource BusinessPanelForeground}">
+					<Border.LayoutTransform>
+						<ScaleTransform
+							ScaleX="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.FinalPreviewGlobalScale}"
+							ScaleY="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.FinalPreviewGlobalScale}" />
+					</Border.LayoutTransform>
+					<Border.Resources>
+						<ResourceDictionary>
+							<Style
+								x:Key="PreviewTextBlockStyle"
+								BasedOn="{StaticResource Body1TextStyle}"
+								TargetType="{x:Type TextBlock}">
+								<Setter Property="LayoutTransform">
+									<Setter.Value>
+										<ScaleTransform
+											ScaleX="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.PreviewFontScale}"
+											ScaleY="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.PreviewFontScale}" />
+									</Setter.Value>
+								</Setter>
+							</Style>
+
+							<Style
+								x:Key="PreviewHeaderTextBlockStyle"
+								BasedOn="{StaticResource Subtitle1TextStyle}"
+								TargetType="{x:Type TextBlock}">
+								<Setter Property="TextTrimming" Value="CharacterEllipsis" />
+								<Setter Property="LayoutTransform">
+									<Setter.Value>
+										<ScaleTransform
+											ScaleX="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.PreviewFontScale}"
+											ScaleY="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.PreviewFontScale}" />
+									</Setter.Value>
+								</Setter>
+							</Style>
+
+							<Style
+								BasedOn="{StaticResource {x:Type TextBox}}"
+								TargetType="{x:Type TextBox}">
+								<Setter Property="behaviors:UserInterfaceScale.FontScale">
+									<Setter.Value>
+										<ScaleTransform
+											ScaleX="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.PreviewFontScale}"
+											ScaleY="{Binding Source={x:Static controller:App.Instance}, Path=UserInterfaceManager.PreviewFontScale}" />
+									</Setter.Value>
+								</Setter>
+							</Style>
+
+						</ResourceDictionary>
+					</Border.Resources>
+
+					<Grid>
+
+						<Border
+							x:Name="MaskBorder"
+							Background="{DynamicResource BusinessPanelBackground}"
+							CornerRadius="5" />
+
+						<DockPanel>
+							<Expander
+								VerticalContentAlignment="Stretch"
+								DockPanel.Dock="Left"
+								ExpandDirection="Right">
+								<Expander.Header>
+									<Grid>
+										<Grid.LayoutTransform>
+											<RotateTransform Angle="-90" />
+										</Grid.LayoutTransform>
+										<TextBlock
+											Padding="0"
+											VerticalAlignment="Center"
+											RenderTransformOrigin="0.5,0.5"
+											SnapsToDevicePixels="True"
+											Style="{StaticResource PreviewTextBlockStyle}"
+											Text="{localize:Static dataTables:DataTableResources.DATATABLE_FILTERS}" />
+									</Grid>
+								</Expander.Header>
+							</Expander>
+
+							<Separator
+								Margin="0"
+								HorizontalAlignment="Right"
+								DockPanel.Dock="Left"
+								Style="{StaticResource VerticalSeparatorStyle}" />
+
+							<dataTables:DataTable DataSource="{Binding PreviewDataTable}">
+								<dataTables:DataTable.OpacityMask>
+									<VisualBrush Visual="{Binding ElementName=MaskBorder}" />
+								</dataTables:DataTable.OpacityMask>
+								<GridView>
+
+									<dataTables:DataTableColumn
+										Width="100"
+										DisplayName="Id"
+										SortKey="Id">
+										<GridViewColumn.CellTemplate>
+											<DataTemplate DataType="{x:Type appearance:PreviewItem}">
+												<TextBlock
+													Style="{StaticResource PreviewTextBlockStyle}"
+													Text="{Binding Id}" />
+											</DataTemplate>
+										</GridViewColumn.CellTemplate>
+										<GridViewColumn.Header>
+											<GridViewColumnHeader>
+												<TextBlock
+													Style="{StaticResource PreviewHeaderTextBlockStyle}"
+													Text="Id" />
+											</GridViewColumnHeader>
+										</GridViewColumn.Header>
+									</dataTables:DataTableColumn>
+
+									<dataTables:DataTableColumn
+										Width="200"
+										DisplayName="Name"
+										SortKey="Name">
+										<GridViewColumn.CellTemplate>
+											<DataTemplate DataType="{x:Type appearance:PreviewItem}">
+												<TextBlock
+													Style="{StaticResource PreviewTextBlockStyle}"
+													Text="{Binding Name}" />
+											</DataTemplate>
+										</GridViewColumn.CellTemplate>
+										<GridViewColumn.Header>
+											<GridViewColumnHeader>
+												<TextBlock
+													Style="{StaticResource PreviewHeaderTextBlockStyle}"
+													Text="Name" />
+											</GridViewColumnHeader>
+										</GridViewColumn.Header>
+									</dataTables:DataTableColumn>
+
+									<dataTables:DataTableColumn
+										Width="100"
+										DisplayName="Value"
+										SortKey="Value">
+										<GridViewColumn.CellTemplate>
+											<DataTemplate DataType="{x:Type appearance:PreviewItem}">
+												<TextBlock
+													Style="{StaticResource PreviewTextBlockStyle}"
+													Text="{Binding Value}" />
+											</DataTemplate>
+										</GridViewColumn.CellTemplate>
+										<GridViewColumn.Header>
+											<GridViewColumnHeader>
+												<TextBlock
+													Style="{StaticResource PreviewHeaderTextBlockStyle}"
+													Text="Value" />
+											</GridViewColumnHeader>
+										</GridViewColumn.Header>
+									</dataTables:DataTableColumn>
+
+								</GridView>
+							</dataTables:DataTable>
+
+						</DockPanel>
+
+					</Grid>
+
+				</Border>
+			</GroupBox>
+
+			<GroupBox Header="{localize:Static appearance:AppearancePanelResources.THEME}">
+				<StackPanel>
+					<TextBlock
+						Opacity="{StaticResource ClickedOpacity}"
+						Text="{localize:Static appearance:AppearancePanelResources.THEME_DESCRIPTION}" />
+					<ItemsControl
+						Margin="0,10,0,0"
+						ItemTemplate="{StaticResource ThemeTemplate}"
+						ItemsSource="{Binding Themes}" />
+				</StackPanel>
+			</GroupBox>
+
+			<GroupBox Header="{localize:Static appearance:AppearancePanelResources.ACCESSIBILITY}">
+				<StackPanel>
+
+					<TextBlock
+						Margin="0,10,0,0"
+						FontSize="{StaticResource FontSizeNormal}"
+						Opacity="{StaticResource ClickedOpacity}"
+						Text="{localize:Static appearance:AppearancePanelResources.FONT_SIZE}" />
+					<controls:CustomSlider
+						x:Name="CustomFontSlider"
+						Margin="10,5,10,0"
+						IsSnapToTickEnabled="True"
+						TickSource="{Binding FontSizeRates}"
+						TickTemplate="{StaticResource CustomSliderTickTemplate}"
+						Value="{Binding FontSizeRate, Mode=TwoWay}" />
+
+					<TextBlock
+						Margin="0,5,0,0"
+						FontSize="{StaticResource FontSizeNormal}"
+						Opacity="{StaticResource ClickedOpacity}"
+						Text="{localize:Static appearance:AppearancePanelResources.ZOOM_LEVEL}" />
+					<controls:CustomSlider
+						Margin="10,5,10,0"
+						IsSnapToTickEnabled="True"
+						TickSource="{Binding GlobalSizeRates}"
+						TickTemplate="{StaticResource CustomSliderTickTemplate}"
+						Value="{Binding GlobalSizeRate, Mode=TwoWay}" />
+
+				</StackPanel>
+			</GroupBox>
+
+		</StackPanel>
+
+	</ScrollViewer>
+
+</UserControl>

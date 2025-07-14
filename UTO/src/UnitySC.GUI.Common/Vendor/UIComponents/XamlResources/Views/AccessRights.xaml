@@ -1,0 +1,284 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:access="clr-namespace:Agileo.Common.Access;assembly=Agileo.Common.Access"
+    xmlns:accessRights="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Setup.AccessRights"
+    xmlns:components="clr-namespace:Agileo.GUI.Components;assembly=Agileo.GUI"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:elements="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Setup.AccessRights.Rights"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:users="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Setup.AccessRights.Users"
+    mc:Ignorable="d">
+
+    <DataTemplate x:Key="AccessRightsGraphicalElementTemplate" DataType="{x:Type components:GraphicalElement}">
+        <DockPanel>
+            <ContentPresenter
+                x:Name="Icon"
+                Width="{StaticResource DefaultIconSize}"
+                Height="{StaticResource DefaultIconSize}"
+                Margin="0,0,7,0"
+                VerticalAlignment="Center"
+                Content="{Binding Icon}" />
+            <TextBlock
+                x:Name="Text"
+                Margin="0,0,5,0"
+                VerticalAlignment="Center"
+                Text="{Binding LocalizedName}"
+                TextAlignment="Left"
+                TextTrimming="CharacterEllipsis" />
+        </DockPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasIcon}" Value="False">
+                <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AccessRightsAccessLevelTemplate" DataType="{x:Type access:AccessLevel}">
+        <TextBlock x:Name="TextBlock" Text="{markupExtensions:LocalizableEnumBinding .}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="AccessRightsItemTemplate" DataType="{x:Type elements:RightsViewModelBase}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Accessibility" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Visibility" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Reset" />
+            </Grid.ColumnDefinitions>
+            <ComboBox
+                x:Name="EnabledRightComboBox"
+                Width="105"
+                Margin="0,0,5,0"
+                HorizontalAlignment="Center"
+                IsEnabled="{Binding EnabledRight.CanEditLevel}"
+                ItemTemplate="{StaticResource AccessRightsAccessLevelTemplate}"
+                ItemsSource="{Binding EnabledRight.AvailableAccessLevels}"
+                SelectedValue="{Binding EnabledRight.Level}" />
+            <ComboBox
+                x:Name="VisibilityRightComboBox"
+                Grid.Column="1"
+                Width="105"
+                Margin="0,0,5,0"
+                HorizontalAlignment="Center"
+                IsEnabled="{Binding VisibilityRight.CanEditLevel}"
+                ItemTemplate="{StaticResource AccessRightsAccessLevelTemplate}"
+                ItemsSource="{Binding VisibilityRight.AvailableAccessLevels}"
+                SelectedValue="{Binding VisibilityRight.Level}" />
+            <Button
+                Grid.Column="2"
+                Margin="0,0,5,0"
+                markupExtensions:Icon.Geometry="{StaticResource RefreshIcon}"
+                Background="Transparent"
+                Command="{Binding ResetCommand}"
+                DockPanel.Dock="Right"
+                ToolTip="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_RESET}">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource SeverityInformationBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding EnabledRight.CanEditLevel}" Value="False">
+                <Setter TargetName="EnabledRightComboBox" Property="BorderBrush" Value="Transparent" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding VisibilityRight.CanEditLevel}" Value="False">
+                <Setter TargetName="VisibilityRightComboBox" Property="BorderBrush" Value="Transparent" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AccessRightsMenuItemTemplate" DataType="{x:Type elements:MenuItemRightsViewModel}">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Led" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Displayer" />
+            </Grid.ColumnDefinitions>
+
+            <ContentPresenter Content="{Binding Element}" ContentTemplate="{StaticResource AccessRightsGraphicalElementTemplate}" />
+
+            <controls:Led
+                x:Name="Led"
+                Grid.Column="1"
+                Margin="7,0,10,0"
+                Foreground="{DynamicResource SeverityInformationBrush}"
+                IsActivated="True"
+                Visibility="{Binding HasModified, Converter={StaticResource FalseToCollapsedConverter}}" />
+
+            <controls:Displayer
+                Grid.Column="2"
+                MinWidth="50"
+                MinHeight="0"
+                Margin="0,0,7,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource FontSizeSmall}"
+                IsHitTestVisible="False"
+                Value="{markupExtensions:LocalizableEnumBinding HighestLevel}">
+                <controls:Displayer.Style>
+                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HighestLevel}" Value="{x:Static access:AccessLevel.Visibility}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:Displayer.Style>
+            </controls:Displayer>
+
+
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AccessRightsCommandElementTemplate" DataType="{x:Type elements:RightsViewModelBase}">
+
+        <Grid Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ContentPresenter
+                Margin="10,0,0,0"
+                Content="{Binding GraphicalElement}"
+                ContentTemplate="{StaticResource AccessRightsGraphicalElementTemplate}" />
+
+            <ContentPresenter
+                Grid.Column="1"
+                Margin="0,0,5,0"
+                Content="{Binding}"
+                ContentTemplate="{StaticResource AccessRightsItemTemplate}" />
+
+        </Grid>
+
+    </DataTemplate>
+
+    <!--#region User-->
+
+    <DataTemplate x:Key="AccessRightsUserTemplate" DataType="{x:Type users:UserViewModel}">
+        <Grid Height="35" HorizontalAlignment="Stretch">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Level" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Reset" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel>
+                <controls:Icon Margin="7,0" Data="{StaticResource UserIcon}" />
+                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+            </DockPanel>
+
+            <controls:Displayer
+                Grid.Column="1"
+                MinWidth="50"
+                MinHeight="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource FontSizeSmall}"
+                IsHitTestVisible="False"
+                Value="{markupExtensions:LocalizableEnumBinding AccessLevel}">
+                <controls:Displayer.Style>
+                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AccessLevel}" Value="{x:Static access:AccessLevel.Visibility}">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:Displayer.Style>
+            </controls:Displayer>
+
+            <Button
+                Grid.Column="2"
+                Margin="5,0,5,0"
+                markupExtensions:Icon.Geometry="{StaticResource RefreshIcon}"
+                Background="Transparent"
+                Command="{Binding ResetCommand}"
+                DockPanel.Dock="Right"
+                ToolTip="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_RESET}">
+                <Button.Style>
+                    <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource SeverityInformationBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+        </Grid>
+    </DataTemplate>
+
+    <!--#endregion-->
+
+    <!--#region Headers-->
+
+    <ControlTemplate x:Key="AppCommandsRightsHeaderTemplate" TargetType="{x:Type Control}">
+        <Grid Margin="{TemplateBinding Padding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Accessibility" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Visibility" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Reset" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Margin="0,3"
+                VerticalAlignment="Center"
+                Text="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_NAME}"
+                TextAlignment="Center" />
+            <TextBlock
+                Grid.Column="1"
+                Margin="0,3,5,3"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Right"
+                Text="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_ACCESSIBILITY}"
+                TextAlignment="Center" />
+            <TextBlock
+                Grid.Column="2"
+                Margin="0,3,5,3"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Right"
+                Text="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_VISIBILITY}"
+                TextAlignment="Center" />
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="AccessRightsUsersHeaderTemplate">
+        <Border BorderBrush="{DynamicResource DefaultBorderBrush}" BorderThickness="0,0,0,1">
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Level" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Reset" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="7,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_NAME}" />
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Right"
+                    Text="{localize:Static accessRights:AccessRightsResources.ACCESSRIGHTSPANEL_LEVEL}" />
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
+    <!--#endregion-->
+
+</ResourceDictionary>

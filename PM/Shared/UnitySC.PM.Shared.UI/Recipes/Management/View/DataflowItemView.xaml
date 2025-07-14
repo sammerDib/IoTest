@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="UnitySC.PM.Shared.UI.Recipes.Management.View.DataflowItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"    
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:graph="clr-namespace:UnitySC.PM.Shared.UI.Recipes.Management.View.Graph"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.Shared.UI;component/Converters/Converter.xaml" />
+
+                <!-- Styles -->                
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <controls:ImageGroupBox Image="{StaticResource Dataflow}" Header="{Binding Name,Converter={converters:ShowUnderscoreConverter}}" Margin="0,2,2,0">
+            <Grid Style="{StaticResource FormGrid}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" DisplayAfter="0" />
+                <StackPanel Orientation="Horizontal" Margin="4">
+                    <TextBlock Text="Name" />
+                    <TextBox Text="{Binding Name}" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" MinWidth="200" />
+                    <controls:ImageButton ImageGeometry="{StaticResource SaveGeometry}" ImageGeometryBrush="#46B584" HorizontalAlignment="Left"
+                                      Command="{Binding DoSaveDFRecipe}" Margin="4">Save</controls:ImageButton>
+
+                </StackPanel>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="198*" />
+                        <ColumnDefinition Width="62*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="521*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="{StaticResource PanelTitleBackgroundBrush}" Grid.ColumnSpan="2">
+                        <controls:ImageButton Image="{StaticResource Undo}" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                              Command="{Binding Dataflow.UndoRecipeCommand}" ToolTip="Undo" Margin="2,0,0,0" />
+                        <controls:ImageButton Image="{StaticResource Redo}" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                              Command="{Binding Dataflow.RedoRecipeCommand}" ToolTip="Redo" />
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                        <controls:ImageButton Image="{StaticResource InsertModuleAfter}" VerticalAlignment="Top" HorizontalAlignment="Right" Width="35"
+                                              Command="{Binding Dataflow.InsertChildNodeCommand}" ToolTip="Insert After..." />
+                        <controls:ImageButton Image="{StaticResource AddBranch}" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                              Command="{Binding Dataflow.AddChildNodeCommand}"  ToolTip="Create new Branch from here..." />
+                        <controls:ImageButton ImageGeometry="{StaticResource TrashGeometry}"  ImageGeometryBrush="{StaticResource ImageErrorColor}"  VerticalAlignment="Top" HorizontalAlignment="Right"
+                                              Command="{Binding Dataflow.DeleteNodeCommand}" ToolTip="Delete from dataflow" />
+                    </StackPanel>
+
+                    <graph:GraphView DataContext="{Binding Dataflow}"
+                             VisibleRect="{Binding VisibleRect, Mode=TwoWay}"
+                             GraphBackground="{StaticResource PanelBackgroundBrush}"
+                             IsEditable="{Binding IsEditable}"
+                             NodeInfoIsVisible="True"
+                             HorizontalAlignment="Stretch"
+                             NodeProgessInfoIsVisible="false"
+                             Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" />
+                    <GridSplitter Grid.Column="2" Grid.RowSpan="2" Width="5" HorizontalAlignment="Stretch" />
+                    <controls:ImageGroupBox Image="{Binding Dataflow.SelectedNode.ActorType, Converter={StaticResource ActorTypeToImageDictionaryConverter}}" Grid.Column="3" Grid.RowSpan="2">
+                        <controls:ImageGroupBox.Header>
+                            <TextBlock Margin="1" FontWeight="Normal">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} - {1}">
+                                        <Binding Path="Dataflow.SelectedNode.ActorType" />
+                                        <Binding Path="Dataflow.SelectedNode.Name" FallbackValue="" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </controls:ImageGroupBox.Header>
+                        <ContentControl Content="{Binding Dataflow.CurrentRecipeSummaryUC}" />
+                    </controls:ImageGroupBox>
+                    <StackPanel Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="1"  Orientation="Horizontal">
+                        <controls:ImageButton Command="{Binding Dataflow.ShareUnShareNodeCommand}" Margin="6,0">
+                            <controls:ImageButton.Style>
+                                <Style TargetType="controls:ImageButton" BasedOn="{StaticResource TransparentImageButton}">
+                                    <Setter Property="Padding" Value="-4" />
+                                    <Setter Property="Image" Value="{StaticResource ShareDisabled}" />
+                                    <Setter Property="ToolTip" Value="Click to share" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Dataflow.SelectedNode.IsShared}" Value="True">
+                                            <Setter Property="Image" Value="{StaticResource ShareEnabled}" />
+                                            <Setter Property="ToolTip" Value="Click to unshare" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:ImageButton.Style>
+                        </controls:ImageButton>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" Margin="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Comment" VerticalAlignment="Top" />
+                    <TextBox Grid.Column="1" Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Height="50" />
+                </Grid>
+                <controls:ImageButton Grid.Row="3" MinWidth="120"
+				                Command="{Binding Dataflow.EditRecipeCommand}"				
+				                Style="{StaticResource HighlightedImageButton}" 
+				                ImageGeometryRight="{StaticResource RightArrowGeometry}" 
+				                ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" 
+				                VerticalContentAlignment="Center"                            
+				                HorizontalAlignment="Right">EDIT RECIPE</controls:ImageButton>
+            </Grid>
+        </controls:ImageGroupBox>
+        <controls:ImageButton Command="{Binding Dataflow.ShareUnShareCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8,4">
+            <controls:ImageButton.Style>
+                <Style TargetType="controls:ImageButton" BasedOn="{StaticResource TransparentImageButton}">
+                    <Setter Property="Padding" Value="-4" />
+                    <Setter Property="Image" Value="{StaticResource ShareDisabled}" />
+                    <Setter Property="ToolTip" Value="Click to share" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=Dataflow.RootNode.IsShared}" Value="True">
+                            <Setter Property="Image" Value="{StaticResource ShareEnabled}" />
+                            <Setter Property="ToolTip" Value="Click to unshare" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </controls:ImageButton.Style>
+        </controls:ImageButton>
+    </Grid>
+</UserControl>

@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="0fca7171-5a2d-487c-9543-c94a7d29d464" name="WaferFlow" access="Public" usings="using UnitySC.Equipment.Abstractions.Vendor.Devices.Activities;" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <vertexContainerHasVertices Id="9a5169c5-1e8f-4df1-ac2c-f3a0711c001b">
+      <initial Id="a0684060-067b-458d-95d5-c9cc7b72ee88" name="Initial" nameSpace="WaferFlow">
+        <successors>
+          <transition Id="7af6a0b3-4d9d-47be-ada6-f9484e76242e" source="WaferFlow.Initial" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow">
+            <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="337cb4dc-314e-4583-bede-6ab4bf207007">
+      <state Id="8c70c472-01a8-441c-8033-e8cce846fdfb" name="Activity" nameSpace="WaferFlow" exitAction="ActivityExit" kind="Normal" exitActionLabel="Exit/ ActivityExit">
+        <vertices>
+          <vertexContainerHasVertices Id="89b3ec22-556f-404a-8ad0-9e6bdbd8f376">
+            <state Id="6cd5533a-3519-4c38-82ad-2e4eee29cdca" name="WaitOrders" nameSpace="WaferFlow.Activity" entryAction="WaitOrdersEntry" exitAction="WaitOrdersExit" kind="Normal" entryActionLabel="Entry/ WaitOrdersEntry" exitActionLabel="Exit/ WaitOrdersExit">
+              <successors>
+                <transition Id="f61626eb-efb6-4189-998c-f1a28f652dde" event="AlignerSelected" label="AlignerSelected" source="WaferFlow.Activity.WaitOrders" destination="WaferFlow.Activity.Aligner.GoInFrontOfAligner" nameSpace="WaferFlow.Activity">
+                  <stateMoniker name="/WaferFlow/Activity/Aligner/GoInFrontOfAligner" />
+                </transition>
+                <transition Id="d9465ad7-5393-42ad-bdf3-d227c257f9f3" event="ProcessModuleSelected" label="ProcessModuleSelected" source="WaferFlow.Activity.WaitOrders" destination="WaferFlow.Activity.PM.CheckPmState" nameSpace="WaferFlow.Activity">
+                  <stateMoniker name="/WaferFlow/Activity/PM/CheckPmState" />
+                </transition>
+                <transition Id="a4dff765-d245-4887-a7d7-c8724d89d834" event="Reevaluate" label="Reevaluate" source="WaferFlow.Activity.WaitOrders" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity">
+                  <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                </transition>
+                <transition Id="d02a2315-73a7-4158-a2b9-40a0b17baceb" event="PickLoadPortSelected" label="PickLoadPortSelected" source="WaferFlow.Activity.WaitOrders" destination="WaferFlow.Activity.LP.PickInLp" nameSpace="WaferFlow.Activity">
+                  <stateMoniker name="/WaferFlow/Activity/LP/PickInLp" />
+                </transition>
+                <transition Id="53e19c2f-8891-4929-b314-a1148e2210bf" event="PlaceLoadPortSelected" label="PlaceLoadPortSelected" source="WaferFlow.Activity.WaitOrders" destination="WaferFlow.Activity.LP.PlaceInLp" nameSpace="WaferFlow.Activity">
+                  <stateMoniker name="/WaferFlow/Activity/LP/PlaceInLp" />
+                </transition>
+                <transition Id="1aa53fd8-422e-439f-9b67-25b27b7c2ee9" event="StopRequested" label="StopRequested" source="WaferFlow.Activity.WaitOrders" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity">
+                  <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                </transition>
+              </successors>
+            </state>
+          </vertexContainerHasVertices>
+          <vertexContainerHasVertices Id="7945a5f4-bcb7-4716-bf82-8a073efe83ce">
+            <state Id="31d8815d-098d-4ebe-a655-16b22ab19543" name="Aligner" nameSpace="WaferFlow.Activity" kind="Normal">
+              <vertices>
+                <stateHasNestedStates Id="14be3e2b-9950-4dbf-8c42-aba09c23bad3">
+                  <state Id="2f3e5700-9cc9-4bfc-b536-60069dcc6e85" name="SwapInAligner" nameSpace="WaferFlow.Activity.Aligner" entryAction="SwapInAlignerEntry" kind="Normal" entryActionLabel="Entry/ SwapInAlignerEntry">
+                    <successors>
+                      <transition Id="a326a0f8-464f-45aa-8374-11fbdb8a7bf5" event="RobotDone" condition="AlignerEmpty" label="RobotDone  [ AlignerEmpty ]" source="WaferFlow.Activity.Aligner.SwapInAligner" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.Aligner">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                      <transition Id="30404fdf-21d3-4546-a791-2a4dcdf8d317" event="RobotDone" condition="AlignerOccupied" label="RobotDone  [ AlignerOccupied ]" source="WaferFlow.Activity.Aligner.SwapInAligner" destination="WaferFlow.Activity.Aligner.StartAlignerActivity" nameSpace="WaferFlow.Activity.Aligner">
+                        <stateMoniker name="/WaferFlow/Activity/Aligner/StartAlignerActivity" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <vertexContainerHasVertices Id="8c1c8349-b865-45c0-947a-849cc73c023f">
+                  <state Id="a78a5013-874b-415d-a201-354c7fbece5e" name="StartAlignerActivity" nameSpace="WaferFlow.Activity.Aligner" entryAction="StartAlignerActivityEntry" exitAction="StartAlignerActivityExit" kind="Normal" entryActionLabel="Entry/ StartAlignerActivityEntry" exitActionLabel="Exit/ StartAlignerActivityExit">
+                    <successors>
+                      <transition Id="044b8abc-ce50-4e18-9902-895b0e23a73b" event="AlignerActivityStarted" label="AlignerActivityStarted" source="WaferFlow.Activity.Aligner.StartAlignerActivity" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.Aligner">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                    </successors>
+                  </state>
+                </vertexContainerHasVertices>
+                <stateHasNestedStates Id="af8c8db6-689b-4de7-8cc4-645ce382eb6c">
+                  <state Id="736f0353-f8c4-45f1-b2be-5eb99621e7cf" name="WaitAlignerActivityDone" nameSpace="WaferFlow.Activity.Aligner" entryAction="WaitAlignerActivityDoneEntry" kind="Normal" entryActionLabel="Entry/ WaitAlignerActivityDoneEntry">
+                    <successors>
+                      <transition Id="ca6f0ef0-251e-4da5-83b5-c736fe348285" event="AlignerActivityDone" label="AlignerActivityDone" source="WaferFlow.Activity.Aligner.WaitAlignerActivityDone" destination="WaferFlow.Activity.Aligner.SwapInAligner" nameSpace="WaferFlow.Activity.Aligner">
+                        <stateMoniker name="/WaferFlow/Activity/Aligner/SwapInAligner" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="bd839ece-c1af-4538-b4fb-db94a15eaf06">
+                  <state Id="0971f096-909c-4d26-8292-7065d4e87348" name="GoInFrontOfAligner" nameSpace="WaferFlow.Activity.Aligner" entryAction="GoInFrontOfAlignerEntry" kind="Normal" entryActionLabel="Entry/ GoInFrontOfAlignerEntry">
+                    <successors>
+                      <transition Id="d507e81a-0a42-4a1c-bbec-e193b9f504d1" event="RobotDone" label="RobotDone" source="WaferFlow.Activity.Aligner.GoInFrontOfAligner" destination="WaferFlow.Activity.Aligner.WaitAlignerActivityDone" nameSpace="WaferFlow.Activity.Aligner">
+                        <stateMoniker name="/WaferFlow/Activity/Aligner/WaitAlignerActivityDone" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+              </vertices>
+            </state>
+          </vertexContainerHasVertices>
+          <vertexContainerHasVertices Id="8b5cffeb-09b4-465d-85f0-8dd4d7ec970e">
+            <state Id="a3f5d319-ef6b-459e-9c29-008592a102a1" name="LP" nameSpace="WaferFlow.Activity" kind="Normal">
+              <vertices>
+                <stateHasNestedStates Id="ed5e12dd-a073-4b03-8208-b8a93950e31f">
+                  <state Id="d82181f6-62ef-4ff4-a30a-ce74b8c8c650" name="PickInLp" nameSpace="WaferFlow.Activity.LP" entryAction="PickInLpEntry" kind="Normal" entryActionLabel="Entry/ PickInLpEntry">
+                    <successors>
+                      <transition Id="ac35bfb6-e3e7-4ee1-8045-844a2d5ffb28" event="RobotDone" label="RobotDone" source="WaferFlow.Activity.LP.PickInLp" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.LP">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="a53ae20a-d15c-4f09-b230-578547bd8a6a">
+                  <state Id="6f2ef0f4-5db2-435d-8a48-e84ba2013546" name="PlaceInLp" nameSpace="WaferFlow.Activity.LP" entryAction="PlaceInLpEntry" kind="Normal" entryActionLabel="Entry/ PlaceInLpEntry">
+                    <successors>
+                      <transition Id="d0b7b464-b17c-4281-9e5d-929318b02995" event="RobotDone" label="RobotDone" source="WaferFlow.Activity.LP.PlaceInLp" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.LP">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+              </vertices>
+            </state>
+          </vertexContainerHasVertices>
+          <vertexContainerHasVertices Id="0c6a873a-20dd-4098-9d56-7a51715c7aae">
+            <state Id="d51d5d76-1e8a-4420-82ab-2891c0e23bc3" name="PM" nameSpace="WaferFlow.Activity" exitAction="PmExit" kind="Normal" exitActionLabel="Exit/ PmExit">
+              <vertices>
+                <stateHasNestedStates Id="9127da61-cd7f-497e-b820-b3b05c9fe277">
+                  <state Id="ead9f2c8-4fbe-4236-9257-1d844a92125f" name="CheckPmState" nameSpace="WaferFlow.Activity.PM" kind="Normal">
+                    <successors>
+                      <transition Id="dfada49c-857f-42f6-bee7-e8705da5fd52" condition="PmEmptyOrIdle" label="[ PmEmptyOrIdle ]" source="WaferFlow.Activity.PM.CheckPmState" destination="WaferFlow.Activity.PM.PreparePm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/PreparePm" />
+                      </transition>
+                      <transition Id="7d60bb7a-ee0d-44b3-958d-84907386db03" condition="PmFullAndActive" label="[ PmFullAndActive ]" source="WaferFlow.Activity.PM.CheckPmState" destination="WaferFlow.Activity.PM.GoInFrontOfPm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/GoInFrontOfPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="c6604e86-2c64-4a3e-863e-8ec65aaacf38">
+                  <state Id="3fb4e3fb-fa25-45e7-943f-1f846a13e476" name="PreparePm" nameSpace="WaferFlow.Activity.PM" entryAction="PreparePmEntry" kind="Normal" entryActionLabel="Entry/ PreparePmEntry">
+                    <successors>
+                      <transition Id="490243e5-be86-4c8e-961a-2aa2fd433b24" event="PmDone" label="PmDone" source="WaferFlow.Activity.PM.PreparePm" destination="WaferFlow.Activity.PM.GoInFrontOfPm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/GoInFrontOfPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="341d0085-2418-4478-9a25-42fe980850ff">
+                  <state Id="d7875034-bb27-4b1c-92e1-c7538417f2db" name="GoInFrontOfPm" nameSpace="WaferFlow.Activity.PM" entryAction="GoInFrontOfPmEntry" kind="Normal" entryActionLabel="Entry/ GoInFrontOfPmEntry">
+                    <successors>
+                      <transition Id="ea2179da-ede8-4194-8522-ba29a3bdbdfd" event="RobotDone" condition="PmFullAndActive" label="RobotDone  [ PmFullAndActive ]" source="WaferFlow.Activity.PM.GoInFrontOfPm" destination="WaferFlow.Activity.PM.WaitPmReadyToTransfer" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/WaitPmReadyToTransfer" />
+                      </transition>
+                      <transition Id="64b04995-1c40-4fe9-8fd6-911e957383d3" event="RobotDone" condition="PmEmptyOrIdle" label="RobotDone  [ PmEmptyOrIdle ]" source="WaferFlow.Activity.PM.GoInFrontOfPm" destination="WaferFlow.Activity.PM.PrepareTransferOnPm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/PrepareTransferOnPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="dc77584c-02ab-4da9-b1f3-067fae972538">
+                  <state Id="99e4b448-575b-4a98-a2a4-80ada722b744" name="PrepareTransferOnPm" nameSpace="WaferFlow.Activity.PM" entryAction="PrepareTransferOnPmEntry" kind="Normal" entryActionLabel="Entry/ PrepareTransferOnPmEntry">
+                    <successors>
+                      <transition Id="80ee2792-d532-4bb2-a89c-1bfd45af5993" event="PmNotReadyToTransfer" label="PmNotReadyToTransfer" source="WaferFlow.Activity.PM.PrepareTransferOnPm" destination="WaferFlow.Activity.PM.WaitPmReadyToTransfer" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/WaitPmReadyToTransfer" />
+                      </transition>
+                      <transition Id="252727eb-e3ce-485b-bba5-7fdb0b3ca74c" event="PmReadyToTransfer" label="PmReadyToTransfer" source="WaferFlow.Activity.PM.PrepareTransferOnPm" destination="WaferFlow.Activity.PM.SwapInPm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/SwapInPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="85a34bd0-9be3-4637-a0d6-6d38af0cfd2a">
+                  <state Id="e5021d7d-1c9e-4eb9-b337-c659c21888f2" name="WaitPmReadyToTransfer" nameSpace="WaferFlow.Activity.PM" entryAction="WaitPmReadyToTransferEntry" kind="Normal" entryActionLabel="Entry/ WaitPmReadyToTransferEntry">
+                    <successors>
+                      <transition Id="1cf04f28-8900-45a3-b354-a35ad96f71d0" event="PmReadyToTransfer" label="PmReadyToTransfer" source="WaferFlow.Activity.PM.WaitPmReadyToTransfer" destination="WaferFlow.Activity.PM.PrepareTransferOnPm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/PrepareTransferOnPm" />
+                      </transition>
+                      <transition Id="03506d07-8e09-4208-9756-063bb008b725" event="PmInError" label="PmInError" source="WaferFlow.Activity.PM.WaitPmReadyToTransfer" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                      <transition Id="5ad28215-0b9f-4c80-a476-5396a7566218" event="StopRequested" label="StopRequested" source="WaferFlow.Activity.PM.WaitPmReadyToTransfer" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="68260195-922b-48c9-be2b-9d5a9044be93">
+                  <state Id="33ff6e9d-dd2a-4f3a-9e6f-c0ca1e7f8a1d" name="SwapInPm" nameSpace="WaferFlow.Activity.PM" entryAction="SwapInPmEntry" kind="Normal" entryActionLabel="Entry/ SwapInPmEntry">
+                    <successors>
+                      <transition Id="8bafce84-cd1d-4fa9-86ab-25525bf330df" event="RobotDone" label="RobotDone" source="WaferFlow.Activity.PM.SwapInPm" destination="WaferFlow.Activity.PM.PostTransferAndStartPm" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/PM/PostTransferAndStartPm" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+                <stateHasNestedStates Id="5ba59985-9568-47b5-b4b7-2ba2bea3ef2b">
+                  <state Id="e36906b0-faed-47f9-b70b-7b3b289e7fa7" name="PostTransferAndStartPm" nameSpace="WaferFlow.Activity.PM" entryAction="PostTransferAndStartPmEntry" kind="Normal" entryActionLabel="Entry/ PostTransferAndStartPmEntry">
+                    <successors>
+                      <transition Id="ae864273-1d45-4e8c-9b53-6d9d690818a5" event="PmDone" label="PmDone" source="WaferFlow.Activity.PM.PostTransferAndStartPm" destination="WaferFlow.Activity.WaitOrders" nameSpace="WaferFlow.Activity.PM">
+                        <stateMoniker name="/WaferFlow/Activity/WaitOrders" />
+                      </transition>
+                    </successors>
+                  </state>
+                </stateHasNestedStates>
+              </vertices>
+            </state>
+          </vertexContainerHasVertices>
+        </vertices>
+        <successors>
+          <transition Id="5c8324d4-2cf0-4c8a-a100-4ce08600ca3e" event="ActivityDoneEvent" label="ActivityDoneEvent" source="WaferFlow.Activity" destination="WaferFlow.FinalState" nameSpace="WaferFlow">
+            <finalStateMoniker name="/WaferFlow/FinalState" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+    <stateMachineHasStates Id="7da02c3c-efed-4f71-84d5-92d12e206b36">
+      <finalState Id="9cf57aee-6d22-4b5d-b0e2-c1247fc53a22" name="FinalState" nameSpace="WaferFlow" kind="Final" />
+    </stateMachineHasStates>
+  </vertices>
+</stateMachine>

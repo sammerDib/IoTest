@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{10A20294-F0AA-437F-8F46-B7C45D0E8CC8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DeepLearningSoft48</RootNamespace>
+    <AssemblyName>DeepLearningSoft48</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Matrox.MatroxImagingLibrary">
+      <HintPath>..\..\..\Shared\ExternalLibraries\MIL\MILXpp6\Matrox.MatroxImagingLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Models\DefectAnnotations\BoundingBox.cs" />
+    <Compile Include="Models\DefectAnnotations\DefectAnnotation.cs" />
+    <Compile Include="Models\DefectAnnotations\LineAnnotation.cs" />
+    <Compile Include="Models\DefectAnnotations\PolygonAnnotation.cs" />
+    <Compile Include="Models\DefectAnnotations\PolylineAnnotation.cs" />
+    <Compile Include="Models\FolderPath.cs" />
+    <Compile Include="Models\Module.cs" />
+    <Compile Include="Models\SerializableColor.cs" />
+    <Compile Include="Models\Wafers.cs" />
+    <Compile Include="Modules\AdvancedModules\ImageProcessing\ComplexTransformation\AdjustLevels\AdjustLevelsFactory.cs" />
+    <Compile Include="Modules\AdvancedModules\ImageProcessing\ComplexTransformation\AdjustLevels\AdjustLevelsModule.cs" />
+    <Compile Include="Modules\BasicModules\ImageProcessing\Binarization\ThresholdStd\ThresholdStandardFactory.cs" />
+    <Compile Include="Modules\BasicModules\ImageProcessing\Binarization\ThresholdStd\ThresholdStandardModule.cs" />
+    <Compile Include="Modules\BasicModules\ImageProcessing\ShapeDetection\SobelFactory.cs" />
+    <Compile Include="Modules\BasicModules\ImageProcessing\ShapeDetection\SobelModule.cs" />
+    <Compile Include="Modules\Parameters\DoubleParameter.cs" />
+    <Compile Include="Modules\Parameters\EnumParameter.cs" />
+    <Compile Include="Modules\Parameters\IntParameter.cs" />
+    <Compile Include="Modules\Parameters\ParameterBase.cs" />
+    <Compile Include="Modules\Parameters\ParameterTemplate.cs" />
+    <Compile Include="Modules\Parameters\Views\DoubleParameterView.xaml.cs">
+      <DependentUpon>DoubleParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Parameters\Views\EnumParameterView.xaml.cs">
+      <DependentUpon>EnumParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UIResources.cs" />
+    <Compile Include="Services\KeyValuePairWrapper.cs" />
+    <Compile Include="Services\SerializableColorToSolidBrushConverter.cs" />
+    <Compile Include="Services\Mapper.cs" />
+    <Compile Include="Services\StringTruncateConverter.cs" />
+    <Compile Include="Services\ViewModelLocator.cs" />
+    <Compile Include="Services\WaferService.cs" />
+    <Compile Include="Services\XmlService.cs" />
+    <Compile Include="UndoRedo\CilpBoard.cs" />
+    <Compile Include="UndoRedo\Commands.cs" />
+    <Compile Include="UndoRedo\UndoRedoManager.cs" />
+    <Compile Include="Utils\RepresentationNameIdentifier.cs" />
+    <Compile Include="Utils\SelectFolderDialog.cs" />
+    <Compile Include="Utils\Enums\TabType.cs" />
+    <Compile Include="ViewModels\AddImageProcessDialogViewModel.cs" />
+    <Compile Include="ViewModels\AddNewDefectCategoryDialogViewModel.cs" />
+    <Compile Include="ViewModels\AnnotateWaferLayerViewModel.cs" />
+    <Compile Include="ViewModels\AnnotationsListingViewModel.cs" />
+    <Compile Include="ViewModels\ApplyImageProcessesDialogViewModel.cs" />
+    <Compile Include="ViewModels\DefectAnnotations\BoundingBoxVM.cs" />
+    <Compile Include="ViewModels\DefectAnnotations\DefectAnnotationVM.cs" />
+    <Compile Include="ViewModels\DefectAnnotations\LineAnnotationVM.cs" />
+    <Compile Include="ViewModels\DefectAnnotations\PolygonAnnotationVM.cs" />
+    <Compile Include="ViewModels\DefectAnnotations\PolylineAnnotationVM.cs" />
+    <Compile Include="ViewModels\DefectCategoryFormViewModel.cs" />
+    <Compile Include="ViewModels\EditDefectCategoryDialogViewModel.cs" />
+    <Compile Include="ViewModels\ImageAnnotationToolsViewModel.cs" />
+    <Compile Include="ViewModels\LearningTabViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\TestTabViewModel.cs" />
+    <Compile Include="ViewModels\WaferContentViewModel.cs" />
+    <Compile Include="ViewModels\DisplayWaferLayerViewModel.cs" />
+    <Compile Include="ViewModels\WafersListingItemViewModel.cs" />
+    <Compile Include="ViewModels\WafersListingViewModel.cs" />
+    <Compile Include="Views\Components\AnnotateWaferLayerView.xaml.cs">
+      <DependentUpon>AnnotateWaferLayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\AnnotationsListing.xaml.cs">
+      <DependentUpon>AnnotationsListing.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\AnnotationsListingItem.xaml.cs">
+      <DependentUpon>AnnotationsListingItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DefectCategoryForm.xaml.cs">
+      <DependentUpon>DefectCategoryForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DesignerCanvasComponents\DesignerComponent.xaml.cs">
+      <DependentUpon>DesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DesignerCanvasComponents\LineDesignerComponent.xaml.cs">
+      <DependentUpon>LineDesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DesignerCanvasComponents\MultiVisibilityConverter.cs" />
+    <Compile Include="Views\Components\DesignerCanvasComponents\PolygonDesignerComponent.xaml.cs">
+      <DependentUpon>PolygonDesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DesignerCanvasComponents\PolylineDesignerComponent.xaml.cs">
+      <DependentUpon>PolylineDesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DesignerCanvasComponents\RectangleDesignerComponent.xaml.cs">
+      <DependentUpon>RectangleDesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\DesignerCanvasComponents\VisibilityConverter.cs" />
+    <Compile Include="Views\Components\DisplayWaferLayerView.xaml.cs">
+      <DependentUpon>DisplayWaferLayerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\ImageAnnotationTools.xaml.cs">
+      <DependentUpon>ImageAnnotationTools.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\LearningWaferContent.xaml.cs">
+      <DependentUpon>LearningWaferContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\TestWaferContent.xaml.cs">
+      <DependentUpon>TestWaferContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\WafersListing.xaml.cs">
+      <DependentUpon>WafersListing.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\WafersListingItem.xaml.cs">
+      <DependentUpon>WafersListingItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Components\ZoomAndPanComponent\GraphView_ZoomAndPan.cs" />
+    <Compile Include="Views\Components\ZoomAndPanComponent\MouseHandlingMode.cs" />
+    <Compile Include="Views\Components\ZoomAndPanComponent\ZoomAndPanView.xaml.cs">
+      <DependentUpon>ZoomAndPanView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainViews\LearningTabView.xaml.cs">
+      <DependentUpon>LearningTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainViews\TestTabView.xaml.cs">
+      <DependentUpon>TestTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PopUpWindows\AddImageProcessDialog.xaml.cs">
+      <DependentUpon>AddImageProcessDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PopUpWindows\AddNewDefectCategoryDialog.xaml.cs">
+      <DependentUpon>AddNewDefectCategoryDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PopUpWindows\ApplyImageProcessesDialog.xaml.cs">
+      <DependentUpon>ApplyImageProcessesDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PopUpWindows\EditDefectCategoryDialog.xaml.cs">
+      <DependentUpon>EditDefectCategoryDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ComToLearningModel\ObjectSocket.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Modules\Parameters\Views\DoubleParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Parameters\Views\EnumParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\AnnotateWaferLayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\AnnotationsListing.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\AnnotationsListingItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\DefectCategoryForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\DesignerCanvasComponents\DesignerComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\DesignerCanvasComponents\LineDesignerComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\DesignerCanvasComponents\PolygonDesignerComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Components\DesignerCanvasComponents\PolylineDesignerComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Components\DesignerCanvasComponents\RectangleDesignerComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\DisplayWaferLayerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\ImageAnnotationTools.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\LearningWaferContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\TestWaferContent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\WafersListing.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\WafersListingItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Components\ZoomAndPanComponent\ZoomAndPanView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainViews\LearningTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainViews\TestTabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopUpWindows\AddImageProcessDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopUpWindows\AddNewDefectCategoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopUpWindows\ApplyImageProcessesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PopUpWindows\EditDefectCategoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\DefectCategoryPair.cs" />
+    <Compile Include="Models\Wafer.cs" />
+    <Compile Include="Modules\IModuleFactory.cs" />
+    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdC\AdCv10\GUI\GraphUI\GraphUI.csproj">
+      <Project>{b7ca1480-c144-40ac-ab97-a626f800d5b4}</Project>
+      <Name>GraphUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdC\AdCv10\GUI\Utils\Utils.csproj">
+      <Project>{e7d6707b-d6ef-4fa8-9374-dc3b7d3cdfd6}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdC\AdCv10\GUI\ZoomAndPan\ZoomAndPan.csproj">
+      <Project>{468adede-6f5e-40c0-99c9-c6dac4fac934}</Project>
+      <Name>ZoomAndPan</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\color-wheel.png" />
+    <None Include="Resources\UIResources.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+    <PackageReference Include="NetMQ">
+      <Version>4.0.1.13</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog">
+      <Version>4.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ResultJSONFile\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cross_black.cur" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

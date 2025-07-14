@@ -1,0 +1,102 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!--#region Calendar-->
+
+    <SolidColorBrush x:Key="CalendarBackground" Color="{DynamicResource ControlInputBackground}" />
+    <SolidColorBrush x:Key="CalendarBorderBrush" Color="Transparent" />
+
+    <Style TargetType="{x:Type Calendar}">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="MinHeight" Value="150" />
+        <Setter Property="MinWidth" Value="150" />
+        <Setter Property="Background" Value="{DynamicResource CalendarBackground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CalendarBorderBrush}" />
+    </Style>
+
+    <!--#endregion Calendar-->
+
+    <!--#region Separator-->
+
+    <SolidColorBrush
+        x:Key="SeparatorBackground"
+        Opacity="{StaticResource DisabledOpacity}"
+        Color="{DynamicResource PanelForeground}" />
+
+    <Style TargetType="{x:Type Separator}">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Margin" Value="0,2,0,2" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBackground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Border
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="VerticalSeparatorStyle" TargetType="{x:Type Separator}">
+        <Setter Property="Width" Value="1" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="2,0,2,0" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SeparatorBackground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Border
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True"
+                        UseLayoutRounding="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion Separator-->
+
+    <!--#region Label-->
+
+    <SolidColorBrush x:Key="LabelForeground" Color="{DynamicResource PanelForeground}" />
+
+    <Style TargetType="{x:Type Label}">
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource LabelForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Label}">
+                    <Grid>
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            RecognizesAccessKey="True">
+                            <ContentPresenter.Resources>
+                                <Style BasedOn="{StaticResource Body1TextStyle}" TargetType="{x:Type TextBlock}" />
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="false" />
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion Label-->
+
+</ResourceDictionary>

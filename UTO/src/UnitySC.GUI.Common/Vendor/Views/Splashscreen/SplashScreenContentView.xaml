@@ -1,0 +1,90 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Splashscreen.SplashScreenContentView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:splashscreen="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Splashscreen"
+    Height="280"
+    d:DataContext="{d:DesignInstance splashscreen:SplashScreenViewModel}"
+    d:DesignWidth="550"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="SplashScreenForeground" Color="{DynamicResource PanelForeground}" />
+    </UserControl.Resources>
+    <DockPanel>
+        <!--#region Step (detail, n of N)-->
+        <DockPanel DockPanel.Dock="Bottom">
+            <TextBlock
+                HorizontalAlignment="Right"
+                DockPanel.Dock="Top"
+                FontSize="20"
+                Foreground="{DynamicResource SplashScreenForeground}"
+                Text="{Binding StepDescription, FallbackValue='Please wait...'}" />
+
+            <TextBlock
+                HorizontalAlignment="Right"
+                DockPanel.Dock="Top"
+                FontSize="10"
+                Foreground="{DynamicResource SplashScreenForeground}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Step {0:F0} of {1:F0}">
+                        <Binding
+                            FallbackValue="1"
+                            Path="Step" />
+                        <Binding
+                            FallbackValue="10"
+                            Path="StepMaximum" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DockPanel>
+        <!--#endregion Step (detail, n of N)-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Margin="20">
+
+                <!--#region Progress-->
+
+
+                <controls:CircularProgressBar
+                    Width="200"
+                    Height="200"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsIndeterminate="{Binding IsProgressIndeterminate}"
+                    Maximum="100"
+                    Minimum="0"
+                    StrokeThickness="8"
+                    Value="{Binding ProgressPercentage, Mode=OneWay, FallbackValue=99}" />
+
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="50"
+                    Foreground="{DynamicResource SplashScreenForeground}"
+                    Text="{Binding ProgressPercentage, FallbackValue=0%, StringFormat='{}{0:F0}%'}" />
+
+            </Grid>
+            <!--#endregion Progress-->
+
+            <DockPanel
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                LastChildFill="False">
+
+                <Control
+                    MaxWidth="200"
+                    MaxHeight="200"
+                    DockPanel.Dock="Right"
+                    Template="{StaticResource ImageCompanyLogoControlTemplate}" />
+
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

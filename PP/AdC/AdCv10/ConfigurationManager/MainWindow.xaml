@@ -1,0 +1,150 @@
+﻿<Window x:Class="ConfigurationManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:ConfigurationManager.ViewModel"
+        xmlns:configuration="clr-namespace:ConfigurationManager.Configuration"
+        mc:Ignorable="d"
+        Title="Configuration manager" 
+        WindowState="Maximized"
+        d:DataContext="{d:DesignInstance viewModel:MainViewModel}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="./ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!-- Header-->
+        <Grid Background="#FFABABBA">
+            <TextBlock Text="Configuration manager" Foreground="#FF2A2F66" FontSize="32" Margin="0,0,40,0" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Right"></TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <Button HorizontalAlignment="Left" Margin="4" Command="{Binding SaveCommand}">
+                    <StackPanel Margin="4,0">
+                        <Viewbox Grid.Column="1" Height="30" Stretch="Uniform">
+                            <ContentControl ContentTemplate="{StaticResource SaveADCImage}"/>
+                        </Viewbox>
+                        <TextBlock Text="Save" HorizontalAlignment="Center" Foreground="#FF2A2F66" FontWeight="SemiBold" Margin="8,0"/>
+                    </StackPanel>
+                </Button>
+                <Button HorizontalAlignment="Left" Margin="4" Command="{Binding RefreshCommand}">
+                    <StackPanel Margin="4,0">
+                        <Viewbox Grid.Column="1" Height="28" Stretch="Uniform">
+                            <ContentControl ContentTemplate="{StaticResource RefreshADCImage}"/>
+                        </Viewbox>
+                        <TextBlock Text="Reload" HorizontalAlignment="Center" Foreground="#FF2A2F66" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <!-- Content-->
+        <ListView Grid.Row="1" ItemsSource="{Binding Settings}">           
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="310" Header="Key">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key}" VerticalAlignment="Top"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="350" Header="Value">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                    <ContentControl Content="{Binding}" HorizontalAlignment="Stretch">
+                                        <ContentControl.Style>
+                                            <Style TargetType="ContentControl">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.Error}">
+                                                        <Setter Property="IsEnabled" Value="True" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.Valid}">
+                                                        <Setter Property="IsEnabled" Value="True" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.InProgress}">
+                                                        <Setter Property="IsEnabled" Value="False" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ContentControl.Style>
+                                    </ContentControl>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="State">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Viewbox Height="20" ToolTip="{Binding Error}">
+                                        <ContentControl>
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.Error}">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource ErrorADCImage}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.Valid}">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource ValidADCImage}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.InProgress}">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource RunningWithAnimationADCImage}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                    </Viewbox>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="320" Header="Scope">
+                        <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox Content="Same value for all applications" IsChecked="{Binding UseThisValueForAllApplication}" VerticalAlignment="Center">
+                                        </CheckBox>
+                                        <ComboBox Visibility="{Binding UseThisValueForAllApplication,Converter={StaticResource InvertedBooleanToVisibilityConverter}}" 
+                                                  ItemsSource="{Binding Source={StaticResource ApplicationValues}}"
+                                                  SelectedItem="{Binding SelectedApplication}"
+                                                  MinWidth="100" 
+                                                  Margin="4,0" 
+                                                  VerticalAlignment="Center">
+                                        </ComboBox>
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.Error}">
+                                                            <Setter Property="IsEnabled" Value="True" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.Valid}">
+                                                            <Setter Property="IsEnabled" Value="True" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding State}" Value="{x:Static configuration:SettingState.InProgress}">
+                                                            <Setter Property="IsEnabled" Value="False" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                        </StackPanel.Style>
+                                    </StackPanel>
+                                </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>                
+                    <GridViewColumn Header="Help" Width="720">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Help}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

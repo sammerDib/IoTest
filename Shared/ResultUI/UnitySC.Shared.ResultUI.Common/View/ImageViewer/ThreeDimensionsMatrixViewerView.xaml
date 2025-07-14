@@ -1,0 +1,138 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Common.View.ImageViewer.ThreeDimensionsMatrixViewerView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"    
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:imageViewer="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.ImageViewer"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	d:DataContext="{d:DesignInstance imageViewer:ThreeDimensionsMatrixViewerVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <Expander
+			Margin="5,5,0,5"
+			DockPanel.Dock="Right"
+			ExpandDirection="Left"
+			IsExpanded="True">
+            <Expander.Header>
+                <TextBlock Text="3D settings">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Expander.Header>
+            <StackPanel
+				Width="200"
+				Margin="5">
+                <CheckBox
+					Content="Hide out of range values"
+					IsChecked="{Binding HideOutOfRange, Mode=TwoWay}" />
+                <CheckBox
+					Margin="0,10,0,0"
+					Content="Show mesh"
+					IsChecked="{Binding Chart.WireframeMesh, Mode=TwoWay}" />
+                <CheckBox
+					Margin="0,10,0,0"
+					Content="Display mouse position"
+					IsChecked="{Binding DisplayMousePos, Mode=TwoWay}" />
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock
+						Margin="0,0,0,2"
+						VerticalAlignment="Center"
+						DockPanel.Dock="Top"
+						Text="Z-axis scaling" />
+                    <controls:DoubleUpDown
+						ImageGeometryDown="{StaticResource MinusGeometry}"
+						ImageGeometryUp="{StaticResource PlusGeometry}"
+						Maximum="{x:Static sys:Double.MaxValue}"
+						Minimum="{x:Static sys:Double.MinValue}"
+						Step="0.1"
+						Value="{Binding Chart.ZAxisScaling, Mode=TwoWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock
+						Margin="0,0,0,2"
+						VerticalAlignment="Center"
+						DockPanel.Dock="Top"
+						Text="Vertical rotation (pitch)" />
+                    <Slider
+						Maximum="{Binding Chart.MaxVerticalRotation}"
+						Minimum="{Binding Chart.MinVerticalRotation}"
+						Value="{Binding Chart.VerticalRotation, Mode=TwoWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock
+						Margin="0,0,0,2"
+						VerticalAlignment="Center"
+						DockPanel.Dock="Top"
+						Text="Horizontal rotation (yaw)" />
+                    <Slider
+						Maximum="{Binding Chart.MaxHorizontalRotation}"
+						Minimum="{Binding Chart.MinHorizontalRotation}"
+						Value="{Binding Chart.HorizontalRotation, Mode=TwoWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock
+						Margin="0,0,0,2"
+						VerticalAlignment="Center"
+						DockPanel.Dock="Top"
+						Text="Side rotation (roll)" />
+                    <Slider
+						Maximum="{Binding Chart.MaxSideRotation}"
+						Minimum="{Binding Chart.MinSideRotation}"
+						Value="{Binding Chart.SideRotation, Mode=TwoWay}" />
+                </DockPanel>
+                <DockPanel Margin="0,10,0,0">
+                    <TextBlock
+						Margin="0,0,0,2"
+						VerticalAlignment="Center"
+						DockPanel.Dock="Top"
+						Text="Zoom level" />
+                    <Slider
+						Maximum="{Binding Chart.MaxZoomLevel}"
+						Minimum="{Binding Chart.MinZoomLevel}"
+						Value="{Binding Chart.ZoomLevel, Mode=TwoWay}" />
+                </DockPanel>
+                <Button
+					Margin="0,10,0,0"
+					Command="{Binding Chart.ResetCameraCommand}"
+					Content="Reset camera" />
+
+            </StackPanel>
+        </Expander>
+
+        <controls:ImageButton
+            DockPanel.Dock="Bottom"
+            Height="32"
+            Margin="0,3,5,3"
+            HorizontalAlignment="Right"
+            Command="{Binding Export3DCommand}"
+            Content="Export 3D"
+            ImageGeometry="{StaticResource Export2Geometry}"
+            Style="{StaticResource HighlightedImageButton}" />
+
+        <Grid>
+            <ContentPresenter Content="{Binding Chart.Chart}" />
+            <TextBlock
+				Margin="10"
+				Foreground="White"
+				IsHitTestVisible="False">
+				<Run Text="Resolution:" />
+				<Run Text="{Binding CurrentResolution, Mode=OneWay, Converter={StaticResource ScaleToPercentConverter}}" /><Run Text="%" />
+            </TextBlock>
+        </Grid>
+        
+    </DockPanel>
+</UserControl>

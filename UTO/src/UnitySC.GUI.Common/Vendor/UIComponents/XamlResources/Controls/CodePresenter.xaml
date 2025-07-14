@@ -1,0 +1,117 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:sequenceLog="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Diagnostic.SequenceLog"
+    xmlns:traceViewer="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Diagnostic.TraceViewer">
+
+    <SolidColorBrush x:Key="CodePresenterBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="CodePresenterForeground" Color="{DynamicResource PanelForeground}" />
+    <SolidColorBrush
+        x:Key="CodePresenterBorderBrush"
+        Opacity="{StaticResource DisabledOpacity}"
+        Color="{DynamicResource PanelForeground}" />
+
+    <Style TargetType="{x:Type controls:CodePresenter}">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="ShowLineNumbers" Value="True" />
+        <Setter Property="UseSearchEngine" Value="True" />
+        <Setter Property="EnableCopyToClipboard" Value="True" />
+        <Setter Property="Background" Value="{DynamicResource CodePresenterBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CodePresenterBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource CodePresenterForeground}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:CodePresenter}">
+                    <controls:Card
+                        MinHeight="30"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        IsShadowEnabled="False">
+                        <DockPanel>
+
+                            <!--#region Header (Search bar)-->
+                            <Border
+                                x:Name="SearchBorder"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="0,0,0,1"
+                                DockPanel.Dock="Top">
+                                <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+                                    <Button
+                                        x:Name="PART_NextButton"
+                                        Margin="0,0,10,0"
+                                        markupExtensions:Icon.Geometry="{StaticResource ArrowDownIcon}"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                    <Button
+                                        x:Name="PART_PreviousButton"
+                                        Margin="0,0,10,0"
+                                        markupExtensions:Icon.Geometry="{StaticResource ArrowUpIcon}"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+
+                                    <ToggleButton
+                                        x:Name="PART_MatchCaseButton"
+                                        Margin="0,0,10,0"
+                                        Content="Aa"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource SquareIconifiedToggleButtonStyle}"
+                                        ToolTip="{localize:Static sequenceLog:SequenceLogResources.SEQUENCE_LOG_MATCH_CASE}" />
+                                    <controls:SearchBar
+                                        x:Name="SearchBar"
+                                        BorderBrush="{DynamicResource ListViewBorderBrush}"
+                                        BorderThickness="0"
+                                        DockPanel.Dock="Left"
+                                        SearchEngine="{Binding SearchEngine, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </DockPanel>
+                            </Border>
+                            <!--#endregion-->
+
+                            <Button
+                                x:Name="PART_CopyButton"
+                                VerticalAlignment="Top"
+                                markupExtensions:Icon.Geometry="{StaticResource CopyIcon}"
+                                Background="Transparent"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource SquareIconifiedButtonStyle}"
+                                ToolTip="{localize:Static traceViewer:TraceViewerResources.TRACEVIEWER_COPY_CLIPBOARD}"
+                                Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=EnableCopyToClipboard, Converter={StaticResource FalseToCollapsedConverter}}" />
+                            <avalonedit:TextEditor
+                                x:Name="PART_TextEditor"
+                                Margin="7,5,5,5"
+                                VerticalAlignment="Stretch"
+                                Background="Transparent"
+                                Foreground="{TemplateBinding Foreground}"
+                                HorizontalScrollBarVisibility="Auto"
+                                IsReadOnly="True"
+                                ShowLineNumbers="{TemplateBinding ShowLineNumbers}"
+                                VerticalScrollBarVisibility="Auto" />
+                        </DockPanel>
+                    </controls:Card>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="UseSearchEngine" Value="False">
+                            <Setter TargetName="SearchBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="SimplifiedCodePresenterStyle"
+        BasedOn="{StaticResource {x:Type controls:CodePresenter}}"
+        TargetType="{x:Type controls:CodePresenter}">
+        <Setter Property="ShowLineNumbers" Value="False" />
+        <Setter Property="UseSearchEngine" Value="False" />
+    </Style>
+
+</ResourceDictionary>

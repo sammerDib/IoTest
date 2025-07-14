@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="EFEM">
+      <Types />
+      <Packages>
+        <Package Name="Rorze">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="IoModule">
+                  <Types />
+                  <Packages>
+                    <Package Name="RC530">
+                      <Types />
+                      <Packages>
+                        <Package Name="Dio1MediumSizeEfem">
+                          <Types>
+                            <CSharpType PlatformType="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Driver.Enums.ErrorCode, UnitySC.EFEM.Rorze, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                            <CSharpType PlatformType="Agileo.SemiDefinitions.LightColors, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                            <CSharpType PlatformType="Agileo.GUI.Services.LightTower.LightState, Agileo.GUI, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                            <CSharpType PlatformType="Agileo.SemiDefinitions.BuzzerState, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                            <DeviceType Name="Dio1MediumSizeEfem" IsAbstract="false" Uri="UnitySC.EFEM.Rorze|Devices\IoModule\RC530\Dio1MediumSizeEfem\Dio1MediumSizeEfem.device|UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.Dio1MediumSizeEfem" SuperTypeUri="UnitySC.EFEM.Rorze|Devices\IoModule\GenericRC5xx\GenericRC5xx.device|UnitySC.EFEM.Rorze.Devices.IoModule.GenericRC5xx.GenericRC5xx" BehaviorImplementation="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.Dio1MediumSizeEfem, UnitySC.EFEM.Rorze">
+                              <Interruptions />
+                              <Commands>
+                                <Command Name="SetLightColor" Type="Void" Timeout="60 s">
+                                  <Parameters>
+                                    <Parameter Name="color" Type="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.LightColors" />
+                                    <Parameter Name="mode" Type="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.LightState" />
+                                  </Parameters>
+                                  <PreConditions>
+                                    <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                                  </PreConditions>
+                                  <PostConditions />
+                                </Command>
+                                <Command Name="SetBuzzerState" Type="Void" Timeout="60 s">
+                                  <Parameters>
+                                    <Parameter Name="state" Type="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.BuzzerState" />
+                                  </Parameters>
+                                  <PreConditions>
+                                    <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                                  </PreConditions>
+                                  <PostConditions />
+                                </Command>
+                              </Commands>
+                              <Statuses>
+                                <Status Name="ErrorDescription" Type="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.ErrorCode" />
+                                <Status Name="I_MaintenanceSwitch" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PressureSensor_VAC" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_Led_PushButton" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PressureSensor_ION_AIR" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_Ionizer1Alarm" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_LightCurtain" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PM1_DoorOpened" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PM1_ReadyToLoadUnload" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PM2_DoorOpened" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PM2_ReadyToLoadUnload" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PM3_DoorOpened" Type="Boolean" Category="Inputs" />
+                                <Status Name="I_PM3_ReadyToLoadUnload" Type="Boolean" Category="Inputs" />
+                                <Status Name="O_RobotArmNotExtended_PM1" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_RobotArmNotExtended_PM2" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_RobotArmNotExtended_PM3" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_LightningRed" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_LightningYellow" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_LightningGreen" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_LightningBlue" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_BlinkingRed" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_BlinkingYellow" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_BlinkingGreen" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_BlinkingBlue" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_Buzzer1" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_Buzzer2" Type="Boolean" Category="Outputs" />
+                                <Status Name="O_SignalTower_PowerSupply" Type="Boolean" Category="Outputs" />
+                              </Statuses>
+                              <Alarms />
+                              <Interlocks />
+                            </DeviceType>
+                          </Types>
+                          <Packages />
+                          <Equipments />
+                        </Package>
+                      </Packages>
+                      <Equipments />
+                    </Package>
+                  </Packages>
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

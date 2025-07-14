@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="ControlsGallery.Toggles"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ControlsGallery"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="CHECK BOXES" Margin="20">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <CheckBox Content="Normal" Margin="10" />
+                <CheckBox IsChecked="True" Content="Checked" Margin="10"/>
+                <CheckBox IsEnabled="False" Content="Disabled" Margin="10"/>
+
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="TOGGLE BUTTONS" Margin="20" Grid.Row="0" Grid.Column="1">
+            <StackPanel Orientation="Vertical" Margin="20">
+                
+                <ToggleButton Margin="10" HorizontalAlignment="Left">Toggle Button</ToggleButton>
+                <TextBlock Text="Toggle Image Button" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    
+                    <sharedControls:ImageToggleButton Margin="10,0" ImageGeometry="{StaticResource ToolGeometry}"></sharedControls:ImageToggleButton>
+                    <sharedControls:ImageToggleButton Margin="10,0" ImageGeometry="{StaticResource ToolGeometry}" IsEnabled="False"></sharedControls:ImageToggleButton>
+                    <sharedControls:ImageToggleButton Margin="10,0" ImageGeometry="{StaticResource ToolGeometry}">Test</sharedControls:ImageToggleButton>
+                    <sharedControls:ImageToggleButton Margin="10,0" ImageGeometry="{StaticResource ToolGeometry}" IsChecked="False" ImageGeometryRight="{StaticResource ToolGeometry}">Test</sharedControls:ImageToggleButton>
+                    <sharedControls:ImageToggleButton Margin="10,0" IsChecked="False" ImageGeometryRight="{StaticResource ToolGeometry}">Test</sharedControls:ImageToggleButton>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="TOGGLE SWITCH" Grid.Column="0" Grid.Row="1" Margin="20">
+            <StackPanel Orientation="Vertical" Margin="20">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock>Normal</TextBlock>
+                    <ToggleButton Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock>Checked</TextBlock>
+                    <ToggleButton Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                </Grid>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock>Disabled</TextBlock>
+                    <ToggleButton Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False"/>
+                </Grid>
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock>Disabled Checked</TextBlock>
+                    <ToggleButton Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" VerticalAlignment="Center" HorizontalAlignment="Left" IsChecked="true"  IsEnabled="False"/>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+
+
+    </Grid>
+</UserControl>

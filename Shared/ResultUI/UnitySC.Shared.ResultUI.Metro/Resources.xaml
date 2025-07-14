@@ -1,0 +1,84 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Common.Converters;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:metro="clr-namespace:UnitySC.Shared.Format.Metro;assembly=UnitySC.Shared.Format.Metro"
+	xmlns:waferDetail="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+		<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/DataTemplates.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<converters:DoubleToPercentConverter
+		x:Key="DoubleTo2DigitsPercentConverter"
+		Digits="2"
+		NullValue="-"
+		ShowPercentSymbol="True" />
+
+	<converters:EqualityConverter x:Key="EqualityConverter" />
+
+    <system:Double x:Key="FilterItemHeight">35</system:Double>
+
+	<DataTemplate
+		x:Key="MeasureStateTemplate"
+		DataType="{x:Type metro:MeasureState}">
+		<controls:ToleranceDisplayer
+			x:Name="ToleranceDisplayer"
+			HorizontalAlignment="Center" />
+		<DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding}" Value="{x:Static metro:MeasureState.Success}">
+				<Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="Good" />
+			</DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static metro:MeasureState.Partial}">
+				<Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="Warning" />
+			</DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static metro:MeasureState.NotMeasured}">
+				<Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="NotMeasured" />
+			</DataTrigger>
+            <DataTrigger Binding="{Binding}" Value="{x:Static metro:MeasureState.Error}">
+				<Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="Bad" />
+			</DataTrigger>
+		</DataTemplate.Triggers>
+	</DataTemplate>
+
+	<DataTemplate
+		x:Key="MetroDigitsEditorTemplate"
+		DataType="{x:Type waferDetail:MetroResultVM}">
+		<StackPanel
+			Margin="10,0,0,0"
+			HorizontalAlignment="Left"
+			Orientation="Horizontal">
+			<controls:ImageButton
+				Width="30"
+				Height="30"
+				Padding="2"
+				Command="{Binding DecreaseDigitsCommand}"
+				ImageGeometry="{StaticResource ArrowLeftGeometry}"
+				ImageGeometryBrush="{StaticResource IconsColor}"
+				Style="{StaticResource LeftImageButton}" />
+			<Border
+				Height="30"
+				BorderBrush="{StaticResource TextboxBorderBrush}"
+				BorderThickness="0,1">
+				<TextBlock
+					Margin="7,0"
+					VerticalAlignment="Center">
+					<Run Text="Digits:" />
+					<Run Text="{Binding Digits, Mode=OneWay}" />
+				</TextBlock>
+			</Border>
+			<controls:ImageButton
+				Width="30"
+				Height="30"
+				Padding="2"
+				Command="{Binding IncreaseDigitsCommand}"
+				ImageGeometry="{StaticResource ArrowRightGeometry}"
+				ImageGeometryBrush="{StaticResource IconsColor}"
+				Style="{StaticResource RightImageButton}" />
+		</StackPanel>
+	</DataTemplate>
+
+</ResourceDictionary>

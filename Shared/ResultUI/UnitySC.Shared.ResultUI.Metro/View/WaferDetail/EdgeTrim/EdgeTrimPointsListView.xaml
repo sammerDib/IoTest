@@ -1,0 +1,462 @@
+﻿<view:GeneratedColumnListViewBase
+    x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.EdgeTrim.EdgeTrimPointsListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.Shared.UI.Behaviors;assembly=UnitySC.Shared.UI"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:converters="clr-namespace:UnitySC.Shared.ResultUI.Common.Converters;assembly=UnitySC.Shared.ResultUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metro="clr-namespace:UnitySC.Shared.Format.Metro;assembly=UnitySC.Shared.Format.Metro"
+    xmlns:edgetrim="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail.EdgeTrim"
+    xmlns:edgetrimFormat="clr-namespace:UnitySC.Shared.Format.Metro.EdgeTrim;assembly=UnitySC.Shared.Format.Metro"
+    xmlns:view="clr-namespace:UnitySC.Shared.ResultUI.Metro.View"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance EdgeTrim:EdgeTrimPointsListVM}"
+    d:DesignHeight="450"
+    GenerateColumnsFlag="{Binding GenerateColumnsFlag}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:DoubleToPercentConverter
+                x:Key="DoubleTo2DigitsPercentConverter"
+                Digits="2"
+                ShowPercentSymbol="True" />
+
+            <converters:LenghtToStringMultiConverter
+                x:Key="LenghtToMicrometerMultiConverter"
+                NullValue="-"
+                ShowUnit="False"
+                Unit="Micrometer" />
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ListView
+        x:Name="ListView"
+        behaviors:GridViewSortBehaviors.Command="{Binding SortedPoints.SortCommand}"
+        Background="Transparent"
+        BorderThickness="0"
+        ItemsSource="{Binding SortedPoints.SourceView}"
+        PreviewKeyDown="ListView_OnKeyDown"
+        SelectedItem="{Binding SingleSelectedItem}"
+        SelectionChanged="ListView_OnSelectionChanged"
+        SelectionMode="Extended">
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+        </ListView.ItemContainerStyle>
+        <ListView.View>
+            <GridView x:Name="GridView">
+                <!--  CheckBox  -->
+                <GridViewColumn Width="30">
+                    <GridViewColumn.Header>
+                        <CheckBox
+                            Command="{Binding ToggleSelectionCommand}"
+                            IsChecked="{Binding SelectionState, Mode=OneWay}"
+                            IsThreeState="True" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <CheckBox
+                                HorizontalAlignment="Center"
+                                Command="{Binding ElementName=UserControl, Path=DataContext.TogglePointSelectionCommand}"
+                                CommandParameter="{Binding}">
+                                <CheckBox.IsChecked>
+                                    <MultiBinding
+                                        Converter="{StaticResource InvokeFuncMultiConverter}"
+                                        Mode="OneWay">
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.MeasurePointSelectionToBool" />
+                                        <Binding Path="." />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.SyncListViewFlag" />
+                                    </MultiBinding>
+                                </CheckBox.IsChecked>
+                            </CheckBox>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Number  -->
+                <GridViewColumn Width="45">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByIndex}"
+                            Content="N°" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource InvokeFuncMultiConverter}"
+                                        Mode="OneWay">
+                                        <Binding
+                                            Path="DataContext.MeasurePointResultToStringPos"
+                                            RelativeSource="{RelativeSource FindAncestor,
+                                                                            AncestorType={x:Type ListView}}" />
+                                        <Binding Path="." />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Site Id  -->
+                <GridViewColumn Width="50"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideSiteIdColumns}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+						behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortBySiteId}"
+						Content="Site" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <TextBlock
+							HorizontalAlignment="Right"
+							Text="{Binding SiteId}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Icon  -->
+                <GridViewColumn Width="60">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByState}"
+                            Content="State" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <controls:ToleranceDisplayer
+                                x:Name="ToleranceDisplayer"
+                                HorizontalAlignment="Center" />
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static metro:MeasureState.Success}">
+                                    <Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="Good" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static metro:MeasureState.Partial}">
+                                    <Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="Warning" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static metro:MeasureState.NotMeasured}">
+                                    <Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="NotMeasured" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static metro:MeasureState.Error}">
+                                    <Setter TargetName="ToleranceDisplayer" Property="Tolerance" Value="Bad" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  QualityScore  -->
+                <GridViewColumn Width="70"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideQualityColumns}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByQualityScore}"
+                            Content="Quality" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                Text="{Binding QualityScore, Converter={StaticResource DoubleTo2DigitsPercentConverter}}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <!--  Die index  -->
+                <GridViewColumn
+                    Width="90"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideDieIndex}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByDieIndex}"
+                            Content="Die index" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding
+                                        Converter="{StaticResource InvokeFuncMultiConverter}"
+                                        Mode="OneWay">
+                                        <Binding
+                                            Path="DataContext.MeasurePointResultToDieIndex"
+                                            RelativeSource="{RelativeSource FindAncestor,
+                                                                            AncestorType={x:Type ListView}}" />
+                                        <Binding Path="." />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <!--  X  -->
+                <GridViewColumn Width="70">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByX}"
+                            Content="X (mm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                Text="{Binding XPosition, StringFormat='0.00'}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Y  -->
+                <GridViewColumn Width="70">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByY}"
+                            Content="Y (mm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type metro:MeasurePointResult}">
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                Text="{Binding YPosition, StringFormat='0.00'}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <!--#region Height-->
+
+                <!--  Avg  -->
+                <GridViewColumn
+                    Width="130"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideHeight}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByAvgHeight}">
+                            <GridViewColumnHeader.Content>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Text" Value="Avg Height (µm)" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HideRepetaColumns}" Value="True">
+                                                    <Setter Property="Text" Value="Height (µm)" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </GridViewColumnHeader.Content>
+                        </GridViewColumnHeader>
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="HeightStat.Mean" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  3 Sigma  -->
+                <GridViewColumn
+                    Width="120"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideHeightRepeta}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortBy3SigmaHeight}"
+                            Content="3σ Height (µm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="HeightStat.Sigma3" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Height Min  -->
+                <GridViewColumn
+                    Width="120"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideHeightRepeta}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByMinHeight}"
+                            Content="Min Height (µm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="HeightStat.Min" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Height Max  -->
+                <GridViewColumn
+                    Width="125"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideHeightRepeta}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByMaxHeight}"
+                            Content="Max Height (µm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type  edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="HeightStat.Max" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <!--#endregion Height-->
+
+                <!--#region Width-->
+
+                <!--  Avg  -->
+                <GridViewColumn
+                    Width="130"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideWidth}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByAvgWidth}">
+                            <GridViewColumnHeader.Content>
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Text" Value="Avg Width (µm)" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HideRepetaColumns}" Value="True">
+                                                    <Setter Property="Text" Value="Width (µm)" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </GridViewColumnHeader.Content>
+                        </GridViewColumnHeader>
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type  edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="WidthStat.Mean" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  3 Sigma  -->
+                <GridViewColumn
+                    Width="120"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideWidthRepeta}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortBy3SigmaWidth}"
+                            Content="3σ Width (µm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="WidthStat.Sigma3" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Width Min  -->
+                <GridViewColumn
+                    Width="120"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideWidthRepeta}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByMinWidth}"
+                            Content="Min Width (µm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type  edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="WidthStat.Min" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <!--  Width Max  -->
+                <GridViewColumn
+                    Width="125"
+                    behaviors:GridViewColumnBehaviors.Collapsed="{Binding HideWidthRepeta}">
+                    <GridViewColumn.Header>
+                        <GridViewColumnHeader
+                            behaviors:GridViewColumnHeaderSortBehaviors.SortDefinition="{Binding SortByMaxWidth}"
+                            Content="Max Width (µm)" />
+                    </GridViewColumn.Header>
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type edgetrimFormat:EdgeTrimPointResult}">
+                            <TextBlock HorizontalAlignment="Right">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource LenghtToMicrometerMultiConverter}">
+                                        <Binding Path="WidthStat.Max" />
+                                        <Binding
+                                            ElementName="UserControl"
+                                            Path="DataContext.Digits" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+
+                <!--#endregion Width-->
+            </GridView>
+        </ListView.View>
+    </ListView>
+</view:GeneratedColumnListViewBase>

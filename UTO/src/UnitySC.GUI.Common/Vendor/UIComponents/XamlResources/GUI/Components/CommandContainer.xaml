@@ -1,0 +1,54 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:navigations="clr-namespace:Agileo.GUI.Components.Navigations;assembly=Agileo.GUI">
+
+    <SolidColorBrush x:Key="CommandsBackground" Color="{DynamicResource VerticalCanvasBackground}" />
+
+    <DataTemplate x:Key="CommandContainerTemplate" DataType="{x:Type navigations:BusinessPanel}">
+        <Grid x:Name="CommandContainerGrid">
+            <Grid.Margin>
+                <Thickness Left="{StaticResource PanelMargin}" />
+            </Grid.Margin>
+
+            <controls:Card Background="{DynamicResource CommandsBackground}">
+                <controls:Card.CornerRadius>
+                    <CornerRadius BottomLeft="{StaticResource CardCornerRadiusDouble}" TopLeft="{StaticResource CardCornerRadiusDouble}" />
+                </controls:Card.CornerRadius>
+                <ScrollViewer
+                    VerticalAlignment="Stretch"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+                    <DockPanel x:Name="DockPanel">
+                        <!--  Work with ItemsSource="{Binding ToolElements}" but don't work in design mode  -->
+                        <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                        <ItemsControl
+                            DockPanel.Dock="Bottom"
+                            ItemTemplateSelector="{StaticResource ToolElementDataTemplateSelector}"
+                            ItemsSource="{Binding DataContext.ToolElements, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                        <controls:InteractionDisplayer
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Interaction="{Binding Popups.Current}"
+                            ShowInteraction="False">
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <ItemsControl
+                                DockPanel.Dock="Top"
+                                ItemTemplateSelector="{StaticResource CommandElementTemplateSelector}"
+                                ItemsSource="{Binding DataContext.Commands, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </controls:InteractionDisplayer>
+
+                    </DockPanel>
+                </ScrollViewer>
+            </controls:Card>
+        </Grid>
+        <DataTemplate.Triggers>
+            <Trigger SourceName="DockPanel" Property="ActualWidth" Value="0">
+                <Setter TargetName="CommandContainerGrid" Property="Margin" Value="0" />
+            </Trigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+</ResourceDictionary>

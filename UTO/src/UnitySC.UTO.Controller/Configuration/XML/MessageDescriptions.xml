@@ -1,0 +1,101 @@
+<SECSMessageScenario xmlns="urn:semi-org:xsd.SMN">
+  <SECSMessage s="13" f="0" direction="Both" blocking="S" name="Abort Transaction" mnemonic="S13F0" replyOption="never" />
+  <SECSMessage s="13" f="13" direction="Both" blocking="M" name="Table Data Send" mnemonic="TDS" replyOption="required">
+    <SECSData maxLength="0" minLength="0">
+      <LST maxLength="0" minLength="0">
+        <ANY dataItemName="DATAID" />
+        <ANY dataItemName="OBJSPEC" />
+        <ANY dataItemName="TBLTYP" />
+        <ANY dataItemName="TBLID" />
+        <ANY dataItemName="TBLCMD" />
+        <LST dataItemName="TABLEATTRIBUTES" maxLength="n" minLength="0">
+          <LST dataItemName="ATTRIBUTE" maxLength="0" minLength="0">
+            <ANY dataItemName="ATTRID" />
+            <ANY dataItemName="ATTRDATA" />
+          </LST>
+        </LST>
+        <LST dataItemName="COLUMNDEFINITIONS" maxLength="n" minLength="0">
+          <ANY dataItemName="COLHDR" />
+        </LST>
+        <LST dataItemName="ROWDEFINITIONS" maxLength="n" minLength="0">
+          <LST dataItemName="ROWDEFINITION" maxLength="n" minLength="0">
+            <ANY dataItemName="TBLELT" />
+          </LST>
+        </LST> 
+      </LST>
+    </SECSData>
+  </SECSMessage>
+  <SECSMessage s="13" f="14" direction="Both" blocking="S" name="Table Data Acknowledge" mnemonic="TDA" replyOption="never">
+    <SECSData maxLength="0" minLength="0">
+      <LST maxLength="0" minLength="0">
+        <ANY dataItemName="TBLACK" />
+        <LST dataItemName="ERRORS" maxLength="n" minLength="0">
+          <LST dataItemName="ERROR" maxLength="0" minLength="0">
+            <ANY dataItemName="ERRCODE" />
+            <ANY dataItemName="ERRTEXT" />
+          </LST>
+        </LST>
+      </LST>
+    </SECSData>
+  </SECSMessage>
+  <SECSMessage s="13" f="15" direction="Both" blocking="M" name="Table Data Request" mnemonic="TDR" replyOption="required">
+    <SECSData maxLength="0" minLength="0">
+      <LST maxLength="0" minLength="0">
+        <ANY dataItemName="DATAID" />
+        <ANY dataItemName="OBJSPEC" />
+        <ANY dataItemName="TBLTYP" />
+        <ANY dataItemName="TBLID" />
+        <ANY dataItemName="TBLCMD" />
+        <LST dataItemName="COLUMNDEFINITIONS" maxLength="n" minLength="0">
+          <ANY dataItemName="COLHDR" />
+        </LST>
+        <LST dataItemName="ROWDEFINITION" maxLength="n" minLength="0">
+          <ANY dataItemName="TBLELT" />
+        </LST>
+      </LST>
+    </SECSData>
+  </SECSMessage>
+  <SECSMessage s="13" f="16" directory="Both" blocking="M" name="Table Data" mnemonic="TD" replyOption="never">
+    <SECSData maxLength="0" minLength="0">
+      <LST maxLength="0" minLength="0">
+        <ANY dataItemName="TBLTYP" />
+        <ANY dataItemName="TBLID" />
+        <LST dataItemName="TABLEATTRIBUTES" maxLength="n" minLength="0">
+          <LST dataItemName="ATTRIBUTE" maxLength="0" minLength="0">
+            <ANY dataItemName="ATTRID" />
+            <ANY dataItemName="ATTRDATA" />
+          </LST>
+        </LST>
+        <LST dataItemName="COLUMNDEFINITIONS" maxLength="n" minLength="0">
+          <ANY dataItemName="COLHDR" />
+        </LST>
+        <LST dataItemName="ROWDEFINITIONS" maxLength="n" minLength="0">
+          <LST dataItemName="ROWDEFINITION" maxLength="n" minLength="0">
+            <ANY dataItemName="TBLELT" />
+          </LST>
+        </LST>
+        <LST maxLength="0" minLength="0">
+          <ANY dataItemName="TBLACK" />
+          <LST dataItemName="ERRORS" maxLength="n" minLength="0">
+            <LST dataItemName="ERROR" maxLength="0" minLength="0">
+              <ANY dataItemName="ERRCODE" />
+              <ANY dataItemName="ERRTEXT" />
+            </LST>
+          </LST>
+        </LST>
+      </LST>
+    </SECSData>
+  </SECSMessage>
+  <SECSMessage s="2" f="43" direction="H to E" blocking="S" name="Reset Spooling Streams and Functions" mnemonic="RSSF" replyOption="required">
+    <SECSData maxLength="0" minLength="0">
+      <LST maxLength="n" minLength="0">
+        <LST dataItemName="STRFCNIDS" maxLength="0" minLength="0">
+          <ANY dataItemName="STRID"/>
+          <LST maxLength="n" minLength="0">
+            <ANY dataItemName="FCNID"/>
+          </LST>
+        </LST>
+      </LST>
+    </SECSData>
+  </SECSMessage>
+</SECSMessageScenario>

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="0ba41165-50bc-4604-bdb9-e65e2765f46d" name="UnloadFromPm" access="Internal" usings="using UnitySC.Equipment.Abstractions.Vendor.Devices.Activities;" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <vertexContainerHasVertices Id="d6250153-6e54-472e-98c5-61075abb9556">
+      <initial Id="381ccc55-252c-479d-88e5-5a9128cce305" name="Initial" nameSpace="UnloadFromPm">
+        <successors>
+          <transition Id="186bcc32-eb7c-4729-a0c0-871c3d6317b4" source="UnloadFromPm.Initial" destination="UnloadFromPm.Activity.PrepareForTransfer" nameSpace="UnloadFromPm">
+            <stateMoniker name="/UnloadFromPm/Activity/PrepareForTransfer" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="b8684698-9b8e-4ef1-93c0-fd8c077f41c0">
+      <finalState Id="98d7c869-581c-4b7b-8bc8-b28f825dfd6b" name="FinalState" nameSpace="UnloadFromPm" kind="Final" />
+    </stateMachineHasStates>
+    <stateMachineHasStates Id="4d76539e-9030-4d23-82ce-e322519a66eb">
+      <state Id="c046f9f5-14cf-4918-9220-1995727a9717" name="Activity" nameSpace="UnloadFromPm" entryAction="ActivityEntry" exitAction="ActivityExit" kind="Normal" entryActionLabel="Entry/ ActivityEntry" exitActionLabel="Exit/ ActivityExit">
+        <vertices>
+          <stateHasNestedStates Id="3920b7e7-220b-4053-bd8b-9a0bd01657df">
+            <state Id="4e26246c-cb93-4162-832c-bbc0c4674b71" name="PickFromPm" nameSpace="UnloadFromPm.Activity" entryAction="PickFromPmEntry" kind="Normal" entryActionLabel="Entry/ PickFromPmEntry">
+              <successors>
+                <transition Id="8a4104f1-2094-49d0-ac35-ba2be70603d2" event="RobotDone" label="RobotDone" source="UnloadFromPm.Activity.PickFromPm" destination="UnloadFromPm.Activity.PostTransfer" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/PostTransfer" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="eeb66ade-c3e8-4192-bfd9-45c3c1013e92">
+            <state Id="ba815666-b63c-4171-8d31-e9e2159e6a9e" name="PlaceToLp" nameSpace="UnloadFromPm.Activity" entryAction="PlaceToLpEntry" kind="Normal" entryActionLabel="Entry/ PlaceToLpEntry">
+              <successors>
+                <transition Id="885e5746-91e5-4863-bae9-69f47df7970f" event="RobotDone" label="RobotDone" source="UnloadFromPm.Activity.PlaceToLp" destination="UnloadFromPm.FinalState" nameSpace="UnloadFromPm.Activity">
+                  <finalStateMoniker name="/UnloadFromPm/FinalState" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="37dd5145-109b-4d48-98df-73c503c0f220">
+            <state Id="209d9db0-7415-4111-a1d3-04d13fd5318a" name="PrepareForTransfer" nameSpace="UnloadFromPm.Activity" entryAction="PrepareForTransferEntry" kind="Normal" entryActionLabel="Entry/ PrepareForTransferEntry">
+              <successors>
+                <transition Id="a2e0f18c-8954-49d6-9647-3581d5229eae" event="PMDone" label="PMDone" source="UnloadFromPm.Activity.PrepareForTransfer" destination="UnloadFromPm.Activity.State1" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/GoInFrontOfPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="907b5aa3-166c-49bd-a247-af2d18a0edea">
+            <state Id="8e181b5f-7601-4563-9d89-60f9614dd0e0" name="PostTransfer" nameSpace="UnloadFromPm.Activity" entryAction="PostTransferEntry" kind="Normal" entryActionLabel="Entry/ PostTransferEntry">
+              <successors>
+                <transition Id="9ab8c0ea-ad9e-4b7b-bab6-7067cda0b9bd" event="PMDone" label="PMDone" source="UnloadFromPm.Activity.PostTransfer" destination="UnloadFromPm.Activity.PlaceToLp" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/PlaceToLp" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="ecd91bba-bcd8-495e-b762-171b959e9f40">
+            <state Id="ab9174b1-d2c3-4158-a3b2-20319a563275" name="GoInFrontOfPm" nameSpace="UnloadFromPm.Activity" entryAction="GoInFrontOfPmEntry" kind="Normal" entryActionLabel="Entry/ GoInFrontOfPmEntry">
+              <successors>
+                <transition Id="c637ad58-ef1f-4ef3-9ed3-0b58e357ae7a" event="RobotDone" label="RobotDone" source="UnloadFromPm.Activity.GoInFrontOfPm" destination="UnloadFromPm.Activity.WaitReadyForTransfer" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/PrepareTransferOnPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="eb84d771-3fd0-46b4-92e3-b45cfb869fa5">
+            <state Id="cf407012-6634-4662-a997-4b9d98521c86" name="PrepareTransferOnPm" nameSpace="UnloadFromPm.Activity" entryAction="PrepareTransferOnPmEntry" kind="Normal" entryActionLabel="Entry/ PrepareTransferOnPmEntry">
+              <successors>
+                <transition Id="18f75568-9201-4d47-ae5e-aa31725c4fb1" event="ReadyToTransfer" label="ReadyToTransfer" source="UnloadFromPm.Activity.PrepareTransferOnPm" destination="UnloadFromPm.Activity.PickFromPm" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/PickFromPm" />
+                </transition>
+                <transition Id="13211b9c-1bf3-4c8c-afed-6b0536e1fdb0" event="NotReadyToTransfer" label="NotReadyToTransfer" source="UnloadFromPm.Activity.PrepareTransferOnPm" destination="UnloadFromPm.Activity.State1" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/WaitReadyToTransfer" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="8c65af88-f169-42bd-a7ff-13f23d972a70">
+            <state Id="f8bf1522-e35d-4c6c-8318-01979247eac5" name="WaitReadyToTransfer" nameSpace="UnloadFromPm.Activity" entryAction="WaitReadyToTransferEntry" kind="Normal" entryActionLabel="Entry/ WaitReadyToTransferEntry">
+              <successors>
+                <transition Id="2cf1547b-8875-430e-8eb4-dc54073facee" event="ReadyToTransfer" label="ReadyToTransfer" source="UnloadFromPm.Activity.WaitReadyToTransfer" destination="UnloadFromPm.Activity.PrepareTransferOnPm" nameSpace="UnloadFromPm.Activity">
+                  <stateMoniker name="/UnloadFromPm/Activity/PrepareTransferOnPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+        </vertices>
+        <successors>
+          <transition Id="4ac888bb-0e1e-4c19-bc1a-f7645468f47e" event="ActivityDoneEvent" label="ActivityDoneEvent" source="UnloadFromPm.Activity" destination="UnloadFromPm.FinalState" nameSpace="UnloadFromPm">
+            <finalStateMoniker name="/UnloadFromPm/FinalState" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+  </vertices>
+</stateMachine>

@@ -1,0 +1,421 @@
+<UserControl x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.SubstrateTracking.SubstrateTrackingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:substrateTracking="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.SubstrateTracking"
+             xmlns:e90="clr-namespace:Agileo.Semi.Gem300.Abstractions.E90;assembly=Agileo.Semi.Gem300.Abstractions"
+             xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+             xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+             xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+             xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+             xmlns:controls1="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTree.Controls;assembly=UnitySC.GUI.Common"
+             d:DataContext="{d:DesignInstance substrateTracking:SubstrateTrackingPanelModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="{StaticResource DesignHeight}"
+             d:DesignWidth="{StaticResource DesignWidth}"
+             Background="Transparent"
+             Style="{StaticResource BusinessPanelViewStyle}"
+             mc:Ignorable="d">
+    <controls:CollapsableHorizontalPanel
+        x:Name="CollapsableHorizontalPanel"
+        FirstRowLength="7*"
+        FirstRowMinHeight="300"
+        SecondRowContentIcon="{StaticResource ExpandTopIcon}"
+        SecondRowContentTitle="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_HISTORY}"
+        SecondRowLength="3*"
+        SecondRowMinHeight="200">
+
+        <controls:CollapsableHorizontalPanel.FirstRowContent>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="4*"
+                        MinWidth="200" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition MinWidth="200" />
+                </Grid.ColumnDefinitions>
+
+                <controls:Card Grid.Column="0">
+                    <GroupBox
+                        Padding="{StaticResource GroupBoxNoPaddingThickness}"
+                        Header="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_SUBSTRATES}">
+                        <dataTables:DataTable
+                            x:Name="SubstrateDataTable"
+                            DataSource="{Binding SubstratesSource}"
+                            SelectedItem="{Binding SelectedSubstrate, UpdateSourceTrigger=PropertyChanged}"
+                            SelectionChanged="DataTable_OnSelectionChanged"
+                            SelectionMode="{Binding SelectionMode, Mode=TwoWay}">
+
+                            <dataTables:DataTable.BottomAdditionalContent>
+                                <StackPanel
+                                    Margin="10"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Margin="0,0,10,0"
+                                        markupExtensions:Icon.Geometry="{DynamicResource CheckAllIcon}"
+                                        Click="ButtonSelectAll_OnClick"
+                                        Content="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_SELECT_ALL}" />
+                                    <Button
+                                        Margin="0,0,10,0"
+                                        markupExtensions:Icon.Geometry="{DynamicResource UncheckAllIcon}"
+                                        Click="ButtonDeselectAll_OnClick"
+                                        Content="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_UNSELECT_ALL}" />
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectionMode}" Value="{x:Static SelectionMode.Single}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                </StackPanel>
+                            </dataTables:DataTable.BottomAdditionalContent>
+
+                            <GridView>
+                                <dataTables:DataTableColumn
+                                    Width="180"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_ID}"
+                                    SortKey="ObjID">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding ObjID}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_SUBST_ID_STATUS}"
+                                    SortKey="SubstIDStatus">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                x:Name="IdStatusTextBlock"
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstIDStatus, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding SubstIDStatus}" Value="{x:Static e90:SubstIDStatus.Confirmed}">
+                                                    <Setter TargetName="IdStatusTextBlock" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SubstIDStatus}" Value="{x:Static e90:SubstIDStatus.ConfirmationFailed}">
+                                                    <Setter TargetName="IdStatusTextBlock" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding SubstIDStatus}" Value="{x:Static e90:SubstIDStatus.WaitingForHost}">
+                                                    <Setter TargetName="IdStatusTextBlock" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="160"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_ACQUIRED_ID}"
+                                    SortKey="AcquiredID">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding AcquiredID}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_LOT_ID}"
+                                    SortKey="LotID">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding LotID}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_LOCATIONS}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding Converter={StaticResource E90SubstrateToLocationConverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="40"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_POSITION}"
+                                    SortKey="SubstPosInBatch">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstPosInBatch}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="100"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_STATE}"
+                                    SortKey="SubstState">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstState, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="122"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_PROC_STATE}"
+                                    SortKey="SubstProcState">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock Text="{Binding SubstProcState, Converter={StaticResource TextToHumanizedTextConverter}}">
+                                                <TextBlock.Style>
+                                                    <Style
+                                                        BasedOn="{StaticResource Body2TextStyle}"
+                                                        TargetType="{x:Type TextBlock}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.Aborted}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource WaferStatusProcessingFailedBrush}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.InProcess}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource WaferStatusProcessingBrush}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.Lost}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.NeedsProcessing}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource WaferStatusWaitingProcessBrush}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.Processed}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource WaferStatusProcessedBrush}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.Rejected}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SubstProcState}" Value="{x:Static e90:SubstProcState.Stopped}">
+                                                                <Setter Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_SOURCE}"
+                                    SortKey="SubstSource">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstSource}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_DESTINATION}"
+                                    SortKey="SubstDestination">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstDestination}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_USAGE}"
+                                    SortKey="SubstUsage">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstUsage}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+
+                                <dataTables:DataTableColumn
+                                    Width="140"
+                                    DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_TYPE}"
+                                    SortKey="SubstUsage">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type e90:Substrate}">
+                                            <TextBlock
+                                                Style="{StaticResource Body2TextStyle}"
+                                                Text="{Binding SubstType, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </dataTables:DataTableColumn>
+                            </GridView>
+                        </dataTables:DataTable>
+                    </GroupBox>
+                </controls:Card>
+
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="{StaticResource PanelMargin}"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent" />
+
+                <controls:Card Grid.Column="2">
+                    <GroupBox
+                        Padding="{StaticResource GroupBoxNoPaddingThickness}"
+                        Header="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_LOCATIONS}">
+                        <controls1:DataTree DataSource="{Binding LocationsSource}">
+                            <controls1:DataTree.GridView>
+                                <GridView>
+
+                                    <dataTables:DataTableColumn
+                                        Width="250"
+                                        DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_ID}"
+                                        SortKey="Id">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type substrateTracking:IE39ObjectViewModel}">
+                                                <DockPanel LastChildFill="True">
+                                                    <controls1:DataTreeExpander />
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Style="{StaticResource Body2TextStyle}"
+                                                        Text="{Binding Id, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </dataTables:DataTableColumn>
+
+                                    <dataTables:DataTableColumn
+                                        Width="60"
+                                        DisplayName="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_STATE}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate DataType="{x:Type substrateTracking:IE39ObjectViewModel}">
+                                                <controls:Led>
+                                                    <controls:Led.Style>
+                                                        <Style
+                                                            BasedOn="{StaticResource {x:Type controls:Led}}"
+                                                            TargetType="{x:Type controls:Led}">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding State}" Value="{x:Static e90:LocationState.Occupied}">
+                                                                    <Setter Property="IsActivated" Value="True" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </controls:Led.Style>
+                                                </controls:Led>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </dataTables:DataTableColumn>
+
+                                </GridView>
+                            </controls1:DataTree.GridView>
+                        </controls1:DataTree>
+                    </GroupBox>
+                </controls:Card>
+            </Grid>
+        </controls:CollapsableHorizontalPanel.FirstRowContent>
+
+        <controls:CollapsableHorizontalPanel.SecondRowContent>
+            <controls:Card>
+                <GroupBox Padding="{StaticResource GroupBoxNoPaddingThickness}">
+                    <GroupBox.Header>
+                        <DockPanel LastChildFill="False">
+
+                            <TextBlock
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Center"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                                Text="{localize:Static substrateTracking:SubstrateTrackingRessources.SUB_TRACK_HISTORY}" />
+
+                            <TextBlock
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Center"
+                                DockPanel.Dock="Left"
+                                Text="{Binding HistoryTitle}">
+                                <TextBlock.Style>
+                                    <Style
+                                        BasedOn="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                                        TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedSubstrate}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Hidden" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <Button
+                                x:Name="ExpanderButton"
+                                VerticalAlignment="Center"
+                                markupExtensions:Icon.Geometry="{StaticResource ExpandBottomIcon}"
+                                Background="Transparent"
+                                Click="ExpandDown_Click"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource SquareIconifiedButtonStyle}" />
+
+                            <controls:ChipsSelector
+                                VerticalAlignment="Center"
+                                DockPanel.Dock="Right"
+                                SelectedItem="{Binding ChartView}">
+                                <controls:ChipsSelector.ItemsSource>
+                                    <x:Array Type="{x:Type substrateTracking:HistoryChartType}">
+                                        <substrateTracking:HistoryChartType>Duration</substrateTracking:HistoryChartType>
+                                        <substrateTracking:HistoryChartType>Time</substrateTracking:HistoryChartType>
+                                        <substrateTracking:HistoryChartType>Condensed</substrateTracking:HistoryChartType>
+                                    </x:Array>
+                                </controls:ChipsSelector.ItemsSource>
+                                <controls:ChipsSelector.Style>
+                                    <Style
+                                        BasedOn="{StaticResource {x:Type controls:ChipsSelector}}"
+                                        TargetType="{x:Type controls:ChipsSelector}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectionMode}" Value="{x:Static SelectionMode.Single}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectionMode}" Value="{x:Static SelectionMode.Multiple}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectionMode}" Value="{x:Static SelectionMode.Extended}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:ChipsSelector.Style>
+                            </controls:ChipsSelector>
+
+                        </DockPanel>
+                    </GroupBox.Header>
+
+                    <substrateTracking:HistoryChart
+                        ChartView="{Binding ChartView}"
+                        SelectionMode="{Binding SelectionMode}"
+                        SubstrateListToDisplay="{Binding SelectedSubstrateList}"
+                        SubstrateToDisplay="{Binding SelectedSubstrate}" />
+
+                </GroupBox>
+            </controls:Card>
+        </controls:CollapsableHorizontalPanel.SecondRowContent>
+
+    </controls:CollapsableHorizontalPanel>
+</UserControl>

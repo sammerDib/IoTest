@@ -1,0 +1,513 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BBE52789-8212-4EF4-857F-733D9761DD2B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BasicModules</RootNamespace>
+    <AssemblyName>BasicModules</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <ExpressionBlendVersion>12.0.41002.1</ExpressionBlendVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>3</WarningLevel>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Matrox.MatroxImagingLibrary, Version=10.60.452.11242, Culture=neutral, PublicKeyToken=5a83d419d44a9d98, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\MIL\MILXpp6\Matrox.MatroxImagingLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classification\ClassificationParameterBase.cs" />
+    <Compile Include="Classification\Classification\ClassificationWithDebugFactory.cs" />
+    <Compile Include="Classification\Classification\ClassificationWithDebugModule.cs" />
+    <Compile Include="Classification\IClassifierModule.cs" />
+    <Compile Include="Classification\Classification\ViewModel\ClassificationDefectClassViewModel.cs" />
+    <Compile Include="Classification\Classification\View\ClassificationControl.xaml.cs">
+      <DependentUpon>ClassificationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classification\Classification\ClassificationFactory.cs" />
+    <Compile Include="Classification\Classification\ClassificationParameter.cs" />
+    <Compile Include="Classification\Classification\DefectClass.cs" />
+    <Compile Include="Classification\Classification\ViewModel\ClassificationViewModel.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\ClassificationParameter.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\DeepControlFactory.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\DeepControlModule.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\DefectClass.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\ViewModel\ClassificationDefectClassViewModel.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\ViewModel\ClassificationViewModel.cs" />
+    <Compile Include="ClusterOperation\DeepControlModule\View\DeepControl.xaml.cs">
+      <DependentUpon>DeepControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\IClusterizerModule.cs" />
+    <Compile Include="ClusterOperation\MilCharacterization\ViewModel\ListViewItem.cs" />
+    <Compile Include="ClusterOperation\MilCharacterization\ViewModel\MilCharacterizationViewModel.cs" />
+    <Compile Include="ClusterOperation\ClusterizerModuleBase.cs" />
+    <Compile Include="ClusterOperation\ClusterBuilder.cs" />
+    <Compile Include="ClusterOperation\MilCharacterization\View\CharacterizationView.xaml.cs">
+      <DependentUpon>CharacterizationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\MilClusterizer\Rendering\ClusterizerRenderingViewModel.cs" />
+    <Compile Include="ClusterOperation\SizingWithBlobCalculation\SizingWithBlobCalculationFactory.cs" />
+    <Compile Include="ClusterOperation\SizingWithBlobCalculation\SizingWithBlobCalculationModule.cs" />
+    <Compile Include="ClusterOperation\Sizing\SizingClass.cs" />
+    <Compile Include="ClusterOperation\Sizing\ViewModel\SizingClassViewModel.cs" />
+    <Compile Include="ClusterOperation\Sizing\ViewModel\SizingViewModel.cs" />
+    <Compile Include="ClusterOperation\Sizing\View\SizingControl.xaml.cs">
+      <DependentUpon>SizingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\Sizing\SizingParameter.cs" />
+    <Compile Include="ClusterOperation\Sizing\SizingFactory.cs" />
+    <Compile Include="ClusterOperation\Sizing\SizingModule.cs" />
+    <Compile Include="DataLoader\DataLoaderBase.cs" />
+    <Compile Include="DataLoader\DieDataLoaderBase.cs" />
+    <Compile Include="DataLoader\InputInfo\FullImageWithMaskInputInfo.cs" />
+    <Compile Include="DataLoader\InputInfo\InspectionInputInfoBase.cs" />
+    <Compile Include="DataLoader\InputInfo\DieInputInfo.cs" />
+    <Compile Include="DataLoader\FullImageDataLoaderBase.cs" />
+    <Compile Include="DataLoader\InputInfo\FullImageInputInfo.cs" />
+    <Compile Include="DataLoader\MosaicDataLoaderBase.cs" />
+    <Compile Include="DataLoader\InputInfo\MosaicInputInfo.cs" />
+    <Compile Include="DataLoader\Rendering\AcquisitionDataViewModel.cs" />
+    <Compile Include="DataLoader\Rendering\SelectRenderingImageViewModel.cs" />
+    <Compile Include="DataLoader\Rendering\DataLoaderRenderingViewModel.cs" />
+    <Compile Include="DataLoader\Rendering\SelectRenderingImageView.xaml.cs">
+      <DependentUpon>SelectRenderingImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugTools\WaitFactory.cs" />
+    <Compile Include="DebugTools\WaitModule.cs" />
+    <Compile Include="Edition\AsoEditor\CategoryStatistic.cs" />
+    <Compile Include="Edition\AsoEditor\Parameter\AsoEditorParameter.cs" />
+    <Compile Include="ClusterOperation\ICharacterizationModule.cs" />
+    <Compile Include="ClusterOperation\MilCharacterization\View\MilCharacterizationControl.xaml.cs">
+      <DependentUpon>MilCharacterizationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\MilCharacterization\MilCharacterizationParameter.cs" />
+    <Compile Include="ClusterOperation\MilCharacterization\MilCharacterizationFactory.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\DispatcherDefectClass.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\ViewModel\DispatcherDefectClassViewModel.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\ViewModel\BranchBooleanViewModel.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\View\ClusterDispatcherControl.xaml.cs">
+      <DependentUpon>ClusterDispatcherControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\ClusterDispatcher\ClusterDispatcherParameter.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\ViewModel\ClusterDispatcherViewModel.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\ClusterDispatcherFactory.cs" />
+    <Compile Include="ClusterOperation\ClusterDispatcher\ClusterDispatcherModule.cs" />
+    <Compile Include="Edition\AsoEditor\Parameter\AsoDefectVidCategory.cs" />
+    <Compile Include="Edition\AsoEditor\ViewModel\AsoRenderingViewModel.cs" />
+    <Compile Include="Edition\AsoEditor\ViewModel\AsoEditorViewModel.cs" />
+    <Compile Include="Edition\AsoEditor\Parameter\AsoDefectClass.cs" />
+    <Compile Include="Edition\AsoEditor\ViewModel\DefectViewModel.cs" />
+    <Compile Include="Edition\DummyDefectCluster\DummyDefectClusterFactory.cs" />
+    <Compile Include="Edition\DummyDefectCluster\DummyDefectClusterModule.cs" />
+    <Compile Include="Edition\DummyDefect\DummyDefectFactory.cs" />
+    <Compile Include="Edition\DummyDefect\DummyDefectModule.cs" />
+    <Compile Include="Edition\EdgEditor\EdgEditorFactory.cs" />
+    <Compile Include="Edition\EdgEditor\EdgEditorModule.cs" />
+    <Compile Include="Edition\EdgEditor\eEdgeModuleID.cs" />
+    <Compile Include="Edition\KlarfEditorEdge\KlarfEditorEdgeModule.cs" />
+    <Compile Include="Edition\KlarfEditorEdge\KlarfEditorEdgeFactory.cs" />
+    <Compile Include="Edition\KlarfEditor\Parameters\KlarfDefectColorParameters.cs" />
+    <Compile Include="Edition\KlarfEditor\Report\CWaferDefectData.cs" />
+    <Compile Include="Edition\KlarfEditor\Report\CWaferParameters.cs" />
+    <Compile Include="Edition\KlarfEditor\Report\CWaferResult.cs" />
+    <Compile Include="Edition\KlarfEditor\Report\DefectValues.cs" />
+    <Compile Include="Edition\KlarfEditor\ViewModel\DefectColorViewModel.cs" />
+    <Compile Include="Edition\KlarfEditor\KlarfBlob.cs" />
+    <Compile Include="Edition\KlarfEditor\Parameters\KlarfDefectColorCategory.cs" />
+    <Compile Include="Edition\KlarfEditor\ViewModel\KlarfEditorColorViewModel.cs" />
+    <Compile Include="Edition\KlarfEditor\View\KlarfEditorColorControl.xaml.cs">
+      <DependentUpon>KlarfEditorColorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\PLSEditor\PLSEditorFactory.cs" />
+    <Compile Include="Edition\PLSEditor\PLSEditorModule.cs" />
+    <Compile Include="Edition\Rendering\ClassDefectResult.cs" />
+    <Compile Include="Edition\Rendering\DefectResult.cs" />
+    <Compile Include="Edition\Rendering\Message\AsoResultMessage.cs" />
+    <Compile Include="Edition\Rendering\Message\EdgResultMessage.cs" />
+    <Compile Include="Edition\Rendering\Message\KlarfResultMessage.cs" />
+    <Compile Include="Edition\Rendering\ViewModel\ClassificationViewModel.cs" />
+    <Compile Include="Edition\Rendering\ViewModel\DefectViewModel.cs" />
+    <Compile Include="Edition\Rendering\ViewModel\ClassViewModel.cs" />
+    <Compile Include="Edition\Rendering\View\ClassView.xaml.cs">
+      <DependentUpon>ClassView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\Rendering\View\Control\DefectsControl.cs" />
+    <Compile Include="Edition\Rendering\View\ResultView.xaml.cs">
+      <DependentUpon>ResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\KlarfEditor\ViewModel\KlarfRenderingViewModel.cs" />
+    <Compile Include="Edition\Rendering\View\WaferView.xaml.cs">
+      <DependentUpon>WaferView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\KlarfEditor\View\KlarfEditorRoughBinControl.xaml.cs">
+      <DependentUpon>KlarfEditorRoughBinControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\KlarfEditor\KlarfEditorRoughBinParameter.cs" />
+    <Compile Include="Edition\KlarfEditor\ViewModel\KlarfEditorRoughBinViewModel.cs" />
+    <Compile Include="Edition\KlarfEditor\DefectRoughBin.cs" />
+    <Compile Include="Edition\KlarfEditorDie\KlarfEditorDieFactory.cs" />
+    <Compile Include="Edition\KlarfEditorDie\KlarfEditorDieModule.cs" />
+    <Compile Include="Edition\Database\DatabaseEditionModule.cs" />
+    <Compile Include="Edition\MicroscopeReview\MicroscopeReviewClass.cs" />
+    <Compile Include="Edition\MicroscopeReview\MicroscopeReviewFactory.cs" />
+    <Compile Include="Edition\MicroscopeReview\MicroscopeReviewModule.cs" />
+    <Compile Include="Edition\MicroscopeReview\MicroscopeReviewParameter.cs" />
+    <Compile Include="Edition\MicroscopeReview\ViewModel\MicroscopeReviewClassViewModel.cs" />
+    <Compile Include="Edition\MicroscopeReview\ViewModel\MicroscopeReviewViewModel.cs" />
+    <Compile Include="Edition\MicroscopeReview\View\MicroscopeReviewControl.xaml.cs">
+      <DependentUpon>MicroscopeReviewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VidReport\VidDefectModule.cs" />
+    <Compile Include="Edition\VidReport\ViewModel\VidReportViewModel.cs" />
+    <Compile Include="Edition\VidReport\ViewModel\ReportClassViewModel.cs" />
+    <Compile Include="Edition\VidReport\View\VidReportControl.xaml.cs">
+      <DependentUpon>VidReportControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VidReport\VidReportParameter.cs" />
+    <Compile Include="Edition\VidReport\ReportClass.cs" />
+    <Compile Include="Edition\VidReport\VidDefectFactory.cs" />
+    <Compile Include="Edition\VidReport\VidReportModule.cs" />
+    <Compile Include="Edition\YieldmapEditor\PrmDefectKiller.cs" />
+    <Compile Include="Edition\YieldmapEditor\View\YieldEditorKillerDefectControl.xaml.cs">
+      <DependentUpon>YieldEditorKillerDefectControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\YieldmapEditor\YieldEditorKillerDefectParameter.cs" />
+    <Compile Include="Edition\YieldmapEditor\ViewModel\YieldEditorKillerDefectViewModel.cs" />
+    <Compile Include="Edition\YieldmapEditor\YieldmapEditorFactory.cs" />
+    <Compile Include="Edition\YieldmapEditor\YieldmapEditorModule.cs" />
+    <Compile Include="Grading\ClassGrading\ClassGradingFactory.cs" />
+    <Compile Include="Grading\ClassGrading\ClassGradingModule.cs" />
+    <Compile Include="Grading\ClassGrading\ClassGradingParameter.cs" />
+    <Compile Include="Grading\ClassGrading\ClassGradingRule.cs" />
+    <Compile Include="Grading\ClassGrading\ViewModel\ClassGradingViewModel.cs" />
+    <Compile Include="Grading\ClassGrading\View\ClassGradingControl.xaml.cs">
+      <DependentUpon>ClassGradingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Grading\ExternalGrading\ExternalGradingFactory.cs" />
+    <Compile Include="Grading\ExternalGrading\ExternalGradingModule.cs" />
+    <Compile Include="Grading\ExternalGrading\GradingRecipe.cs" />
+    <Compile Include="Grading\GradingRule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\DMTMaskEdgeRemove\DMTMaskEdgeRemoveFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\DMTMaskEdgeRemove\DMTMaskEdgeRemoveModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\CroppedpBorder\CroppeBorderFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\CroppedpBorder\CroppeBorderModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\CustomAreaRemove\CustomAreaRemoveFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\CustomAreaRemove\CustomAreaRemoveModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\CustomAreaRemove\CustomAreaRemoveAlgorithm.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\EdgeRemove\EdgeModule_Col_Exclusion.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\EdgeRemove\Edge_Col_exclusionFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\EdgeRemove\RemoveAlgorithmBase.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\EdgeRemove\EdgeRemoveAlgorithm.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\PadFingerRemove\PadFingerRemoveFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\PadFingerRemove\PadFingerRemoveModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\AbsoluteValue\AbsoluteValueFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\AbsoluteValue\AbsoluteValueModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Average\AverageFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Average\AverageModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Division\DivisionFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Division\DivisionModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Logarithm\LogarithmFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Logarithm\LogarithmModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\LogicalOperation\LogicalOperationFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\LogicalOperation\LogicalOperationModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\MinMax\MinMaxFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\MinMax\MinMaxModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Multiplication\MultiplicationFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Multiplication\MultiplicationModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\MathematicModuleBase.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Addition\AdditionFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Addition\AdditionModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Inversion\InversionFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Inversion\InversionModule.cs" />
+    <Compile Include="ImageProcessing\ImageModuleBase.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Subtraction\SubtractionFactory.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Subtraction\SubtractionModule.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Subtraction\FirstOperandParameter.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Subtraction\ViewModel\FirstOperandViewModel.cs" />
+    <Compile Include="ImageProcessing\Mathematic\Subtraction\View\FirstOperandParameterView.xaml.cs">
+      <DependentUpon>FirstOperandParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ImageProcessing\NoiseReduction\BlobFiltering\MilBlobFilteringFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\BlobFiltering\MilBlobFilteringModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\Smoothing\SmoothingFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\Smoothing\SmoothingModule.cs" />
+    <Compile Include="ImageProcessing\OpeningClosing\Filling\FillingFactory.cs" />
+    <Compile Include="ImageProcessing\OpeningClosing\Filling\FillingModule.cs" />
+    <Compile Include="Merge\Append\AppendFactory.cs" />
+    <Compile Include="Merge\Append\AppendModule.cs" />
+    <Compile Include="Classification\Classification\ClassificationModule.cs" />
+    <Compile Include="Edition\AsoEditor\View\AsoControl.xaml.cs">
+      <DependentUpon>AsoControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\AsoEditor\AsoEditorFactory.cs" />
+    <Compile Include="Edition\KlarfEditor\KlarfEditorFactory.cs" />
+    <Compile Include="ClusterOperation\MilCharacterization\MilCharacterizationModule.cs" />
+    <Compile Include="Edition\AsoEditor\AsoEditorModule.cs" />
+    <Compile Include="ClusterOperation\MilClusterizer\MilClusterizerModule.cs" />
+    <Compile Include="Edition\KlarfEditor\KlarfEditorModule.cs" />
+    <Compile Include="ClusterOperation\MilClusterizer\MilClusterizerFactory.cs" />
+    <Compile Include="ImageProcessing\OpeningClosing\Closing\ClosingFactory.cs" />
+    <Compile Include="ImageProcessing\OpeningClosing\Closing\ClosingModule.cs" />
+    <Compile Include="ImageProcessing\OpeningClosing\Expansion\ExpansionFactory.cs" />
+    <Compile Include="ImageProcessing\OpeningClosing\Expansion\ExpansionModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\EdgeRemove\EdgeRemoveFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\EdgeRemove\EdgeRemoveModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\Erosion\ErosionFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\Erosion\ErosionModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\NoiseFilter\NoiseFilterFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\NoiseFilter\NoiseFilterModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\ClusterEdgeRemoveByStrip\ClusterEdgeRemoveByStripFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\ClusterEdgeRemoveByStrip\ClusterEdgeRemoveByStripModule.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\SobelModule\SobelFactory.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdAverage\ThresholdAverageFactory.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdAverage\ThresholdAverageModule.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdStd\ThresholdStandardFactory.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdStd\ThresholdStandardModule.cs" />
+    <None Include="Properties\AssemblyInfo.template" />
+    <Compile Include="Trace\TraceImage\TraceImageConverter.cs" />
+    <Compile Include="Trace\TraceImage\TraceImage.cs" />
+    <Compile Include="Trace\TraceImage\TraceImageFactory.cs" />
+    <Compile Include="Trace\TraceImage\TraceImageModule.cs" />
+    <Compile Include="Trace\TraceImage\TraceImageUserControl.xaml.cs">
+      <DependentUpon>TraceImageUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Trace\TraceImage\TraceImageViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\SobelModule\SobelModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5c0a-4f7e-a355-8d03680b3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Proxy\UnitySC.Shared.Proxy.csproj">
+      <Project>{90bdbe2a-b307-4fe9-95ab-09a0673c2345}</Project>
+      <Name>UnitySC.Shared.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{ABA2C6A4-BCB4-478A-BE76-CB62AB4941E9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdcBasicObjects\AdcBasicObjects.csproj">
+      <Project>{2261bf78-6856-4a67-9d4c-904a911aef74}</Project>
+      <Name>AdcBasicObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ADCEngine\ADCEngine.csproj">
+      <Project>{52513f8e-c8b8-4663-b1ff-bec743e9a14c}</Project>
+      <Name>ADCEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\AdcTools\AdcTools.csproj">
+      <Project>{2d6ad4b4-1775-45ef-ac20-85a6da7fd953}</Project>
+      <Name>AdcTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Format001\Format001.csproj">
+      <Project>{fda04714-fcc9-4b0b-bff1-b63fef65fb27}</Project>
+      <Name>Format001</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\libProcessing\LibProcessing.csproj">
+      <Project>{4be42cd7-805d-47b3-863f-263671bf30e9}</Project>
+      <Name>LibProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ComRobot\AdcRobotExchange\AdcRobotExchange.csproj">
+      <Project>{0B2F9160-2203-4CDD-B9A6-1723EFA2F17D}</Project>
+      <Name>AdcRobotExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MergeContext\AcquisitionAdcExchange\AcquisitionAdcExchange.csproj">
+      <Project>{3c26d6d9-8b32-447f-8e21-e65e81b5ed29}</Project>
+      <Name>AcquisitionAdcExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MergeContext\Context\MergeContext.Context.csproj">
+      <Project>{3E2F7C06-0C12-4058-AEEE-E91A9C77845F}</Project>
+      <Name>MergeContext.Context</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Classification\Classification\View\ClassificationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClusterOperation\DeepControlModule\View\DeepControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="ClusterOperation\MilCharacterization\View\CharacterizationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClusterOperation\Sizing\View\SizingControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DataLoader\Rendering\SelectRenderingImageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\AsoEditor\View\AsoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClusterOperation\MilCharacterization\View\MilCharacterizationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClusterOperation\ClusterDispatcher\View\ClusterDispatcherControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <EmbeddedResource Include="ClusterOperation\ClusterDispatcher\View\CheckBoxTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClusterOperation\ClusterDispatcher\View\TextBoxTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Page Include="Edition\KlarfEditor\View\KlarfEditorColorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\Rendering\View\ClassView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\Rendering\View\ResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\Rendering\View\WaferView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Edition\KlarfEditor\View\KlarfEditorRoughBinControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Edition\MicroscopeReview\View\MicroscopeReviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Edition\VidReport\View\VidReportControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\YieldmapEditor\View\YieldEditorKillerDefectControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Grading\ClassGrading\View\ClassGradingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImageProcessing\Mathematic\Subtraction\View\FirstOperandParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Trace\TraceImage\TraceImageUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Trace\TraceImage\ViewFinder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Defect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Defect.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NoDefect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NoDefect.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>8.0.5</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

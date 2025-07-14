@@ -1,0 +1,79 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Style TargetType="{x:Type controls:CustomSlider}">
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
+        <Setter Property="Background" Value="{DynamicResource SliderBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SliderTrackBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource SliderForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:CustomSlider}">
+                    <Border
+                        x:Name="border"
+                        Padding="0,4,0,4"
+                        Background="Transparent"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="False">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                            </Grid.RowDefinitions>
+                            <ItemsControl
+                                x:Name="PART_TickItemsControl"
+                                Grid.Row="0"
+                                Margin="0,2"
+                                ItemContainerStyle="{TemplateBinding TickContainerStyle}"
+                                ItemTemplate="{TemplateBinding TickTemplate}"
+                                ItemsSource="{TemplateBinding TickSource}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                            <Border
+                                x:Name="TrackBackground"
+                                Grid.Row="1"
+                                Height="3"
+                                VerticalAlignment="Center"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="Transparent"
+                                BorderThickness="0" />
+                            <Track x:Name="PART_Track" Grid.Row="1">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton
+                                        Height="3"
+                                        Background="{TemplateBinding BorderBrush}"
+                                        Command="{x:Static Slider.DecreaseLarge}"
+                                        Style="{StaticResource InvisibleRepeatButton}" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource InvisibleRepeatButton}" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb
+                                        x:Name="Thumb"
+                                        VerticalAlignment="Center"
+                                        Focusable="False"
+                                        Foreground="{TemplateBinding BorderBrush}"
+                                        OverridesDefaultStyle="True"
+                                        Style="{StaticResource SliderThumb}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+</ResourceDictionary>

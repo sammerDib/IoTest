@@ -1,0 +1,108 @@
+﻿<UserControl
+    x:Class="UnitySC.Shared.ResultUI.Common.View.Defect.DefectView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:commonControls="clr-namespace:UnitySC.Shared.ResultUI.Common.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:defect="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.Defect"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sharedUiControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:view="clr-namespace:UnitySC.Shared.ResultUI.Common.View"
+    d:DataContext="{d:DesignInstance defect:DefectVM}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="4,1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="679*" />
+            <ColumnDefinition Width="113*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition
+                Height="3*"
+                MinHeight="100" />
+            <RowDefinition Height="5" />
+            <RowDefinition
+                Height="7*"
+                MinHeight="350" />
+        </Grid.RowDefinitions>
+
+        <commonControls:LotStatsHeader Grid.ColumnSpan="2">
+            <sharedUiControls:ImageButton
+                Width="30"
+                Height="30"
+                Margin="0"
+                HorizontalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Command="{Binding CommandExportCSV}"
+                ImageGeometry="{StaticResource ArrowCircleUpGeometry}"
+                ImageGeometryBrush="{StaticResource IconsColor}"
+                IsEnabled="{Binding IsExportCsvButtonEnabled}"
+                ToolTip="Export CSV" />
+        </commonControls:LotStatsHeader>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Label
+                VerticalAlignment="Center"
+                Content="Statistic type" />
+            <ComboBox
+                Width="80"
+                Margin="4,5"
+                HorizontalAlignment="Right"
+                ItemsSource="{Binding ResultValueTypes}"
+                SelectedItem="{Binding SelectedResValueType}" />
+        </StackPanel>
+
+        <!--  Stats view  -->
+        <view:GridStatsView
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            DataContext="{Binding GridStatsVM}" />
+
+        <!--  Splitter  -->
+        <GridSplitter
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch" />
+        <Grid
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Border
+                Margin="0,5"
+                Style="{StaticResource HeaderBorder}">
+                <ComboBox
+                    Width="200"
+                    HorizontalAlignment="Right"
+                    DisplayMemberPath="Value"
+                    ItemsSource="{Binding HistogramTypes}"
+                    SelectedValue="{Binding SelectedHistogram}" />
+            </Border>
+            <ContentPresenter
+                Grid.Row="1"
+                MinHeight="300"
+                Content="{Binding HistogramVM.Chart}" />
+        </Grid>
+    </Grid>
+</UserControl>

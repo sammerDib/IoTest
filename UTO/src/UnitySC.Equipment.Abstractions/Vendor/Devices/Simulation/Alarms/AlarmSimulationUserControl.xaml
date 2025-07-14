@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="UnitySC.Equipment.Abstractions.Vendor.Devices.Simulation.Alarms.AlarmSimulationUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:alarms="clr-namespace:UnitySC.Equipment.Abstractions.Vendor.Devices.Simulation.Alarms"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance alarms:AlarmSimulationViewModel}"
+             d:DesignHeight="400" d:DesignWidth="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ComboBox
+            Grid.Column="0"
+            Margin="5"
+            VerticalAlignment="Top"
+            Height="25"
+            ItemsSource="{Binding Alarms}"
+            DisplayMemberPath="Description"
+            SelectedItem="{Binding SelectedAlarm, Mode=TwoWay}" />
+
+        <UniformGrid
+            Grid.Column="1"
+            Columns="2"
+            VerticalAlignment="Top">
+
+            <Button
+                Margin="5"
+                Content="Set Alarm"
+                Height="25"
+                Command="{Binding SetAlarmCommand}" />
+
+            <Button
+                Margin="5"
+                Content="Clear Alarm"
+                Height="25"
+                Command="{Binding ClearAlarmCommand}" />
+
+        </UniformGrid>
+    </Grid>
+</UserControl>

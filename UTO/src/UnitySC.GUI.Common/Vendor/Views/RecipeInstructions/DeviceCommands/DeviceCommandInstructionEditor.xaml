@@ -1,0 +1,230 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.DeviceCommands.DeviceCommandInstructionEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:recipeInstructions="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions"
+    xmlns:equipmentTree="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.EquipmentTree"
+    xmlns:scenarios="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.Scenarios"
+    xmlns:viewModels="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.DeviceCommands.ViewModels"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:deviceCommands="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.DeviceCommands"
+    Width="1200"
+    Height="700"
+    d:DataContext="{d:DesignInstance deviceCommands:DeviceCommandEditorViewModel, IsDesignTimeCreatable=False}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate
+            x:Key="StringTemplate"
+            DataType="{x:Type viewModels:StringDeviceCommandParameterViewModel}">
+            <TextBox
+                VerticalContentAlignment="Center"
+                Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="BoolTemplate"
+            DataType="{x:Type viewModels:BoolDeviceCommandParameterViewModel}">
+            <CheckBox
+                VerticalAlignment="Center"
+                IsChecked="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged}" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="NumericTemplate"
+            DataType="{x:Type viewModels:NumericDeviceCommandParameterViewModel}">
+            <numericBox:DoubleBox Value="{Binding Value, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="UnitNetTemplate"
+            DataType="{x:Type viewModels:QuantityDeviceCommandParameterViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:LocalizedUnitsNet
+                    IsUnitFixed="True"
+                    Quantity="{Binding Quantity}" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="MaterialLocationTemplate"
+            DataType="{x:Type viewModels:MaterialLocationDeviceCommandParameterViewModel}">
+            <ComboBox
+                ItemsSource="{Binding Locations}"
+                SelectedItem="{Binding TypedValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="EnumerableTemplate"
+            DataType="{x:Type viewModels:EnumerableDeviceCommandParameterViewModel}">
+            <ComboBox
+                ItemsSource="{Binding Literals}"
+                SelectedItem="{Binding Path=TypedValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="LocationContainerTemplate"
+            DataType="{x:Type viewModels:MaterialLocationContainerDeviceCommandParameterViewModel}">
+            <ComboBox
+                ItemsSource="{Binding MaterialLocationContainers}"
+                SelectedItem="{Binding Path=TypedValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </DataTemplate>
+
+        <dataTemplateSelectors:GenericDataTemplateSelector x:Key="ParameterTemplateSelector">
+            <StaticResource ResourceKey="BoolTemplate" />
+            <StaticResource ResourceKey="UnitNetTemplate" />
+            <StaticResource ResourceKey="EnumerableTemplate" />
+            <StaticResource ResourceKey="MaterialLocationTemplate" />
+            <StaticResource ResourceKey="NumericTemplate" />
+            <StaticResource ResourceKey="StringTemplate" />
+            <StaticResource ResourceKey="LocationContainerTemplate" />
+        </dataTemplateSelectors:GenericDataTemplateSelector>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1.5*" />
+        </Grid.ColumnDefinitions>
+
+        <equipmentTree:EquipmentTreeView DataContext="{Binding EquipmentTree}" />
+
+        <GroupBox
+            Grid.Column="1"
+            Margin="0,0,20,0"
+            Padding="0,15,0,0"
+            Header="{localize:Static scenarios:ScenarioResources.SCENARIO_COMMANDS}">
+            <controls:BindableTreeView
+                DataContext="{Binding SelectedDevice}"
+                ItemsSource="{Binding CommandGroups}"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                SelectedTreeElement="{Binding UntypedSelectedCommand}">
+                <TreeView.ItemTemplateSelector>
+                    <dataTemplateSelectors:GenericDataTemplateSelector>
+                        <HierarchicalDataTemplate
+                            DataType="{x:Type deviceCommands:DeviceCommandGroupViewModel}"
+                            ItemsSource="{Binding Commands}">
+                            <TextBlock Text="{Binding Name}" />
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type deviceCommands:DeviceCommandViewModel}">
+                            <TextBlock Text="{Binding DisplayName}" />
+                        </DataTemplate>
+                    </dataTemplateSelectors:GenericDataTemplateSelector>
+                </TreeView.ItemTemplateSelector>
+                <TreeView.ItemContainerStyle>
+                    <Style
+                        BasedOn="{StaticResource {x:Type TreeViewItem}}"
+                        TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True" />
+                        <Style.Triggers>
+                            <Trigger Property="HasItems" Value="true">
+                                <Setter Property="Focusable" Value="false" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </controls:BindableTreeView>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Column="2"
+            Header="{localize:Static scenarios:ScenarioResources.SCENARIO_PARAMETERS}">
+
+            <DockPanel>
+
+                <recipeInstructions:TimeoutEditorView
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Bottom"
+                    IsActive="{Binding IsTimeoutEnabled, Mode=TwoWay}"
+                    IsOptional="True"
+                    Text="{localize:Static scenarios:ScenarioResources.SCENARIO_USE_TIMEOUT}"
+                    Value="{Binding Timeout, Mode=TwoWay}" />
+
+                <ContentControl
+                    Content="{Binding}"
+                    DataContext="{Binding SelectedDevice.SelectedCommand}">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate>
+                            <Control Name="ContentControl">
+                                <Control.Template>
+                                    <ControlTemplate>
+                                        <ItemsControl
+                                            DockPanel.Dock="Top"
+                                            ItemsSource="{Binding Parameters, Mode=OneWay}"
+                                            Style="{StaticResource VirtualizedItemsControlStyle}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type viewModels:IDeviceCommandParameterViewModel}">
+                                                    <controls:PropertyEditor PropertyName="{Binding Name, Converter={StaticResource TextToHumanizedTextConverter}}">
+                                                        <ContentControl
+                                                            Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                                            Content="{Binding}"
+                                                            ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
+                                                            IsTabStop="False"
+                                                            TabIndex="2" />
+                                                    </controls:PropertyEditor>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ControlTemplate>
+                                </Control.Template>
+                            </Control>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Parameters.Count}" Value="0">
+                                    <Setter TargetName="ContentControl" Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBlock
+                                                    Style="{StaticResource CaptionTextStyle}"
+                                                    Text="{localize:Static scenarios:ScenarioResources.SCENARIO_NO_PARAMETER}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                                    <Setter TargetName="ContentControl" Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBlock
+                                                    Style="{StaticResource CaptionTextStyle}"
+                                                    Text="{localize:Static scenarios:ScenarioResources.SCENARIO_NO_COMMAND}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+            </DockPanel>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

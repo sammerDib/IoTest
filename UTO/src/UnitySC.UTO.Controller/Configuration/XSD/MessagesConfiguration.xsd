@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.0.1 U (http://www.xmlspy.com) by Irisha (home) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="Data">
+    <xs:annotation>
+      <xs:documentation>Comment describing your root element</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="HostConfig"/>
+        <xs:element ref="Secs2DataItems"/>
+        <xs:element ref="Variables"/>
+        <xs:element ref="Reports"/>
+        <xs:element ref="CollectionEvents"/>
+        <xs:element ref="CommunicationPiping"/>
+        <xs:element ref="Alarms"/>
+        <xs:element name="LimitsMonitoring" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MonitoringVar" type="VarLimits" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HostConfig">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="HostCommonConfig" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HC" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="VID" type="xs:string"/>
+                    <xs:element name="VName" type="xs:string"/>
+                    <xs:element name="Value"/>
+                    <xs:element name="Units"/>
+                    <xs:element name="Type">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="B"/>
+                          <xs:enumeration value="BOOL"/>
+                          <xs:enumeration value="A"/>
+                          <xs:enumeration value="I8"/>
+                          <xs:enumeration value="I1"/>
+                          <xs:enumeration value="I2"/>
+                          <xs:enumeration value="I4"/>
+                          <xs:enumeration value="F8"/>
+                          <xs:enumeration value="F4"/>
+                          <xs:enumeration value="U8"/>
+                          <xs:enumeration value="U1"/>
+                          <xs:enumeration value="U2"/>
+                          <xs:enumeration value="U4"/>
+                          <xs:enumeration value="L"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="Min"/>
+                    <xs:element name="Max"/>
+                    <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="HostHSMSConfig" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HC" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="VID" type="xs:string"/>
+                    <xs:element name="VName" type="xs:string"/>
+                    <xs:element name="Value"/>
+                    <xs:element name="Units"/>
+                    <xs:element name="Type">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="B"/>
+                          <xs:enumeration value="BOOL"/>
+                          <xs:enumeration value="A"/>
+                          <xs:enumeration value="I8"/>
+                          <xs:enumeration value="I1"/>
+                          <xs:enumeration value="I2"/>
+                          <xs:enumeration value="I4"/>
+                          <xs:enumeration value="F8"/>
+                          <xs:enumeration value="F4"/>
+                          <xs:enumeration value="U8"/>
+                          <xs:enumeration value="U1"/>
+                          <xs:enumeration value="U2"/>
+                          <xs:enumeration value="U4"/>
+                          <xs:enumeration value="L"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="Min"/>
+                    <xs:element name="Max"/>
+                    <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="HostSECS1Config" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HC" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="VID" type="xs:string"/>
+                    <xs:element name="VName" type="xs:string"/>
+                    <xs:element name="Value"/>
+                    <xs:element name="Units"/>
+                    <xs:element name="Type">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="B"/>
+                          <xs:enumeration value="BOOL"/>
+                          <xs:enumeration value="A"/>
+                          <xs:enumeration value="I8"/>
+                          <xs:enumeration value="I1"/>
+                          <xs:enumeration value="I2"/>
+                          <xs:enumeration value="I4"/>
+                          <xs:enumeration value="F8"/>
+                          <xs:enumeration value="F4"/>
+                          <xs:enumeration value="U8"/>
+                          <xs:enumeration value="U1"/>
+                          <xs:enumeration value="U2"/>
+                          <xs:enumeration value="U4"/>
+                          <xs:enumeration value="L"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="Min"/>
+                    <xs:element name="Max"/>
+                    <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Secs2DataItems">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Secs2DataItem" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" type="xs:string"/>
+              <xs:element name="Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="B"/>
+                    <xs:enumeration value="BOOL"/>
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="I8"/>
+                    <xs:enumeration value="I1"/>
+                    <xs:enumeration value="I2"/>
+                    <xs:enumeration value="I4"/>
+                    <xs:enumeration value="F8"/>
+                    <xs:enumeration value="F4"/>
+                    <xs:enumeration value="U8"/>
+                    <xs:enumeration value="U1"/>
+                    <xs:enumeration value="U2"/>
+                    <xs:enumeration value="U4"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Variables">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="SV" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="VID" type="xs:string"/>
+              <xs:element name="VName" type="xs:string"/>
+              <xs:element name="Units"/>
+              <xs:element name="Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="B"/>
+                    <xs:enumeration value="BOOL"/>
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="I8"/>
+                    <xs:enumeration value="I1"/>
+                    <xs:enumeration value="I2"/>
+                    <xs:enumeration value="I4"/>
+                    <xs:enumeration value="F8"/>
+                    <xs:enumeration value="F4"/>
+                    <xs:enumeration value="U8"/>
+                    <xs:enumeration value="U1"/>
+                    <xs:enumeration value="U2"/>
+                    <xs:enumeration value="U4"/>
+                    <xs:enumeration value="L"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CEID" type="xs:string" minOccurs="0"/>
+              <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+		      <xs:element name="Description" type="xs:string" minOccurs="0" />															  
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DV" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="VID" type="xs:string"/>
+              <xs:element name="VName" type="xs:string"/>
+              <xs:element name="Units" minOccurs="0" maxOccurs="1"/>
+              <xs:element name="Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="B"/>
+                    <xs:enumeration value="BOOL"/>
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="I8"/>
+                    <xs:enumeration value="I1"/>
+                    <xs:enumeration value="I2"/>
+                    <xs:enumeration value="I4"/>
+                    <xs:enumeration value="F8"/>
+                    <xs:enumeration value="F4"/>
+                    <xs:enumeration value="U8"/>
+                    <xs:enumeration value="U1"/>
+                    <xs:enumeration value="U2"/>
+                    <xs:enumeration value="U4"/>
+                    <xs:enumeration value="L"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+			  <xs:element name="Description" type="xs:string" minOccurs="0" />															  
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EC" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="VID" type="xs:string"/>
+              <xs:element name="VName" type="xs:string"/>
+              <xs:element name="Value"/>
+              <xs:element name="Units"/>
+              <xs:element name="Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="B"/>
+                    <xs:enumeration value="BOOL"/>
+                    <xs:enumeration value="A"/>
+                    <xs:enumeration value="I8"/>
+                    <xs:enumeration value="I1"/>
+                    <xs:enumeration value="I2"/>
+                    <xs:enumeration value="I4"/>
+                    <xs:enumeration value="F8"/>
+                    <xs:enumeration value="F4"/>
+                    <xs:enumeration value="U8"/>
+                    <xs:enumeration value="U1"/>
+                    <xs:enumeration value="U2"/>
+                    <xs:enumeration value="U4"/>
+                    <xs:enumeration value="L"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Min"/>
+              <xs:element name="Max"/>
+              <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+              <xs:element name="Description" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Reports">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Report" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RPTID" type="xs:string"/>
+              <xs:element name="RPTName" type="xs:string"/>
+              <xs:element name="VIDs">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="VID" type="xs:string" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CollectionEvents">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CollectionEvent" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CEID" type="xs:string"/>
+              <xs:element name="CEName" type="xs:string"/>
+              <xs:element name="Enabled" type="xs:boolean"/>
+              <xs:element name="RPTIDs">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="RPTID" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="WellKnowName" type="xs:string" minOccurs="0"/>
+              <xs:element name="ValidDVIDs" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ValidDVID" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CommunicationPiping">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="IsAllowedOut">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Messages"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="IsAllowedIn">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="Messages"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Messages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Message" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Stream" type="xs:byte"/>
+              <xs:element name="Function" type="xs:byte"/>
+              <xs:element ref="ControlStates"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="ControlStateType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HostOffLine"/>
+      <xs:enumeration value="AttemptOnLine"/>
+      <xs:enumeration value="EquipmentOffLine"/>
+      <xs:enumeration value="Local"/>
+      <xs:enumeration value="Remote"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ControlStates">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ControlState" type="ControlStateType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Alarms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Alarm" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ALID"/>
+              <xs:element name="ALCD"/>
+              <xs:element name="ALTX"/>
+              <xs:element name="ALName"/>
+              <xs:element name="Enabled" type="xs:boolean"/>
+              <xs:element name="SetCEID"/>
+              <xs:element name="ClearCEID"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Limit">
+    <xs:sequence>
+      <xs:element name="ID" type="xs:string"/>
+      <xs:element name="UpperBound" type="xs:string"/>
+      <xs:element name="LowerBound" type="xs:string"/>
+      <xs:element name="IsEnabled" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="VarLimits">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:element name="VID" type="xs:string"/>
+      <xs:element name="Limit" type="Limit" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

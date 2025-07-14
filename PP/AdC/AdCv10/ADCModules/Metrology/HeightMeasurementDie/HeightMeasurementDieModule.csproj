@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4B6EF46F-F55B-4C5A-8533-57BE80ACC9F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HeightMeasurementDieModule</RootNamespace>
+    <AssemblyName>HeightMeasurementDieModule</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Matrox.MatroxImagingLibrary, Version=10.60.452.11242, Culture=neutral, PublicKeyToken=5a83d419d44a9d98, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Shared\ExternalLibraries\MIL\MILXpp6\Matrox.MatroxImagingLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AhmDieEditorFactory.cs" />
+    <Compile Include="AhmDieEditorModule.cs" />
+    <Compile Include="Cluster3DDieHM.cs" />
+    <Compile Include="Cluster3DHM.cs" />
+    <Compile Include="HeightMeasurementAnalysisFactory.cs" />
+    <Compile Include="HeightMeasurementAnalysisModule.cs" />
+    <Compile Include="HeightMeasurementClusterFactory.cs" />
+    <Compile Include="HeightMeasurementClusterModule.cs" />
+    <Compile Include="HeightMeasurementDieFactory.cs" />
+    <Compile Include="HeightMeasurementDieModule.cs" />
+    <Compile Include="HMDieExecutor.cs" />
+    <None Include="Properties\AssemblyInfo.template" />
+    <Compile Include="HMeasuresReportFactory.cs" />
+    <Compile Include="HMeasuresReportModule.cs" />
+    <Compile Include="HMStatsReportFactory.cs" />
+    <Compile Include="HMStatsReportModule.cs" />
+    <Compile Include="KlarfEditor3DHMFactory.cs" />
+    <Compile Include="KlarfEditor3DHMModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\AdcBasicObjects\AdcBasicObjects.csproj">
+      <Project>{2261bf78-6856-4a67-9d4c-904a911aef74}</Project>
+      <Name>AdcBasicObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\ADCEngine\ADCEngine.csproj">
+      <Project>{52513f8e-c8b8-4663-b1ff-bec743e9a14c}</Project>
+      <Name>ADCEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\AdcTools\AdcTools.csproj">
+      <Project>{2d6ad4b4-1775-45ef-ac20-85a6da7fd953}</Project>
+      <Name>AdcTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\Format001\Format001.csproj">
+      <Project>{fda04714-fcc9-4b0b-bff1-b63fef65fb27}</Project>
+      <Name>Format001</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\FormatAHM\FormatAHM.csproj">
+      <Project>{8a6ecbbe-35cd-4933-809b-0cdf2c1ddaa6}</Project>
+      <Name>FormatAHM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\FormatRHM\FormatRHM.csproj">
+      <Project>{a5b24ad1-62f9-4937-a90c-a5071138d3a8}</Project>
+      <Name>FormatRHM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\libProcessing\LibProcessing.csproj">
+      <Project>{4be42cd7-805d-47b3-863f-263671bf30e9}</Project>
+      <Name>LibProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\MergeContext\AcquisitionAdcExchange\AcquisitionAdcExchange.csproj">
+      <Project>{3c26d6d9-8b32-447f-8e21-e65e81b5ed29}</Project>
+      <Name>AcquisitionAdcExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BasicModules\BasicModules.csproj">
+      <Project>{bbe52789-8212-4ef4-857f-733d9761dd2b}</Project>
+      <Name>BasicModules</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+  </PropertyGroup>
+</Project>

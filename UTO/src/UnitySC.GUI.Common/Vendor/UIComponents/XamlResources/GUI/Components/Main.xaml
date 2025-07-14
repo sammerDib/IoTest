@@ -1,0 +1,83 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tools="clr-namespace:Agileo.GUI.Components.Tools;assembly=Agileo.GUI"
+    mc:Ignorable="d">
+
+    <SolidColorBrush x:Key="ToolBackground" Color="{DynamicResource PanelBackground}" />
+    <SolidColorBrush x:Key="DisabledToolMask" Color="{DynamicResource BackgroundMask}" />
+
+    <DataTemplate x:Key="ToolManagerTemplate" DataType="{x:Type tools:ToolManager}">
+        <ItemsControl
+            x:Name="ItemsControl"
+            ItemsSource="{Binding Tools}"
+            Visibility="{Binding HasVisibleTool, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ItemsControl.Margin>
+                <Thickness
+                    Bottom="{StaticResource PanelMargin}"
+                    Left="{StaticResource PanelMargin}"
+                    Top="{StaticResource PanelMargin}" />
+            </ItemsControl.Margin>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type tools:Tool}">
+                    <controls:Card
+                        x:Name="Card"
+                        VerticalAlignment="{Binding DisplayZone}"
+                        Background="{DynamicResource ToolBackground}"
+                        Elevation="Level2"
+                        Visibility="Collapsed">
+                        <Grid>
+                            <ContentPresenter x:Name="ContentPresenter" Content="{Binding}" />
+                            <Rectangle
+                                x:Name="DisabledMask"
+                                Fill="{DynamicResource DisabledToolMask}"
+                                Visibility="Collapsed" />
+                        </Grid>
+                    </controls:Card>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsVisible}" Value="true">
+                            <Setter TargetName="Card" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsEnabled}" Value="false">
+                            <Setter TargetName="DisabledMask" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="ContentPresenter" Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsMaximized}" Value="true">
+                            <Setter TargetName="Card" Property="VerticalAlignment" Value="Stretch" />
+                            <Setter TargetName="Card" Property="HorizontalAlignment" Value="Stretch" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <!--  Need to use Grid in order to manage Tool's DisplayZone property  -->
+                    <Grid />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasVisibleAndMaximizedTool}" Value="true">
+                <Setter TargetName="ItemsControl" Property="Margin">
+                    <Setter.Value>
+                        <Thickness Bottom="{StaticResource PanelMargin}" Top="{StaticResource PanelMargin}" />
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <SolidColorBrush x:Key="MainWindowsBackground" Color="{DynamicResource WindowBackground}" />
+    <SolidColorBrush x:Key="MainWindowsForeground" Color="{DynamicResource PanelForeground}" />
+
+    <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="Foreground" Value="{DynamicResource MainWindowsForeground}" />
+        <Setter Property="Background" Value="{DynamicResource MainWindowsBackground}" />
+        <Setter Property="Width" Value="{StaticResource DesignWidth}" />
+        <Setter Property="Height" Value="{StaticResource DesignHeight}" />
+    </Style>
+
+</ResourceDictionary>

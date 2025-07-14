@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="987b4640-d063-40ea-a881-88a29db90c87" name="Clear" access="Internal" usings="using UnitySC.Equipment.Abstractions.Vendor.Devices.Activities;" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <stateMachineHasStates Id="36704e39-18f9-4afb-8e50-c0684086ae54">
+      <finalState Id="1aed7e72-c36d-4e48-b332-4e159d6da153" name="FinalState" nameSpace="Clear" kind="Final" />
+    </stateMachineHasStates>
+    <vertexContainerHasVertices Id="2f3306e0-9dc3-4b13-a5e9-a93bfa392014">
+      <initial Id="ec197159-b2fa-41b5-be5a-b2111edd3597" name="Initial" nameSpace="Clear">
+        <successors>
+          <transition Id="2c9ae3a3-3963-43e2-b786-b51e37db405d" action="ActivityEntry" label="/ ActivityEntry" source="Clear.Initial" destination="Clear.Activity" nameSpace="Clear">
+            <stateMoniker name="/Clear/Activity" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="ab6ecd5e-9fc0-47ce-a23c-8846b1351354">
+      <state Id="e528bfc9-5d71-4ab4-af38-a27acd687e05" name="Activity" nameSpace="Clear" kind="Normal">
+        <vertices>
+          <stateHasNestedStates Id="21871cfd-cc5d-4c69-8302-6a020c52dbf7">
+            <state Id="5e232a1c-61dc-4dce-86ee-0e2d6385335f" name="PlaceToLP_G1" nameSpace="Clear.Activity" entryAction="PlaceToLP_G1Entry" kind="Normal" entryActionLabel="Entry/ PlaceToLP_G1Entry">
+              <successors>
+                <transition Id="77240a73-4bdd-489a-9d80-1f9cefda543d" event="RobotDone" label="RobotDone" source="Clear.Activity.PlaceToLP_G1" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="492fac4b-73f6-4ea1-814b-8c57bc540e28">
+            <state Id="3366f854-b03b-424b-b78a-26d3edbf7415" name="RunClearPm1Activity_G2" nameSpace="Clear.Activity" entryAction="RunClearPm1Activity_G2Entry" kind="Normal" entryActionLabel="Entry/ RunClearPm1Activity_G2Entry">
+              <successors>
+                <transition Id="87d4a924-dcc5-47ff-aa43-80f7948e87c0" event="PmDone" label="PmDone" source="Clear.Activity.RunClearPm1Activity_G2" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="974dd1d1-d66c-40df-9b26-d90b98997eb5">
+            <state Id="a7fdb3c5-23b1-4c13-afdb-4e936475ce41" name="PickOnAligner_G1" nameSpace="Clear.Activity" entryAction="PickOnAligner_G1Entry" kind="Normal" entryActionLabel="Entry/ PickOnAligner_G1Entry">
+              <successors>
+                <transition Id="886383f9-a3d9-4e3c-9b0a-21d9ba393b44" event="RobotDone" label="RobotDone" source="Clear.Activity.PickOnAligner_G1" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <vertexContainerHasVertices Id="7f299fc5-352f-4de1-babf-04e05f3a1834">
+            <state Id="259f7376-445d-415a-8403-d2fa47bd5a91" name="GetStatuses" nameSpace="Clear.Activity" entryAction="GetStatusesEntry" kind="Normal" entryActionLabel="Entry/ GetStatusesEntry">
+              <successors>
+                <transition Id="40cc20b1-ad02-4eaf-89ff-cfa497a4ae0c" event="StatusReceived" condition="AlignerOccupied_G1Empty" label="StatusReceived  [ AlignerOccupied_G1Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PickOnAligner_G1" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/PickOnAligner_G1" />
+                </transition>
+                <transition Id="c41e3f0d-2d90-4d45-85df-ace2da5cf424" event="StatusReceived" condition="PM1Occupied_G2Empty" label="StatusReceived  [ PM1Occupied_G2Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PickOnPM1_G2" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/RunClearPm1Activity_G2" />
+                </transition>
+                <transition Id="ca2dd3a4-91f1-4ae5-8a32-81f2a2ad6894" event="StatusReceived" condition="IsCleanG2Allowed" label="StatusReceived  [ IsCleanG2Allowed ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PlaceToLP_G2" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/PlaceToLP_G2" />
+                </transition>
+                <transition Id="d6553b86-1389-441a-aa04-3a266e6336da" event="StatusReceived" condition="PM1Occupied_G2Occupied_G1Empty" label="StatusReceived  [ PM1Occupied_G2Occupied_G1Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PickOnPM1_G1" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/RunClearPm1Activity_G1" />
+                </transition>
+                <transition Id="6895bbe8-56fc-4b76-9b28-f49d33ceb3c8" event="StatusReceived" condition="AlignerOccupied_G1Occupied_G2Empty" label="StatusReceived  [ AlignerOccupied_G1Occupied_G2Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PickOnAligner_G2" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/PickOnAligner_G2" />
+                </transition>
+                <transition Id="b970a7d4-3723-45e6-b532-01511829361f" event="StatusReceived" condition="G1Occupied_1SubstrateOnTool" label="StatusReceived  [ G1Occupied_1SubstrateOnTool ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PlaceToLP_G1" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/PlaceToLP_G1" />
+                </transition>
+                <transition Id="a4383dce-5ba4-4f9a-aa76-8945c3de03a5" event="StatusReceived" condition="PM2Occupied_G2Empty" label="StatusReceived  [ PM2Occupied_G2Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PickOnPM2_G2" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/RunClearPm2Activity_G2" />
+                </transition>
+                <transition Id="38949246-9368-4b10-ac1d-7e92e2293ec7" event="StatusReceived" condition="PM2Occupied_G2Occupied_G1Empty" label="StatusReceived  [ PM2Occupied_G2Occupied_G1Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.PickOnPM2_G1" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/RunClearPm2Activity_G1" />
+                </transition>
+                <transition Id="08ce8d72-beee-423a-84a7-9a3b34c38d80" event="StatusReceived" condition="PM3Occupied_G2Empty" label="StatusReceived  [ PM3Occupied_G2Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.State1" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/RunClearPm3Activity_G2" />
+                </transition>
+                <transition Id="6a9bf1c0-1786-42aa-ac04-c9e9c4e6b914" event="StatusReceived" condition="PM3Occupied_G2Occupied_G1Empty" label="StatusReceived  [ PM3Occupied_G2Occupied_G1Empty ]" source="Clear.Activity.GetStatuses" destination="Clear.Activity.State7" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/RunClearPm3Activity_G1" />
+                </transition>
+              </successors>
+            </state>
+          </vertexContainerHasVertices>
+          <vertexContainerHasVertices Id="1486dd40-08b6-497d-bda4-60f1a0afcbfb">
+            <state Id="09a51acb-d825-4f52-9a79-b70dd0311a97" name="PlaceToLP_G2" nameSpace="Clear.Activity" entryAction="PlaceToLP_G2Entry" kind="Normal" entryActionLabel="Entry/ PlaceToLP_G2Entry">
+              <successors>
+                <transition Id="cb350a11-6ef6-4b76-8495-ca3ba7395b85" event="RobotDone" condition="G1Occupied" label="RobotDone  [ G1Occupied ]" source="Clear.Activity.PlaceToLP_G2" destination="Clear.Activity.PlaceToLP_G1" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/PlaceToLP_G1" />
+                </transition>
+                <transition Id="00a4c35b-c3d9-4931-a26c-f844f34f1f9c" event="RobotDone" condition="G1Empty" label="RobotDone  [ G1Empty ]" source="Clear.Activity.PlaceToLP_G2" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </vertexContainerHasVertices>
+          <vertexContainerHasVertices Id="2e928de9-49b3-4b16-b91e-15deb468a028">
+            <initial Id="b9a7e9a4-a940-46d7-84fa-1e2f53958f54" name="InitialRequest" nameSpace="Clear.Activity">
+              <successors>
+                <transition Id="068e7408-9dcf-44f4-9f3e-0964d678a854" source="Clear.Activity.InitialRequest" destination="Clear.Activity.GetStatuses" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity/GetStatuses" />
+                </transition>
+              </successors>
+            </initial>
+          </vertexContainerHasVertices>
+          <stateHasNestedStates Id="e48642b9-5e57-4169-a45a-7c647d8d87ce">
+            <state Id="f8ad82f4-5328-4a47-95d5-f6e01f60d85f" name="RunClearPm1Activity_G1" nameSpace="Clear.Activity" entryAction="RunClearPm1Activity_G1Entry" kind="Normal" entryActionLabel="Entry/ RunClearPm1Activity_G1Entry">
+              <successors>
+                <transition Id="b6c1e5ea-bf1e-4cc4-b0b2-f789903aead4" event="PmDone" label="PmDone" source="Clear.Activity.RunClearPm1Activity_G1" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="7802ffbf-b199-4c74-8a04-aadef9907f0d">
+            <state Id="002f624d-e76d-40bc-a80c-af72648423f4" name="PickOnAligner_G2" nameSpace="Clear.Activity" entryAction="PickOnAligner_G2Entry" kind="Normal" entryActionLabel="Entry/ PickOnAligner_G2Entry">
+              <successors>
+                <transition Id="4c9f879f-a24f-405d-a95d-5d5dcbeae0df" event="RobotDone" label="RobotDone" source="Clear.Activity.PickOnAligner_G2" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="872a07fb-787c-4592-ae73-1af3d951ead1">
+            <state Id="0393a972-2d46-4d9d-b765-ff81f7ecb65a" name="RunClearPm2Activity_G2" nameSpace="Clear.Activity" entryAction="RunClearPm2Activity_G2Entry" kind="Normal" entryActionLabel="Entry/ RunClearPm2Activity_G2Entry">
+              <successors>
+                <transition Id="ab064d48-011e-484d-9fd1-6bf95003c77b" event="PmDone" label="PmDone" source="Clear.Activity.RunClearPm2Activity_G2" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="f93567d1-86f9-42ee-a966-8bf6bf78b9f1">
+            <state Id="874256af-72d5-4745-9d12-c35fcc99960c" name="RunClearPm2Activity_G1" nameSpace="Clear.Activity" entryAction="RunClearPm2Activity_G1Entry" kind="Normal" entryActionLabel="Entry/ RunClearPm2Activity_G1Entry">
+              <successors>
+                <transition Id="b1f4084b-89cd-4e1f-936a-251e39c9d987" event="PmDone" label="PmDone" source="Clear.Activity.RunClearPm2Activity_G1" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="7a4faa6f-085d-41a6-a6e4-b4e0bb95a6d3">
+            <state Id="7ee526e0-aaa5-489e-81d2-e26420141302" name="RunClearPm3Activity_G2" nameSpace="Clear.Activity" entryAction="RunClearPm3Activity_G2Entry" kind="Normal" entryActionLabel="Entry/ RunClearPm3Activity_G2Entry">
+              <successors>
+                <transition Id="6acb5a0e-b664-4d4c-8de7-7966f52b5f32" event="PmDone" label="PmDone" source="Clear.Activity.RunClearPm3Activity_G2" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="efa79e9d-2ca7-4f49-bd0f-fa5b87b05f3b">
+            <state Id="1f74abb9-1c2c-47fc-9b2e-edd3c943affb" name="RunClearPm3Activity_G1" nameSpace="Clear.Activity" entryAction="RunClearPm3Activity_G1Entry" kind="Normal" entryActionLabel="Entry/ RunClearPm3Activity_G1Entry">
+              <successors>
+                <transition Id="9a34ff95-dffa-451d-8b97-2e8636f6fe76" event="PmDone" label="PmDone" source="Clear.Activity.RunClearPm3Activity_G1" destination="Clear.Activity" nameSpace="Clear.Activity">
+                  <stateMoniker name="/Clear/Activity" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+        </vertices>
+        <successors>
+          <transition Id="fed5747a-7e9e-4710-a39b-1b42686ff221" event="ActivityDoneEvent" action="ActivityExit" label="ActivityDoneEvent / ActivityExit" source="Clear.Activity" destination="Clear.FinalState" nameSpace="Clear">
+            <finalStateMoniker name="/Clear/FinalState" />
+          </transition>
+          <transition Id="df669e91-b863-498b-bde7-25d272dd457d" event="StatusReceived" condition="ToolClean" action="ActivityExit" label="StatusReceived  [ ToolClean ] / ActivityExit" source="Clear.Activity" destination="Clear.FinalState" nameSpace="Clear">
+            <finalStateMoniker name="/Clear/FinalState" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+  </vertices>
+  <comments>
+    <stateMachineHasComments Id="23382dea-33df-45e0-b3ba-f7f3ac8f9007">
+      <comment Id="596300e7-840e-4a63-aa58-cc8b598ecff8" text="Get as much as possible wafers on robot with priorities to match process arm:&#xD;&#xA;1- PM presence -&gt; Gripper 2 (Gripper 1 if occupied)&#xD;&#xA;2- Aligner presence -&gt; Gripper 1 (Gripper 2 if occupied)&#xD;&#xA; &#xD;&#xA; and then apply the Strategy:&#xD;&#xA;1- Unload Gripper 2&#xD;&#xA;2- Unload Gripper 1" />
+    </stateMachineHasComments>
+    <stateMachineHasComments Id="9acf3eeb-ef2b-4164-91ca-e4ef8f71f206">
+      <comment Id="85b5ccae-8c5d-4e00-9615-255e98de5248" text="Event sent by States at the end of each Robot Command" />
+    </stateMachineHasComments>
+    <stateMachineHasComments Id="3780218c-9b01-4f1b-b9ac-32b87054affe">
+      <comment Id="494c956c-8c09-41b5-9d66-9fb7a89d3dc5" text="IsCleanGripper2Allowed &#xD;&#xA;- 1 ambient wafer in the tool and present on Gripper 2 OR&#xD;&#xA;- 1 hot wafer in the tool and present on Gripper 2 without cooling station OR&#xD;&#xA;- Both arm full and wafer on gripper 2 is ambient or hot without cooling station &#xD;&#xA;&#xD;&#xA;Priority given to pick wafer on Gripper 1" />
+    </stateMachineHasComments>
+  </comments>
+</stateMachine>

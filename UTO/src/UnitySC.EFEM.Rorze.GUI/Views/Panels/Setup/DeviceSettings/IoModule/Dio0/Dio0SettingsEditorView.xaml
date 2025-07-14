@@ -1,0 +1,34 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Rorze.GUI.Views.Panels.Setup.DeviceSettings.IoModule.Dio0.Dio0SettingsEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dio0="clr-namespace:UnitySC.EFEM.Rorze.GUI.Views.Panels.Setup.DeviceSettings.IoModule.Dio0"
+    xmlns:ioModule="clr-namespace:UnitySC.EFEM.Rorze.GUI.Views.Panels.Setup.DeviceSettings.IoModule"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance dio0:Dio0SettingsEditor}"
+    d:DesignWidth="600"
+    mc:Ignorable="d">
+    <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+        <GroupBox Padding="0">
+            <GroupBox.Header>
+                <TextBlock Style="{StaticResource GroupBoxHeaderTextBlockStyle}">
+                    <Run Text="Dio" />
+                    <Run Text="{Binding InstanceId, Mode=OneWay}" />
+                </TextBlock>
+            </GroupBox.Header>
+            <StackPanel>
+                <controls:PropertyEditor
+                    Margin="10"
+                    Orientation="Horizontal"
+                    PropertyName="{localize:Static ioModule:IoModuleSettingsResources.S_SETUP_IO_MODULE_PRESSURE_SENSOR_AVAILABLE}">
+                    <CheckBox IsChecked="{Binding IsPressureSensorAvailable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                </controls:PropertyEditor>
+                <ContentPresenter Content="{Binding CommunicationConfig}" DockPanel.Dock="Top" />
+            </StackPanel>
+        </GroupBox>
+    </ScrollViewer>
+</UserControl>

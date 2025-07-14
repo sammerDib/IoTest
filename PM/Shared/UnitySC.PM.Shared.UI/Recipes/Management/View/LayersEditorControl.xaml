@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="UnitySC.PM.Shared.UI.Recipes.Management.View.LayersEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:localConverters="clr-namespace:UnitySC.PM.Shared.UI.Recipes.Management.Converter"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Images -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageDictionary.xaml"/>
+                <!-- Images Geometries-->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageGeometries.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Name="Layer">
+        <Border >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Left" Text="Add layers">
+                                
+                </TextBlock>
+                <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0">
+                                <Hyperlink Command="{Binding DeleteAll}">Delete all layers</Hyperlink>
+                </TextBlock>
+                <!--<Button  Content="Add Layer" Style="{StaticResource HighlightedButton}" Command="{Binding AddLayer}" HorizontalAlignment="Center" Grid.Row="1" />-->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2">
+                    <Grid>
+                    <ItemsControl ItemsSource="{Binding Layers}" AlternationCount="6" Margin="32,15,0,15">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                    <Border Background="{Binding Path=LayerColor, Converter={converters:MediaColorToSolidBrushConverter}}" CornerRadius="4" Height="{Binding Thickness, Converter={localConverters:LayerThicknessToHeightConverter}}" BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}">
+                                    <Grid>
+                                        <!-- Readonly -->
+                                            <Grid Visibility="{Binding InEdition, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="75" />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Content-->
+                                            <Grid>
+                                                <Grid VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="150" />
+                                                        <ColumnDefinition Width="120" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="130" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock  Text="{Binding Name}" Margin="10,0" FontWeight="Bold" VerticalAlignment="Center" />
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="1" >
+                                                        <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource HeightGeometry}" VerticalAlignment="Center" ToolTip="Thickness" Height="20"  Margin="10,0,0,0" />
+                                                            <TextBlock Text="{Binding Thickness, StringFormat='{} {0:0.###}'}" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                    </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Column="2" Visibility="{Binding DataContext.EditLayersThicknessTolerance,  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={converters:BooleanToVisibilityConverter}}" Width="120">
+                                                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ThicknessToleranceGeometry}" VerticalAlignment="Center" ToolTip="Thickness" Height="20"  Margin="10,0,0,0" />
+                                                            <TextBlock Text="{Binding ThicknessTolerance, StringFormat='{} {0:0.###}'}" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" Grid.Column="3">
+                                                        <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource AtomGeometry}"  VerticalAlignment="Center" ToolTip="Material" Height="20" Margin="5,0,6,0" />
+                                                        <TextBlock Text="Unknown material" VerticalAlignment="Center" FontWeight="Bold" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="4">
+                                                        <TextBlock Text="RI " VerticalAlignment="Center" FontWeight="Bold" />
+                                                        <TextBlock Text="?" VerticalAlignment="Center" Visibility="{Binding IsRefractiveIndexUnknown, Converter={converters:BooleanToVisibilityConverter}}"/>
+                                                        <TextBlock Text="{Binding RefractiveIndex, StringFormat='{}{0:F2}'}" Visibility="{Binding IsRefractiveIndexUnknown, Converter={converters:InvertedBooleanToVisibilityConverter}}" VerticalAlignment="Center" FontWeight="Bold"  />
+                                                </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                            <!-- Button-->
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <controls:ImageButton Width="30" ImageGeometry="{StaticResource TrashGeometry}" Margin="5,0,0,0" ImageGeometryBrush="{StaticResource ImageErrorColor}" ToolTip="Delete"  Command="{Binding DataContext.DeleteLayer, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                                <controls:ImageButton Width="30" Grid.Column="1" ImageGeometry="{StaticResource PencilGeometry}" ImageGeometryBrush="{StaticResource ImageMainColor}" ToolTip="Edit" Margin="5,0" Command="{Binding DataContext.ChangeLayerEditionState, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <!-- In edition -->
+                                        <Grid Visibility="{Binding InEdition, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="75" />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Content-->
+  
+                                                <Grid VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="150" />
+                                                        <ColumnDefinition Width="120" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="130" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBox MinWidth="80" Text="{Binding Name}" VerticalAlignment="Center"  Margin="5,0,0,0"/>
+                                                    <Grid Grid.Column="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                        <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource HeightGeometry}" ToolTip="Thickness" Height="20"  Margin="10,0,0,0" VerticalAlignment="Center" />
+                                                        <controls:TextBoxUnit Grid.Column="1"  LengthValue="{Binding Thickness}"  VerticalAlignment="Center" Margin="2" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" ></controls:TextBoxUnit>
+                                                    
+                                                    </Grid>
+
+                                                    <Grid Grid.Column="2" Width="120" Visibility="{Binding DataContext.EditLayersThicknessTolerance,  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={converters:BooleanToVisibilityConverter}}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ThicknessToleranceGeometry}" ToolTip="Thickness" Height="20"  Margin="10,0,0,0" VerticalAlignment="Center" />
+                                                        <controls:TextBoxUnit Grid.Column="1"  LengthValue="{Binding ThicknessTolerance}"  VerticalAlignment="Center" Margin="2" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" ></controls:TextBoxUnit>
+
+                                                    </Grid>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Stretch" >
+                                                        <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource AtomGeometry}" ToolTip="Material" Height="20" Margin="5,0,6,0" VerticalAlignment="Center" />
+                                                        <ComboBox HorizontalAlignment="Stretch" MinWidth="200"></ComboBox>
+                                                    </StackPanel>
+                                                    <Grid Grid.Column="4" >
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="RI" FontWeight="Bold" VerticalAlignment="Center"  HorizontalAlignment="Left" Margin="0,0,3,0"/>
+                                                        <TextBox Width="70" Grid.Column="1" Text="{Binding RefractiveIndex}"  VerticalAlignment="Center"  Margin="2" HorizontalAlignment="Stretch" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Visibility="{Binding IsRefractiveIndexUnknown, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                                                        <sharedControls:ImageToggleButton Grid.Column="2"  Width="30" ImageGeometry="{StaticResource QuestionMarkGeometry}" ImageCheckedGeometry="{StaticResource QuestionMarkGeometry}"  ImageGeometryBrush="Black" ImageGeometryCheckedBrush="Green"   IsChecked="{Binding IsRefractiveIndexUnknown}" Padding="1,1,2,2"/>
+                                                    </Grid>
+                                                </Grid>
+                                                <!-- Button-->
+                                                 <Button Grid.Column="1" Content="Ok" Width="30" ToolTip="Apply change" Style="{StaticResource HighlightedButton}"  Margin="5,0"  Command="{Binding DataContext.ChangeLayerEditionState, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                        </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                        <controls:ImageButton Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" ImageGeometry="{StaticResource InsertRowGeometry}" Style="{StaticResource ImageButtonWithoutBorder}" Cursor="Hand" ToolTip="Add Layer" Margin="5" Command="{Binding AddTopLayer}">
+                            <controls:ImageButton.RenderTransform>
+                                <TranslateTransform Y="-5">
+                                </TranslateTransform>
+                            </controls:ImageButton.RenderTransform>
+                        </controls:ImageButton>
+                        <ItemsControl ItemsSource="{Binding Layers}" Margin="5,15,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Height="{Binding Thickness, Converter={localConverters:LayerThicknessToHeightConverter}}">
+                                        <controls:ImageButton Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" ImageGeometry="{StaticResource InsertRowGeometry}" Style="{StaticResource ImageButtonWithoutBorder}"  Command="{Binding DataContext.AddLayerAfter, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  CommandParameter="{Binding }" ToolTip="Add Layer" Cursor="Hand">
+                                            <controls:ImageButton.RenderTransform>
+                                                <TranslateTransform Y="15">
+                                                </TranslateTransform>
+                                            </controls:ImageButton.RenderTransform>
+                                        </controls:ImageButton>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

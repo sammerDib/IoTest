@@ -1,0 +1,80 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Rorze.GUI.Views.Panels.Setup.DeviceSettings.Robot.RR75x.RR75xSettingsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:deviceSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox;assembly=UnitySC.GUI.Common"
+    xmlns:robot="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Robot;assembly=UnitySC.GUI.Common"
+    xmlns:rr75X="clr-namespace:UnitySC.EFEM.Rorze.GUI.Views.Panels.Setup.DeviceSettings.Robot.RR75x"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance rr75X:RR75xSettingsPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <controls:Card Visibility="{Binding ErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource Headline4TextStyle}"
+                Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_ERROR}" />
+        </controls:Card>
+        <UniformGrid Columns="3" Visibility="{Binding SettingsVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <GroupBox DockPanel.Dock="Top" Header="{localize:Static robot:RobotSettingsResources.BP_ROBOT_SETTINGS}">
+                            <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_INIT_TIMEOUT}">
+                                <DockPanel VerticalAlignment="Top">
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_SECONDS}" />
+                                    <numericBox:UIntBox HorizontalContentAlignment="Left" Value="{Binding InitializationTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                        </GroupBox>
+                        <GroupBox DockPanel.Dock="Top" Header="{localize:Static robot:RobotSettingsResources.S_SETUP_ROBOT_UPPER_ARM_CONFIG}">
+                            <robot:ArmConfigurationSettingsEditorView DataContext="{Binding UpperArmConfig}" />
+                        </GroupBox>
+                        <Separator Margin="10" DockPanel.Dock="Top" />
+                        <GroupBox DockPanel.Dock="Top" Header="{localize:Static robot:RobotSettingsResources.S_SETUP_ROBOT_LOWER_ARM_CONFIG}">
+                            <robot:ArmConfigurationSettingsEditorView DataContext="{Binding LowerArmConfig}" />
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:Card>
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <ContentPresenter Content="{Binding CommunicationConfig}" DockPanel.Dock="Top" />
+                </ScrollViewer>
+            </controls:Card>
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <ContentPresenter Content="{Binding StoppingPositionConfig}" DockPanel.Dock="Top" />
+                </ScrollViewer>
+            </controls:Card>
+        </UniformGrid>
+    </Grid>
+</UserControl>

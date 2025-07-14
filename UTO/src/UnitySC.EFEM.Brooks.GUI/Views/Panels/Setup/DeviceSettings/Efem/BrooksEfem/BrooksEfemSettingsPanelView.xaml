@@ -1,0 +1,165 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Brooks.GUI.Views.Panels.Setup.DeviceSettings.Efem.BrooksEfem.BrooksEfemSettingsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:brooksEfem="clr-namespace:UnitySC.EFEM.Brooks.GUI.Views.Panels.Setup.DeviceSettings.Efem.BrooksEfem"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:deviceSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings;assembly=UnitySC.GUI.Common"
+    xmlns:efem="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Efem;assembly=UnitySC.GUI.Common"
+    xmlns:enums="clr-namespace:UnitySC.Equipment.Abstractions.Devices.Efem.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance brooksEfem:BrooksEfemSettingsPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <Grid>
+        <controls:Card Visibility="{Binding ErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource Headline4TextStyle}"
+                Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_ERROR}" />
+        </controls:Card>
+        <UniformGrid Columns="2" Visibility="{Binding SettingsVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <DockPanel>
+                        <GroupBox DockPanel.Dock="Top" Header="{localize:Static efem:EfemSettingsResources.BP_EFEM_SETTINGS}">
+                            <StackPanel Orientation="Vertical">
+                                <controls:PropertyEditor
+                                    Margin="0,20,0,0"
+                                    Orientation="Horizontal"
+                                    PropertyDescription="{localize:Static efem:EfemSettingsResources.LIGHT_CURTAIN_WIRING_DESCRIPTION}"
+                                    PropertyName="{localize:Static efem:EfemSettingsResources.LIGHT_CURTAIN_WIRING}">
+                                    <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection {x:Type enums:LightCurtainWiring}}" SelectedItem="{Binding ModifiedConfig.LightCurtainWiring}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_CLIENT_NAME}">
+                                    <TextBox Text="{Binding BrooksClientName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_EFEM_NAME}">
+                                    <TextBox Text="{Binding BrooksEfemName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_DIO_NAME}">
+                                    <TextBox Text="{Binding BrooksDioName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_LOADPORT_1_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksLoadPort1LocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_LOADPORT_2_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksLoadPort2LocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_LOADPORT_3_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksLoadPort3LocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_LOADPORT_4_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksLoadPort4LocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_PROCESS_MODULE_A_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksProcessModuleALocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_PROCESS_MODULE_B_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksProcessModuleBLocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.BROOKS_PROCESS_MODULE_C_LOCATION_NAME}">
+                                    <TextBox Text="{Binding BrooksProcessModuleCLocationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.AIR_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding AirNodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.PRESSURE_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding PressureNodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.DOOR_SENSOR1_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding DoorSensor1NodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.DOOR_SENSOR2_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding DoorSensor2NodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.INTLCK_SENSOR1_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding InterlockSensor1NodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    IsEnabled="False"
+                                    PropertyName="{localize:Static brooksEfem:BrooksEfemSettingsResources.INTLCK_SENSOR2_NODE_SIGNAL}">
+                                    <TextBox Text="{Binding InterlockSensor2NodeSignal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+                            </StackPanel>
+                        </GroupBox>
+                    </DockPanel>
+                </ScrollViewer>
+            </controls:Card>
+        </UniformGrid>
+    </Grid>
+</UserControl>

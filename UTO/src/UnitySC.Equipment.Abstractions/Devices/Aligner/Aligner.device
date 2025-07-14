@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="Aligner">
+                  <Types>
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.SampleDimension, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Vendor.Devices.Enums.WaferStatus, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Vendor.Devices.Enums.WaferPresence, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.Aligner.Enums.AlignType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Enums.EffectorType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Enums.MaterialType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <DeviceType Name="Aligner" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\Aligner\Aligner.device|UnitySC.Equipment.Abstractions.Devices.Aligner.Aligner" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Aligner.Aligner, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="Align" Type="Void" Timeout="60 s">
+                          <Documentation>Align material at the given target</Documentation>
+                          <Parameters>
+                            <Parameter Name="target" Type="Angle" Unit="UnitsNet.Units.AngleUnit.Degree" />
+                            <Parameter Name="alignType" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.AlignType" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Aligner.Conditions.IsWaferPresent, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Centering" Type="Void" Timeout="60 s">
+                          <Documentation>Centering material</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Aligner.Conditions.IsWaferPresent, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="PrepareTransfer" Type="Void" Timeout="60 s">
+                          <Documentation>Prepare the aligner (unclamp, move pins...) for material deposit/removal.</Documentation>
+                          <Parameters>
+                            <Parameter Name="effector" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.EffectorType" />
+                            <Parameter Name="dimension" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.SampleDimension" />
+                            <Parameter Name="materialType" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.MaterialType" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Clamp" Type="Void" Timeout="60 s">
+                          <Documentation>Secure material on spindle so aligner axes can move without loosing it.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="Unclamp" Type="Void" Timeout="60 s">
+                          <Documentation>Release material on spindle so it can be removed by hand. Caution: this is less safe than PrepareTransfer command.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="MoveZAxis" Type="Void" Timeout="60 s">
+                          <Documentation>Move Z Axis command.</Documentation>
+                          <Parameters>
+                            <Parameter Name="isBottom" Type="Boolean" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetDateAndTime" Type="Void" Timeout="60 s">
+                          <Documentation>Send current date and time to hardware in order to synchronize logs.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="WaferDimension" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.SampleDimension">
+                          <Documentation>Wafer dimension</Documentation>
+                        </Status>
+                        <Status Name="SimplifiedWaferId" Type="String">
+                          <Documentation>Simplified wafer ID</Documentation>
+                        </Status>
+                        <Status Name="WaferStatus" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.WaferStatus">
+                          <Documentation>Wafer status</Documentation>
+                        </Status>
+                        <Status Name="WaferPresence" Type="UnitySC.Equipment.Abstractions.Devices.Aligner.WaferPresence">
+                          <Documentation>Wafer presence</Documentation>
+                        </Status>
+                        <Status Name="SubstrateDetectionError" Type="Boolean">
+                          <Documentation>Substrate detection error</Documentation>
+                        </Status>
+                        <Status Name="IsClamped" Type="Boolean">
+                          <Documentation>Clamp state</Documentation>
+                        </Status>
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

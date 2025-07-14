@@ -1,0 +1,48 @@
+﻿<#@ template hostspecific="true" language="C#" #>
+<#@ output encoding="utf-8" extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+using System.Windows.Media;
+
+using UnitySC.GUI.Common.Vendor.Helpers;
+
+// ReSharper disable StringLiteralTypo
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable once CheckNamespace
+
+namespace UnitySC.GUI.Common.Vendor.UIComponents.XamlResources.Shared
+{
+    public static class Brushes
+    {
+<#
+	var filePaths = Directory.GetFiles(Host.ResolvePath("."), "Brushes.xaml");
+    var regex = new Regex("x:Key=\"(.*?)\"");
+
+    var keys = new HashSet<string>();
+
+    foreach (var path in filePaths)
+    {
+        var fileContent = File.ReadAllText(path);
+        var matches = regex.Matches(fileContent);
+
+        foreach (Match match in matches)
+        {
+            keys.Add(match.Groups[1].Value);
+        }
+    }
+
+    foreach (var key in keys)
+    {
+        #>        public static SolidColorBrush <#=key#> => ResourcesHelper.GetSolidColorBrushOrDefault("<#=key#>");
+<#
+    }
+#>
+    }
+}

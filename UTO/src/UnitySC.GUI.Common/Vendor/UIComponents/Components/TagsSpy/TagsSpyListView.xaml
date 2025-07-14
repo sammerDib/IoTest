@@ -1,0 +1,587 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.UIComponents.Components.TagsSpy.TagsSpyListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:groupSelector="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.GroupSelector"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:messageDataBus="clr-namespace:Agileo.MessageDataBus;assembly=Agileo.MessageDataBus"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:tagsSpy="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.TagsSpy"
+    x:Name="TagSpyView"
+    d:DataContext="{d:DesignInstance tagsSpy:TagsSpyListViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Background="{DynamicResource BusinessPanelBackground}"
+    Foreground="{DynamicResource BusinessPanelForeground}"
+    mc:Ignorable="d">
+
+    <!--
+        This version of the component is optimized for displaying Tags deriving from ExternalTag<>.
+        There are potential binding errors because some properties displayed are in classes derived from BaseTag.
+        In the event that these errors occur, the graphics performance of TagSpy will be severely impacted.
+        To overcome this problem, it is necessary to condition the display of these values according to the type of Tag.
+        Once finalized, there should no longer be "ReSharper disable once Xaml.BindingWithContextNotResolved" in the xaml code.
+	-->
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="BaseTagQualityLedTemplate" DataType="{x:Type messageDataBus:BaseTag}">
+            <!--  The property Quality is defined in generic ExternalTag<T> class  -->
+            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+            <controls:Icon
+                x:Name="Icon"
+                Height="10"
+                Data="{StaticResource FilledCircleIcon}"
+                Foreground="{DynamicResource SeverityErrorBrush}"
+                Tag="{Binding Quality}"
+                ToolTip="{Binding Tag, RelativeSource={RelativeSource Self}}" />
+            <DataTemplate.Triggers>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_WAITING_FOR_INITIAL_DATA}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_UNCERTAIN}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_LAST_USABLE}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_SENSOR_CAL}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_EGU_EXCEEDED}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_SUB_NORMAL}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityWarningBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_GOOD}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                </Trigger>
+                <Trigger SourceName="Icon" Property="Tag" Value="{x:Static semiDefinitions:Quality.QUALITY_LOCAL_OVERRIDE}">
+                    <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="BaseTagSpiedButtonTemplate" DataType="{x:Type messageDataBus:BaseTag}">
+            <Button
+                x:Name="SpyButton"
+                Width="20"
+                Height="20"
+                Padding="0"
+                VerticalAlignment="Center"
+                dependencyObjects:Icon.Geometry="{StaticResource HideIcon}"
+                Background="Transparent"
+                Command="{Binding DataContext.AddTagToSpiedCommand, ElementName=TagSpyView}"
+                CommandParameter="{Binding}"
+                Style="{StaticResource SquareIconifiedButtonStyle}"
+                ToolTip="{localize:Static tagsSpy:TagsSpyResources.TAGS_ADD}">
+                <Button.Foreground>
+                    <SolidColorBrush Opacity="{StaticResource DisabledOpacity}" Color="{DynamicResource PanelForeground}" />
+                </Button.Foreground>
+            </Button>
+            <DataTemplate.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource ItemIsInTheCollectionToBooleanConverter}">
+                            <Binding Path="." />
+                            <Binding ElementName="TagSpyView" Path="DataContext.SpiedTags" />
+                            <Binding ElementName="TagSpyView" Path="DataContext.SpiedTagsChangedFlag" />
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter TargetName="SpyButton" Property="Foreground">
+                        <Setter.Value>
+                            <SolidColorBrush Color="{DynamicResource PanelForeground}" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter TargetName="SpyButton" Property="dependencyObjects:Icon.Geometry" Value="{StaticResource ShowIcon}" />
+                    <Setter TargetName="SpyButton" Property="Command" Value="{Binding DataContext.RemoveTagFromSpiedCommand, ElementName=TagSpyView}" />
+                    <Setter TargetName="SpyButton" Property="ToolTip" Value="{localize:Static tagsSpy:TagsSpyResources.TAGS_REMOVE}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="BaseTagFavoriteButtonTemplate" DataType="{x:Type messageDataBus:BaseTag}">
+            <Button
+                x:Name="FavoriteButton"
+                Width="20"
+                Height="20"
+                Margin="-5,0,0,0"
+                Padding="0"
+                VerticalAlignment="Center"
+                dependencyObjects:Icon.Geometry="{StaticResource OutlinedStarIcon}"
+                Background="Transparent"
+                Command="{Binding DataContext.AddTagToFavoriteCommand, ElementName=TagSpyView}"
+                CommandParameter="{Binding}"
+                Style="{StaticResource SquareIconifiedButtonStyle}"
+                ToolTip="{localize:Static tagsSpy:TagsSpyResources.TAGS_ADDTOFAVORITE}">
+                <Button.Foreground>
+                    <SolidColorBrush Opacity="{StaticResource DisabledOpacity}" Color="{DynamicResource PanelForeground}" />
+                </Button.Foreground>
+            </Button>
+            <DataTemplate.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource ItemIsInTheCollectionToBooleanConverter}">
+                            <Binding Path="." />
+                            <Binding ElementName="TagSpyView" Path="DataContext.FavoriteTags" />
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter TargetName="FavoriteButton" Property="Foreground">
+                        <Setter.Value>
+                            <SolidColorBrush Color="{DynamicResource PanelForeground}" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter TargetName="FavoriteButton" Property="dependencyObjects:Icon.Geometry" Value="{StaticResource StarIcon}" />
+                    <Setter TargetName="FavoriteButton" Property="Command" Value="{Binding DataContext.RemoveTagFromFavoriteCommand, ElementName=TagSpyView}" />
+                    <Setter TargetName="FavoriteButton" Property="ToolTip" Value="{localize:Static tagsSpy:TagsSpyResources.TAGS_REMOVEFROMFAVORITE}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <DockPanel>
+
+        <Expander
+            DockPanel.Dock="Right"
+            Header="{localize:Static tagsSpy:TagsSpyResources.TAGS_DETAILS}"
+            Style="{StaticResource LeftExpanderStyle}">
+            <DockPanel
+                Width="400"
+                Margin="20"
+                IsEnabled="{Binding SelectedTag, Converter={StaticResource NullToFalseConverter}}"
+                LastChildFill="True">
+
+                <controls:PropertyEditor
+                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                    DockPanel.Dock="Top"
+                    PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_NAME}"
+                    Style="{StaticResource BorderedPropertyEditorStyle}">
+                    <TextBlock
+                        Style="{StaticResource Subtitle2TextStyle}"
+                        Text="{Binding SelectedTag.Name}"
+                        TextWrapping="Wrap"
+                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                </controls:PropertyEditor>
+
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <controls:PropertyEditor
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="UID"
+                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                        <TextBlock Style="{StaticResource Subtitle2TextStyle}" Text="{Binding SelectedTag.UID}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_UNIT}"
+                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                        <TextBlock Style="{StaticResource Subtitle2TextStyle}" Text="{Binding SelectedTag.Unit}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_QUALITY}"
+                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                        <DockPanel>
+                            <ContentPresenter
+                                Margin="0,0,5,0"
+                                VerticalAlignment="Center"
+                                Content="{Binding SelectedTag}"
+                                ContentTemplate="{StaticResource BaseTagQualityLedTemplate}"
+                                DockPanel.Dock="Left">
+                                <ContentPresenter.Style>
+                                    <Style TargetType="{x:Type ContentPresenter}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Content" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Hidden" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentPresenter.Style>
+                            </ContentPresenter>
+                            <!--  The property Quality is defined in generic ExternalTag<T> class  -->
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <TextBlock Style="{StaticResource Subtitle2TextStyle}" Text="{Binding SelectedTag.Quality}" />
+                        </DockPanel>
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_TIMESTAMP}"
+                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                        <TextBlock Style="{StaticResource Subtitle2TextStyle}" Text="{Binding SelectedTag.TimeStamp, Converter={StaticResource DateTimeFormatConvert}, ConverterParameter='HH:mm:ss.fff'}" />
+                    </controls:PropertyEditor>
+
+                </Grid>
+
+
+                <DockPanel Margin="{StaticResource HorizontalStackPropertyMargin}" DockPanel.Dock="Top">
+
+                    <Button
+                        Margin="15,0,0,0"
+                        VerticalAlignment="Bottom"
+                        dependencyObjects:Icon.Geometry="{StaticResource CheckIcon}"
+                        Command="{Binding ApplyValueCommand}"
+                        Content="{localize:Static tagsSpy:TagsSpyResources.S_B_APPLY}"
+                        DockPanel.Dock="Right" />
+
+                    <TextBlock
+                        Margin="0,0,15,0"
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Left"
+                        Style="{StaticResource PropertyEditorNameTextBlockStyle}"
+                        Text="{localize:Static tagsSpy:TagsSpyResources.TAGS_VALUE}" />
+
+                    <ContentControl DockPanel.Dock="Top">
+                        <ContentControl.Style>
+                            <Style x:Name="myContentControlStyle" TargetType="{x:Type ContentControl}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedTagType}" Value="{x:Static tagsSpy:SelectedTagTemplate.Various}">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <TextBox
+                                                            HorizontalAlignment="Stretch"
+                                                            VerticalAlignment="Stretch"
+                                                            Text="{Binding DataContext.ValueToWrite, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type tagsSpy:TagsSpyListView}}}">
+                                                            <TextBox.InputBindings>
+                                                                <KeyBinding Key="Enter" Command="{Binding ApplyValueCommand}" />
+                                                            </TextBox.InputBindings>
+                                                        </TextBox>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedTagType}" Value="{x:Static tagsSpy:SelectedTagTemplate.Boolean}">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <controls:ChipsSelector VerticalAlignment="Center" SelectedItem="{Binding DataContext.ValueToWrite, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type tagsSpy:TagsSpyListView}}}">
+                                                        <controls:ChipsSelector.Items>
+                                                            <system:Boolean>False</system:Boolean>
+                                                            <system:Boolean>True</system:Boolean>
+                                                        </controls:ChipsSelector.Items>
+                                                    </controls:ChipsSelector>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedTagType}" Value="{x:Static tagsSpy:SelectedTagTemplate.Enumerate}">
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <ComboBox
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Center"
+                                                        ItemsSource="{Binding Path=DataContext.EnumTagValues, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type tagsSpy:TagsSpyListView}}}"
+                                                        SelectedValue="{Binding Path=DataContext.ValueToWrite, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type tagsSpy:TagsSpyListView}}}" />
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                </DockPanel>
+
+                <controls:PropertyEditor
+                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                    DockPanel.Dock="Top"
+                    PropertyDescription="{localize:Static tagsSpy:TagsSpyResources.TAGS_DEBUGDESCRIPTION}"
+                    PropertyName="Debug"
+                    Style="{StaticResource BorderedPropertyEditorStyle}">
+                    <controls:ChipsSelector Margin="0,5,0,0" SelectedItem="{Binding SelectedTag.IsDebugActive, Mode=TwoWay}">
+                        <controls:ChipsSelector.Items>
+                            <system:Boolean>False</system:Boolean>
+                            <system:Boolean>True</system:Boolean>
+                        </controls:ChipsSelector.Items>
+                    </controls:ChipsSelector>
+                </controls:PropertyEditor>
+
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <controls:PropertyEditor
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_DEFAULTVALUE}"
+                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                        <!--  The property DefaultValue is defined in generic Tag<T> class  -->
+                        <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                        <TextBlock Style="{StaticResource Subtitle2TextStyle}" Text="{Binding SelectedTag.DefaultValue}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_CLIENTID}"
+                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                        <!--  The property ClientID is defined in generic ExternalTag<T> class  -->
+                        <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                        <TextBlock Style="{StaticResource Subtitle2TextStyle}" Text="{Binding SelectedTag.ClientID}" />
+                    </controls:PropertyEditor>
+
+                </Grid>
+
+                <controls:PropertyEditor
+                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                    DockPanel.Dock="Top"
+                    PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_PATH}"
+                    Style="{StaticResource BorderedPropertyEditorStyle}">
+                    <!--  The property Path is defined in generic ExternalTag<T> class  -->
+                    <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                    <TextBlock
+                        Style="{StaticResource Subtitle2TextStyle}"
+                        Text="{Binding SelectedTag.Path}"
+                        TextWrapping="Wrap"
+                        ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                </controls:PropertyEditor>
+
+                <controls:PropertyEditor
+                    HorizontalContentAlignment="Stretch"
+                    PropertyName="{localize:Static tagsSpy:TagsSpyResources.TAGS_DESCRIPTION}"
+                    Style="{StaticResource BorderedPropertyEditorStyle}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                        <TextBlock
+                            Style="{StaticResource Subtitle2TextStyle}"
+                            Text="{Binding SelectedTag.Description}"
+                            TextWrapping="Wrap" />
+                    </ScrollViewer>
+                </controls:PropertyEditor>
+
+            </DockPanel>
+        </Expander>
+
+        <dataTables:DataTable
+            DataSource="{Binding TagSource, IsAsync=True}"
+            FirstColumnCellTemplate="{StaticResource BaseTagFavoriteButtonTemplate}"
+            SelectedItem="{Binding SelectedTag, Mode=TwoWay}">
+
+            <dataTables:DataTable.LeftAdditionalContent>
+                <Border BorderBrush="{DynamicResource ListViewBorderBrush}" BorderThickness="0,0,1,0">
+                    <Expander
+                        VerticalContentAlignment="Stretch"
+                        ExpandDirection="Right"
+                        IsExpanded="True">
+                        <Expander.Header>
+                            <TextBlock Text="{localize:Static tagsSpy:TagsSpyResources.TAGS_GROUPS}">
+                                <TextBlock.LayoutTransform>
+                                    <RotateTransform Angle="-90" />
+                                </TextBlock.LayoutTransform>
+                            </TextBlock>
+                        </Expander.Header>
+                        <groupSelector:GroupSelectorView DataContext="{Binding GroupSelector}">
+                            <groupSelector:GroupSelectorView.GroupTemplate>
+                                <DataTemplate DataType="{x:Type messageDataBus:Group}">
+                                    <DockPanel Margin="10,5,10,5">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Subtitle2TextStyle}"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Margin="5,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Body2TextStyle}">
+                                            <TextBlock.Text>
+                                                <dependencyObjects:FuncBinding BindingToFunc="{Binding DataContext.UpdateVisibleItemsCountFunc, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type dataTables:DataTable}}}">
+                                                    <Binding Path="." />
+                                                    <Binding Path="DataContext.VisibleItemsCountFlag" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type dataTables:DataTable}}" />
+                                                </dependencyObjects:FuncBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </groupSelector:GroupSelectorView.GroupTemplate>
+                        </groupSelector:GroupSelectorView>
+                    </Expander>
+                </Border>
+            </dataTables:DataTable.LeftAdditionalContent>
+
+            <GridView>
+
+                <dataTables:DataTableColumn DisplayName="Spy">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource BaseTagSpiedButtonTemplate}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="60"
+                    CellTemplate="{StaticResource BaseTagQualityLedTemplate}"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_QUALITY}"
+                    SortKey="Quality" />
+
+                <dataTables:DataTableColumn
+                    Width="Auto"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_GROUP}"
+                    SortKey="GroupName">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding GroupName}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="500"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_NAME}"
+                    SortKey="Name">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Name}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn Width="80" DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_VALUE}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <!--  The property Value is defined in generic Tag<T> class  -->
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Value}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="120"
+                    Collapsed="True"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_UNIT}"
+                    SortKey="Unit">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Unit}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="110"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_TIMESTAMP}"
+                    SortKey="TimeStamp">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding TimeStamp, Converter={StaticResource DateTimeFormatConvert}, ConverterParameter='HH:mm:ss.fff'}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="80"
+                    Collapsed="True"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_DEFAULTVALUE}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <!--  The property DefaultValue is defined in generic Tag<T> class  -->
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding DefaultValue}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="70"
+                    Collapsed="True"
+                    DisplayName="UID"
+                    SortKey="UID">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding UID}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="500"
+                    Collapsed="True"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_PATH}"
+                    SortKey="Path">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <!--  The property Path is defined in generic ExternalTag<T> class  -->
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Path}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="60"
+                    Collapsed="True"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_CLIENTID}"
+                    SortKey="ClientID">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <!--  The property ClientID is defined in generic ExternalTag<T> class  -->
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding ClientID}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="90"
+                    Collapsed="True"
+                    DisplayName="Debug"
+                    SortKey="IsDebugActive">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding IsDebugActive}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="500"
+                    Collapsed="True"
+                    DisplayName="{localize:Static tagsSpy:TagsSpyResources.TAGS_DESCRIPTION}"
+                    SortKey="Description">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="messageDataBus:BaseTag">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Description}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+            </GridView>
+
+        </dataTables:DataTable>
+
+    </DockPanel>
+</UserControl>

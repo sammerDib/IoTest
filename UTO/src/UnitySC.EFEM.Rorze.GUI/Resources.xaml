@@ -1,0 +1,155 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:layingPlanLoadPort="clr-namespace:UnitySC.EFEM.Rorze.Devices.LoadPort.LayingPlanLoadPort;assembly=UnitySC.EFEM.Rorze"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:re201="clr-namespace:UnitySC.EFEM.Rorze.Devices.LoadPort.RE201;assembly=UnitySC.EFEM.Rorze"
+    xmlns:rv101="clr-namespace:UnitySC.EFEM.Rorze.Devices.LoadPort.RV101;assembly=UnitySC.EFEM.Rorze"
+    xmlns:rv201="clr-namespace:UnitySC.EFEM.Rorze.Devices.LoadPort.RV201;assembly=UnitySC.EFEM.Rorze"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions"
+    mc:Ignorable="d">
+
+    <!--#region Adapter-->
+    <DataTemplate x:Key="Rv201AdapterTemplate" DataType="{x:Type rv201:RV201}">
+        <Control
+            x:Name="AdapterControl"
+            Grid.Row="1"
+            Height="30"
+            VerticalAlignment="Center"
+            Opacity="0.6" />
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding I_Adapter}" Value="True">
+                <Setter TargetName="AdapterControl" Property="Template" Value="{StaticResource Rv201AdapterControlTemplate}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsDocked}" Value="True">
+                <Setter TargetName="AdapterControl" Property="VerticalAlignment" Value="Top" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+    <!--#endregion Adapter-->
+
+    <!--#region Carrier-->
+    <DataTemplate x:Key="Rv201CarrierTemplate" DataType="{x:Type rv201:RV201}">
+        <Control
+            x:Name="Carrier"
+            Height="30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
+        <DataTemplate.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding I_Adapter}" Value="False" />
+                    <Condition Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.NoPresentPlacement}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource CarrierDisabledTemplate}" />
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding I_Adapter}" Value="False" />
+                    <Condition Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.PresentNoPlacement}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource CarrierDisabledTemplate}" />
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding I_Adapter}" Value="False" />
+                    <Condition Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource CarrierTemplate}" />
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding I_Adapter}" Value="True" />
+                    <Condition Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.NoPresentPlacement}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding I_Adapter}" Value="True" />
+                    <Condition Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+            </MultiDataTrigger>
+            <DataTrigger Binding="{Binding IsDocked}" Value="True">
+                <Setter TargetName="Carrier" Property="VerticalAlignment" Value="Top" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Re201CarrierTemplate" DataType="{x:Type re201:RE201}">
+        <Control
+            x:Name="Carrier"
+            Height="30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.NoPresentPlacement}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.PresentNoPlacement}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsDocked}" Value="True">
+                <Setter TargetName="Carrier" Property="VerticalAlignment" Value="Top" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Rv101CarrierTemplate" DataType="{x:Type rv101:RV101}">
+        <Control
+            x:Name="Carrier"
+            Height="30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.NoPresentPlacement}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.PresentNoPlacement}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsDocked}" Value="True">
+                <Setter TargetName="Carrier" Property="VerticalAlignment" Value="Top" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LayingPlanLoadPortCarrierTemplate" DataType="{x:Type layingPlanLoadPort:LayingPlanLoadPort}">
+        <Control
+            x:Name="Carrier"
+            Height="30"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.NoPresentPlacement}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.PresentNoPlacement}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+                <Setter TargetName="Carrier" Property="Opacity" Value="0.7" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierPresence}" Value="{x:Static semiDefinitions:CassettePresence.Correctly}">
+                <Setter TargetName="Carrier" Property="Template" Value="{StaticResource Carrier200MmTemplate}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsDocked}" Value="True">
+                <Setter TargetName="Carrier" Property="VerticalAlignment" Value="Top" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+    <!--#endregion Carrier-->
+
+</ResourceDictionary>

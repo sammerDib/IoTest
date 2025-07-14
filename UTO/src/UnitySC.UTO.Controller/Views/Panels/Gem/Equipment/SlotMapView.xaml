@@ -1,0 +1,121 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.SlotMapView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="SlotMapControl"
+    d:DataContext="{d:DesignInstance equipment:SlotMapViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="450"
+    mc:Ignorable="d">
+    <DockPanel>
+        <TextBlock
+            DockPanel.Dock="Bottom"
+            Foreground="{DynamicResource SeverityWarningBrush}"
+            Style="{StaticResource Body2TextStyle}"
+            Text="{Binding Reason, Mode=OneWay}"
+            Visibility="Collapsed" />
+        <Border BorderBrush="{DynamicResource HeaderedContentControlHeaderBackground}" CornerRadius="3">
+            <Grid IsSharedSizeScope="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Margin="0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="B" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="C" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Center"
+                        Text="#" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="0,0,10,0"
+                        Text="Slot Status" />
+                    <TextBlock
+                        Grid.Column="3"
+                        Margin="0,0,30,0"
+                        HorizontalAlignment="Center"
+                        Text="Substrate Id" />
+                    <TextBlock
+                        Grid.Column="4"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Center"
+                        Text="Lot Id" />
+                </Grid>
+                <ItemsControl
+                    Grid.Row="1"
+                    ItemTemplate="{StaticResource SlotItemWithoutStateTextTemplate}"
+                    ItemsSource="{Binding Slots}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="1" IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <DockPanel Grid.Row="2" Margin="5">
+                    <TextBlock Margin="7,0,0,0" DockPanel.Dock="Right">
+                        <Run Text="Substrates :" />
+                        <Run Text="{Binding SubstrateCount, Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{Binding Capacity, Mode=OneWay}" />
+                    </TextBlock>
+                    <ContentPresenter Content="{Binding SlotMapStatus}">
+                        <ContentPresenter.ContentTemplate>
+                            <DataTemplate DataType="{x:Type e87:SlotMapStatus}">
+                                <DockPanel>
+                                    <controls:Icon x:Name="Icon" DockPanel.Dock="Left" />
+                                    <TextBlock
+                                        x:Name="TextBlock"
+                                        Margin="7,0,0,0"
+                                        Text="{Binding}" />
+                                </DockPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding}" Value="{x:Static e87:SlotMapStatus.NotRead}">
+                                        <Setter TargetName="Icon" Property="Data" Value="{StaticResource FilledCircleIcon}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding}" Value="{x:Static e87:SlotMapStatus.WaitingForHost}">
+                                        <Setter TargetName="Icon" Property="Data" Value="{StaticResource LoaderIcon}" />
+                                        <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                        <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding}" Value="{x:Static e87:SlotMapStatus.VerificationOk}">
+                                        <Setter TargetName="Icon" Property="Data" Value="{StaticResource CheckedIcon}" />
+                                        <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                        <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding}" Value="{x:Static e87:SlotMapStatus.VerificationFailed}">
+                                        <Setter TargetName="Icon" Property="Data" Value="{StaticResource CancelIcon}" />
+                                        <Setter TargetName="Icon" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                        <Setter TargetName="TextBlock" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ContentPresenter.ContentTemplate>
+                    </ContentPresenter>
+                </DockPanel>
+            </Grid>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=SlotMapControl, Path=ShowBorder}" Value="False">
+                            <Setter Property="BorderThickness" Value="0" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+    </DockPanel>
+</UserControl>

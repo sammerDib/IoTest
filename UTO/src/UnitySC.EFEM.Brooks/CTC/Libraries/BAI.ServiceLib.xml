@@ -1,0 +1,426 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BAI.ServiceLib</name>
+    </assembly>
+    <members>
+        <member name="M:BAI.Service.Common.Persist.IPersistDataManager.LoadStationDataFromDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Load station data from embedded controller's persistent media (usually CF disk) to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.IPersistDataManager.SaveStationDataToDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Save the station data in embedded application to embedded controller's persistent media (usually CF disk)
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.IRoboticStationManager.GetEndEffecters(BAI.Service.Common.ServiceType)">
+            <summary>
+            Get the names of all robotic end effecters from the robotic device
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <returns>Array of end effecters such as {EE1, EE2}</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.IRoboticStationManager.GetStationNames(BAI.Service.Common.ServiceType,System.String)">
+            <summary>
+            Get the names all stations for a robotic end effecter.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as EE1.</param>
+            <returns>Array of station names for the end effecter.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.IRoboticStationManager.GetStationData(BAI.Service.Common.ServiceType,System.String,System.String)">
+            <summary>
+            Get the data for a station from embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as "EE1".</param>
+            <param name="stationName">Name of station such as PortA.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.IRoboticStationManager.SetStationData(BAI.Service.Common.ServiceType,System.String,System.String,BAI.Service.Common.Persist.RoboticStation)">
+            <summary>
+            Set the data for station to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as EE1.</param>
+            <param name="stationName">Name of station such as PortA.</param>
+            <param name="data">Robotic station data.</param>
+        </member>
+        <member name="T:BAI.Service.Common.Persist.RoboticStation">
+            <summary>
+            Immutable class to represent data for a robotic teach/calibration point.
+            The teach point may be a single location/slot in space, or multiple locations/slots such as a number of vertically spaced slots.
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.#ctor(System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.Dictionary{System.String,BAI.General.NumberWithUnit})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="stationType">Station type such as Transfer, Offset, Thresholds, Settings, etc</param>
+            <param name="endEffecter">Robotic end effecter that owns this teach data, such as EE2.</param>
+            <param name="stationName">Station name such as PortU for multiple locations/slots, full name for single location/slot.</param>
+            <param name="indexName">Index name for multiple locations/slots, such as Slot for PortU.Slot2. String.Empty for single location/slot.</param>
+            <param name="indexAxis">Index axis for multiple locations/slots, such as Z. String.Empty for single location/slot.</param>
+            <param name="startIndex">Index number of first location/slot.</param>
+            <param name="numberOfLocations">Number of locations/slots.</param>
+            <param name="coordinates">Coordinates and related data.</param>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.#ctor(System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.Dictionary{System.String,BAI.General.NumberWithUnit})">
+            <summary>
+            Constructor - backward compactable for previous contructors, where the station type is Transfer 
+            </summary>
+            <param name="endEffecter">Robotic end effecter that owns this teach data, such as EE2.</param>
+            <param name="stationName">Station name such as PortU for multiple locations/slots, full name for single location/slot.</param>
+            <param name="indexName">Index name for multiple locations/slots, such as Slot for PortU.Slot2. String.Empty for single location/slot.</param>
+            <param name="indexAxis">Index axis for multiple locations/slots, such as Z. String.Empty for single location/slot.</param>
+            <param name="startIndex">Index number of first location/slot.</param>
+            <param name="numberOfLocations">Number of locations/slots.</param>
+            <param name="coordinates">Coordinates and related data.</param>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.CreateSingleLocation(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,BAI.General.NumberWithUnit})">
+            <summary>
+            Convenient method to create a station with a single slot that's not indexed.
+            </summary>
+            <param name="stationType">Station type such as Transfer, Offset, Thresholds, Settings, etc</param>
+            <param name="endEffecter">Robotic end effecter that owns this teach data, such as EE2.</param>
+            <param name="stationName">Full name of the slot, such as WaferAligner.Chuck.</param>
+            <param name="coordinates">Coordinates and related data.</param>
+            <returns>RoboticStation data object with a single location/slot that's not indexed.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.CreateSingleLocation(System.String,System.String,System.Collections.Generic.Dictionary{System.String,BAI.General.NumberWithUnit})">
+            <summary>
+            Convenient method to create a station with a single slot that's not indexed. 
+            The backward compatible version where station type is Transfer
+            </summary>
+            <param name="endEffecter">Robotic end effecter that owns this teach data, such as EE2.</param>
+            <param name="stationName">Full name of the slot, such as WaferAligner.Chuck.</param>
+            <param name="coordinates">Coordinates and related data.</param>
+            <returns>RoboticStation data object with a single location/slot that's not indexed.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.CreateVerticalSlots(System.String,System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.Dictionary{System.String,BAI.General.NumberWithUnit})">
+            <summary>
+            Convenient method to create a station with a number of evenly spaced slots vertically.
+            </summary>
+            <param name="stationType">Station type such as Transfer, Offset, Thresholds, Settings, etc</param>
+            <param name="endEffecter">Robotic end effecter that owns this teach data, such as EE2.</param>
+            <param name="stationName">Station name such as PortA, PortU.</param>
+            <param name="startSlot">Index number of first slot.</param>
+            <param name="numberOfSlots">Number of slots.</param>
+            <param name="coordinates">Coordinates and related data.</param>
+            <returns>RoboticStation data object with multiple slots evenly spaced vertically.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.CreateVerticalSlots(System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.Dictionary{System.String,BAI.General.NumberWithUnit})">
+            <summary>
+            Convenient method to create a station with a number of evenly spaced slots vertically. 
+            The backward compatible version where station type is Transfer
+            </summary>
+            <param name="endEffecter">Robotic end effecter that owns this teach data, such as EE2.</param>
+            <param name="stationName">Station name such as PortA, PortU.</param>
+            <param name="startSlot">Index number of first slot.</param>
+            <param name="numberOfSlots">Number of slots.</param>
+            <param name="coordinates">Coordinates and related data.</param>
+            <returns>RoboticStation data object with multiple slots evenly spaced vertically.</returns>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.StationType">
+            <summary>
+            Station type, such as Transfer, Offset, Thresholds, Settings, and etc
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.EndEffecter">
+            <summary>
+            The name of the robotic end effecter (such as EE2) that is taught to this station and uses the station coordinates.
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.StationName">
+            <summary>
+            Station name if a single slot, and starting part of name for all slots if multiple slots
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.IsIndexed">
+            <summary>
+            If indexed, the slot names will be StationName.IndexNameIndex such as PortA.Slot25
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.IndexName">
+            <summary>
+            If Indexed, the prefix to the slots to index, such as the Slot in PortA.Slot25. Otherwise, String.Empty.
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.IndexAxis">
+            <summary>
+            If indexed, the axis to which the indexed slots are arranged, such as Z
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.StartIndex">
+            <summary>
+            First slot index, if indexed
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.NumberOfLocations">
+            <summary>
+            Number of slots in this taught group of locations/slots at this station
+            </summary>
+        </member>
+        <member name="P:BAI.Service.Common.Persist.RoboticStation.Coordinates">
+            <summary>
+            Return a copy of the coordinates: key = axis name, value = position
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.GetLocationNames">
+            <summary>
+            Get full names of all locations/slots at this station such as { PortA.Slot1, ... PortA.Slot25 }
+            </summary>
+            <returns>Array of full slot names</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.GetLocationName(System.Int32)">
+            <summary>
+            Get the full name of a location/slot.
+            </summary>
+            <param name="locationIndex">Index to the location/slot.</param>
+            <returns>Name of the transfer location such as PortA.Slot25</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.GetCoordinates">
+            <summary>
+            Get the detailed coordinate-related data, including robotic taught position, slot pitch, over and under wafer offset for transfers.
+            </summary>
+            <returns>A cloned copy of the coordinate data.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.ToString(System.IFormatProvider)">
+            <summary>
+            Calls ToStdString()
+            </summary>
+            <param name="format">Such as CultureInfo.InvariantCulture, of CultureInfo.CurrentCulture.</param>
+            <returns>Short string representation of station data.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.ToStdString(System.IFormatProvider)">
+            <summary>
+            Serialize station data to standard string with given format for numbers.
+            </summary>
+            <param name="format">Such as CultureInfo.InvariantCulture, of CultureInfo.CurrentCulture.</param>
+            <returns>Short string representation of station data.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.ToXmlString(System.IFormatProvider)">
+            <summary>
+            Serialize stationd data to XML string with given format for numbers.
+            </summary>
+            <param name="format">Such as CultureInfo.InvariantCulture, of CultureInfo.CurrentCulture.</param>
+            <returns>XML string representation of station data.</returns>
+        </member>
+        <member name="M:BAI.Service.Common.Persist.RoboticStation.ToString">
+            <summary>
+            Serialize station data to standard string with current culture for numbers.
+            </summary>
+            <returns>Short string representation of station data.</returns>
+        </member>
+        <member name="M:BAI.Service.Devices.DeviceServiceProxy.instantiateImp(System.String,System.String)">
+            <summary>
+            This method is called in proxy constructor to instantiate implementation.
+            </summary>
+            <param name="deviceName">Name of device to instance in format of Module.Device</param>
+            <param name="clientName">Client name, such as Module name or CTC.</param>
+        </member>
+        <member name="T:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl">
+            <summary>
+            Methods for low level control of the loadport.
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.MoveUp">
+            <summary>
+            Move Door Opener Up
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.MoveDown">
+            <summary>
+            Move Door Opener Down
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Close">
+            <summary>
+            Move Door Opener Close
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Open">
+            <summary>
+            Move Door Opener Open
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Dock">
+            <summary>
+            Dock carrier
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Undock">
+            <summary>
+            Undock carrier
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Lock">
+            <summary>
+            Lock carrier
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Unlock">
+            <summary>
+            Unlock carrier
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Unclamp">
+            <summary>
+            Unclamp carrier
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.LoadPort.ILoadPortServiceCtrl.Clamp">
+            <summary>
+            Clamp carrier
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceLocalImp.GetEndEffecters(BAI.Service.Common.ServiceType)">
+            <summary>
+            Get the names of all robotic end effecters from the robotic device
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <returns>Array of end effecters such as {EE1, EE2}</returns>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceLocalImp.GetStationNames(BAI.Service.Common.ServiceType,System.String)">
+            <summary>
+            Get the names all stations for a robotic end effecter.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as EE1.</param>
+            <returns>Array of station names for the end effecter.</returns>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceLocalImp.GetStationData(BAI.Service.Common.ServiceType,System.String,System.String)">
+            <summary>
+            Get the data for a station from embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as "EE1".</param>
+            <param name="stationName">Name of station such as PortA.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceLocalImp.SetStationData(BAI.Service.Common.ServiceType,System.String,System.String,BAI.Service.Common.Persist.RoboticStation)">
+            <summary>
+            Set the data for station to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as EE1.</param>
+            <param name="stationName">Name of station such as PortA.</param>
+            <param name="data">Robotic station data.</param>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceProxy.GetEndEffecters(BAI.Service.Common.ServiceType)">
+            <summary>
+            Get the names of all robotic end effecters from the robotic device
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <returns>Array of end effecters such as {EE1, EE2}</returns>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceProxy.GetStationNames(BAI.Service.Common.ServiceType,System.String)">
+            <summary>
+            Get the names all stations for a robotic end effecter.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as EE1.</param>
+            <returns>Array of station names for the end effecter.</returns>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceProxy.GetStationData(BAI.Service.Common.ServiceType,System.String,System.String)">
+            <summary>
+            Get the data for a station from embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as "EE1".</param>
+            <param name="stationName">Name of station such as PortA.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.Service.Devices.Robot.RobotServiceProxy.SetStationData(BAI.Service.Common.ServiceType,System.String,System.String,BAI.Service.Common.Persist.RoboticStation)">
+            <summary>
+            Set the data for station to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+            <param name="endEffecter">End effecter name such as EE1.</param>
+            <param name="stationName">Name of station such as PortA.</param>
+            <param name="data">Robotic station data.</param>
+        </member>
+        <member name="M:BAI.Service.Devices.WaferEngine.IAWCService.GetAwcOffsets(System.String,System.String)">
+            <summary>
+            This method can be used to return AWC offsets.
+            </summary>
+            <param name="endEffector">Name of the end effector on which AWC measurement was performed during Get.Ex: EE1 or EE2</param>
+            <param name="station">Name of the target station where the substrate will be placed. Its teach location is used to transform the offsets.Ex: PortA,PortB,PortC,PortD,PortU</param>
+            <returns>
+            AwcRadialOffset => AWC radial offset. The value that needs to be applied to R axis.
+            AwcXOffsets => AWC X offset. The value that needs to be applied to X axis.
+            AwcThetaOffsets => AWC Theta offset. The value that needs to be applied to Theta axis.
+            </returns>
+        </member>
+        <member name="M:BAI.Service.Devices.WaferEngine.WaferEngineServiceProxy.instantiateImp(System.String,System.String)">
+            <summary>
+            This method is called in proxy constructor to instantiate implementation.
+            </summary>
+            <param name="deviceName">Name of device such as AT1.WaferEngine, EFEM.WaferEngine</param>
+            <param name="clientName">Client name, such as Module name AT1, EFEM, or CTC.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.AT.AtmTransferServiceProxy.LoadStationDataFromDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Load station data from embedded controller's persistent media (usually CF disk) to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.AT.AtmTransferServiceProxy.SaveStationDataToDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Save the station data in embedded application to embedded controller's persistent media (usually CF disk)
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.RobotBaseServiceLocalImp.LoadStationDataFromDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Load station data from embedded controller's persistent media (usually CF disk) to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.RobotBaseServiceLocalImp.SaveStationDataToDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Save the station data in embedded application to embedded controller's persistent media (usually CF disk)
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.EFEM.EfemServiceProxy.instantiateImp(System.String,System.String)">
+            <summary>
+            This method is called in proxy constructor to instantiate implementation.
+            </summary>
+            <param name="moduleName">Name of module to instance in format of Module.Module</param>
+            <param name="clientName">Client name, such as Module name or CTC.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.EFEM.EfemServiceProxy.LoadStationDataFromDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Load station data from embedded controller's persistent media (usually CF disk) to embedded application.
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="M:BAI.Service.Modules.EFEM.EfemServiceProxy.SaveStationDataToDisk(BAI.Service.Common.ServiceType)">
+            <summary>
+            Save the station data in embedded application to embedded controller's persistent media (usually CF disk)
+            </summary>
+            <param name="serviceType">Type of service (calib and etc) station is for. Note Calib=Teach.</param>
+        </member>
+        <member name="T:BAI.Service.Modules.EFEM.EfemServiceEcLocalImp">
+            <summary>
+            Implementation class for future extension to have specific service functionality for EC controlled EFEM
+            </summary>
+        </member>
+        <member name="T:BAI.Service.Modules.EFEM.EfemServiceScLocalImp">
+            <summary>
+            Implementation class for future extension to have specific service functionality for SC controlled EFEM
+            </summary>
+        </member>
+        <member name="M:BAI.Service.Modules.ModuleServiceProxy.instantiateImp(System.String,System.String)">
+            <summary>
+            This method is called in proxy constructor to instantiate implementation.
+            </summary>
+            <param name="moduleName">Name of module to instance in format of Module.Module</param>
+            <param name="clientName">Client name, such as Module name or CTC.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,64 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Equipment.Popup.SetWaferPresencePopupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions"
+    xmlns:popup="clr-namespace:UnitySC.GUI.Common.Equipment.Popup"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.Resources"
+    xmlns:enums="clr-namespace:UnitySC.Equipment.Abstractions.Enums;assembly=UnitySC.Equipment.Abstractions"
+    d:DataContext="{d:DesignInstance popup:SetWaferPresencePopup}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ObjectDataProvider
+            x:Key="SampleDimensionEnum"
+            MethodName="GetValues"
+            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="semiDefinitions:SampleDimension" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider
+            x:Key="MaterialTypeEnum"
+            MethodName="GetValues"
+            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enums:MaterialType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <StackPanel>
+        <controls:PropertyEditor Orientation="Horizontal" PropertyName="{localize:Static equipment:EquipmentResources.EQUIPMENT_WAFER_SIZE}">
+            <ComboBox
+                Width="200"
+                Margin="10,0,0,5"
+                Padding="10,0,10,0"
+                FontSize="{StaticResource FontSizeNormal}"
+                ItemsSource="{Binding Source={StaticResource SampleDimensionEnum}}"
+                SelectedItem="{Binding WaferSize}" />
+        </controls:PropertyEditor>
+        <controls:PropertyEditor Orientation="Horizontal" PropertyName="{localize:Static equipment:EquipmentResources.EQUIPMENT_WAFER_MATERIAL_TYPE}">
+            <ComboBox
+                Width="200"
+                Margin="10,0,0,5"
+                Padding="10,0,10,0"
+                FontSize="{StaticResource FontSizeNormal}"
+                ItemsSource="{Binding Source={StaticResource MaterialTypeEnum}}"
+                SelectedItem="{Binding MaterialType}" />
+        </controls:PropertyEditor>
+        <controls:PropertyEditor Orientation="Horizontal" PropertyName="{localize:Static equipment:EquipmentResources.EQUIPMENT_WAFER_PRESENCE}">
+            <CheckBox
+                Width="200"
+                Margin="10,0,0,5"
+                Padding="10,0,10,0"
+                FontSize="{StaticResource FontSizeNormal}"
+                IsChecked="{Binding WaferPresence}" />
+        </controls:PropertyEditor>
+    </StackPanel>
+</UserControl>

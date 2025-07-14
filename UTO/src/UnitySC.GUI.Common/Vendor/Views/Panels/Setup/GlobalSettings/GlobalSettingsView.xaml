@@ -1,0 +1,60 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Setup.GlobalSettings.GlobalSettingsView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Setup.GlobalSettings"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+	Background="Transparent"
+	KeyboardNavigation.ControlTabNavigation="Cycle"
+	Style="{StaticResource BusinessPanelViewStyle}"
+	d:DataContext="{d:DesignInstance {x:Type local:GlobalSettingsPanel}, IsDesignTimeCreatable=True}"
+	d:DesignHeight="{StaticResource DesignHeight}"
+	d:DesignWidth="{StaticResource DesignWidth}"
+	mc:Ignorable="d">
+	<UniformGrid Columns="2">
+		<controls:Card Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}">
+			<GroupBox Header="{localize:Static local:GlobalSettingsPanelResources.GLOBAL_SETUP_SETTINGS}">
+				<StackPanel Orientation="Vertical">
+
+					<controls:PropertyEditor
+						Margin="{StaticResource HorizontalStackPropertyMargin}"
+						Orientation="Horizontal"
+						PropertyName="{localize:Static local:GlobalSettingsPanelResources.GLOBAl_SETUP_SHUTDOWN_REQUIRED}">
+						<CheckBox
+							HorizontalAlignment="Right"
+							VerticalAlignment="Center"
+							IsChecked="{Binding ModifiedConfigNode.IsShutDownConfirmationRequired}"
+							Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+					</controls:PropertyEditor>
+
+					<controls:PropertyEditor
+						Margin="{StaticResource HorizontalStackPropertyMargin}"
+						Orientation="Horizontal"
+						PropertyName="{localize:Static local:GlobalSettingsPanelResources.GLOBAL_SETUP_DEV_MODE}">
+						<CheckBox
+							HorizontalAlignment="Right"
+							VerticalAlignment="Center"
+							IsChecked="{Binding ModifiedConfigNode.IsDeveloperDebugModeEnabled}"
+							Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+					</controls:PropertyEditor>
+
+					<controls:PropertyEditor
+						Margin="{StaticResource HorizontalStackPropertyMargin}"
+						Orientation="Horizontal"
+						PropertyName="{localize:Static local:GlobalSettingsPanelResources.GLOBAL_SETUP_COLOR_TOOL}">
+						<CheckBox
+							HorizontalAlignment="Right"
+							VerticalAlignment="Center"
+							IsChecked="{Binding ModifiedConfigNode.IsColorizationToolboxVisible}"
+							Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+					</controls:PropertyEditor>
+
+				</StackPanel>
+			</GroupBox>
+		</controls:Card>
+	</UniformGrid>
+</UserControl>

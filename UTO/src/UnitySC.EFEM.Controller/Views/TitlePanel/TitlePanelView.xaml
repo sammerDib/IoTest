@@ -1,0 +1,521 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Controller.Views.TitlePanel.TitlePanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:communicatingDevice="clr-namespace:UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:controller="clr-namespace:UnitySC.EFEM.Controller"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:deviceEnums="clr-namespace:UnitySC.Equipment.Abstractions.Vendor.Devices.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:loadPort="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:titlePanel="clr-namespace:UnitySC.EFEM.Controller.Views.TitlePanel"
+    xmlns:vendorsTitlePanel="clr-namespace:UnitySC.GUI.Common.Vendor.Views.TitlePanel;assembly=UnitySC.GUI.Common"
+    x:Name="UserControl"
+    Height="80"
+    d:DataContext="{d:DesignInstance titlePanel:TitlePanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Foreground="{DynamicResource TitlePanelLabelForeground}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="TitlePanelBackground" Color="{DynamicResource HorizontalCanvasBackground}" />
+            <SolidColorBrush x:Key="TitlePanelLabelForeground" Color="{DynamicResource HorizontalCanvasForeground}" />
+
+            <DataTemplate x:Key="TitlePanelConnectionStateDisplayerTemplate" DataType="{x:Type communicatingDevice:UnityCommunicatingDevice}">
+
+                <controls:Displayer
+                    x:Name="TitlePanelDisplayerState"
+                    MinHeight="0"
+                    CommandParameter="{Binding}"
+                    FontSize="{StaticResource FontSizeSmall}"
+                    FontWeight="DemiBold"
+                    Value="{Binding Path=State, Converter={StaticResource TextToHumanizedTextConverter}, FallbackValue='None'}" />
+
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static deviceEnums:OperatingModes.Initialization}">
+                        <Setter TargetName="TitlePanelDisplayerState" Property="Color" Value="Blue" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static deviceEnums:OperatingModes.Maintenance}">
+                        <Setter TargetName="TitlePanelDisplayerState" Property="Color" Value="Red" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static deviceEnums:OperatingModes.Idle}">
+                        <Setter TargetName="TitlePanelDisplayerState" Property="Color" Value="Green" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding State}" Value="{x:Static deviceEnums:OperatingModes.Executing}">
+                        <Setter TargetName="TitlePanelDisplayerState" Property="Color" Value="Blue" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel>
+
+        <Rectangle
+            Height="3"
+            DockPanel.Dock="Top"
+            Fill="{DynamicResource UnityScGradient}" />
+
+        <Grid IsSharedSizeScope="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="23" />
+                <ColumnDefinition Width="180" />
+            </Grid.ColumnDefinitions>
+
+            <!--#region Background-->
+            <Rectangle
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Effect="{StaticResource E95ElementsShadow}"
+                Fill="{DynamicResource TitlePanelBackground}"
+                SnapsToDevicePixels="True" />
+            <!--#endregion Background-->
+
+            <StackPanel
+                Grid.Column="0"
+                Margin="5,0"
+                Orientation="Horizontal">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="140" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_MODE}" />
+
+                    <controls:Displayer
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        MinHeight="0"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Command="{Binding GoMainPageCommand}"
+                        FontSize="{StaticResource FontSizeSmall}">
+                        <controls:Displayer.Style>
+                            <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                <Setter Property="Value" Value="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=ControlState, FallbackValue='NONE', Converter={StaticResource ToHumanizedAndUpperCaseTextConverter}}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=IsMaintenanceMode}" Value="TRUE">
+                                        <Setter Property="Value" Value="MAINTENANCE" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </controls:Displayer.Style>
+                    </controls:Displayer>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_HOST}" />
+
+                    <controls:Displayer
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        MinHeight="0"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource FontSizeSmall}">
+                        <controls:Displayer.Style>
+                            <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                <Setter Property="Value" Value="NOT CONNECTED" />
+                                <Setter Property="Color" Value="Red" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=HostDriver.IsCommunicationEnabled}" Value="TRUE">
+                                        <Setter Property="Value" Value="CONNECTED" />
+                                        <Setter Property="Color" Value="Green" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </controls:Displayer.Style>
+                    </controls:Displayer>
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_EFEM}" />
+                    <ContentPresenter
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Content="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.Efem}"
+                        ContentTemplate="{StaticResource TitlePanelConnectionStateDisplayerTemplate}" />
+                </Grid>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="155" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="155" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--#region Robot-->
+
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_ROBOT}" />
+                    <ContentPresenter
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="3,2,0,1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Content="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.Robot}"
+                        ContentTemplate="{StaticResource TitlePanelConnectionStateDisplayerTemplate}" />
+
+                    <!--#region End Robot-->
+
+                    <!--#region Aligner-->
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_ALIGNER}" />
+                    <ContentPresenter
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        Content="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.Aligner}"
+                        ContentTemplate="{StaticResource TitlePanelConnectionStateDisplayerTemplate}" />
+
+                    <!--#region End Aligner-->
+
+                    <!--#region LPs-->
+
+                    <ItemsControl
+                        Grid.Row="0"
+                        Grid.RowSpan="3"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.LoadPorts}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type loadPort:LoadPort}">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <TextBlock Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_LP}" />
+                                        <TextBlock Text="{Binding Value.InstanceId, Mode=OneWay}" />
+                                    </StackPanel>
+                                    <ContentPresenter
+                                        Width="155"
+                                        Margin="5,1,0,1"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Center"
+                                        Content="{Binding Value}"
+                                        ContentTemplate="{StaticResource TitlePanelConnectionStateDisplayerTemplate}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="3" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <!--#region End LPs-->
+
+                    <!--#region Safety door-->
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="5"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_SAFETYDOOR}" />
+                    <controls:Led
+                        Grid.Row="0"
+                        Grid.Column="6"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Left"
+                        IsActivated="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.Efem.SafetyDoorSensor}" />
+                    <!--#region End Safety door-->
+
+                    <!--#region Air-->
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="5"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_AIR}" />
+                    <controls:Led
+                        Grid.Row="1"
+                        Grid.Column="6"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Left"
+                        IsActivated="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.Efem.AirSensor}" />
+                    <!--#region End Air-->
+
+                    <!--#region Vacuum-->
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="5"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static titlePanel:TitlePanelResources.TITLE_PANEL_VACUUM}" />
+                    <controls:Led
+                        Grid.Row="2"
+                        Grid.Column="6"
+                        Margin="5,2,0,1"
+                        HorizontalAlignment="Left"
+                        IsActivated="{Binding Source={x:Static controller:App.EfemAppInstance}, Path=EfemEquipmentManager.Efem.VacuumSensor}" />
+                    <!--#region End Vacuum-->
+                </Grid>
+            </StackPanel>
+
+            <!--#region Logo + ProductName-->
+            <DockPanel Grid.Column="3" Margin="5,0,0,0">
+                <StackPanel
+                    Margin="5,0"
+                    HorizontalAlignment="Center"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        DockPanel.Dock="Top"
+                        FontFamily="Segoe UI"
+                        Text="{Binding AppName, FallbackValue='UnitySC.EFEM.Controller'}" />
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right"
+                        Text="{Binding Path=ApplicationVersion.FileVersion, Source={x:Static controller:App.EfemAppInstance}, Mode=OneWay, FallbackValue='v---', TargetNullValue='---', StringFormat='{}v{0}'}" />
+                </StackPanel>
+                <Control
+                    Height="55"
+                    MaxWidth="200"
+                    Margin="10,0"
+                    HorizontalAlignment="Center"
+                    Template="{StaticResource ImageCompanyLogoControlTemplate}" />
+            </DockPanel>
+            <!--#endregion Logo + ProductName-->
+
+            <!--#region Current View + Title Message-->
+            <UniformGrid
+                Grid.Column="1"
+                Margin="0,0,5,0"
+                Rows="2">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="0,0,0,5"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+
+                        <!--#region Mute Buzzer-->
+                        <Button
+                            Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
+                            Height="Auto"
+                            Margin="5,0"
+                            markupExtensions:Icon.Geometry="{Binding BuzzerState, Converter={StaticResource BuzzerStateToIconConverter}, FallbackValue={StaticResource AudioOnIcon}}"
+                            Command="{Binding MuteBuzzerCommand}"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource SquareIconifiedButtonStyle}" />
+                        <!--#endregion Mute Buzzer-->
+
+                        <Grid>
+                            <!--#region DeviceStateViewerButton-->
+                            <Button
+                                Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
+                                Height="Auto"
+                                Margin="5,0,5,0"
+                                markupExtensions:Icon.Geometry="{StaticResource LinkIcon}"
+                                Command="{Binding HardwareConnectionViewModel.OpenDevicesStateViewerCommand}">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                                        <Setter Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HardwareConnectionViewModel.AllDevicesAreConnected, TargetNullValue=false}" Value="False">
+                                                <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                            <!--#endregion DeviceStateViewerButton-->
+
+                            <!--#region DeviceStateViewerPopup-->
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="{Binding HardwareConnectionViewModel.IsCommunicatingDevicesPopupVisible, Mode=TwoWay}"
+                                Placement="Bottom"
+                                PopupAnimation="Fade"
+                                StaysOpen="False">
+                                <Grid>
+                                    <controls:Card
+                                        MinWidth="250"
+                                        Margin="5,10,10,10"
+                                        DataContext="{Binding HardwareConnectionViewModel}"
+                                        Elevation="Level1">
+                                        <Grid>
+                                            <GroupBox Header="{localize:Static vendorsTitlePanel:TitlePanelResources.TITLE_PANEL_HARDWARE_CONNECTION}">
+                                                <ItemsControl IsEnabled="{Binding Path=DataContext.EquipmentManager.Controller.State, Converter={StaticResource DeviceStateToBooleanConverter}, RelativeSource={RelativeSource AncestorType=Popup}}" ItemsSource="{Binding CommunicatingDevices}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type communicatingDevice:UnityCommunicatingDevice}">
+                                                            <controls:PropertyEditor>
+                                                                <DockPanel LastChildFill="True">
+                                                                    <controls:Led
+                                                                        Margin="0,0,7,0"
+                                                                        Background="{DynamicResource InteractionSeverityError}"
+                                                                        DockPanel.Dock="Left"
+                                                                        IsActivated="{Binding IsCommunicating}" />
+                                                                    <Button
+                                                                        Background="Transparent"
+                                                                        Command="{Binding Path=DataContext.ToggleDeviceConnectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Card}}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        DockPanel.Dock="Right">
+                                                                        <Button.Style>
+                                                                            <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                                                                                <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource DisconnectedIcon}" />
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsCommunicating}" Value="True">
+                                                                                        <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource ConnectedIcon}" />
+                                                                                    </DataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Button.Style>
+                                                                    </Button>
+                                                                    <TextBlock
+                                                                        Margin="0,0,10,0"
+                                                                        VerticalAlignment="Center"
+                                                                        Text="{Binding Name}" />
+                                                                </DockPanel>
+                                                            </controls:PropertyEditor>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </GroupBox>
+                                            <Button
+                                                Margin="5,5,5,5"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                markupExtensions:Icon.Geometry="{StaticResource CloseIcon}"
+                                                Background="Transparent"
+                                                Command="{Binding CloseDevicesStateViewerCommand}"
+                                                Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                        </Grid>
+                                    </controls:Card>
+                                </Grid>
+                            </Popup>
+                            <!--#endregion DeviceStateViewerPopup-->
+                        </Grid>
+
+
+                        <!--#region LogonButton-->
+                        <Button
+                            Height="Auto"
+                            HorizontalAlignment="Center"
+                            markupExtensions:Icon.Geometry="M15.827007,0C20.406003,0 24.346007,3.1960449 24.346007,9.2930298 24.346007,13.259033 22.542005,17.289001 20.180997,19.791992L20.193005,19.791992C19.287,22.627014 20.736997,23.299011 20.966,23.376038 25.997008,25.090027 31.651002,28.317993 31.651002,31.626038L31.651002,32 0,32 0,31.626038C8.034749E-08,28.414001 5.6260008,25.161011 10.421,23.376038 10.766993,23.244995 12.422999,22.317017 11.497004,19.817993 9.1220035,17.321045 7.3279971,13.275024 7.3279971,9.2930298 7.3279971,3.1960449 11.245006,0 15.827007,0z"
+                            Command="{Binding OpenLoginPanelCommand}"
+                            Content="{Binding CurrentUserName, FallbackValue=Logon here}"
+                            DockPanel.Dock="Right" />
+                        <!--#endregion LogonButton-->
+
+                        <!--#region DateTime-->
+                        <StackPanel
+                            Margin="5,5,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                            <TextBlock
+                                Height="18"
+                                HorizontalAlignment="Center"
+                                FontFamily="Segoe UI"
+                                FontSize="16"
+                                Foreground="{DynamicResource TitlePanelLabelForeground}"
+                                Text="{Binding CurrentTime, StringFormat=HH:mm}" />
+                            <TextBlock
+                                Height="20"
+                                HorizontalAlignment="Center"
+                                FontFamily="Segoe UI"
+                                FontSize="13"
+                                Foreground="{DynamicResource TitlePanelLabelForeground}"
+                                Text="{Binding CurrentDate}" />
+                        </StackPanel>
+                        <!--#endregion DateTime-->
+
+                    </StackPanel>
+
+                    <!--#region ActiveView-->
+                    <TextBlock
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        DockPanel.Dock="Left"
+                        FontFamily="SegoeUI"
+                        FontSize="{StaticResource FontSizeBig}"
+                        Foreground="{StaticResource TitlePanelLabelForeground}"
+                        Text="{Binding SelectedBusinessPanelId, FallbackValue='Setup - AccessRights'}" />
+                    <!--#endregion ActiveView-->
+
+                </Grid>
+
+                <controls:MessageArea
+                    Height="Auto"
+                    Padding="0"
+                    HorizontalAlignment="Stretch"
+                    DockPanel.Dock="Bottom"
+                    Message="{Binding Messages.DisplayedUserMessage}"
+                    TextBlock.TextAlignment="Center" />
+
+            </UniformGrid>
+            <!--#endregion Current View + Title Message-->
+
+            <!--#region LightTower-->
+            <Viewbox Grid.Column="2" Stretch="UniformToFill">
+                <ContentPresenter Content="{Binding LightTowerViewModel}" Opacity="1" />
+            </Viewbox>
+            <!--#endregion LightTower-->
+
+        </Grid>
+
+    </DockPanel>
+</UserControl>

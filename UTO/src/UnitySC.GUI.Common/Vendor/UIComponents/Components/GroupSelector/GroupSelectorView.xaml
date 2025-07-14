@@ -1,0 +1,84 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.UIComponents.Components.GroupSelector.GroupSelectorView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:groupSelector="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.GroupSelector"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+	xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+	x:Name="GroupSelectorControl"
+	d:DataContext="{d:DesignInstance groupSelector:IGroupSelector, IsDesignTimeCreatable=False}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+	<DockPanel>
+		<StackPanel
+			Height="{StaticResource HeaderElementHeight}"
+			DockPanel.Dock="Top"
+			Orientation="Horizontal">
+			<Button
+				Margin="5,0"
+				VerticalAlignment="Center"
+				Background="Transparent"
+				Command="{Binding CheckAllCommand}"
+				Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+				Style="{StaticResource SquareIconifiedButtonStyle}"
+				ToolTip="Check all"
+				dependencyObjects:Icon.Geometry="{StaticResource CheckAllIcon}" />
+			<Button
+				Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+				VerticalAlignment="Center"
+				Background="Transparent"
+				Command="{Binding UncheckAllCommand}"
+				Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+				Style="{StaticResource SquareIconifiedButtonStyle}"
+				ToolTip="Uncheck all"
+				dependencyObjects:Icon.Geometry="{StaticResource UncheckAllIcon}" />
+			<Button
+				Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}"
+				VerticalAlignment="Center"
+				Background="Transparent"
+				Command="{Binding InvertSelectionCommand}"
+				Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+				Style="{StaticResource SquareIconifiedButtonStyle}"
+				ToolTip="Invert selection"
+				dependencyObjects:Icon.Geometry="{StaticResource InvertSelectionIcon}" />
+		</StackPanel>
+		<ItemsControl
+			MinWidth="200"
+			MaxWidth="400"
+			ItemsSource="{Binding Groups}"
+			Style="{StaticResource VirtualizedItemsControlStyle}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<DockPanel Margin="10,5,10,5">
+						<CheckBox
+							x:Name="CheckBox"
+							Command="{Binding DataContext.SelectGroupCommand, ElementName=GroupSelectorControl}"
+							CommandParameter="{Binding}" />
+						<ContentPresenter
+							Content="{Binding}"
+							ContentTemplate="{Binding GroupTemplate, ElementName=GroupSelectorControl}" />
+					</DockPanel>
+					<DataTemplate.Triggers>
+						<DataTrigger Value="True">
+							<DataTrigger.Binding>
+								<MultiBinding Converter="{StaticResource ItemIsInTheCollectionToBooleanConverter}">
+									<Binding Path="." />
+									<Binding
+										ElementName="GroupSelectorControl"
+										Path="DataContext.SelectedGroups" />
+									<Binding
+										ElementName="GroupSelectorControl"
+										Path="DataContext.SelectedGroupsChangedFlag" />
+								</MultiBinding>
+							</DataTrigger.Binding>
+							<Setter TargetName="CheckBox" Property="IsChecked" Value="True" />
+						</DataTrigger>
+					</DataTemplate.Triggers>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</DockPanel>
+</UserControl>

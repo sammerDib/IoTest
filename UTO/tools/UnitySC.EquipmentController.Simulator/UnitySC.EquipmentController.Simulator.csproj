@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+	  <TargetFramework>net48</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <OutputPath>..\..\artifacts\$(Configuration)\build\apps\UnitySC.EquipmentController.Simulator\</OutputPath>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Configurations>Release;Debug</Configurations>
+    <ApplicationIcon></ApplicationIcon>
+	  <RootNamespace>UnitySC.EquipmentController.Simulator</RootNamespace>
+	  <Platforms>AnyCPU;x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Agileo.Common.Communication-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.Drivers-Protected" Version="7.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="UnitsNet.Agileo" Version="4.71.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\UnitySC.Equipment.Abstractions\Devices\Aligner\Enums\AlignType.cs">
+      <Link>Driver\Enums\AlignType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.Equipment.Abstractions\Devices\Efem\Enums\AlignerStatus.cs">
+      <Link>Driver\Enums\AlignerStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.Equipment.Abstractions\Devices\Efem\Enums\LoadPortStatus.cs">
+      <Link>Driver\Enums\LoadPortStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.Equipment.Abstractions\Devices\Efem\Enums\OperationMode.cs">
+      <Link>Driver\Enums\OperationMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.Equipment.Abstractions\Devices\Efem\Enums\RobotStatus.cs">
+      <Link>Driver\Enums\RobotStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Constants.cs">
+      <Link>Driver\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Enums\ErrorCode.cs">
+      <Link>Driver\Enums\ErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Enums\GetWaferPresenceOnArmParameters.cs">
+      <Link>Driver\Enums\GetWaferPresenceOnArmParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Enums\LightState.cs">
+      <Link>Driver\Enums\LightState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.Equipment.Abstractions\Material\SlotState.cs">
+      <Link>Driver\Enums\SlotState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Enums\SubstrateSide.cs">
+      <Link>Driver\Enums\SubstrateSide.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Enums\SubstrateType.cs">
+      <Link>Driver\Enums\SubstrateType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Message.cs">
+      <Link>Driver\Message.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\MessageParseException.cs">
+      <Link>Driver\MessageParseException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Statuses\GeneralStatus.cs">
+      <Link>Driver\Statuses\GeneralStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\UnitySC.EFEM.Controller\HostInterface\Statuses\SystemStatus.cs">
+      <Link>Driver\Statuses\SystemStatus.cs</Link>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Driver\EfemDriverConfig.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>EfemDriverConfig.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\UnitySC.EFEM.Controller\UnitySC.EFEM.Controller.csproj" />
+  </ItemGroup>
+</Project>

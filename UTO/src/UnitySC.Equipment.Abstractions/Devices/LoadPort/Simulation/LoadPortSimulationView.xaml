@@ -1,0 +1,157 @@
+<UserControl
+    x:Class="UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation.LoadPortSimulationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls1="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:simulation="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation"
+    xmlns:userControls="clr-namespace:Agileo.UserControls;assembly=Agileo.UserControls"
+    xmlns:views="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort.Simulation.CarrierConfigurations.Views"
+    d:DataContext="{d:DesignInstance Type=simulation:LoadPortSimulationViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="900"
+    d:DesignWidth="1300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <userControls:BoolToLedStateConverter x:Key="BoolToLedStateConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <controls1:CarrierPlacementToColorConverter x:Key="CarrierPlacementToColorConverter" />
+    </UserControl.Resources>
+    <TabControl>
+        <TabItem Header="LoadPort">
+
+            <Grid Margin="30,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <CheckBox
+                        x:Name="ChkCommandExecutionStatus"
+                        Margin="5,10"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Content="Is Command Failed"
+                        IsChecked="{Binding IsCommandFailed}" />
+                    <controls1:LoadPortControlView />
+                </StackPanel>
+                <DockPanel Grid.Column="1">
+                    <controls1:MappingView
+                        Width="250"
+                        HorizontalAlignment="Left"
+                        ClampLed="{Binding LoadPortControlViewModel.IsClamped, Converter={StaticResource BoolToLedStateConverter}}"
+                        DockPanel.Dock="Top"
+                        ItemUi="{Binding LoadPortControlViewModel.CarrierItems}"
+                        MappingVisibility="{Binding LoadPortControlViewModel.IsMappingVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        PresenceLed="{Binding LoadPortControlViewModel.IsCarrierPresent, Converter={StaticResource BoolToLedStateConverter}}"
+                        PresenceLedColor="{Binding LoadPortControlViewModel.IsCarrierPlacementOk, Mode=OneWay, Converter={StaticResource CarrierPlacementToColorConverter}}" />
+                </DockPanel>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Carrier Configuration">
+            <views:CarrierConfigurationsUserControl />
+        </TabItem>
+        <TabItem Header="E84 Signals">
+
+            <Border
+                Margin="0,20,0,0"
+                BorderBrush="{DynamicResource SeparatorBackground}"
+                BorderThickness="1"
+                CornerRadius="5">
+                <GroupBox Header="Signals">
+                    <Grid Height="100" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <CheckBox
+                            Margin="10"
+                            Content="VALID"
+                            IsChecked="{Binding Valid, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10"
+                            Content="L_REQ"
+                            IsChecked="{Binding LReq, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10"
+                            Content="CS_0"
+                            IsChecked="{Binding Cs0, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="10"
+                            Content="U_REQ"
+                            IsChecked="{Binding UReq, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="7"
+                            Margin="10"
+                            Content="CS_1"
+                            IsChecked="{Binding Cs1, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Margin="10"
+                            Content="READY"
+                            IsChecked="{Binding Ready, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Margin="10"
+                            Content="TR_REQ"
+                            IsChecked="{Binding TrReq, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            Margin="10"
+                            Content="BUSY"
+                            IsChecked="{Binding Busy, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.Column="5"
+                            Margin="10"
+                            Content="COMPT"
+                            IsChecked="{Binding Compt, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="5"
+                            Margin="10"
+                            Content="HO_AVBL"
+                            IsChecked="{Binding HoAvbl, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="0"
+                            Grid.Column="6"
+                            Margin="10"
+                            Content="CONT"
+                            IsChecked="{Binding Cont, Mode=TwoWay}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="6"
+                            Margin="10"
+                            Content="ES"
+                            IsChecked="{Binding Es, Mode=TwoWay}" />
+                    </Grid>
+                </GroupBox>
+            </Border>
+        </TabItem>
+        <TabItem Header="Alarms" Visibility="{Binding IsDeviceWithAlarms, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ContentControl Content="{Binding AlarmSimulationUserControl}" />
+        </TabItem>
+    </TabControl>
+</UserControl>

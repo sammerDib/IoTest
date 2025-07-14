@@ -1,0 +1,94 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.Device.Alarms.DeviceAlarmOccurrencesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:alarmModeling="clr-namespace:Agileo.AlarmModeling;assembly=Agileo.AlarmModeling"
+    xmlns:alarms="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.ServiceMode.Device.Alarms"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    d:DataContext="{d:DesignInstance alarms:DeviceAlarmOccurrencesViewModel}"
+    d:DesignHeight="700"
+    d:DesignWidth="700"
+    mc:Ignorable="d">
+
+    <dataTables:DataTable DataSource="{Binding AlarmSource}">
+        <GridView>
+            <dataTables:DataTableColumn DisplayName="SetTimeStamp" SortKey="SetTimeStamp">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding SetTimeStamp}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="Name" SortKey="Name">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding Alarm.Name}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="Acknowledged" SortKey="Acknowledged">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding Acknowledged}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="AcknowledgedTimeStamp" SortKey="AcknowledgedTimeStamp">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding AcknowledgedTimeStamp}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="State" SortKey="State">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding State}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="ClearedTimeStamp" SortKey="ClearedTimeStamp">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding ClearedTimeStamp}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="Acknowledged" SortKey="Acknowledged">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <CheckBox
+                            Focusable="False"
+                            IsChecked="{Binding Acknowledged, Mode=OneWay}"
+                            IsHitTestVisible="False" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="AcknowledgedBy" SortKey="AcknowledgedBy">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding AcknowledgedBy}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="Text" SortKey="Text">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding Text}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+            <dataTables:DataTableColumn DisplayName="EnglishText" SortKey="EnglishText">
+                <dataTables:DataTableColumn.CellTemplate>
+                    <DataTemplate DataType="{x:Type alarmModeling:AlarmOccurrence}">
+                        <TextBlock Text="{Binding EnglishText}" />
+                    </DataTemplate>
+                </dataTables:DataTableColumn.CellTemplate>
+            </dataTables:DataTableColumn>
+        </GridView>
+
+    </dataTables:DataTable>
+
+</UserControl>

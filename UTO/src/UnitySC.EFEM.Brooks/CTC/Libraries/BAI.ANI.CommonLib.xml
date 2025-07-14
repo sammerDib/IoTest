@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BAI.ANI.CommonLib</name>
+    </assembly>
+    <members>
+        <member name="M:BAI.ANI.Common.Model.AdaptorObjectModel.TryGetMethod(System.String,BAI.ANI.Common.Model.MethodModel@)">
+            <summary>
+            This method returns the first found overload of the requested method
+            </summary>
+            <param name="name">Method Name</param>
+            <param name="method">Output parameter of type MethodModel</param>
+            <returns></returns>
+        </member>
+        <member name="F:BAI.ANI.Common.ObjectStatus.NotReady">
+            <summary>
+            The controllers are still starting up. Commands to the object will not succeed.
+            </summary>
+        </member>
+        <member name="F:BAI.ANI.Common.ObjectStatus.Faulted">
+            <summary>
+            An failed to create. Commands to the object will not succeed.
+            </summary>
+        </member>
+        <member name="F:BAI.ANI.Common.ObjectStatus.Ready">
+            <summary>
+            The object is ready for messages.
+            </summary>
+        </member>
+        <member name="T:BAI.ANI.Common.IAniConnection">
+            <summary>
+            Manages the current connection to the ANI.
+            </summary>
+        </member>
+        <member name="P:BAI.ANI.Common.IAniConnection.ConfiguredObjects">
+            <summary>
+            The list of available objects in the system.
+            </summary>
+        </member>
+        <member name="P:BAI.ANI.Common.IAniConnection.ConnectionName">
+            <summary>
+            The name of the connection as displayed in the server GUI.
+            </summary>
+        </member>
+        <member name="M:BAI.ANI.Common.IAniConnection.EnableEvent(System.String,System.String)">
+            <summary>
+            Enables the event on the current connection.
+            </summary>
+            <remarks>
+            When a new connection is made to the ANI server, no events will be sent.
+            To receive events in the future, the event must be enabled.
+            The ANI server will send events until <see cref="M:BAI.ANI.Common.IAniConnection.DisableEvent(System.String,System.String)"/>
+            is called.
+            </remarks>
+            <param name="objectName">The name of the object in the system.</param>
+            <param name="eventName">The name of the event to enable.</param>
+        </member>
+        <member name="M:BAI.ANI.Common.IAniConnection.DisableEvent(System.String,System.String)">
+            <summary>
+            Disables sending an event.
+            </summary>
+            <param name="objectName">The name of the object in the system.</param>
+            <param name="eventName">The name of the event to enable.</param>
+        </member>
+        <member name="M:BAI.ANI.Common.IAniConnection.EnableEvents(System.String,System.String)">
+            <summary>
+            Enable all the events defined on one interface.
+            </summary>
+            <param name="objectName">The name of the object in the system.</param>
+            <param name="interfaceName">The name of the interface whose events should be enabled.</param>
+        </member>
+        <member name="M:BAI.ANI.Common.IAniConnection.DisableEvents(System.String,System.String)">
+            <summary>
+            Disable all the events defined on one interface.
+            </summary>
+            <param name="objectName">The name of the object in the system.</param>
+            <param name="interfaceName">The name of the interface whose events should be disabled.</param>
+        </member>
+        <member name="M:BAI.ANI.Common.IAniConnection.QueryAllObjectStatus">
+            <summary>
+            Check to see if all objects in the system are ready messages.
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

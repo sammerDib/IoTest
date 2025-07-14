@@ -1,0 +1,130 @@
+﻿<UserControl x:Class="BasicModules.Edition.Rendering.WaferView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:control="clr-namespace:BasicModules.Edition.Rendering.Control"
+			 xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             Loaded="UserControl_Loaded"
+			 mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+	<Border Style="{StaticResource BorderPanel}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+				<RowDefinition Height="Auto"></RowDefinition>
+			</Grid.RowDefinitions>
+
+			<!-- Header -->
+			<Grid Background="{StaticResource PanelBorderBackground}">
+				<StackPanel Orientation="Horizontal" Margin="0,2" HorizontalAlignment="Left">
+					<Viewbox Stretch="Uniform" Width="22" Margin="4,0" VerticalAlignment="Center">
+                        <ContentControl ContentTemplate="{StaticResource WaferADCImage}"/>
+					</Viewbox>
+					<TextBlock Text="Wafer" Style="{StaticResource PanelTitle}" VerticalAlignment="Center"/>
+
+					<!-- Rectangular -->
+					<StackPanel Orientation="Horizontal" Visibility="{Binding IsRectangularWafer, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+						<TextBlock Text="{Binding RealWaferWidthmm, FallbackValue=0}" Style="{StaticResource PanelTitle}" VerticalAlignment="Center" Margin="2,0,0,0"/>
+						<TextBlock Text="x" VerticalAlignment="Center" Style="{StaticResource PanelTitle}"/>
+						<TextBlock Text="{Binding RealWaferHeightmm,FallbackValue=0}" Style="{StaticResource PanelTitle}" VerticalAlignment="Center" Margin="0"/>
+						<TextBlock Text="mm" VerticalAlignment="Center" Style="{StaticResource PanelTitle}"/>
+					</StackPanel>
+
+					<!-- Circular -->
+					<StackPanel Orientation="Horizontal" Visibility="{Binding IsRectangularWafer, Converter={StaticResource InvertedBooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+						<TextBlock Text="{Binding RealWaferWidthmm, FallbackValue=0}" Style="{StaticResource PanelTitle}" VerticalAlignment="Center" Margin="2,0,0,0"/>
+						<TextBlock Text="mm" VerticalAlignment="Center" Style="{StaticResource PanelTitle}"/>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+					<!-- Wafer info collapsed-->
+					<!--<Button Command="{Binding WaferInfoCommand}" ToolTip="Display wafer info" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{Binding WaferInfoVisible, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+						<Viewbox Stretch="Uniform" Height="18" Margin="2,0">
+							<ContentControl ContentTemplate="{StaticResource InfoADCImage}"/>
+						</Viewbox>
+					</Button>
+					-->
+				</StackPanel>
+			</Grid>
+
+
+			<!-- Content-->
+			<Grid Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<xctk:Zoombox x:Name="ZoomBox" Grid.Column="0" Grid.ColumnSpan="2" RelativeZoomModifiers="Ctrl" >
+					<Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="{Binding WaferWidth, FallbackValue=100}" Height="{Binding WaferHeight,FallbackValue=100}" Margin="{Binding WaferMargin,FallbackValue=10}" SizeChanged="myCanvas_SizeChanged">
+						<Ellipse Width="{Binding WaferWidth, FallbackValue=100}" Height="{Binding WaferHeight,FallbackValue=100}" Fill="{StaticResource WaferBackground}" Stroke="{StaticResource WaferBorder}" StrokeThickness="50"  Visibility="{Binding IsRectangularWafer,Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+						<Rectangle Width="{Binding WaferWidth}" Height="{Binding WaferHeight}" Fill="{StaticResource WaferBackground}" Stroke="{StaticResource WaferBorder}" StrokeThickness="50" Visibility="{Binding IsRectangularWafer,Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
+						<!-- Defect -->
+                        <control:DefectsControl x:Name="defectsControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Defects="{Binding Defects}" IsUpToDate="{Binding WaferIsUpToDate,Mode=TwoWay}" />
+						<!-- x:Name="waferCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>  -->
+					</Canvas>
+				</xctk:Zoombox>
+			</Grid>
+
+			<!-- Footer -->
+			<Grid  Grid.Row="2" Style="{DynamicResource UnityGridStyle}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="auto" />
+					<ColumnDefinition Width="auto" />
+				</Grid.ColumnDefinitions>
+
+				<Menu>
+					<!-- The 'fit content' button.  Causes the content to be scaled so that all the graph nodes fit in the viewport.-->
+					<MenuItem
+                    Click="FitContent"
+                    Header="Fit"
+                    Style="{DynamicResource UnityMenuItemStyle}"
+                    ToolTip="Fit the entire content area to the viewport" />
+
+					<!--
+                    The fill button.  Causes the content to be scaled so that it fits in the viewport.
+                -->
+					<MenuItem
+                    Click="Fill"
+                    Header="Fill"
+                    Style="{DynamicResource UnityMenuItemStyle}"
+                    ToolTip="Fill the entire content area to the viewport" />
+
+					<!--  Button to zoom out.  -->
+					<MenuItem
+                    Click="ZoomOut"
+                    Header="-"
+                    Style="{DynamicResource UnityMenuItemStyle}"
+                    Margin="0,0,-3,0"
+                    ToolTip="Zoom out from the content" />
+				</Menu>
+
+				<!--  Slider to change the current zoom level.  -->
+				<Slider Grid.Column="1" Margin="0,5" LargeChange="0.4" Maximum="20" Minimum="0.01" SmallChange="0.2" TickFrequency="0.4" TickPlacement="TopLeft"
+						ToolTip="Change the zoom level of the content" Value="{Binding ElementName=ZoomBox, Path=Scale}" />
+
+				<Menu Grid.Column="2">
+					<MenuItem
+                    Click="ZoomIn"
+                    Header="+"
+                    Style="{DynamicResource UnityMenuItemStyle}"
+                    ToolTip="Zoom in on the content" />
+				</Menu>
+				<StackPanel Grid.Column="3" Orientation="Horizontal" Margin="0,2" HorizontalAlignment="Left">
+					<GridSplitter Width="2"   Background="{StaticResource SplitterColor}"/>
+					<TextBlock Text="Defect display Factor"  Margin="6,0,2,0" VerticalAlignment="Center" Foreground="#FFF7F4F4" />
+					<xctk:IntegerUpDown Margin="2,0" VerticalAlignment="Center" Value="{Binding DefectFactorSize}" Minimum="1" Increment="1"/>
+					<TextBlock Text="Defect display Min size (µm)"  Margin="6,0,2,0" VerticalAlignment="Center"  Foreground="#FFF7F4F4" />
+					<xctk:IntegerUpDown Margin="2,0" VerticalAlignment="Center" Value="{Binding DefectMinSize}" Minimum="0" MinWidth="50" Increment="500"/>
+					
+				</StackPanel>
+			</Grid>
+
+		</Grid>
+	</Border>
+</UserControl>

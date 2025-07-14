@@ -1,0 +1,245 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.HAZE.View.Stats.HazeStatsView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.ResultUI.Common.Controls;assembly=UnitySC.Shared.ResultUI.Common"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:lcusb="http://schemas.lightningchart.com/chartingMVVM/"
+	xmlns:localDto="clr-namespace:UnitySC.DataAccess.Dto.ModelDto.LocalDto;assembly=UnitySC.DataAccess.Dto"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:stats="clr-namespace:UnitySC.Shared.ResultUI.HAZE.ViewModel.Stats"
+	d:DataContext="{d:DesignInstance stats:HazeStatsVM, IsDesignTimeCreatable=False}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	DataContextChanged="OnDataContextChanged"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.HAZE;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<Grid Margin="4,1">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<controls:LotStatsHeader />
+
+		<StackPanel
+			Grid.Row="1"
+			Margin="0,5,0,0"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Center"
+			Orientation="Horizontal">
+			<Label
+				VerticalAlignment="Center"
+				Content="Haze map" />
+			<ComboBox SelectedIndex="{Binding SelectedHazeType, Mode=TwoWay}">
+				<ComboBoxItem>Wide</ComboBoxItem>
+				<ComboBoxItem>Narrow</ComboBoxItem>
+				<ComboBoxItem>Total</ComboBoxItem>
+			</ComboBox>
+		</StackPanel>
+
+		<Grid Grid.Row="2">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<ListView
+				Grid.Row="0"
+				Margin="0,5,0,0"
+				ItemsSource="{Binding WaferResultDatas}"
+				ScrollViewer.HorizontalScrollBarVisibility="Auto">
+				<ListView.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+					</Style>
+				</ListView.ItemContainerStyle>
+				<ListView.View>
+					<GridView>
+						<GridViewColumn
+							Width="Auto"
+							Header="SlotId">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type localDto:WaferResultData}">
+									<TextBlock Text="{Binding SlotId}" />
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn
+							Width="80"
+							Header="State">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type localDto:WaferResultData}">
+									<ContentPresenter ContentTemplate="{StaticResource ResultStateCellTemplate}">
+										<ContentPresenter.Content>
+											<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+												<Binding
+													Path="DataContext.IntToResultStateStringFunc"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+												<Binding Path="ResultItem.State" />
+											</MultiBinding>
+										</ContentPresenter.Content>
+									</ContentPresenter>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn
+							Width="100"
+							Header="Min (ppm)">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type localDto:WaferResultData}">
+									<TextBlock HorizontalAlignment="Right">
+										<TextBlock.Text>
+											<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+												<Binding
+													Path="DataContext.WaferResultToMinFunc"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+												<Binding Path="." />
+												<Binding
+													Path="DataContext.SelectedHazeType"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+											</MultiBinding>
+										</TextBlock.Text>
+									</TextBlock>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn
+							Width="100"
+							Header="Max (ppm)">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type localDto:WaferResultData}">
+									<TextBlock HorizontalAlignment="Right">
+										<TextBlock.Text>
+											<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+												<Binding
+													Path="DataContext.WaferResultToMaxFunc"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+												<Binding Path="." />
+												<Binding
+													Path="DataContext.SelectedHazeType"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+											</MultiBinding>
+										</TextBlock.Text>
+									</TextBlock>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn
+							Width="100"
+							Header="Avg (ppm)">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type localDto:WaferResultData}">
+									<TextBlock HorizontalAlignment="Right">
+										<TextBlock.Text>
+											<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+												<Binding
+													Path="DataContext.WaferResultToMeanFunc"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+												<Binding Path="." />
+												<Binding
+													Path="DataContext.SelectedHazeType"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+											</MultiBinding>
+										</TextBlock.Text>
+									</TextBlock>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+						<GridViewColumn
+							Width="100"
+							Header="Std Dev (ppm)">
+							<GridViewColumn.CellTemplate>
+								<DataTemplate DataType="{x:Type localDto:WaferResultData}">
+									<TextBlock HorizontalAlignment="Right">
+										<TextBlock.Text>
+											<MultiBinding Converter="{StaticResource InvokeFuncMultiConverter}">
+												<Binding
+													Path="DataContext.WaferResultToStdDevFunc"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+												<Binding Path="." />
+												<Binding
+													Path="DataContext.SelectedHazeType"
+													RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+											</MultiBinding>
+										</TextBlock.Text>
+									</TextBlock>
+								</DataTemplate>
+							</GridViewColumn.CellTemplate>
+						</GridViewColumn>
+					</GridView>
+				</ListView.View>
+			</ListView>
+
+			<GridSplitter
+				Grid.Row="1"
+				Height="5"
+				Margin="0,5,0,0"
+				HorizontalAlignment="Stretch" />
+
+			<lcusb:LightningChart
+				x:Name="Chart"
+				Grid.Row="2"
+				AfterRendering="Chart_AfterRendering"
+				ChartName="Profile">
+				<lcusb:LightningChart.Title>
+					<lcusb:ChartTitle
+						Text="Pareto"
+						Visible="False" />
+				</lcusb:LightningChart.Title>
+				<lcusb:LightningChart.ViewXY>
+					<lcusb:ViewXY
+						BarSeries="{Binding BarSeriesCollection}"
+						DropOldSeriesData="False"
+						FreeformPointLineSeries="{Binding Freeforms}">
+						<lcusb:ViewXY.AxisLayout>
+							<lcusb:AxisLayout AxisGridStrips="X" />
+						</lcusb:ViewXY.AxisLayout>
+						<lcusb:ViewXY.XAxes>
+							<lcusb:AxisX
+								AutoFormatLabels="False"
+								CustomTicks="{Binding CustomAxisXTicks}"
+								CustomTicksEnabled="True"
+								ValueType="Number"
+								Visible="True">
+								<lcusb:AxisX.Title>
+									<lcusb:AxisXTitle Visible="False" />
+								</lcusb:AxisX.Title>
+							</lcusb:AxisX>
+						</lcusb:ViewXY.XAxes>
+						<lcusb:ViewXY.YAxes>
+							<lcusb:AxisY Visible="True">
+								<lcusb:AxisY.Title>
+									<lcusb:AxisYTitle Text="ppm" />
+								</lcusb:AxisY.Title>
+							</lcusb:AxisY>
+						</lcusb:ViewXY.YAxes>
+						<lcusb:ViewXY.BarViewOptions>
+							<lcusb:BarViewOptions
+								BarSpacing="0"
+								Grouping="ByLocation"
+								IndexGroupingFitGroupDistance="0"
+								IndexGroupingFitSideMargins="10" />
+						</lcusb:ViewXY.BarViewOptions>
+						<lcusb:ViewXY.ZoomPanOptions>
+							<lcusb:ZoomPanOptions ViewFitYMarginPixels="10">
+								<lcusb:ZoomPanOptions.AutoYFit>
+									<lcusb:AutoYFit Enabled="False" />
+								</lcusb:ZoomPanOptions.AutoYFit>
+							</lcusb:ZoomPanOptions>
+						</lcusb:ViewXY.ZoomPanOptions>
+					</lcusb:ViewXY>
+				</lcusb:LightningChart.ViewXY>
+			</lcusb:LightningChart>
+		</Grid>
+	</Grid>
+</UserControl>

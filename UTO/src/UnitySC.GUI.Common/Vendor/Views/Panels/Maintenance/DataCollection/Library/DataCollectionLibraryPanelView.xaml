@@ -1,0 +1,530 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Library.DataCollectionLibraryPanelView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:dataMonitoring="clr-namespace:Agileo.DataMonitoring;assembly=Agileo.DataMonitoring"
+	xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:device="clr-namespace:Agileo.DataMonitoring.DataSource.Device;assembly=Agileo.DataMonitoring.DataSource.Device"
+	xmlns:library="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Library"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:messageDataBus="clr-namespace:Agileo.DataMonitoring.DataSource.MessageDataBus;assembly=Agileo.DataMonitoring.DataSource.MessageDataBus"
+	xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+	xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+	xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+	xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors"
+	x:Name="DataCollectionLibrary"
+	d:DataContext="{d:DesignInstance library:DataCollectionLibraryPanel, IsDesignTimeCreatable=False}"
+	d:DesignHeight="{StaticResource DesignHeight}"
+	d:DesignWidth="{StaticResource DesignWidth}"
+	Style="{StaticResource BusinessPanelViewStyle}"
+	mc:Ignorable="d">
+	<DockPanel>
+
+		<!--#region Expander part-->
+		<Expander
+			BorderThickness="1,0,0,0"
+			DockPanel.Dock="Right"
+			ExpandDirection="Left"
+			IsExpanded="{Binding DetailsIsExpanded}">
+			<Expander.Header>
+				<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.DETAILS}">
+					<TextBlock.LayoutTransform>
+						<RotateTransform Angle="90" />
+					</TextBlock.LayoutTransform>
+				</TextBlock>
+			</Expander.Header>
+			<Expander.Style>
+				<Style
+					BasedOn="{StaticResource {x:Type Expander}}"
+					TargetType="Expander">
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding DataCollectionDetailsViewModel.IsEditing}" Value="True">
+							<Setter Property="Template" Value="{StaticResource ExpanderWithoutHeaderTemplate}" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Expander.Style>
+			<ContentControl
+				Width="800"
+				Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}"
+				Content="{Binding DataCollectionDetailsViewModel}">
+				<ContentControl.ContentTemplate>
+					<DataTemplate DataType="{x:Type library:DataCollectionDetailsViewModel}">
+						<Grid Margin="20">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="20" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<controls:PropertyEditor
+								x:Name="NamePropertyEditor"
+								Margin="{StaticResource HorizontalStackPropertyMargin}"
+								PropertyName="{localize:Static library:DataCollectionLibraryResources.NAME}"
+								Visibility="{Binding DataCollectionPlan, Converter={StaticResource NullToCollapsedConverter}}">
+								<TextBox Text="{Binding DcpName, UpdateSourceTrigger=PropertyChanged}" />
+							</controls:PropertyEditor>
+							<controls:PropertyEditor
+								x:Name="DescriptionPropertyEditor"
+								Grid.Row="1"
+								Grid.Column="0"
+								Grid.ColumnSpan="3"
+								Margin="{StaticResource HorizontalStackPropertyMargin}"
+								PropertyName="{localize:Static library:DataCollectionLibraryResources.DESCRIPTION}">
+								<TextBox
+									Height="100"
+									VerticalContentAlignment="Top"
+									AcceptsReturn="True"
+									Text="{Binding DcpDescription, UpdateSourceTrigger=PropertyChanged}" />
+							</controls:PropertyEditor>
+							<controls:PropertyEditor
+								x:Name="FrequencyPropertyEditor"
+								Grid.Row="0"
+								Grid.Column="2"
+								Margin="{StaticResource HorizontalStackPropertyMargin}"
+								PropertyName="{localize:Static library:DataCollectionLibraryResources.DCP_FREQUENCY}"
+								Visibility="Collapsed">
+								<WrapPanel
+									x:Name="FrequencyText"
+									Margin="0,5"
+									Orientation="Horizontal">
+									<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.ACQUISITION_FREQ_SENTENCE_LEFT_PART}" />
+									<TextBlock
+										Margin="2,0"
+										FontWeight="Bold"
+										Text="{Binding SelectedDcpPeriod}" />
+									<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.ACQUISITION_FREQ_SENTENCE_RIGHT_PART}" />
+								</WrapPanel>
+							</controls:PropertyEditor>
+							<controls:PropertyEditor
+								x:Name="FrequencyPropertyEditorTextBox"
+								Grid.Row="0"
+								Grid.Column="2"
+								Margin="{StaticResource HorizontalStackPropertyMargin}"
+								PropertyName="{localize:Static library:DataCollectionLibraryResources.DCP_FREQUENCY}">
+								<TextBox Text="{Binding DcpFrequency, UpdateSourceTrigger=PropertyChanged}" />
+							</controls:PropertyEditor>
+
+							<GroupBox
+								x:Name="SourceGroupBox"
+								Grid.Row="3"
+								Grid.Column="0"
+								Grid.ColumnSpan="3"
+								Height="300"
+								Margin="{StaticResource HorizontalStackPropertyMargin}"
+								Padding="{StaticResource GroupBoxNoPaddingThickness}"
+								BorderThickness="1"
+								DockPanel.Dock="Bottom"
+								Header="{localize:Static library:DataCollectionLibraryResources.SOURCES}">
+								<DockPanel>
+									<StackPanel
+										x:Name="SourceButtonBox"
+										Margin="10"
+										DockPanel.Dock="Bottom"
+										Orientation="Horizontal"
+										SnapsToDevicePixels="True">
+										<Button
+											dependencyObjects:Icon.Geometry="{DynamicResource AddIcon}"
+											Command="{Binding AddCommand}"
+											CommandParameter="Source"
+											Style="{StaticResource SquareIconifiedButtonStyle}"
+											ToolTip="{localize:Static library:DataCollectionLibraryResources.DCP_EDITOR_ADD_SOURCE_TOOLTIP}" />
+										<Button
+											Margin="10,0"
+											dependencyObjects:Icon.Geometry="{DynamicResource DeleteIcon}"
+											Command="{Binding RemoveCommand}"
+											CommandParameter="Source"
+											Style="{StaticResource SquareIconifiedButtonStyle}"
+											ToolTip="{localize:Static library:DataCollectionLibraryResources.DCP_EDITOR_REMOVE_SOURCE_TOOLTIP}" />
+									</StackPanel>
+									<TabControl>
+										<TabItem Visibility="{Binding DcpSourcesDevices, Converter={StaticResource CollectionHasItemsToVisibilityConverter}}">
+											<TabItem.Header>
+												<TextBlock
+													FontSize="{StaticResource FontSizeHeader}"
+													Text="{localize:Static library:DataCollectionLibraryResources.DEVICE}">
+													<Run Text=" (" /><Run Text="{Binding DcpSourcesDevices.Count, Mode=OneWay}" /><Run>)</Run>
+												</TextBlock>
+											</TabItem.Header>
+											<ListView
+												HorizontalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												Background="Transparent"
+												ItemsSource="{Binding DcpSourcesDevices}"
+												SelectedItem="{Binding SelectedDcpSource}"
+												Visibility="{Binding DcpSourcesDevices, Converter={StaticResource CollectionHasItemsToVisibilityConverter}}">
+												<ListView.ItemContainerStyle>
+													<Style
+														BasedOn="{StaticResource GridViewItemStyle}"
+														TargetType="{x:Type ListViewItem}">
+														<Setter Property="BorderBrush" Value="Transparent" />
+														<!--<Setter Property="Height" Value="35" />-->
+													</Style>
+												</ListView.ItemContainerStyle>
+												<ListView.View>
+													<GridView AllowsColumnReorder="True">
+														<GridView.Columns>
+															<!--#region Name-->
+															<GridViewColumn Width="393">
+																<GridViewColumnHeader>
+																	<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.SOURCE_NAME}" />
+																</GridViewColumnHeader>
+																<GridViewColumn.CellTemplateSelector>
+																	<dataTemplateSelectors:GenericDataTemplateSelector>
+																		<DataTemplate DataType="{x:Type device:DeviceDataSource}">
+																			<TextBlock
+																				Text="{Binding Source.Name, Converter={StaticResource TextToHumanizedTextConverter}}"
+																				TextAlignment="Left" />
+																		</DataTemplate>
+																	</dataTemplateSelectors:GenericDataTemplateSelector>
+																</GridViewColumn.CellTemplateSelector>
+															</GridViewColumn>
+															<!--#endregion Name-->
+															<!--#region Status-->
+															<GridViewColumn Width="180">
+																<GridViewColumnHeader>
+																	<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.STATUS}" />
+																</GridViewColumnHeader>
+																<GridViewColumn.CellTemplateSelector>
+																	<dataTemplateSelectors:GenericDataTemplateSelector>
+																		<DataTemplate DataType="{x:Type device:DeviceDataSource}">
+																			<TextBlock
+																				Text="{Binding Status.Name, Converter={StaticResource TextToHumanizedTextConverter}}"
+																				TextAlignment="Left" />
+																		</DataTemplate>
+																	</dataTemplateSelectors:GenericDataTemplateSelector>
+																</GridViewColumn.CellTemplateSelector>
+															</GridViewColumn>
+															<!--#endregion Status-->
+															<!--#region Type-->
+															<GridViewColumn Width="112">
+																<GridViewColumnHeader>
+																	<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.TYPE}" />
+																</GridViewColumnHeader>
+																<GridViewColumn.CellTemplate>
+																	<DataTemplate DataType="dataMonitoring:IDataSource">
+																		<TextBlock
+																			Text="{Binding Information.SourceUnitName, Converter={StaticResource TextToHumanizedTextConverter}}"
+																			TextAlignment="Left" />
+																	</DataTemplate>
+																</GridViewColumn.CellTemplate>
+															</GridViewColumn>
+															<!--#endregion Type-->
+															<!--#region Unit-->
+															<GridViewColumn Width="70">
+																<GridViewColumnHeader>
+																	<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.UNIT}" />
+																</GridViewColumnHeader>
+																<GridViewColumn.CellTemplate>
+																	<DataTemplate DataType="dataMonitoring:IDataSource">
+																		<TextBlock
+																			Text="{Binding Information.SourceUnitAbbreviation}"
+																			TextAlignment="Left" />
+																	</DataTemplate>
+																</GridViewColumn.CellTemplate>
+															</GridViewColumn>
+															<!--#endregion Unit-->
+														</GridView.Columns>
+													</GridView>
+												</ListView.View>
+											</ListView>
+										</TabItem>
+										<TabItem Visibility="{Binding DcpSourcesMdb, Converter={StaticResource CollectionHasItemsToVisibilityConverter}}">
+											<TabItem.Header>
+												<TextBlock
+													FontSize="{StaticResource FontSizeHeader}"
+													Text="{localize:Static library:DataCollectionLibraryResources.TAG}">
+													<Run Text=" (" /><Run Text="{Binding DcpSourcesMdb.Count, Mode=OneWay}" /><Run>)</Run>
+												</TextBlock>
+											</TabItem.Header>
+											<ListView
+												HorizontalAlignment="Stretch"
+												HorizontalContentAlignment="Stretch"
+												Background="Transparent"
+												ItemsSource="{Binding DcpSourcesMdb}"
+												SelectedItem="{Binding SelectedDcpSource}"
+												Visibility="{Binding DcpSourcesMdb, Converter={StaticResource CollectionHasItemsToVisibilityConverter}}">
+												<ListView.ItemContainerStyle>
+													<Style
+														BasedOn="{StaticResource GridViewItemStyle}"
+														TargetType="{x:Type ListViewItem}">
+														<Setter Property="BorderBrush" Value="Transparent" />
+														<!--<Setter Property="Height" Value="35" />-->
+													</Style>
+												</ListView.ItemContainerStyle>
+												<ListView.View>
+													<GridView AllowsColumnReorder="True">
+														<GridView.Columns>
+															<!--#region Name-->
+															<GridViewColumn Width="670">
+																<GridViewColumnHeader>
+																	<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.NAME}" />
+																</GridViewColumnHeader>
+																<GridViewColumn.CellTemplateSelector>
+																	<dataTemplateSelectors:GenericDataTemplateSelector>
+																		<DataTemplate DataType="{x:Type messageDataBus:MdbTagDataSource}">
+																			<TextBlock
+																				Text="{Binding Source.Name, Converter={StaticResource TextToHumanizedTextConverter}}"
+																				TextAlignment="Left" />
+																		</DataTemplate>
+																	</dataTemplateSelectors:GenericDataTemplateSelector>
+																</GridViewColumn.CellTemplateSelector>
+															</GridViewColumn>
+															<!--#endregion Name-->
+															<!--#region Unit-->
+															<GridViewColumn Width="85">
+																<GridViewColumnHeader>
+																	<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.UNIT}" />
+																</GridViewColumnHeader>
+																<GridViewColumn.CellTemplate>
+																	<DataTemplate DataType="dataMonitoring:IDataSource">
+																		<TextBlock
+																			Text="{Binding Information.SourceUnitAbbreviation}"
+																			TextAlignment="Left" />
+																	</DataTemplate>
+																</GridViewColumn.CellTemplate>
+															</GridViewColumn>
+															<!--#endregion Unit-->
+														</GridView.Columns>
+													</GridView>
+												</ListView.View>
+											</ListView>
+										</TabItem>
+									</TabControl>
+								</DockPanel>
+							</GroupBox>
+							<GroupBox
+								x:Name="WriterGroupBox"
+								Grid.Row="4"
+								Grid.Column="0"
+								Grid.ColumnSpan="3"
+								Margin="{StaticResource HorizontalStackPropertyMargin}"
+								Padding="{StaticResource GroupBoxNoPaddingThickness}"
+								BorderThickness="1"
+								Header="{localize:Static library:DataCollectionLibraryResources.WRITERS}">
+								<DockPanel>
+									<StackPanel
+										x:Name="WriterButtonBox"
+										Margin="10"
+										DockPanel.Dock="Bottom"
+										Orientation="Horizontal">
+										<Button
+											dependencyObjects:Icon.Geometry="{DynamicResource AddIcon}"
+											Command="{Binding AddCommand}"
+											CommandParameter="Writer"
+											Style="{StaticResource SquareIconifiedButtonStyle}"
+											ToolTip="{localize:Static library:DataCollectionLibraryResources.DCP_EDITOR_ADD_WRITER_TOOLTIP}" />
+										<Button
+											Margin="10,0"
+											dependencyObjects:Icon.Geometry="{DynamicResource DeleteIcon}"
+											Command="{Binding RemoveCommand}"
+											CommandParameter="Writer"
+											Style="{StaticResource SquareIconifiedButtonStyle}"
+											ToolTip="{localize:Static library:DataCollectionLibraryResources.DCP_EDITOR_REMOVE_WRITER_TOOLTIP}" />
+										<Button
+											dependencyObjects:Icon.Geometry="{DynamicResource EditIcon}"
+											Command="{Binding EditDataWriterCommand}"
+											CommandParameter="Writer"
+											Style="{StaticResource SquareIconifiedButtonStyle}"
+											ToolTip="{localize:Static library:DataCollectionLibraryResources.DCP_EDITOR_EDIT_WRITER_TOOLTIP}" />
+									</StackPanel>
+									<ListView
+										ItemsSource="{Binding DcpWriters}"
+										SelectedItem="{Binding SelectedDcpWriter}">
+										<ListView.View>
+											<GridView AllowsColumnReorder="True">
+												<GridView.Columns>
+													<!--#region Type-->
+													<GridViewColumn Width="220">
+														<GridViewColumnHeader>
+															<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.TYPE}" />
+														</GridViewColumnHeader>
+														<GridViewColumn.CellTemplate>
+															<DataTemplate DataType="{x:Type dataMonitoring:IDataWriter}">
+																<TextBlock
+																	Text="{Binding TypeName, Mode=OneWay}"
+																	TextAlignment="Left" />
+															</DataTemplate>
+														</GridViewColumn.CellTemplate>
+													</GridViewColumn>
+													<!--#endregion Type-->
+													<!--#region Details-->
+													<GridViewColumn Width="500">
+														<GridViewColumnHeader>
+															<TextBlock Text="{localize:Static library:DataCollectionLibraryResources.DETAILS}" />
+														</GridViewColumnHeader>
+														<GridViewColumn.CellTemplate>
+															<DataTemplate DataType="{x:Type dataMonitoring:IDataWriter}">
+																<TextBlock
+																	Text="{Binding Description, Mode=OneWay}"
+																	TextAlignment="Left"
+																	TextWrapping="WrapWithOverflow" />
+															</DataTemplate>
+														</GridViewColumn.CellTemplate>
+													</GridViewColumn>
+													<!--#endregion Details-->
+												</GridView.Columns>
+											</GridView>
+										</ListView.View>
+									</ListView>
+								</DockPanel>
+							</GroupBox>
+
+							<TextBlock
+								Grid.Row="0"
+								Grid.Column="0"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								Text="{localize:Static library:DataCollectionLibraryResources.NO_DCP_SELECTED}"
+								Visibility="Collapsed" />
+						</Grid>
+						<DataTemplate.Triggers>
+							<DataTrigger Value="True">
+								<DataTrigger.Binding>
+									<MultiBinding Converter="{StaticResource OrOperatorMultiValueConverter}">
+										<Binding
+											Converter="{StaticResource NullToTrueConverter}"
+											Path="." />
+										<Binding
+											Converter="{StaticResource InvertedBoolConverter}"
+											Path="IsEditing" />
+									</MultiBinding>
+								</DataTrigger.Binding>
+
+								<Setter TargetName="SourceButtonBox" Property="Visibility" Value="Collapsed" />
+								<Setter TargetName="WriterButtonBox" Property="Visibility" Value="Collapsed" />
+								<Setter TargetName="FrequencyPropertyEditor" Property="Visibility" Value="Visible" />
+								<Setter TargetName="FrequencyPropertyEditorTextBox" Property="Visibility" Value="Collapsed" />
+
+								<Setter TargetName="NamePropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="NamePropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding DcpName}" />
+									</Setter.Value>
+								</Setter>
+
+								<Setter TargetName="DescriptionPropertyEditor" Property="Style" Value="{StaticResource BorderedPropertyEditorStyle}" />
+								<Setter TargetName="DescriptionPropertyEditor" Property="Content">
+									<Setter.Value>
+										<TextBlock Text="{Binding DcpDescription}" />
+									</Setter.Value>
+								</Setter>
+							</DataTrigger>
+						</DataTemplate.Triggers>
+					</DataTemplate>
+				</ContentControl.ContentTemplate>
+			</ContentControl>
+		</Expander>
+
+		<!--#endregion Expander part-->
+		<dataTables:DataTable
+			DataSource="{Binding DataTableSource}"
+			IsEnabled="{Binding IsEditing, Converter={StaticResource InvertedBoolConverter}}"
+			SelectedItem="{Binding SelectedDcp}">
+			<dataTables:DataTable.BottomAdditionalContent>
+				<StackPanel
+					Margin="10"
+					Orientation="Horizontal"
+					Visibility="{Binding IsTemporaryLibrary, Converter={StaticResource BooleanToVisibilityConverter}}">
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource AddIcon}"
+						Command="{Binding AddDcpCommand}"
+						IsEnabled="{Binding AddDcpCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static library:DataCollectionLibraryResources.ADD_DCP_TOOLTIP}" />
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource DeleteIcon}"
+						Command="{Binding DeleteDcpCommand}"
+						IsEnabled="{Binding DeleteDcpCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static library:DataCollectionLibraryResources.DELETE_DCP}" />
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource DuplicateIcon}"
+						Command="{Binding DuplicateDcpCommand}"
+						IsEnabled="{Binding DuplicateDcpCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static library:DataCollectionLibraryResources.DUPLICATE_DCP_TOOLTIP}" />
+					<Button
+						Margin="0,0,10,0"
+						dependencyObjects:Icon.Geometry="{DynamicResource EditIcon}"
+						Command="{Binding EditDcpCommand}"
+						IsEnabled="{Binding EditDcpCommand.IsEnabled}"
+						Style="{StaticResource SquareIconifiedButtonStyle}"
+						ToolTip="{localize:Static library:DataCollectionLibraryResources.EDIT_DCP_TOOLTIP}" />
+				</StackPanel>
+			</dataTables:DataTable.BottomAdditionalContent>
+
+			<GridView AllowsColumnReorder="True">
+
+				<!--#region Name-->
+				<dataTables:DataTableColumn
+					Width="200"
+					DisplayName="{localize:Static library:DataCollectionLibraryResources.NAME}"
+					SortKey="Name">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="dataMonitoring:DataCollectionPlan">
+							<TextBlock
+								Text="{Binding Name}"
+								TextAlignment="Left" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion Name-->
+
+				<!--#region SourcesCount-->
+				<dataTables:DataTableColumn
+					Width="150"
+					DisplayName="{localize:Static library:DataCollectionLibraryResources.SRC_COUNT}"
+					SortKey="DataSources.Count">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="dataMonitoring:DataCollectionPlan">
+							<TextBlock
+								Text="{Binding DataSources.Count}"
+								TextAlignment="Left" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion SourcesCount-->
+
+				<!--#region WritersCount-->
+				<dataTables:DataTableColumn
+					Width="150"
+					DisplayName="{localize:Static library:DataCollectionLibraryResources.WRITERS_COUNT}"
+					SortKey="DataWriters.Count">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="dataMonitoring:DataCollectionPlan">
+							<TextBlock
+								Text="{Binding DataWriters.Count}"
+								TextAlignment="Left" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion WritersCount-->
+
+				<!--#region AcquisitionFrequency-->
+				<dataTables:DataTableColumn
+					Width="250"
+					DisplayName="{localize:Static library:DataCollectionLibraryResources.ACQUISITION_FREQ}"
+					SortKey="Frequency">
+					<GridViewColumn.CellTemplate>
+						<DataTemplate DataType="dataMonitoring:DataCollectionPlan">
+							<TextBlock Text="{Binding Frequency}" />
+						</DataTemplate>
+					</GridViewColumn.CellTemplate>
+				</dataTables:DataTableColumn>
+				<!--#endregion AcquisitionFrequency-->
+
+			</GridView>
+		</dataTables:DataTable>
+	</DockPanel>
+</UserControl>

@@ -1,0 +1,142 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.ChartVisualization.Popups.SetupGraphPopupView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:chartVisualization="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.ChartVisualization"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:model="clr-namespace:Agileo.LineCharts.Abstractions.Model;assembly=Agileo.LineCharts.Abstractions"
+	xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+	xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+	d:DesignHeight="300"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+	<TabControl>
+		<TabItem Header="{localize:Static chartVisualization:ProcessDataVisualizationResources.Y_SCALE}">
+			<!--
+				Border.MaxHeight must be a number validating the equation x = 2 + 40 + n*46, where:
+				2 is the BorderThickness applied twice (once at the bottom and once at the top),
+				40 is the header height,
+				n is the number of lines to display without scrolling,
+				46 is line-height.
+				There will be an empty line at the end of the list view when scrollable if the equation above can not generate the MaxHeight.
+			-->
+			<Border
+				MaxHeight="272"
+				Margin="0,10,0,0"
+				BorderBrush="{StaticResource MainWindowsBackground}"
+				BorderThickness="1">
+				<ListView
+					d:DataContext="{d:DesignData Type=popups:SetupGraphPopup}"
+					ItemsSource="{Binding Axis}">
+					<ListView.View>
+						<GridView AllowsColumnReorder="True">
+							<GridView.Columns>
+								<!--#region SourceType-->
+								<GridViewColumn Width="200">
+									<GridViewColumnHeader>
+										<TextBlock Text="{localize:Static chartVisualization:ProcessDataVisualizationResources.SRC_TYPE}" />
+									</GridViewColumnHeader>
+									<GridViewColumn.CellTemplate>
+										<DataTemplate DataType="{x:Type model:IAxis}">
+											<TextBlock
+												Text="{Binding Name}"
+												TextAlignment="Left" />
+										</DataTemplate>
+									</GridViewColumn.CellTemplate>
+								</GridViewColumn>
+								<!--#endregion SourceType-->
+								<!--#region Min-->
+								<GridViewColumn Width="300">
+									<GridViewColumnHeader>
+										<TextBlock Text="{localize:Static chartVisualization:ProcessDataVisualizationResources.Y_MIN}" />
+									</GridViewColumnHeader>
+									<GridViewColumn.CellTemplate>
+										<DataTemplate DataType="{x:Type model:IAxis}">
+											<DockPanel>
+												<TextBox
+													Width="150"
+													DockPanel.Dock="Left"
+													KeyDown="AxisMinimum_OnKeyDown"
+													Text="{Binding Minimum, Converter={StaticResource NaNDoubleToAutoStringConverter}}"
+													TextAlignment="Left" />
+												<TextBlock
+													Margin="5,0"
+													VerticalAlignment="Center"
+													Text="{Binding Unit}"
+													TextAlignment="Left" />
+											</DockPanel>
+										</DataTemplate>
+									</GridViewColumn.CellTemplate>
+								</GridViewColumn>
+								<!--#endregion Min-->
+								<!--#region Max-->
+								<GridViewColumn Width="300">
+									<GridViewColumnHeader>
+										<TextBlock Text="{localize:Static chartVisualization:ProcessDataVisualizationResources.Y_MAX}" />
+									</GridViewColumnHeader>
+									<GridViewColumn.CellTemplate>
+										<DataTemplate DataType="{x:Type model:IAxis}">
+											<DockPanel>
+												<TextBox
+													Width="150"
+													DockPanel.Dock="Left"
+													KeyDown="AxisMaximum_OnKeyDown"
+													Text="{Binding Maximum, Converter={StaticResource NaNDoubleToAutoStringConverter}}"
+													TextAlignment="Left" />
+												<TextBlock
+													Margin="5,0"
+													VerticalAlignment="Center"
+													Text="{Binding Unit}"
+													TextAlignment="Left" />
+											</DockPanel>
+										</DataTemplate>
+									</GridViewColumn.CellTemplate>
+								</GridViewColumn>
+								<!--#endregion Max-->
+							</GridView.Columns>
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</Border>
+		</TabItem>
+		<TabItem
+			d:DataContext="{d:DesignData Type=popups:SetupGraphPopup}"
+			Header="{localize:Static chartVisualization:ProcessDataVisualizationResources.X_SCALE}"
+			Visibility="{Binding IsRealTimeChart, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<ScrollViewer
+				MaxHeight="200"
+				Margin="5"
+				HorizontalScrollBarVisibility="Disabled"
+				VerticalScrollBarVisibility="Auto">
+				<Grid>
+					<GroupBox Header="{localize:Static chartVisualization:ProcessDataVisualizationResources.SLIDING_WINDOW}">
+						<StackPanel IsEnabled="{Binding IsChecked, ElementName=SlidingModeCheckBox}">
+							<TextBlock
+								Width="310"
+								VerticalAlignment="Center"
+								Text="{localize:Static chartVisualization:ProcessDataVisualizationResources.WINDOW_SIZE}" />
+							<controls:LocalizedUnitsNet
+								d:DataContext="{d:DesignData Type=popups:SetupGraphPopup}"
+								IsEnabled="True"
+								IsUnitFixed="False"
+								Quantity="{Binding DurationRange, Mode=TwoWay}"
+								UnitWidth="80" />
+						</StackPanel>
+					</GroupBox>
+
+					<CheckBox
+						x:Name="SlidingModeCheckBox"
+						Margin="10"
+						HorizontalAlignment="Right"
+						VerticalAlignment="Top"
+						d:DataContext="{d:DesignData Type=popups:SetupGraphPopup}"
+						Foreground="{StaticResource GroupBoxHeaderForeground}"
+						IsChecked="{Binding IsSlidingMode, Mode=TwoWay}"
+						Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+
+				</Grid>
+			</ScrollViewer>
+		</TabItem>
+	</TabControl>
+</UserControl>

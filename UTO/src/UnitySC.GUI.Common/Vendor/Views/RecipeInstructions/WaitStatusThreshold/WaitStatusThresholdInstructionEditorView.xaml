@@ -1,0 +1,276 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitStatusThreshold.WaitStatusThresholdInstructionEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipmentModeling="clr-namespace:Agileo.EquipmentModeling;assembly=Agileo.EquipmentModeling"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:recipeInstructions="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions"
+    xmlns:scenarios="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.Scenarios"
+    xmlns:equipmentTree="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.EquipmentTree"
+    xmlns:waitStatusThreshold="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitStatusThreshold"
+    xmlns:operand="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitStatusThreshold.ViewModels.Operand"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:waitStatusThresholdUi="clr-namespace:UnitySC.GUI.Common.Vendor.Views.RecipeInstructions.WaitStatusThreshold.ViewModels.Operators"
+    xmlns:operators="clr-namespace:UnitySC.GUI.Common.Vendor.Recipes.Instructions.WaitStatusThreshold.Operators"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    x:Name="UserControl"
+    Width="1200"
+    Height="700"
+    d:DataContext="{d:DesignInstance {x:Type waitStatusThreshold:WaitStatusThresholdInstructionEditor}, IsDesignTimeCreatable=True}"
+    Background="{DynamicResource InteractionBackground}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+
+        <DataTemplate
+            x:Key="BoolTemplate"
+            DataType="{x:Type operand:BooleanThresholdOperandViewModel}">
+            <controls:ChipsSelector SelectedItem="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged}">
+                <controls:ChipsSelector.Items>
+                    <system:Boolean>True</system:Boolean>
+                    <system:Boolean>False</system:Boolean>
+                </controls:ChipsSelector.Items>
+                <controls:ChipsSelector.ItemTemplateSelector>
+                    <dataTemplateSelectors:EqualityDataTemplateSelector>
+                        <dataTemplateSelectors:EqualityDataTemplate
+                            DataType="{x:Type system:Boolean}"
+                            ValueToCompare="True">
+                            <TextBlock Text="{localize:Static scenarios:ScenarioResources.SCENARIO_TRUE}" />
+                        </dataTemplateSelectors:EqualityDataTemplate>
+                        <dataTemplateSelectors:EqualityDataTemplate
+                            DataType="{x:Type system:Boolean}"
+                            ValueToCompare="False">
+                            <TextBlock Text="{localize:Static scenarios:ScenarioResources.SCENARIO_FALSE}" />
+                        </dataTemplateSelectors:EqualityDataTemplate>
+                    </dataTemplateSelectors:EqualityDataTemplateSelector>
+                </controls:ChipsSelector.ItemTemplateSelector>
+            </controls:ChipsSelector>
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="QuantityTemplate"
+            DataType="{x:Type operand:QuantityThresholdOperandViewModel}">
+            <controls:LocalizedUnitsNet
+                IsUnitFixed="True"
+                Quantity="{Binding Model.Quantity, Mode=TwoWay}"
+                ValueChanged="UnitsNet_OnValueChanged" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="NumericTemplate"
+            DataType="{x:Type operand:NumericThresholdOperandViewModel}">
+            <numericBox:DoubleBox
+                LostFocus="UIElement_OnLostFocus"
+                Value="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="StringTemplate"
+            DataType="{x:Type operand:StringThresholdOperandViewModel}">
+            <TextBox
+                VerticalContentAlignment="Center"
+                Text="{Binding Model.Value, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                TextChanged="TextBoxBase_OnTextChanged" />
+        </DataTemplate>
+
+        <DataTemplate
+            x:Key="EnumerableTemplate"
+            DataType="{x:Type operand:EnumerableThresholdOperandViewModel}">
+            <ComboBox
+                ItemsSource="{Binding Literals}"
+                SelectedItem="{Binding Path=TypedValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                SelectionChanged="Selector_OnSelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </DataTemplate>
+
+        <dataTemplateSelectors:GenericDataTemplateSelector x:Key="ParameterTemplateSelector">
+            <StaticResource ResourceKey="BoolTemplate" />
+            <StaticResource ResourceKey="EnumerableTemplate" />
+            <StaticResource ResourceKey="QuantityTemplate" />
+            <StaticResource ResourceKey="NumericTemplate" />
+            <StaticResource ResourceKey="StringTemplate" />
+        </dataTemplateSelectors:GenericDataTemplateSelector>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1.5*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <equipmentTree:EquipmentTreeView DataContext="{Binding EquipmentTree}" />
+
+        <GroupBox
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,20,0"
+            Padding="0,15,0,0"
+            Header="{localize:Static scenarios:ScenarioResources.SCENARIO_STATUSES}">
+            <controls:BindableTreeView ItemsSource="{Binding SelectedDevice.StatusGroups}">
+                <TreeView.ItemTemplateSelector>
+                    <dataTemplateSelectors:GenericDataTemplateSelector>
+                        <HierarchicalDataTemplate
+                            DataType="{x:Type waitStatusThreshold:DeviceStatusThresholdGroupViewModel}"
+                            ItemsSource="{Binding Statuses}">
+                            <TextBlock Text="{Binding UnitName}" />
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type equipmentModeling:DeviceStatus}">
+                            <DockPanel Height="40">
+                                <Button
+                                    Margin="0,0,5,0"
+                                    markupExtensions:Icon.Geometry="{StaticResource AddIcon}"
+                                    Background="Transparent"
+                                    Command="{Binding DataContext.AddStatusCommand, ElementName=UserControl}"
+                                    CommandParameter="{Binding}"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource SquareIconifiedButtonStyle}"
+                                    ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_ADD}"
+                                    Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}, Mode=FindAncestor}, Converter={StaticResource FalseToCollapsedConverter}}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Name}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </dataTemplateSelectors:GenericDataTemplateSelector>
+                </TreeView.ItemTemplateSelector>
+                <TreeView.ItemContainerStyle>
+                    <Style
+                        BasedOn="{StaticResource {x:Type TreeViewItem}}"
+                        TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True" />
+                        <Setter Property="behaviors:TreeViewItemBehaviors.IsReadonly" Value="True" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </controls:BindableTreeView>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Row="0"
+            Grid.Column="2"
+            Header="{localize:Static scenarios:ScenarioResources.SCENARIO_INSTRUCTION_DEFINITION}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl
+                        x:Name="ItemsControl"
+                        VerticalAlignment="Top"
+                        ItemsSource="{Binding Thresholds}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Control x:Name="Control">
+                                    <Control.Template>
+                                        <ControlTemplate>
+                                            <controls:PropertyEditor PropertyName="{Binding Model.HumanizedStatusName}">
+                                                <DockPanel>
+                                                    <ComboBox
+                                                        Margin="0,0,5,0"
+                                                        DockPanel.Dock="Left"
+                                                        ItemsSource="{Binding Model.AvailableWaitingOperators}"
+                                                        SelectedItem="{Binding Model.WaitingOperator, Mode=TwoWay}"
+                                                        SelectionChanged="Selector_OnSelectionChanged">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Text="{Binding Converter={StaticResource WaitingThresholdOperatorToSignStringConverter}}" />
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <Button
+                                                        Margin="0,0,0,0"
+                                                        markupExtensions:Icon.Geometry="{StaticResource DeleteIcon}"
+                                                        Background="Transparent"
+                                                        Command="{Binding DataContext.RemoveCommand, ElementName=ItemsControl}"
+                                                        CommandParameter="{Binding}"
+                                                        DockPanel.Dock="Right"
+                                                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                                                        ToolTip="{localize:Static scenarios:ScenarioResources.SCENARIO_DELETE}" />
+                                                    <ContentControl
+                                                        Content="{Binding}"
+                                                        ContentTemplateSelector="{StaticResource ParameterTemplateSelector}" />
+                                                </DockPanel>
+                                            </controls:PropertyEditor>
+                                        </ControlTemplate>
+                                    </Control.Template>
+                                </Control>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Path=., Converter={StaticResource IsInstanceOfTypeConverter}, ConverterParameter={x:Type waitStatusThresholdUi:ThresholdOperatorViewModel}}" Value="True">
+                                        <Setter TargetName="Control" Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <ComboBox
+                                                        Margin="0,15"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        ItemsSource="{markupExtensions:EnumCollection operators:LogicalOperator}"
+                                                        SelectedItem="{Binding Model.Operator, Mode=TwoWay}"
+                                                        SelectionChanged="Selector_OnSelectionChanged">
+                                                        <ComboBox.ItemTemplateSelector>
+                                                            <dataTemplateSelectors:EqualityDataTemplateSelector>
+                                                                <dataTemplateSelectors:EqualityDataTemplate ValueToCompare="{x:Static operators:LogicalOperator.And}">
+                                                                    <TextBlock Text="{localize:Static scenarios:ScenarioResources.SCENARIO_OPERATOR_AND}" />
+                                                                </dataTemplateSelectors:EqualityDataTemplate>
+                                                                <dataTemplateSelectors:EqualityDataTemplate ValueToCompare="{x:Static operators:LogicalOperator.Or}">
+                                                                    <TextBlock Text="{localize:Static scenarios:ScenarioResources.SCENARIO_OPERATOR_OR}" />
+                                                                </dataTemplateSelectors:EqualityDataTemplate>
+                                                            </dataTemplateSelectors:EqualityDataTemplateSelector>
+                                                        </ComboBox.ItemTemplateSelector>
+                                                    </ComboBox>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </GroupBox>
+
+        <recipeInstructions:TimeoutEditorView
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Margin="20,0,20,20"
+            HorizontalAlignment="Right"
+            DockPanel.Dock="Bottom"
+            IsActive="{Binding IsTimeoutEnabled, Mode=TwoWay}"
+            IsOptional="True"
+            Text="{localize:Static scenarios:ScenarioResources.SCENARIO_USE_TIMEOUT}"
+            Value="{Binding TimeOut, Mode=TwoWay}" />
+
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Margin="20,0,20,20"
+            HorizontalAlignment="Left"
+            behaviors:AdvancedStringFormatTextBlockBehavior.Definitions="{Binding FormattedLabel}"
+            TextTrimming="CharacterEllipsis"
+            TextWrapping="Wrap"
+            ToolTip="{Binding PrettyLabel}" />
+
+    </Grid>
+</UserControl>

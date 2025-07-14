@@ -1,0 +1,34 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Controller.Views.Panels.Setup.HostInterface.HostInterfacePanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:hostInterface="clr-namespace:UnitySC.EFEM.Controller.Views.Panels.Setup.HostInterface"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    d:DataContext="{d:DesignInstance {x:Type hostInterface:HostInterfacePanel},
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Background="{x:Null}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <UniformGrid Columns="3">
+        <controls:Card>
+            <GroupBox Header="{localize:Static hostInterface:HostInterfacePanelResources.SERVER_CONFIGURATION}">
+                <StackPanel>
+                    <!--  IP Address  -->
+                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static hostInterface:HostInterfacePanelResources.IP_ADDRESS}">
+                        <TextBox Text="{Binding IpAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </controls:PropertyEditor>
+
+                    <!--  TCP Port  -->
+                    <controls:PropertyEditor Margin="{StaticResource HorizontalStackPropertyMargin}" PropertyName="{localize:Static hostInterface:HostInterfacePanelResources.TCP_PORT}">
+                        <TextBox Text="{Binding TcpPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </controls:PropertyEditor>
+                </StackPanel>
+            </GroupBox>
+        </controls:Card>
+    </UniformGrid>
+</UserControl>

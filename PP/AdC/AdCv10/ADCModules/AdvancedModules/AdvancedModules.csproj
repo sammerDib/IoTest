@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{944D43A5-7FF2-4218-A01B-B8D212461753}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdvancedModules</RootNamespace>
+    <AssemblyName>AdvancedModules</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Matrox.MatroxImagingLibrary, Version=10.60.452.11242, Culture=neutral, PublicKeyToken=5a83d419d44a9d98, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\MIL\MILXpp6\Matrox.MatroxImagingLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classification\ClassificationMultiLayer\ClassificationMultiLayerFactory.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\ClassificationMultiLayerModule.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\ClassificationMultiLayerParameter.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\DefectTestType.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\MultiLayerDefectClass.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\ViewModel\ClassificationMultiLayerViewModel.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\ViewModel\BranchBooleanViewModel.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\ViewModel\MultiLayerDefectClassViewModel.cs" />
+    <Compile Include="Classification\ClassificationMultiLayer\View\ClassificationMultiLayerControl.xaml.cs">
+      <DependentUpon>ClassificationMultiLayerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\MultiLayerClusterDispatcherFactory.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\MultiLayerClusterDispatcherModule.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\MultiLayerClusterDispatcherParameter.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\MultiLayerDispatcherDefectClass.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\ViewModel\BranchBooleanViewModel.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\ViewModel\DispatcherDefectClassViewModel.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\ViewModel\MultiLayerClusterDispatcherViewModel.cs" />
+    <Compile Include="ClusterOperation\MultiLayerClusterDispatcher\View\MultiLayerClusterDispatcherControl.xaml.cs">
+      <DependentUpon>MultiLayerClusterDispatcherControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\Sieve\SieveClass.cs" />
+    <Compile Include="ClusterOperation\Sieve\ViewModel\SieveClassViewModel.cs" />
+    <Compile Include="ClusterOperation\Sieve\ViewModel\SieveViewModel.cs" />
+    <Compile Include="ClusterOperation\Sieve\View\SieveParameterView.xaml.cs">
+      <DependentUpon>SieveParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClusterOperation\Stitching\Stitch.cs" />
+    <Compile Include="ClusterOperation\Stitching\StitchingFactory.cs" />
+    <Compile Include="Edition\Apc\ApcFactory.cs" />
+    <Compile Include="Edition\Apc\ApcModule.cs" />
+    <Compile Include="Edition\Apc\ApcParameter.cs" />
+    <Compile Include="Edition\Apc\ViewModel\ApcParameterViewModel.cs" />
+    <Compile Include="Edition\Apc\View\ApcParameterView.xaml.cs">
+      <DependentUpon>ApcParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VID\BF3DFactory.cs" />
+    <Compile Include="Edition\VID\BF3DModule.cs" />
+    <Compile Include="Edition\VID\BF3DParameter.cs" />
+    <Compile Include="Edition\VID\BF3DParameter_DC.cs" />
+    <Compile Include="Edition\VID\CrownFactory.cs" />
+    <Compile Include="Edition\VID\CrownModule.cs" />
+    <Compile Include="Edition\VID\CrownParameter.cs" />
+    <Compile Include="Edition\VID\BF2DFactory.cs" />
+    <Compile Include="Edition\VID\BF2DModule.cs" />
+    <Compile Include="Edition\VID\BF2DParameter.cs" />
+    <Compile Include="Edition\VID\GTParameter.cs" />
+    <Compile Include="Edition\VID\GTFactory.cs" />
+    <Compile Include="Edition\VID\GTModule.cs" />
+    <Compile Include="Edition\VID\HazeParameter.cs" />
+    <Compile Include="Edition\VID\HazeFactory.cs" />
+    <Compile Include="Edition\VID\HazeModule.cs" />
+    <Compile Include="Edition\VID\BF2DParameter_DC.cs" />
+    <Compile Include="Edition\VID\ViewModel\BF3DParameterViewModel_DC.cs" />
+    <Compile Include="Edition\VID\ViewModel\BF3DParameterViewModel.cs" />
+    <Compile Include="Edition\VID\ViewModel\BF2DParameterViewModel.cs" />
+    <Compile Include="Edition\VID\ViewModel\GTParameterViewModel.cs" />
+    <Compile Include="Edition\VID\ViewModel\HazeParameterViewModel.cs" />
+    <Compile Include="Edition\VID\ViewModel\CrownParameterViewModel.cs" />
+    <Compile Include="Edition\VID\ViewModel\BF2DParameterViewModel_DC.cs" />
+    <Compile Include="Edition\VID\View\BF3DParameterView.xaml.cs">
+      <DependentUpon>BF3DParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VID\View\BF2DParameterView.xaml.cs">
+      <DependentUpon>BF2DParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VID\View\GTParameterView.xaml.cs">
+      <DependentUpon>GTParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VID\View\HazeParameterView.xaml.cs">
+      <DependentUpon>HazeParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VID\View\CrownParameterView.xaml.cs">
+      <DependentUpon>CrownParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Edition\VirtualGrid\VirtualGridFactory.cs" />
+    <Compile Include="Edition\VirtualGrid\VirtualGridModule.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdPSLFile\ThresholdPSLFileFactory.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdPSLFile\ThresholdPSLFileModule.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdPSL\ThresholdPSLFactory.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdPSL\ThresholdPSLModule.cs" />
+    <Compile Include="ClusterOperation\Stitching\StitchingModule.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdMedian\ThresholdMedianFactory.cs" />
+    <Compile Include="ImageProcessing\Binarization\ThresholdMedian\ThresholdMedianModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\ClusterEdgeRemoveByBlob\ClusterEdgeRemoveByBlobFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\ClusterEdgeRemoveByBlob\ClusterEdgeRemoveByBlobModule.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\MaskModule\MaskFactory.cs" />
+    <Compile Include="ImageProcessing\BorderRemoval\MaskModule\MaskModule.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\AdjustLevel\AdjustLevelsFactory.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\AdjustLevel\AdjustLevelsModule.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\Convolve\ConvolveFactory.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\Convolve\ConvolveModule.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\Equalizer\EqualizerFactory.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\Equalizer\EqualizerModule.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\FFTConvolution\FFTConvolveMexhatFactory.cs" />
+    <Compile Include="ImageProcessing\ComplexTransformation\FFTConvolution\FFTConvolveMexhatModule.cs" />
+    <Compile Include="ImageProcessing\Convert16To8\Convert16To8Factory.cs" />
+    <Compile Include="ImageProcessing\Convert16To8\Convert16To8Module.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\LocalDensityFiltering\LocalDensityFilteringFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\LocalDensityFiltering\LocalDensityFilteringModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\LowPass\LowPassFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\LowPass\LowPassModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\MedianFilter\MedianFilterFactoy.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\MedianFilter\MedianFilterModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\MedianFloatFilter\MedianFloatFilterFactoy.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\MedianFloatFilter\MedianFloatFilterModule.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\Trimming\TrimmingFactory.cs" />
+    <Compile Include="ImageProcessing\NoiseReduction\Trimming\TrimmingModule.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\Laplacian\LaplacianFactory.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\Laplacian\LaplacianModule.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\Prewitt\PrewittFactory.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\Prewitt\PrewittModule.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\Sharpen\SharpenFactory.cs" />
+    <Compile Include="ImageProcessing\ShapeDetection\Sharpen\SharpenModule.cs" />
+    <Compile Include="ImageProcessing\Stitching\StitchingImageModule.cs" />
+    <Compile Include="ImageProcessing\Stitching\StitchingModuleFactory.cs" />
+    <Compile Include="Merge\CMC\CmcFactory.cs" />
+    <Compile Include="Merge\CMC\ViewModel\CmcBranchViewModel.cs" />
+    <Compile Include="Merge\CMC\View\CmcLayersControl.xaml.cs">
+      <DependentUpon>CmcLayersControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Merge\CMC\CmcParameter.cs" />
+    <Compile Include="Merge\CMC\ViewModel\CmcViewModel.cs" />
+    <Compile Include="Merge\CMC\CmcModule.cs" />
+    <Compile Include="ClusterOperation\Sieve\SieveFactory.cs" />
+    <Compile Include="ClusterOperation\Sieve\SieveModule.cs" />
+    <Compile Include="ClusterOperation\Sieve\SieveParameter.cs" />
+    <None Include="Properties\AssemblyInfo.template" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Classification\ClassificationMultiLayer\View\CharacteristicForAutomaticMeasureTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Classification\ClassificationMultiLayer\View\CheckBoxTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Classification\ClassificationMultiLayer\View\ClassificationMultiLayerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <EmbeddedResource Include="Classification\ClassificationMultiLayer\View\MeasuredBranchTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClusterOperation\MultiLayerClusterDispatcher\View\CheckBoxTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Page Include="ClusterOperation\MultiLayerClusterDispatcher\View\MultiLayerClusterDispatcherControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <EmbeddedResource Include="ClusterOperation\MultiLayerClusterDispatcher\View\TextBoxTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Page Include="ClusterOperation\Sieve\View\SieveParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Edition\Apc\View\ApcParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Edition\VID\View\BF3DParameterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\VID\View\BF2DParameterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\VID\View\GTParameterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\VID\View\HazeParameterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition\VID\View\CrownParameterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Merge\CMC\View\CmcLayersControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ImageProcessing\OpeningClosing\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Proxy\UnitySC.Shared.Proxy.csproj">
+      <Project>{90BDBE2A-B307-4FE9-95AB-09A0673C2345}</Project>
+      <Name>UnitySC.Shared.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdcBasicObjects\AdcBasicObjects.csproj">
+      <Project>{2261bf78-6856-4a67-9d4c-904a911aef74}</Project>
+      <Name>AdcBasicObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ADCEngine\ADCEngine.csproj">
+      <Project>{52513f8e-c8b8-4663-b1ff-bec743e9a14c}</Project>
+      <Name>ADCEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\AdcTools\AdcTools.csproj">
+      <Project>{2d6ad4b4-1775-45ef-ac20-85a6da7fd953}</Project>
+      <Name>AdcTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\FormatAHM\FormatAHM.csproj">
+      <Project>{8A6ECBBE-35CD-4933-809B-0CDF2C1DDAA6}</Project>
+      <Name>FormatAHM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\FormatGTR\FormatGTR.csproj">
+      <Project>{2400DD1C-E3D2-4C45-8BBF-BBFFB7959B8B}</Project>
+      <Name>FormatGTR</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\FormatHAZE\FormatHAZE.csproj">
+      <Project>{A28EF4C9-DD9C-4B00-B7FE-ADEA86BC6A0B}</Project>
+      <Name>FormatHAZE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\libProcessing\LibProcessing.csproj">
+      <Project>{4be42cd7-805d-47b3-863f-263671bf30e9}</Project>
+      <Name>LibProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ComRobot\AdcRobotExchange\AdcRobotExchange.csproj">
+      <Project>{0B2F9160-2203-4CDD-B9A6-1723EFA2F17D}</Project>
+      <Name>AdcRobotExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MergeContext\AcquisitionAdcExchange\AcquisitionAdcExchange.csproj">
+      <Project>{3C26D6D9-8B32-447F-8E21-E65E81B5ED29}</Project>
+      <Name>AcquisitionAdcExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MergeContext\Context\MergeContext.Context.csproj">
+      <Project>{3E2F7C06-0C12-4058-AEEE-E91A9C77845F}</Project>
+      <Name>MergeContext.Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BasicModules\BasicModules.csproj">
+      <Project>{bbe52789-8212-4ef4-857f-733d9761dd2b}</Project>
+      <Name>BasicModules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metrology\CrownMeasurement\CrownMeasurementModule.csproj">
+      <Project>{A4920453-28CA-4D25-80CC-A8AF72AB18D3}</Project>
+      <Name>CrownMeasurementModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metrology\DiameterMeasurementDie\DiameterMeasurementDieModule.csproj">
+      <Project>{D4FDD59A-3D55-45D1-99D9-AEA525AA8DEE}</Project>
+      <Name>DiameterMeasurementDieModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metrology\GlobaltopoModule\GlobaltopoModule.csproj">
+      <Project>{B376F5EC-5A0D-41A0-A58D-259C4DFE24A8}</Project>
+      <Name>GlobaltopoModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metrology\HazeLS\HazeLSModule.csproj">
+      <Project>{8844e946-1236-4dcc-b231-6e686ba554d7}</Project>
+      <Name>HazeLSModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Metrology\HeightMeasurementDie\HeightMeasurementDieModule.csproj">
+      <Project>{4B6EF46F-F55B-4C5A-8533-57BE80ACC9F5}</Project>
+      <Name>HeightMeasurementDieModule</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+</Project>

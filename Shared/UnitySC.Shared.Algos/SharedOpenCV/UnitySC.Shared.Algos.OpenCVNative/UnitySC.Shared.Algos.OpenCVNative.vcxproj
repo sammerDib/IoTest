@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{09b652fb-7833-4b0a-84cf-72ac8b6b806d}</ProjectGuid>
+    <RootNamespace>UnitySCSharedAlgosOpenCVNative</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)..\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>true</VcpkgEnabled>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgTriplet>
+    </VcpkgTriplet>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgTriplet>
+    </VcpkgTriplet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Include;$(ProjectDir)..\..\SharedFitLib\Include</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Include;$(ProjectDir)..\..\SharedFitLib\Include</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\2DMatrixAnalysis.hpp" />
+    <ClInclude Include="..\Include\AngularReflectionsCalibration.hpp" />
+    <ClInclude Include="..\Include\BWAReportOption.hpp" />
+    <ClInclude Include="..\Include\C1DSignalAnalysis.hpp" />
+    <ClInclude Include="..\Include\C2DSignalAnalysis.hpp" />
+    <ClInclude Include="..\Include\CalibrationParameters.hpp" />
+    <ClInclude Include="..\Include\CameraCalibration.hpp" />
+    <ClInclude Include="..\Include\CDetectDies.hpp" />
+    <ClInclude Include="..\Include\CDistortionCalibration.hpp" />
+    <ClInclude Include="..\Include\CEdgeDetector.hpp" />
+    <ClInclude Include="..\Include\CFilters.hpp" />
+    <ClInclude Include="..\Include\CheckerBoardOrigins.hpp" />
+    <ClInclude Include="..\Include\CheckerBoardsSettings.hpp" />
+    <ClInclude Include="..\Include\CImageOperators.hpp" />
+    <ClInclude Include="..\Include\CImageTypeConvertor.hpp" />
+    <ClInclude Include="..\Include\CPhaseShiftingDeflectometry.hpp" />
+    <ClInclude Include="..\Include\CPhaseShiftingInterferometry.hpp" />
+    <ClInclude Include="..\Include\CRegistration.hpp" />
+    <ClInclude Include="..\Include\CShapeFinder.hpp" />
+    <ClInclude Include="..\Include\CUtils.hpp" />
+    <ClInclude Include="..\Include\CEvent.hpp" />
+    <ClInclude Include="..\Include\CEventHandler.hpp" />
+    <ClInclude Include="..\Include\CEventQueue.hpp" />
+    <ClInclude Include="..\Include\EdgeImage.hpp" />
+    <ClInclude Include="..\Include\HyperAccurateCircleFitter.hpp" />
+    <ClInclude Include="..\Include\ICircleFitter.hpp" />
+    <ClInclude Include="..\Include\InputSystemParameters.hpp" />
+    <ClInclude Include="..\Include\MetroBase.hpp" />
+    <ClInclude Include="..\Include\MetroBaseEnums.hpp" />
+    <ClInclude Include="..\Include\MetroCircleSeeker.hpp" />
+    <ClInclude Include="..\Include\MetroSeeker.hpp" />
+    <ClInclude Include="..\Include\MultiperiodUnwrap.hpp" />
+    <ClInclude Include="..\Include\NamedType.hpp" />
+    <ClInclude Include="..\Include\NormalEstimation.hpp" />
+    <ClInclude Include="..\Include\NotchFinder.hpp" />
+    <ClInclude Include="..\Include\NotchImage.hpp" />
+    <ClInclude Include="..\Include\Status.hpp" />
+    <ClInclude Include="..\Include\SystemCalibration.hpp" />
+    <ClInclude Include="..\Include\Wafer.hpp" />
+    <ClInclude Include="..\Include\WaferDetector.hpp" />
+    <ClInclude Include="..\Include\WaferFinder.hpp" />
+    <ClInclude Include="..\Include\WrappedPhaseMap.hpp" />
+    <ClInclude Include="CheckerBoardsDetector.hpp" />
+    <ClInclude Include="DieGridGenerator.hpp" />
+    <ClInclude Include="ErrorLogging.hpp" />
+    <ClInclude Include="GeneralizedPhaseMapping.hpp" />
+    <ClInclude Include="HyperAccurateEllipseFitter.hpp" />
+    <ClInclude Include="IEllipseFitter.hpp" />
+    <ClInclude Include="RadonTransform.hpp" />
+    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="FourierTransform.hpp" />
+    <ClInclude Include="GoldsteinUnwrap.hpp" />
+    <ClInclude Include="Linspace.hpp" />
+    <ClInclude Include="LoggerOCV.hpp" />
+    <ClInclude Include="PhaseMapping.hpp" />
+    <ClInclude Include="PhaseMappingWithHariharan.hpp" />
+    <ClInclude Include="Point.hpp" />
+    <ClInclude Include="PolarImageCropper.hpp" />
+    <ClInclude Include="PolarTransform.hpp" />
+    <ClInclude Include="QualGuidedUnwrap.hpp" />
+    <ClInclude Include="ReliabilityHistUnwrap.hpp" />
+    <ClInclude Include="ReportingUtils.hpp" />
+    <ClInclude Include="PhaseMappingWithResidualFringeRemoving.hpp" />
+    <ClInclude Include="SymmetryDetector.hpp" />
+    <ClInclude Include="WaferImageGenerator.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="2DMatrixAnalysis.cpp" />
+    <ClCompile Include="AngularReflectionsCalibration.cpp" />
+    <ClCompile Include="CameraCalibration.cpp" />
+    <ClCompile Include="CDetectDies.cpp" />
+    <ClCompile Include="CDistortionCalibration.cpp" />
+    <ClCompile Include="CheckerBoardsDetector.cpp" />
+    <ClCompile Include="CUtils.cpp" />
+    <ClCompile Include="CircularTheoricalGrid.cpp" />
+    <ClCompile Include="GeneralizedPhaseMapping.cpp" />
+    <ClCompile Include="HyperAccurateEllipseFitter.cpp" />
+    <ClCompile Include="MetroBase.cpp" />
+    <ClCompile Include="MetroCircleSeeker.cpp" />
+    <ClCompile Include="MetroSeeker.cpp" />
+    <ClCompile Include="MultiperiodUnwrap.cpp" />
+    <ClCompile Include="NanoTopography.cpp" />
+    <ClCompile Include="NanoTopography.hpp" />
+    <ClCompile Include="NormalEstimation.cpp" />
+    <ClCompile Include="NotchFinder.cpp" />
+    <ClCompile Include="CPhaseShiftingDeflectometry.cpp" />
+    <ClCompile Include="RadonTransform.cpp" />
+    <ClCompile Include="SystemCalibration.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="C1DSignalAnalysis.cpp" />
+    <ClCompile Include="C2DSignalAnalysis.cpp" />
+    <ClCompile Include="CEdgeDetector.cpp" />
+    <ClCompile Include="CFilters.cpp" />
+    <ClCompile Include="CImageOperators.cpp" />
+    <ClCompile Include="CImageTypeConvertor.cpp" />
+    <ClCompile Include="CRegistration.cpp" />
+    <ClCompile Include="CShapeFinder.cpp" />
+    <ClCompile Include="CEvent.cpp" />
+    <ClCompile Include="CEventQueue.cpp" />
+    <ClCompile Include="EdgeImage.cpp" />
+    <ClCompile Include="FourierTransform.cpp" />
+    <ClCompile Include="GoldsteinUnwrap.cpp" />
+    <ClCompile Include="HyperAccurateCircleFitter.cpp" />
+    <ClCompile Include="NotchImage.cpp" />
+    <ClCompile Include="PhaseMapping.cpp" />
+    <ClCompile Include="CPhaseShiftingInterferometry.cpp" />
+    <ClCompile Include="PhaseMappingWithHariharan.cpp" />
+    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="PolarImageCropper.cpp" />
+    <ClCompile Include="PolarTransform.cpp" />
+    <ClCompile Include="QualGuidedUnwrap.cpp" />
+    <ClCompile Include="ReliabilityHistUnwrap.cpp" />
+    <ClCompile Include="ReportingUtils.cpp" />
+    <ClCompile Include="PhaseMappingWithResidualFringeRemoving.cpp" />
+    <ClCompile Include="SymmetryDetector.cpp" />
+    <ClCompile Include="Wafer.cpp" />
+    <ClCompile Include="WaferDetector.cpp" />
+    <ClCompile Include="WaferFinder.cpp" />
+    <ClCompile Include="WaferImageGenerator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharedFitLib\FitLib\FitLib.vcxproj">
+      <Project>{8f36dacc-f23f-4782-a36c-142005290215}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,418 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.LoadPorts.LoadPortViewerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment"
+    xmlns:loadPort="clr-namespace:UnitySC.GUI.Common.Equipment.LoadPort;assembly=UnitySC.GUI.Common"
+    xmlns:loadPorts="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.LoadPorts"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance loadPorts:LoadPortViewer,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1000"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <GroupBox Padding="15,5,15,0" Background="Transparent">
+        <GroupBox.Header>
+            <DockPanel>
+                <TextBlock
+                    Margin="10,0,0,0"
+                    Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                    Text="{Binding E87LoadPort.Type}" />
+                <TextBlock
+                    Margin="2,0,0,0"
+                    Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                    Text="{Binding E87LoadPort.PortID}" />
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Right"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="{localize:Static equipment:EquipmentResources.LOADPORT_TRANSFER}" />
+                    <controls:Displayer Width="200" Margin="10,0,0,0">
+                        <controls:Displayer.Style>
+                            <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding E87LoadPort.TransferState}" Value="{x:Static e87:TransferState.OutOfService}">
+                                        <Setter Property="Background" Value="{DynamicResource SeverityErrorBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                        <Setter Property="Icon" Value="{StaticResource CancelIcon}" />
+                                        <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_OUTOFSERVICE}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding E87LoadPort.TransferState}" Value="{x:Static e87:TransferState.TransferBlocked}">
+                                        <Setter Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                        <Setter Property="Icon" Value="{StaticResource LoaderIcon}" />
+                                        <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_TRANSFERBLOCKED}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding E87LoadPort.TransferState}" Value="{x:Static e87:TransferState.ReadyToLoad}">
+                                        <Setter Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                                        <Setter Property="Icon" Value="{StaticResource RoundedDownIcon}" />
+                                        <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_READYTOLOAD}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding E87LoadPort.TransferState}" Value="{x:Static e87:TransferState.ReadyToUnload}">
+                                        <Setter Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                                        <Setter Property="Icon" Value="{StaticResource RoundedUpIcon}" />
+                                        <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_READYTOUNLOAD}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </controls:Displayer.Style>
+                    </controls:Displayer>
+                </StackPanel>
+            </DockPanel>
+        </GroupBox.Header>
+        <DockPanel>
+
+            <StackPanel
+                Margin="0,0,0,10"
+                DockPanel.Dock="Top"
+                Orientation="Horizontal">
+                <controls:Icon Data="{StaticResource TimePickerIcon}" />
+                <TextBlock Margin="7,0,0,0" Text="{Binding LoadPort.Carrier.PutTimeStamp}" />
+            </StackPanel>
+
+            <loadPort:LoadPortLedStatesView
+                Margin="0,0,0,10"
+                DockPanel.Dock="Top"
+                LoadPort="{Binding LoadPort}" />
+
+            <Grid DockPanel.Dock="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical">
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_CARRIER_ID}">
+                            <controls:Displayer Color="None" Value="{Binding E87LoadPort.AssociatedCarrier.ObjID}" />
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_ACCESSING}">
+                            <controls:Displayer>
+                                <controls:Displayer.Style>
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.NotAccessed}">
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_NOTACCESSED}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.InAccess}">
+                                                <Setter Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_INACCESS}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.CarrierComplete}">
+                                                <Setter Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter Property="Icon" Value="{StaticResource CheckedIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_CARRIERCOMPLETE}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.CarrierStopped}">
+                                                <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter Property="Icon" Value="{StaticResource CancelIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_CARRIERSTOPPED}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="{localize:Static equipment:EquipmentResources.EQUIPMENT_ASSOCIATION}">
+                            <controls:Displayer>
+                                <controls:Displayer.Style>
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociationState}" Value="{x:Static e87:AssociationState.Associated}">
+                                                <Setter Property="Icon" Value="{StaticResource CheckedIcon}" />
+                                                <Setter Property="Color" Value="Green" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_ASSOCIATED}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociationState}" Value="{x:Static e87:AssociationState.NotAssociated}">
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_NOTASSOCIATED}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+                        </controls:PropertyEditor>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Orientation="Vertical">
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_STATUS_ID}">
+                            <controls:Displayer>
+                                <controls:Displayer.Style>
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.IDNotRead}">
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDNOTREAD}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.WaitingForHost}">
+                                                <Setter Property="Color" Value="Blue" />
+                                                <Setter Property="Icon" Value="{StaticResource LoaderIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_WAITINGFORHOST}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.VerificationOk}">
+                                                <Setter Property="Color" Value="Green" />
+                                                <Setter Property="Icon" Value="{StaticResource CheckedIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_VERIFICATIONOK}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.AssociatedCarrier.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.VerificationFailed}">
+                                                <Setter Property="Color" Value="Red" />
+                                                <Setter Property="Icon" Value="{StaticResource CancelIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_VERIFICATIONFAILED}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+
+                        </controls:PropertyEditor>
+                        <controls:PropertyEditor
+                            Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                            IsEnabled="{Binding IsControllerOk}"
+                            PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_ACCESS_MODE}">
+
+                            <UniformGrid Columns="2">
+                                <controls:Chips Margin="{StaticResource HalfVerticalStackPropertyMargin}" Command="{Binding AccessModeCommand}">
+                                    <controls:Chips.Content>
+                                        <DockPanel LastChildFill="True">
+                                            <controls:Icon
+                                                x:Name="AutoIconState"
+                                                Margin="{StaticResource HalfVerticalStackPropertyMargin}"
+                                                Data="{StaticResource ActivesIcon}" />
+                                            <TextBlock x:Name="AutoTextBlockState" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_AUTO}" />
+                                        </DockPanel>
+                                    </controls:Chips.Content>
+                                    <controls:Chips.Style>
+                                        <Style BasedOn="{StaticResource {x:Type controls:Chips}}" TargetType="{x:Type controls:Chips}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static e87:AccessMode.Auto}">
+                                                    <Setter Property="IsActivated" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </controls:Chips.Style>
+                                </controls:Chips>
+
+                                <controls:Chips x:Name="ManuChips" Command="{Binding AccessModeCommand}">
+                                    <controls:Chips.Content>
+                                        <DockPanel LastChildFill="True">
+                                            <controls:Icon
+                                                x:Name="ManuState"
+                                                Margin="{StaticResource HalfVerticalStackPropertyMargin}"
+                                                Data="{StaticResource CancelIcon}" />
+                                            <TextBlock x:Name="ManuTextBlockState" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_MANUAL}" />
+                                        </DockPanel>
+                                    </controls:Chips.Content>
+                                    <controls:Chips.Style>
+                                        <Style BasedOn="{StaticResource {x:Type controls:Chips}}" TargetType="{x:Type controls:Chips}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static e87:AccessMode.Manual}">
+                                                    <Setter Property="IsActivated" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </controls:Chips.Style>
+                                </controls:Chips>
+                            </UniformGrid>
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_RESERVATION}">
+                            <controls:Displayer>
+                                <controls:Displayer.Style>
+
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding E87LoadPort.ReservationState}" Value="{x:Static e87:ReservationState.Reserved}">
+                                                <Setter Property="Icon" Value="{StaticResource ReservationIcon}" />
+                                                <Setter Property="Color" Value="Blue" />
+
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_RESERVED}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding E87LoadPort.ReservationState}" Value="{x:Static e87:ReservationState.NotReserved}">
+                                                <Setter Property="Icon" Value="{StaticResource ReservationIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_NOTRESERVED}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+                        </controls:PropertyEditor>
+                    </StackPanel>
+
+                    <controls:PropertyEditor
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_SERVICE_MODE}">
+                        <StackPanel Orientation="Horizontal">
+                            <UniformGrid Columns="2">
+                                <controls:Chips Margin="{StaticResource HalfVerticalStackPropertyMargin}" Command="{Binding ServiceModeCommand}">
+                                    <controls:Chips.Content>
+                                        <DockPanel LastChildFill="True">
+                                            <controls:Icon
+                                                x:Name="InServiceIconState"
+                                                Margin="{StaticResource HalfVerticalStackPropertyMargin}"
+                                                Data="{StaticResource CheckedIcon}" />
+                                            <TextBlock x:Name="InServiceTextBlockState" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_INSERVICE}" />
+                                        </DockPanel>
+                                    </controls:Chips.Content>
+                                    <controls:Chips.Style>
+                                        <Style BasedOn="{StaticResource {x:Type controls:Chips}}" TargetType="{x:Type controls:Chips}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LoadPortServiceStatus}" Value="{x:Static e87:ServiceStatus.InService}">
+                                                    <Setter Property="IsActivated" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </controls:Chips.Style>
+                                </controls:Chips>
+
+                                <controls:Chips x:Name="OutOfServiceChips" Command="{Binding ServiceModeCommand}">
+                                    <controls:Chips.Content>
+                                        <DockPanel LastChildFill="True">
+                                            <controls:Icon
+                                                x:Name="OutOfServiceIconState"
+                                                Margin="{StaticResource HalfVerticalStackPropertyMargin}"
+                                                Data="{StaticResource CancelIcon}" />
+                                            <TextBlock x:Name="OutOfServiceTextBlockState" Text="{localize:Static equipment:EquipmentResources.EQUIPMENT_OUTOFSERVICE}" />
+                                        </DockPanel>
+                                    </controls:Chips.Content>
+                                    <controls:Chips.Style>
+                                        <Style BasedOn="{StaticResource {x:Type controls:Chips}}" TargetType="{x:Type controls:Chips}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LoadPortServiceStatus}" Value="{x:Static e87:ServiceStatus.OutOfService}">
+                                                    <Setter Property="IsActivated" Value="True" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </controls:Chips.Style>
+                                </controls:Chips>
+                            </UniformGrid>
+                        </StackPanel>
+
+                    </controls:PropertyEditor>
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Foreground="{DynamicResource SeveritySuccessBrush}">
+                        <TextBlock.Style>
+                            <Style BasedOn="{StaticResource Subtitle1TextStyle}" TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding E87LoadPort.TransferState}" Value="{x:Static e87:TransferState.ReadyToLoad}">
+                                        <Setter Property="Text" Value="{localize:Static equipment:EquipmentResources.LOADPORT_NEED_TO_BE_PLACED}" />
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding E87LoadPort.TransferState}" Value="{x:Static e87:TransferState.ReadyToUnload}">
+                                        <Setter Property="Text" Value="{localize:Static equipment:EquipmentResources.LOADPORT_NEED_TO_BE_REMOVED}" />
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <Grid
+                    Grid.Row="1"
+                    Margin="0,0,0,10"
+                    DockPanel.Dock="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Margin="0,10,0,0"
+                        Command="{Binding ProceedCommand}"
+                        Content="{localize:Static equipment:EquipmentResources.LOADPORT_PROCEED}"
+                        DockPanel.Dock="Bottom"
+                        FontSize="{StaticResource FontSizeBig}" />
+                    <Button
+                        Grid.Column="2"
+                        Margin="0,10,0,0"
+                        Command="{Binding ReleaseCommand}"
+                        Content="{localize:Static equipment:EquipmentResources.LOADPORT_CANCEL}"
+                        FontSize="{StaticResource FontSizeBig}" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Border BorderBrush="{DynamicResource SeparatorBackground}" BorderThickness="0,1,0,0" />
+                    <Expander ExpandDirection="Up" Header="{localize:Static equipment:EquipmentResources.LOADPORT_ADDITIONAL_DATA}">
+                        <Grid Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}" MaxHeight="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="5" Text="{localize:Static equipment:EquipmentResources.LOADPORT_BYPASS_READ_ID}" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding ByPassReadId}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5"
+                                Text="{localize:Static equipment:EquipmentResources.CARRIERS_LOCATION_ID}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding E87LoadPort.LocationID}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="5"
+                                Text="{localize:Static equipment:EquipmentResources.CARRIERS_USAGE}" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="5"
+                                Text="{Binding E87LoadPort.AssociatedCarrier.Usage}" />
+                        </Grid>
+                    </Expander>
+                </Grid>
+
+            </Grid>
+
+            <!--#region SlotMap-->
+            <equipment:SlotMapView Margin="{StaticResource HalfHorizontalStackPropertyMargin}" DataContext="{Binding SlotMap}" />
+            <!--#endregion SlotMap-->
+
+        </DockPanel>
+    </GroupBox>
+
+</UserControl>

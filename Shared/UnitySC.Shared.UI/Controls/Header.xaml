@@ -1,0 +1,48 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.UI.Controls.Header"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:header="clr-namespace:UnitySC.Shared.UI.ViewModel.Header"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DataContext="{d:DesignInstance header:HeaderVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<!--  Styles  -->
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid
+		MinHeight="15"
+		Background="{StaticResource PanelTitleBackgroundBrush}">
+		<ItemsControl
+			HorizontalAlignment="Left"
+			ItemsSource="{Binding MenuItems}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal" />
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<controls:ImageButton
+						Margin="4"
+						VerticalAlignment="Center"
+						Command="{Binding ExecuteCommand}"
+						Content="{Binding Content}"
+						Image="{Binding ImageResourceKey, Converter={StaticResource StringToResourceConverter}}"
+						Style="{StaticResource TransparentImageButton}"
+						ToolTip="{Binding Tooltip}"
+						Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
+</UserControl>

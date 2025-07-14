@@ -1,0 +1,182 @@
+﻿<UserControl x:Class="ADCConfiguration.View.Administration.LogsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ADCConfiguration.View.Administration"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1000">
+    <Grid Background="{StaticResource GlobalBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <!-- Filter -->
+        <Border Style="{StaticResource BorderPanel}">
+            <StackPanel Orientation="Horizontal" Background="{StaticResource GlobalPanelTitleBackground}">
+                <StackPanel.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="/ADCConfiguration;component/Styles/FormStyle.xaml" />
+                        </ResourceDictionary.MergedDictionaries>                      
+                    </ResourceDictionary>                    
+                </StackPanel.Resources>
+                <!-- User -->
+                <TextBlock Text="User"/>
+                <ComboBox ItemsSource="{Binding Users}" MinWidth="100" SelectedItem="{Binding SelectedUser}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Stretch="Uniform" Height="15" Margin="0,0,4,0" Visibility="{Binding WrappedObject, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <ContentControl ContentTemplate="{StaticResource UserADCImage}"/>                                 
+                                </Viewbox>
+                                <TextBlock Text="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Area -->
+                <TextBlock Text="Area"/>
+                <ComboBox ItemsSource="{Binding Areas}" MinWidth="100" SelectedItem="{Binding SelectedArea}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Stretch="Uniform" Height="15" Margin="0,0,4,0" Visibility="{Binding WrappedObject, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <ContentControl ContentTemplate="{Binding WrappedObject, Converter={StaticResource LogTableToImageDictionaryConverter}}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Action-->
+                <TextBlock Text="Action"/>
+                <ComboBox  ItemsSource="{Binding Actions}" MinWidth="100" SelectedItem="{Binding SelectedAction}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Stretch="Uniform" Height="15" Margin="0,0,4,0" Visibility="{Binding WrappedObject, Converter={StaticResource NullToVisibilityConverter}}">
+                                    <ContentControl ContentTemplate="{Binding WrappedObject, Converter={StaticResource LogActionToImageDictionaryConverter}}" />
+                                </Viewbox>
+                                <TextBlock Text="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Date -->
+                <TextBlock Text="Date"/>
+                <xctk:DateTimePicker Format="Custom" FormatString="G" MinWidth="100" Value="{Binding StartDate}"/>
+                <Button ToolTip="Clear date" Margin="-4,0,0,0" Command="{Binding ClearStartDateCommand}">
+                    <Viewbox Stretch="Uniform" Height="12">
+                        <ContentControl ContentTemplate="{StaticResource DeleteADCImage}"/>
+                    </Viewbox>
+                </Button>
+
+                <TextBlock Text="to"/>
+                <xctk:DateTimePicker Format="Custom" FormatString="G" MinWidth="100" Value="{Binding EndDate}"/>
+                <Button Margin="-4,0,0,0" ToolTip="Clear date" Command="{Binding ClearEndDateCommand}">
+                    <Viewbox Stretch="Uniform" Height="12">
+                        <ContentControl ContentTemplate="{StaticResource DeleteADCImage}"/>
+                    </Viewbox>
+                </Button>
+
+                <TextBlock Text="Detail"/>
+                <xctk:WatermarkTextBox Text="{Binding Detail, UpdateSourceTrigger=PropertyChanged}" Watermark="Search on detail" Width="100" VerticalAlignment="Center" Margin="4"/>
+
+                <Button Margin="8,0,0,0" ToolTip="Apply filter" Command="{Binding ApplyFilterCommand}" IsDefault="True">
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <Viewbox Stretch="Uniform" Height="20">
+                            <ContentControl ContentTemplate="{StaticResource FilterADCImage}"/>
+                        </Viewbox>
+                        <TextBlock Text="Apply" Margin="4,0"/>
+                    </StackPanel>
+                </Button>                
+
+            </StackPanel>
+        </Border>
+        
+        <!-- Results -->
+        <ListView Grid.Row="1" ItemsSource="{Binding Logs}"
+            IsSynchronizedWithCurrentItem="True"
+            AdcTools:GridViewSort.AutoSort="True">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="Auto" Header="Area" AdcTools:GridViewSort.PropertyName="Table">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Stretch="Uniform" Height="15" Margin="0,0,4,0" Visibility="{Binding TableType, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <ContentControl ContentTemplate="{Binding Table, Converter={StaticResource LogTableToImageDictionaryConverter}}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding Table}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="Action" AdcTools:GridViewSort.PropertyName="Action">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Stretch="Uniform" Height="15" Margin="0,0,4,0" Visibility="{Binding ActionType, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <ContentControl ContentTemplate="{Binding Action, Converter={StaticResource LogActionToImageDictionaryConverter}}" />
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding Action}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="User" AdcTools:GridViewSort.PropertyName="User.Login">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Stretch="Uniform" Height="15" Margin="0,0,4,0" Visibility="{Binding User, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <ContentControl ContentTemplate="{StaticResource UserADCImage}"/>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding User}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="Date" AdcTools:GridViewSort.PropertyName="Date">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Date}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="Auto" Header="Detail" AdcTools:GridViewSort.PropertyName="Detail">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Detail}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsBusy}" d:IsHidden="true" DisplayAfter="0" />
+        
+        <!-- Result Summary-->
+        <Grid Grid.Row="2" Background="{StaticResource GlobalPanelTitleBackground}">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock Text="{Binding NbResult}" Margin="2,4" VerticalAlignment="Center" Style="{StaticResource Title2}"/>
+                <TextBlock Text="Results" Margin="2,4" VerticalAlignment="Center" />
+                <Button Margin="4" Command="{Binding ExportCommand}" ToolTip="Export logs as csv">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Stretch="Uniform" Height="18">
+                            <ContentControl ContentTemplate="{StaticResource ExportADCImage}"/>
+                        </Viewbox>
+                        <TextBlock Text="Export" HorizontalAlignment="Center" Margin="2,0"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="BasicModules.KlarfEditor.KlarfEditorRoughBinControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"             
+             xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools"
+             xmlns:BasicModules="clr-namespace:BasicModules"
+             xmlns:local="clr-namespace:BasicModules.KlarfEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="250"
+             MinHeight="40"
+             Loaded="UserControl_Loaded">
+    <Grid MinHeight="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" MinHeight="20">
+            <Label Content="Enter RoughBin number associated to each Defect Class..." HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Bottom"/>
+        </StackPanel>
+
+        <DataGrid x:Name="dataGrid" Grid.Row="1" Margin="10" ItemsSource="{Binding RoughBins}" MinHeight="30"
+                  VerticalAlignment="Top" HorizontalAlignment="Left"
+                  CellEditEnding="DataGrid_CellEditEnding" 
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Defect Class" MinWidth="100" Binding="{Binding DefectLabel}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Left" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="RoughBin Number" MinWidth="50" Binding="{Binding RoughBinNum}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="FineBin Number" MinWidth="50" Binding="{Binding FineBinNum}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="ClassNum Number" MinWidth="50" Binding="{Binding ClassNumber}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

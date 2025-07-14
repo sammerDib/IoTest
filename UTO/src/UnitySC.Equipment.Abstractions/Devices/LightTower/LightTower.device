@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="LightTower">
+                  <Types>
+                    <CSharpType PlatformType="Agileo.GUI.Services.LightTower.LightState, Agileo.GUI, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.BuzzerState, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.LightTower.Enums.LightTowerState, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <DeviceType Name="LightTower" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\LightTower\LightTower.device|UnitySC.Equipment.Abstractions.Devices.LightTower.LightTower" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.LightTower.LightTower, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="DefineGreenLightMode" Type="Void" Timeout="60 s">
+                          <Documentation>Change Light Tower's Green color</Documentation>
+                          <Parameters>
+                            <Parameter Name="state" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="DefineOrangeLightMode" Type="Void" Timeout="60 s">
+                          <Documentation>Change Light Tower's Orange color</Documentation>
+                          <Parameters>
+                            <Parameter Name="state" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="DefineBlueLightMode" Type="Void" Timeout="60 s">
+                          <Documentation>Change Light Tower's Blue color</Documentation>
+                          <Parameters>
+                            <Parameter Name="state" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="DefineRedLightMode" Type="Void" Timeout="60 s">
+                          <Documentation>Change Light Tower's Red color</Documentation>
+                          <Parameters>
+                            <Parameter Name="state" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="DefineBuzzerMode" Type="Void" Timeout="60 s">
+                          <Documentation>Change Buzzer State</Documentation>
+                          <Parameters>
+                            <Parameter Name="state" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.BuzzerState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="DefineState" Type="Void" Timeout="60 s">
+                          <Documentation>Change Light Tower's state and associated colors</Documentation>
+                          <Parameters>
+                            <Parameter Name="state" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightTowerState" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetDateAndTime" Type="Void" Timeout="60 s">
+                          <Documentation>Send current date and time to hardware in order to synchronize logs.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="GreenLight" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState">
+                          <Documentation>Status of the green light</Documentation>
+                        </Status>
+                        <Status Name="OrangeLight" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState">
+                          <Documentation>Status of the orange light</Documentation>
+                        </Status>
+                        <Status Name="BlueLight" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState">
+                          <Documentation>Status of the blue light</Documentation>
+                        </Status>
+                        <Status Name="RedLight" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightState">
+                          <Documentation>Status of the red light</Documentation>
+                        </Status>
+                        <Status Name="BuzzerState" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.BuzzerState">
+                          <Documentation>Status of the Buzzer</Documentation>
+                        </Status>
+                        <Status Name="SignalTowerState" Type="UnitySC.Equipment.Abstractions.Devices.LightTower.LightTowerState">
+                          <Documentation>Status of the general Signal tower state</Documentation>
+                        </Status>
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

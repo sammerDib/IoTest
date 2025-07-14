@@ -1,0 +1,440 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:guiExtended="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.GuiExtended"
+    xmlns:interactions="clr-namespace:Agileo.GUI.Services.Popups;assembly=Agileo.GUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d">
+
+    <!--#region Commands-->
+
+    <DataTemplate x:Key="InteractionCommandContentTemplate" DataType="{x:Type interactions:PopupCommand}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="Column0" Width="Auto" />
+                <ColumnDefinition x:Name="Column1" Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--  Icon  -->
+            <ContentPresenter
+                x:Name="Icon"
+                Grid.Column="0"
+                MaxWidth="{StaticResource MaxSubCommandIconSize}"
+                MaxHeight="{StaticResource MaxSubCommandIconSize}"
+                Margin="4,0,8,0"
+                VerticalAlignment="Center"
+                Content="{Binding Icon}" />
+            <!--  Text  -->
+            <TextBlock
+                x:Name="Text"
+                Grid.Column="1"
+                Padding="0,3,3,3"
+                VerticalAlignment="Center"
+                Style="{StaticResource ButtonTextStyle}"
+                Text="{Binding LocalizedName}"
+                TextAlignment="Left"
+                TextWrapping="Wrap" />
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasIcon}" Value="false">
+                <Setter TargetName="Icon" Property="Margin" Value="0" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LocalizedName}" Value="">
+                <Setter TargetName="Text" Property="Padding" Value="0" />
+                <Setter TargetName="Icon" Property="Margin" Value="8,0" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!--#endregion Commands-->
+
+    <!--#region Interaction ViewModel Template-->
+
+    <SolidColorBrush x:Key="InteractionBackground" Color="{DynamicResource PanelBackground}" />
+    <SolidColorBrush x:Key="InteractionForeground" Color="{DynamicResource PanelForeground}" />
+    <SolidColorBrush x:Key="InteractionWithColorForeground" Color="White" />
+    <SolidColorBrush x:Key="InteractionSeverityVarious" Color="{DynamicResource PanelForeground}" />
+    <SolidColorBrush x:Key="InteractionSeverityVariousForeground" Color="{DynamicResource PanelBackground}" />
+    <SolidColorBrush x:Key="InteractionButtonBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="InteractionButtonForeground" Color="{DynamicResource SelectionForeground}" />
+    <sys:Double x:Key="InteractionPaddingDouble">24</sys:Double>
+    <sys:Double x:Key="InteractionPaddingBetweenTitleAndBodyDouble">16</sys:Double>
+
+    <DataTemplate x:Key="InteractionCommandTemplate" DataType="{x:Type interactions:PopupCommand}">
+        <Button
+            MinWidth="100"
+            MinHeight="32"
+            Margin="5,0,0,0"
+            Background="{DynamicResource InteractionButtonBackground}"
+            Command="{Binding}"
+            Content="{Binding}"
+            ContentTemplate="{StaticResource InteractionCommandContentTemplate}"
+            Foreground="{DynamicResource InteractionButtonForeground}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="PopupMessageTemplate" DataType="{x:Type interactions:Popup}">
+        <ScrollViewer
+            x:Name="ScrollViewer"
+            Width="Auto"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            DockPanel.Dock="Top"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="{Binding Message.Value, Converter={StaticResource TextToVisibilityConverter}, FallbackValue=Collapsed}">
+            <TextBlock
+                x:Name="message"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                ScrollViewer.CanContentScroll="True"
+                Style="{StaticResource Body1TextStyle}"
+                Text="{Binding Message.Value}"
+                TextWrapping="Wrap" />
+        </ScrollViewer>
+
+        <DataTemplate.Triggers>
+
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Message, Converter={StaticResource NullToFalseConverter}}" Value="True" />
+                    <Condition Binding="{Binding Content, Converter={StaticResource NullToFalseConverter}}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="ScrollViewer" Property="Margin" Value="{behaviors:MarginAssist Bottom={StaticResource InteractionPaddingBetweenTitleAndBodyDouble}}" />
+            </MultiDataTrigger>
+
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type interactions:Popup}">
+        <controls:Card
+            x:Name="MainContainer"
+            MinWidth="400"
+            Margin="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Elevation="Level3"
+            SnapsToDevicePixels="True"
+            UseLayoutRounding="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!--  Height="{StaticResource HeaderElementHeight}"  -->
+                <Border
+                    x:Name="Header"
+                    Margin="{behaviors:MarginAssist Bottom={StaticResource InteractionPaddingBetweenTitleAndBodyDouble}}"
+                    SnapsToDevicePixels="True">
+                    <TextBlock
+                        x:Name="caption"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource HeaderedContentControlHeaderForeground}"
+                        Style="{StaticResource Headline6TextStyle}"
+                        Text="{Binding Title.Value}"
+                        TextAlignment="Left">
+                        <TextBlock.Margin>
+                            <Thickness
+                                Bottom="{StaticResource InteractionPaddingBetweenTitleAndBodyDouble}"
+                                Left="{StaticResource InteractionPaddingDouble}"
+                                Right="{StaticResource InteractionPaddingDouble}"
+                                Top="{StaticResource InteractionPaddingBetweenTitleAndBodyDouble}" />
+                        </TextBlock.Margin>
+                    </TextBlock>
+                </Border>
+                <ItemsControl
+                    x:Name="CommandsItemsControl"
+                    Grid.Row="2"
+                    HorizontalAlignment="Right"
+                    ItemTemplate="{StaticResource InteractionCommandTemplate}"
+                    ItemsSource="{Binding Commands}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Margin>
+                        <Thickness
+                            Bottom="{StaticResource InteractionPaddingDouble}"
+                            Left="{StaticResource InteractionPaddingDouble}"
+                            Right="{StaticResource InteractionPaddingDouble}"
+                            Top="{StaticResource InteractionPaddingDouble}" />
+                    </ItemsControl.Margin>
+                </ItemsControl>
+                <DockPanel x:Name="GridContainer" Grid.Row="1">
+                    <DockPanel.Margin>
+                        <Thickness Left="{StaticResource InteractionPaddingDouble}" Right="{StaticResource InteractionPaddingDouble}" />
+                    </DockPanel.Margin>
+
+                    <ContentPresenter
+                        x:Name="FirstContentPresenter"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Content="{Binding Content}"
+                        DockPanel.Dock="Bottom"
+                        TextBlock.FontSize="{StaticResource FontSizeHeader}"
+                        TextBlock.Foreground="{DynamicResource InteractionForeground}" />
+
+                    <ContentPresenter
+                        x:Name="SecondContentPresenter"
+                        MaxWidth="560"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Content="{Binding}"
+                        ContentTemplate="{StaticResource PopupMessageTemplate}"
+                        TextBlock.FontSize="{StaticResource FontSizeHeader}"
+                        TextBlock.Foreground="{DynamicResource InteractionForeground}" />
+
+                </DockPanel>
+            </Grid>
+        </controls:Card>
+
+        <DataTemplate.Triggers>
+
+            <!--  Increases the margin around the commands in case the popup has no content.  -->
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Message, Converter={StaticResource NullToFalseConverter}}" Value="False" />
+                    <Condition Binding="{Binding Content, Converter={StaticResource NullToFalseConverter}}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="CommandsItemsControl" Property="Margin">
+                    <Setter.Value>
+                        <Thickness
+                            Bottom="{StaticResource InteractionPaddingDouble}"
+                            Left="{StaticResource InteractionPaddingDouble}"
+                            Right="{StaticResource InteractionPaddingDouble}" />
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+
+            <!--  FullScreen  -->
+            <DataTrigger Binding="{Binding IsFullScreen}" Value="True">
+                <Setter TargetName="MainContainer" Property="HorizontalAlignment" Value="Stretch" />
+                <Setter TargetName="MainContainer" Property="VerticalAlignment" Value="Stretch" />
+
+                <!--  Reverses the order of the contents to allow the second ContentPresenter to take the full size available.  -->
+                <Setter TargetName="FirstContentPresenter" Property="ContentTemplate" Value="{StaticResource PopupMessageTemplate}" />
+                <Setter TargetName="FirstContentPresenter" Property="Content" Value="{Binding}" />
+                <Setter TargetName="FirstContentPresenter" Property="DockPanel.Dock" Value="Top" />
+                <Setter TargetName="FirstContentPresenter" Property="MaxHeight" Value="200" />
+
+                <Setter TargetName="SecondContentPresenter" Property="MaxWidth" Value="{x:Static sys:Double.PositiveInfinity}" />
+                <Setter TargetName="SecondContentPresenter" Property="ContentTemplate" Value="{x:Null}" />
+                <Setter TargetName="SecondContentPresenter" Property="Content" Value="{Binding Content}" />
+            </DataTrigger>
+
+            <!--  Severity  -->
+            <DataTrigger Binding="{Binding SeverityLevel}" Value="{x:Static interactions:MessageLevel.NotAssigned}">
+                <Setter TargetName="caption" Property="Margin">
+                    <Setter.Value>
+                        <Thickness
+                            Bottom="{StaticResource InteractionPaddingBetweenTitleAndBodyDouble}"
+                            Left="{StaticResource InteractionPaddingDouble}"
+                            Right="{StaticResource InteractionPaddingDouble}"
+                            Top="{StaticResource InteractionPaddingDouble}" />
+                    </Setter.Value>
+                </Setter>
+                <Setter TargetName="Header" Property="Margin" Value="0" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SeverityLevel}" Value="Success">
+                <Setter TargetName="Header" Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="caption" Property="Foreground" Value="{DynamicResource InteractionWithColorForeground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SeverityLevel}" Value="Error">
+                <Setter TargetName="Header" Property="Background" Value="{DynamicResource SeverityErrorBrush}" />
+                <Setter TargetName="caption" Property="Foreground" Value="{DynamicResource InteractionWithColorForeground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SeverityLevel}" Value="Warning">
+                <Setter TargetName="Header" Property="Background" Value="{DynamicResource SeverityWarningBrush}" />
+                <Setter TargetName="caption" Property="Foreground" Value="{DynamicResource InteractionWithColorForeground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SeverityLevel}" Value="Info">
+                <Setter TargetName="Header" Property="Background" Value="{DynamicResource SeverityInformationBrush}" />
+                <Setter TargetName="caption" Property="Foreground" Value="{DynamicResource InteractionWithColorForeground}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SeverityLevel}" Value="Various">
+                <Setter TargetName="Header" Property="Background" Value="{DynamicResource InteractionSeverityVarious}" />
+                <Setter TargetName="caption" Property="Foreground" Value="{DynamicResource InteractionSeverityVariousForeground}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+    <!--#endregion Interaction ViewModel Template-->
+
+    <!--#region BusyIndicator Interaction-->
+
+    <SolidColorBrush x:Key="BusyIndicatorInteractionForeground" Color="White" />
+    <SolidColorBrush x:Key="BusyIndicatorInteractionProgressBarForeground" Color="{DynamicResource SelectionForeground}" />
+
+    <DataTemplate x:Key="BusyIndicatorInteractionCommandTemplate" DataType="{x:Type interactions:PopupCommand}">
+        <Button
+            MinWidth="100"
+            MinHeight="28"
+            Margin="0,0,5,0"
+            Background="Transparent"
+            Command="{Binding}"
+            Content="{Binding}"
+            ContentTemplate="{StaticResource InteractionCommandContentTemplate}"
+            Foreground="{DynamicResource BusyIndicatorInteractionForeground}"
+            Style="{StaticResource FlatBaseButtonStyle}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type interactions:BusyIndicator}">
+        <Grid
+            Width="650"
+            MinHeight="200"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" SharedSizeGroup="A" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" SharedSizeGroup="A" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="1"
+                MaxWidth="600"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <controls:CircularProgressBar
+                    Width="70"
+                    Height="70"
+                    IsIndeterminate="{Binding IsIndeterminate}"
+                    Maximum="{Binding Maximum}"
+                    Minimum="{Binding Minimum}"
+                    Value="{Binding Value}" />
+                <StackPanel
+                    Margin="15,0,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical">
+                    <TextBlock
+                        VerticalAlignment="Top"
+                        FontSize="{StaticResource FontSizeHug}"
+                        Foreground="{DynamicResource BusyIndicatorInteractionForeground}"
+                        Text="{Binding Title.Value}" />
+                    <TextBlock
+                        MaxWidth="450"
+                        Margin="1,0,0,20"
+                        VerticalAlignment="Bottom"
+                        FontSize="{StaticResource FontSizeNormal}"
+                        Foreground="{DynamicResource BusyIndicatorInteractionForeground}"
+                        Text="{Binding Message.Value}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </StackPanel>
+            <ItemsControl
+                Grid.Row="2"
+                Margin="10,0,5,10"
+                HorizontalAlignment="Right"
+                ItemTemplate="{StaticResource BusyIndicatorInteractionCommandTemplate}"
+                ItemsSource="{Binding Commands}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
+    </DataTemplate>
+    <!--#endregion BusyIndicator Interaction-->
+
+    <!--#region Interaction Displayer-->
+    <SolidColorBrush x:Key="InteractionBackgroundMask" Color="{DynamicResource BackgroundMask}" />
+
+    <Style TargetType="{x:Type controls:InteractionDisplayer}">
+        <Setter Property="Background" Value="{DynamicResource InteractionBackgroundMask}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:InteractionDisplayer}">
+                    <Grid x:Name="RootElement">
+                        <VisualStateManager.CustomVisualStateManager>
+                            <b:ExtendedVisualStateManager />
+                        </VisualStateManager.CustomVisualStateManager>
+
+                        <AdornerDecorator>
+                            <ContentPresenter
+                                x:Name="RealContent"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </AdornerDecorator>
+
+                        <Grid
+                            x:Name="InteractionContainerGrid"
+                            d:IsHidden="True"
+                            Opacity="0">
+                            <Grid.Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Style.Triggers>
+                                        <Trigger Property="Opacity" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+
+                            <Rectangle
+                                x:Name="Mask"
+                                Fill="{DynamicResource InteractionBackgroundMask}"
+                                IsHitTestVisible="False"
+                                UseLayoutRounding="True" />
+
+                            <ContentPresenter
+                                x:Name="Popup"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                d:IsHidden="True"
+                                Content="{TemplateBinding LastInteraction}" />
+
+                        </Grid>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="InteractionVisibilityStates" b:ExtendedVisualStateManager.UseFluidLayout="True">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition
+                                        GeneratedDuration="{StaticResource ShowInteractionDuration}"
+                                        From="Active"
+                                        To="Inactive" />
+                                    <VisualTransition
+                                        GeneratedDuration="{StaticResource ShowInteractionDuration}"
+                                        From="Inactive"
+                                        To="Active" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Active">
+                                    <Storyboard Timeline.DesiredFrameRate="10">
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="InteractionContainerGrid" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Inactive">
+                                    <Storyboard Timeline.DesiredFrameRate="10">
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="InteractionContainerGrid" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsShowingInteraction" Value="True">
+                            <Setter TargetName="RealContent" Property="IsHitTestVisible" Value="False" />
+                            <Setter TargetName="RealContent" Property="IsEnabled" Value="False" />
+                        </Trigger>
+                        <Trigger Property="ShowInteraction" Value="False">
+                            <Setter TargetName="Popup" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--#endregion Interaction Displayer-->
+
+</ResourceDictionary>

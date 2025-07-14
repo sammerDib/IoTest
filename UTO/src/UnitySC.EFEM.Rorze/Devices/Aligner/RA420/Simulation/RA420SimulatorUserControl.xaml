@@ -1,0 +1,76 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Rorze.Devices.Aligner.RA420.Simulation.RA420SimulatorUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:simulation="clr-namespace:UnitySC.EFEM.Rorze.Devices.Aligner.RA420.Simulation"
+    d:DataContext="{d:DesignInstance Type=simulation:RA420SimulationData}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <TabControl>
+        <TabItem Header="Physical Sensors">
+            <StackPanel Orientation="Horizontal">
+                <GroupBox Margin="10" Header="Inputs">
+                    <StackPanel>
+                        <CheckBox
+                            Margin="5"
+                            Content="I_ExhaustFanRotating"
+                            IsChecked="{Binding I_ExhaustFanRotating}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_SubstrateDetectionSensor1"
+                            IsChecked="{Binding I_SubstrateDetectionSensor1}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_SubstrateDetectionSensor2"
+                            IsChecked="{Binding I_SubstrateDetectionSensor2}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Margin="10" Header="Outputs">
+                    <StackPanel>
+                        <CheckBox
+                            Margin="5"
+                            Content="O_AlignerReadyToOperate"
+                            IsChecked="{Binding O_AlignerReadyToOperate}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_TemporarilyStop"
+                            IsChecked="{Binding O_TemporarilyStop}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignificantError"
+                            IsChecked="{Binding O_SignificantError}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_LightError"
+                            IsChecked="{Binding O_LightError}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SubstrateDetection"
+                            IsChecked="{Binding O_SubstrateDetection}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_AlignmentComplete"
+                            IsChecked="{Binding O_AlignmentComplete}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SpindleSolenoidValveChuckingOFF"
+                            IsChecked="{Binding O_SpindleSolenoidValveChuckingOFF}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SpindleSolenoidValveChuckingON"
+                            IsChecked="{Binding O_SpindleSolenoidValveChuckingON}" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Alarms" Visibility="{Binding IsDeviceWithAlarms, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ContentControl Content="{Binding AlarmSimulationUserControl}" />
+        </TabItem>
+    </TabControl>
+</UserControl>

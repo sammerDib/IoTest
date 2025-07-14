@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="ADCConfiguration.View.Recipe.ImportRecipeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:recipeVm ="clr-namespace:ADCConfiguration.ViewModel.Recipe"
+             xmlns:local="clr-namespace:ADCConfiguration.View.Recipe"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800"
+             Background="{StaticResource GlobalBackground}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ADCConfiguration;component/Styles/FormStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid HorizontalAlignment="Center" Width="780" Margin="0,30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Recipe File and External Files-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Viewbox  Grid.Column="0" Stretch="Uniform" Height="40">
+                    <ContentControl ContentTemplate="{StaticResource RecipeFileADCImage}"/>
+                </Viewbox>
+                <TextBlock Grid.Column="1" Text="Recipe file" Style="{StaticResource Title}"/>
+                <TextBox Grid.Column="2" FontSize="12" Margin="2,8" Text="{Binding RecipeFilePath, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Column="3" Content="..." Width="30" Margin="4" Command="{Binding OpenRecipeCommand}"/>
+                <Viewbox  Grid.Row="1" Grid.Column="0" Stretch="Uniform"  Height="40">
+                    <ContentControl ContentTemplate="{StaticResource FolderADCImage}"/>
+                </Viewbox>
+                <TextBlock Grid.Row="1"  Grid.Column="1" Text="External recipe files folder" Style="{StaticResource Title}"/>
+                <TextBox Grid.Row="1" Grid.Column="2"  FontSize="12" Margin="2,8" Text="{Binding ExternalFileFolder, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Row="1" Grid.Column="3" Content="..." Width="30" Margin="2,6" Command="{Binding OpenExternalFilesCommand}"/>
+            </Grid>
+
+            <!-- Status-->
+            <Border Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource BorderPanel}" Visibility="{Binding RecipeLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Vertical">
+                    <!-- Recipe Status-->
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <Viewbox Stretch="Uniform" Height="20" Margin="4" ToolTip="{Binding RecipeStatus.State, Converter={StaticResource FileStateToString}}">
+                                <ContentControl ContentTemplate="{Binding RecipeStatus.State, Converter={StaticResource FileStateToResource}}"/>
+                            </Viewbox>
+                            <TextBlock Text="{Binding RecipeStatus.FileName}" Margin="4" Style="{StaticResource ValidTitle}"/>
+                            <TextBlock Text="Database version" Margin="4" Style="{StaticResource Title}"/>
+                            <TextBlock Text="{Binding RecipeStatus.OldVersion}" Margin="4" Style="{StaticResource ValidTitle}"/>
+                            <TextBlock Text="Type" Margin="4" Style="{StaticResource Title}"/>
+                            <TextBlock Text="{Binding DataLoaderTypes}" Margin="4" Style="{StaticResource ValidTitle}"/>                            
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- External files status-->
+                    <Border Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource BorderPanel}">
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FilesStatus.Count}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="*" ></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="External files status" Style="{StaticResource PanelTitle}"/>
+                            <ListView Grid.Row="1" ItemsSource="{Binding FilesStatus}" >
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Focusable" Value="false"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Viewbox Stretch="Uniform" Height="20" Margin="4" ToolTip="{Binding State, Converter={StaticResource FileStateToString}}">
+                                                <ContentControl ContentTemplate="{Binding State, Converter={StaticResource FileStateToResource}}"/>
+                                            </Viewbox>
+                                            <TextBlock Text="{Binding FileName}" Style="{StaticResource ValidTitle2}" />
+                                            <TextBlock Text="Database version" Margin="2" VerticalAlignment="Center" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding OldVersion}" Style="{StaticResource ValidTitle2}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+            
+            <!-- Comment -->
+            <Border Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource BorderPanel}"  Visibility="{Binding RecipeLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="4,4,0,0">
+                        <Viewbox Stretch="Uniform" Height="30" >
+                            <ContentControl ContentTemplate="{StaticResource CommentADCImage}"/>
+                        </Viewbox>
+                        <TextBlock Text="Comment" HorizontalAlignment="Center"  VerticalAlignment="Center"  ToolTip="Import recipe" Style="{StaticResource Title}"/>
+                    </StackPanel>
+                    <TextBox Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Height="80" Text="{Binding Comment}"/>
+                </Grid>
+            </Border>
+
+            <!-- Import-->
+            <Button Margin="10" Grid.Row="4"  Command="{Binding ImportCommand}" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="2">
+                    <Viewbox Stretch="Uniform" Height="30">
+                        <ContentControl ContentTemplate="{StaticResource ImportADCImage}"/>
+                    </Viewbox>
+                    <TextBlock Text="Import" HorizontalAlignment="Center" Margin="5" ToolTip="Import recipe"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true"/>
+    </Grid>
+</UserControl>

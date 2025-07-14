@@ -1,0 +1,122 @@
+<UserControl
+    x:Class="UnitySC.ToolControl.ProcessModules.GUI.Views.Panels.EquipmentHandling.ProcessModule.ToolControlProcessModule.ToolControlProcessModuleCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolControlProcessModule="clr-namespace:UnitySC.ToolControl.ProcessModules.GUI.Views.Panels.EquipmentHandling.ProcessModule.ToolControlProcessModule"
+    d:DataContext="{d:DesignInstance toolControlProcessModule:ToolControlProcessModuleCardViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="500"
+    mc:Ignorable="d">
+    <controls:Card>
+        <GroupBox
+            Margin="0,0,0,5"
+            Padding="10,5,10,0"
+            VerticalAlignment="Top">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="5,0,5,0"
+                            HorizontalAlignment="Center"
+                            DockPanel.Dock="Left"
+                            Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                            Text="{Binding ProcessModule.ProcessModuleName}" />
+                    </StackPanel>
+
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Background="Transparent"
+                        Command="{Binding Path=DataContext.ToggleDeviceConnectCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:Card}}}"
+                        CommandParameter="{Binding ProcessModule}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource SquareIconifiedButtonStyle}" TargetType="{x:Type Button}">
+                                <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource DisconnectedIcon}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ProcessModule.IsCommunicating}" Value="True">
+                                        <Setter Property="markupExtensions:Icon.Geometry" Value="{StaticResource ConnectedIcon}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <ContentPresenter
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Content="{Binding ProcessModule}"
+                        ContentTemplate="{StaticResource PmOperatingModeDisplayerTemplate}" />
+                </Grid>
+            </GroupBox.Header>
+
+
+            <StackPanel>
+
+                <controls:PropertyEditor Orientation="Horizontal" PropertyName="{localize:Static toolControlProcessModule:ToolControlProcessModuleCardResources.EQUIPMENT_WAFER_ID}">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:Displayer
+                            MinWidth="150"
+                            Margin="0,0,0,5"
+                            Padding="5,0,5,0"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding ProcessModule.SimplifiedWaferId}">
+                            <controls:Displayer.Style>
+                                <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                    <Setter Property="Color" Value="Blue" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ProcessModule.Location.Material, UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
+                                            <Setter Property="Color" Value="None" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ProcessModule.SubstrateDetectionError, UpdateSourceTrigger=PropertyChanged}" Value="true">
+                                            <Setter Property="Color" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:Displayer.Style>
+                            <controls:Displayer.InputBindings>
+                                <MouseBinding Command="{Binding SetWaferPresenceCommand}" MouseAction="LeftClick" />
+                            </controls:Displayer.InputBindings>
+                        </controls:Displayer>
+                        <controls:Icon
+                            Data="{StaticResource CautionIcon}"
+                            Foreground="{DynamicResource HighlightBrush}"
+                            ToolTip="{localize:Static toolControlProcessModule:ToolControlProcessModuleCardResources.SENSOR_INCOHERENCE_DETECTED}"
+                            Visibility="{Binding ProcessModule.SubstrateDetectionError, Converter={StaticResource FalseToHiddenConverter}}" />
+                    </StackPanel>
+                </controls:PropertyEditor>
+
+                <Button
+                    Margin="0,5,0,0"
+                    HorizontalContentAlignment="Stretch"
+                    markupExtensions:Icon.Geometry="{StaticResource RefreshIcon}"
+                    Command="{Binding InitializeCommand}"
+                    FontSize="{StaticResource FontSizeNormal}">
+                    <Button.Content>
+                        <TextBlock HorizontalAlignment="Center" Text="{localize:Static toolControlProcessModule:ToolControlProcessModuleCardResources.EQUIPMENT_INIT}" />
+                    </Button.Content>
+                </Button>
+
+            </StackPanel>
+        </GroupBox>
+    </controls:Card>
+</UserControl>

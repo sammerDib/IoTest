@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="BasicModules.Edition.Rendering.ResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	         xmlns:view="clr-namespace:BasicModules.Edition.Rendering"
+			 d:IsDataSource="True"
+			 mc:Ignorable="d" Height="auto" Width="auto"  DataContext="{Binding Source = KlarfRenderingViewModel}" Unloaded="UserControl_Unloaded">
+
+
+	<UserControl.Resources>
+
+		<RoutedUICommand x:Key="Commands.ZoomOut" />
+		<RoutedUICommand x:Key="Commands.ZoomIn" />
+
+		<Style x:Key="ZoomBoxStyle" TargetType="{x:Type xctk:Zoombox}">
+			<Style.Triggers>
+				<Trigger Property="xctk:Zoombox.AreZoomModifiersActive" Value="True">
+					<Setter Property="xctk:Zoombox.Cursor" Value="Cross" />
+				</Trigger>
+				<Trigger Property="xctk:Zoombox.AreRelativeZoomModifiersActive" Value="True">
+					<Setter Property="xctk:Zoombox.Cursor" Value="Cross" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+
+	</UserControl.Resources>
+
+	<UserControl.InputBindings>
+		<!--  Bind input to commands.  -->
+		<KeyBinding Key="Minus" Command="{StaticResource Commands.ZoomOut}" />
+		<KeyBinding Key="Plus" Command="{StaticResource Commands.ZoomIn}" />
+	</UserControl.InputBindings>
+	<Grid >
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="2*" />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
+
+		<view:ClassView/>
+		<GridSplitter Grid.Row="1" Height="3" HorizontalAlignment="Stretch" Background="{StaticResource SplitterColor}"/>
+		<view:WaferView Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+	</Grid>
+
+
+</UserControl>

@@ -1,0 +1,199 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.LoginPopup.SampleLoginPopupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
+    xmlns:loginPopup="clr-namespace:Agileo.GUI.Components.LoginPopup;assembly=Agileo.GUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:properties="clr-namespace:Agileo.GUI.Properties;assembly=Agileo.GUI"
+    xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:controller="clr-namespace:UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch"
+    d:DataContext="{d:DesignInstance loginPopup:LogInPopup, IsDesignTimeCreatable=True}"
+    d:DesignHeight="{DynamicResource DesignHeight}"
+    d:DesignWidth="{DynamicResource DesignWidth}"
+    Focusable="True"
+    IsVisibleChanged="LogInPopupView_OnIsVisibleChanged"
+    SnapsToDevicePixels="True"
+    mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="Escape"
+            Command="{Binding CloseCommand}" />
+        <KeyBinding
+            Command="{Binding LogInCommand}"
+            CommandParameter="{Binding ElementName=PasswordBox}"
+            Gesture="Enter" />
+    </UserControl.InputBindings>
+    <Grid UseLayoutRounding="True">
+
+        <!--#region Clickable background-->
+        <DockPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            Focusable="True"
+            LastChildFill="False">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="PreviewMouseDown">
+                    <b:InvokeCommandAction Command="{Binding CloseCommand}" />
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </DockPanel>
+        <!--#endregion Clickable background-->
+
+        <!--#region Close button-->
+        <Button
+            Margin="10"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            dependencyObjects:Icon.Geometry="{StaticResource CloseIcon}"
+            Background="Transparent"
+            Command="{Binding CloseCommand}"
+            Foreground="White"
+            Style="{StaticResource SquareIconifiedButtonStyle}" />
+        <!--#endregion Close button-->
+
+        <!--#region logon view-->
+        <controls:Card
+            Width="450"
+            MinHeight="240"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Elevation="Level3">
+            <DockPanel
+                MinHeight="240"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center">
+
+                <!--#region Title-->
+                <TextBlock
+                    Margin="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Top"
+                    Foreground="{DynamicResource LogonWindowHeaderForeground}"
+                    Style="{StaticResource Headline6TextStyle}"
+                    Text="{Binding Title.Value}" />
+                <!--#endregion Title-->
+
+                <StackPanel
+                    Margin="{behaviors:MarginAssist Left={StaticResource InteractionPaddingDouble}, Bottom={StaticResource InteractionPaddingDouble}, Right={StaticResource InteractionPaddingDouble}}"
+                    FocusManager.FocusedElement="{Binding ElementName=CbUserName}"
+                    Orientation="Vertical">
+
+                    <!--#region UserName-->
+                    <ComboBox
+                        x:Name="CbUserName"
+                        Height="35"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        dependencyObjects:Icon.Geometry="{StaticResource UserIcon}"
+                        FocusVisualStyle="{x:Null}"
+                        Focusable="True"
+                        IsEditable="False"
+                        ItemsSource="{Binding UsersView}"
+                        SelectedValue="{Binding Path=UserName, UpdateSourceTrigger=PropertyChanged}" />
+                    <!--#endregion UserName-->
+
+                    <!--#region Password + Language selection-->
+                    <DockPanel Margin="{StaticResource HorizontalStackPropertyMargin}">
+                        <ComboBox
+                            Height="Auto"
+                            MinWidth="100"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Center"
+                            DockPanel.Dock="Right"
+                            ItemsSource="{Binding Localizer.SupportedCultures, Source={x:Static controller:App.Instance}}"
+                            SelectedItem="{Binding Localizer.CurrentCulture, Source={x:Static controller:App.Instance}}"
+                            Visibility="{Binding HasSeveralSupportedCultures, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="globalization:CultureInfo">
+                                    <TextBlock Text="{Binding Path=NativeName, Converter={StaticResource FirstLetterUppercaseConverter}}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <controls:VisiblePasswordBox
+                            x:Name="PasswordBox"
+                            VerticalContentAlignment="Center"
+                            dependencyObjects:Icon.Geometry="{StaticResource LockIcon}"
+                            CanVisualizePassword="True" />
+                    </DockPanel>
+
+                    <!--#endregion Password + Language selection-->
+
+                    <!--#region LoginStatus message-->
+                    <controls:MessageArea
+                        Height="44"
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        HorizontalAlignment="Stretch"
+                        Message="{Binding LoginStatus}" />
+                    <!--#endregion LoginStatus message-->
+
+                    <!--#region Log in/out button-->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            x:Name="ShutDownButton"
+                            Margin="0,0,5,0"
+                            dependencyObjects:Icon.Geometry="{StaticResource ShutDownIcon}"
+                            Background="{DynamicResource SeverityErrorBrush}"
+                            Command="{Binding ShutDownApplicationCommand}"
+                            Content="{localize:Static properties:Resources.S_LOGON_SHUTDOWN}"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Foreground="{DynamicResource LogonWindowShutdownButtonForeground}"
+                            IsEnabled="{Binding ShutDownApplicationCommand.IsEnabled}"
+                            Visibility="{Binding ShutDownApplicationCommand.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                        <!--  ReSharper disable once Xaml.MissingGridIndex  -->
+                        <Button
+                            CommandParameter="{Binding ElementName=PasswordBox}"
+                            FontSize="{StaticResource FontSizeNormal}">
+                            <Button.Style>
+                                <Style
+                                    BasedOn="{StaticResource {x:Type Button}}"
+                                    TargetType="{x:Type Button}">
+                                    <Setter Property="Grid.Column" Value="1" />
+                                    <Setter Property="Margin" Value="5,0,0,0" />
+                                    <Setter Property="Content" Value="{localize:Static properties:Resources.S_LOGON_LOGIN}" />
+                                    <Setter Property="Command" Value="{Binding LogInCommand}" />
+                                    <Setter Property="IsEnabled" Value="{Binding LogInCommand.IsEnabled}" />
+                                    <Setter Property="Visibility" Value="{Binding LogInCommand.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsCurrentUserSelected}" Value="True" />
+                                                <Condition Binding="{Binding IsAnybodyLogged}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Content" Value="{localize:Static properties:Resources.S_LOGON_LOGOUT}" />
+                                            <Setter Property="Command" Value="{Binding LogOutCommand}" />
+                                            <Setter Property="IsEnabled" Value="{Binding LogOutCommand.IsEnabled}" />
+                                            <Setter Property="Visibility" Value="{Binding LogOutCommand.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </MultiDataTrigger>
+                                        <DataTrigger Binding="{Binding ShutDownApplicationCommand.IsVisible}" Value="false">
+                                            <Setter Property="Grid.Column" Value="0" />
+                                            <Setter Property="Grid.ColumnSpan" Value="2" />
+                                            <Setter Property="Margin" Value="0" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                    <!--#endregion Log in/out button-->
+
+                </StackPanel>
+            </DockPanel>
+        </controls:Card>
+        <!--#endregion logon view-->
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,171 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.Carriers.CarrierViewerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:carriers="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.Carriers"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment"
+    xmlns:loadPort="clr-namespace:UnitySC.GUI.Common.Equipment.LoadPort;assembly=UnitySC.GUI.Common"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance carriers:CarrierViewer}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="550"
+    mc:Ignorable="d">
+    <Border Background="{DynamicResource BusinessPanelBackground}">
+        <GroupBox Padding="20,5,20,20">
+            <DockPanel>
+
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource PropertyEditorNameTextBlockStyle}"
+                        Text="Location Id" />
+                    <controls:Displayer
+                        Grid.Column="1"
+                        Margin="20,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding GoToBusinessPanelLinkCommand}"
+                        CommandIcon="{StaticResource ArrowRightIcon}"
+                        Value="{Binding Carrier.LocationId}" />
+                </Grid>
+
+                <StackPanel
+                    Margin="0,0,0,10"
+                    DockPanel.Dock="Top"
+                    Orientation="Horizontal">
+                    <controls:Icon Data="{StaticResource TimePickerIcon}" />
+                    <TextBlock Margin="7,0,0,0" Text="{Binding AssociatedLoadPort.Carrier.PutTimeStamp}" />
+                </StackPanel>
+
+                <loadPort:LoadPortLedStatesView
+                    Margin="0,0,0,10"
+                    DockPanel.Dock="Top"
+                    LoadPort="{Binding AssociatedLoadPort}" />
+
+                <Grid Margin="{StaticResource HorizontalStackPropertyMargin}" DockPanel.Dock="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Vertical">
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_STATUS_ID}">
+                            <controls:Displayer>
+                                <controls:Displayer.Style>
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Setter Property="Value" Value="{Binding CarrierViewModel.CarrierIdStatus}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                                                <Setter Property="Icon" Value="{x:Null}" />
+                                                <Setter Property="Color" Value="None" />
+                                                <Setter Property="Value" Value="-" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.IDNotRead}">
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDNOTREAD}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.VerificationFailed}">
+                                                <Setter Property="Color" Value="Red" />
+                                                <Setter Property="Icon" Value="{StaticResource CancelIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_VERIFICATIONFAILED}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.VerificationOk}">
+                                                <Setter Property="Color" Value="Green" />
+                                                <Setter Property="Icon" Value="{StaticResource CheckedIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_VERIFICATIONOK}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.WaitingForHost}">
+                                                <Setter Property="Color" Value="Orange" />
+                                                <Setter Property="Icon" Value="{StaticResource LoaderIcon}" />
+                                                <Setter Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_WAITINGFORHOST}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="Accessing">
+                            <controls:Displayer Value="{Binding CarrierViewModel.AccessingStatus}">
+                                <controls:Displayer.Style>
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.AccessingStatus}" Value="{x:Static e87:AccessingStatus.NotAccessed}">
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.AccessingStatus}" Value="{x:Static e87:AccessingStatus.InAccess}">
+                                                <Setter Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.AccessingStatus}" Value="{x:Static e87:AccessingStatus.CarrierComplete}">
+                                                <Setter Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter Property="Icon" Value="{StaticResource CheckedIcon}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CarrierViewModel.AccessingStatus}" Value="{x:Static e87:AccessingStatus.CarrierStopped}">
+                                                <Setter Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter Property="Icon" Value="{StaticResource CancelIcon}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor PropertyName="Association">
+                            <controls:Displayer>
+                                <controls:Displayer.Style>
+                                    <Style BasedOn="{StaticResource {x:Type controls:Displayer}}" TargetType="{x:Type controls:Displayer}">
+                                        <Setter Property="Value" Value="{Binding Source={x:Static e87:AssociationState.Associated}}" />
+                                        <Setter Property="Icon" Value="{StaticResource CheckedIcon}" />
+                                        <Setter Property="Color" Value="Green" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding AssociatedE87LoadPort}" Value="{x:Null}">
+                                                <Setter Property="Value" Value="{Binding Source={x:Static e87:AssociationState.NotAssociated}}" />
+                                                <Setter Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter Property="Color" Value="None" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </controls:Displayer.Style>
+                            </controls:Displayer>
+                        </controls:PropertyEditor>
+
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Vertical">
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="Carrier Id">
+                            <controls:Displayer Value="{Binding Carrier.ObjID}" />
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor Margin="{StaticResource HalfHorizontalStackPropertyMargin}" PropertyName="Port Id">
+                            <controls:Displayer
+                                Command="{Binding GoToBusinessPanelLinkCommand}"
+                                CommandIcon="{StaticResource ArrowRightIcon}"
+                                Value="{Binding AssociatedE87LoadPort.PortID}" />
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor PropertyName="Usage">
+                            <controls:Displayer Value="{Binding CarrierViewModel.Usage}" />
+                        </controls:PropertyEditor>
+
+                    </StackPanel>
+
+                </Grid>
+
+                <equipment:SlotMapView Margin="{StaticResource HalfHorizontalStackPropertyMargin}" DataContext="{Binding SlotMap}" />
+
+            </DockPanel>
+        </GroupBox>
+    </Border>
+</UserControl>

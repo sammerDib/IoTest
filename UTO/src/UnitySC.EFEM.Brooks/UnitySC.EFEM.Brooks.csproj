@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{28D3EC0F-81E2-41EB-A44E-EB484415AF2D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.EFEM.Brooks</RootNamespace>
+    <AssemblyName>UnitySC.EFEM.Brooks</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BAI.ClientInitLib">
+      <HintPath>..\..\staticPackages\BAI.ClientInitLib.dll</HintPath>
+    </Reference>
+    <Reference Include="BAI.InfrasLib">
+      <HintPath>..\..\staticPackages\BAI.InfrasLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BAI.MaintLib, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>CTC\Libraries\BAI.MaintLib.dll</HintPath>
+    </Reference>
+    <Reference Include="BAI.SystemsLib">
+      <HintPath>..\..\staticPackages\BAI.SystemsLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Devices\Aligner\BrooksAligner\BrooksAligner.cs" />
+    <Compile Include="Devices\Aligner\BrooksAligner\BrooksAligner.g.cs">
+      <DependentUpon>BrooksAligner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Aligner\BrooksAligner\BrooksAligner.sim.cs" />
+    <Compile Include="Devices\Aligner\BrooksAligner\Configuration\BrooksAlignerConfiguration.cs" />
+    <Compile Include="Devices\Aligner\BrooksAligner\IBrooksAligner.cs" />
+    <Compile Include="Devices\Aligner\BrooksAligner\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Devices\Efem\BrooksEfem\BrooksEfem.cs" />
+    <Compile Include="Devices\Efem\BrooksEfem\BrooksEfem.g.cs">
+      <DependentUpon>BrooksEfem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Efem\BrooksEfem\BrooksEfem.sim.cs" />
+    <Compile Include="Devices\Efem\BrooksEfem\Configuration\BrooksEfemConfiguration.cs" />
+    <Compile Include="Devices\Efem\BrooksEfem\IBrooksEfem.cs" />
+    <Compile Include="Devices\Efem\BrooksEfem\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Devices\Ffu\BrooksFfu\BrooksFfu.cs" />
+    <Compile Include="Devices\Ffu\BrooksFfu\BrooksFfu.g.cs">
+      <DependentUpon>BrooksFfu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Ffu\BrooksFfu\BrooksFfu.sim.cs" />
+    <Compile Include="Devices\Ffu\BrooksFfu\Configuration\BrooksFfuConfiguration.cs" />
+    <Compile Include="Devices\Ffu\BrooksFfu\IBrooksFfu.cs" />
+    <Compile Include="Devices\Ffu\BrooksFfu\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Devices\LightTower\BrooksLightTower\BrooksLightTower.cs" />
+    <Compile Include="Devices\LightTower\BrooksLightTower\BrooksLightTower.g.cs">
+      <DependentUpon>BrooksLightTower.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LightTower\BrooksLightTower\BrooksLightTower.sim.cs" />
+    <Compile Include="Devices\LightTower\BrooksLightTower\Configuration\BrooksLightTowerConfiguration.cs" />
+    <Compile Include="Devices\LightTower\BrooksLightTower\IBrooksLightTower.cs" />
+    <Compile Include="Devices\LightTower\BrooksLightTower\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Devices\LoadPort\BrooksLoadPort\BrooksLoadPort.cs" />
+    <Compile Include="Devices\LoadPort\BrooksLoadPort\BrooksLoadPort.g.cs">
+      <DependentUpon>BrooksLoadPort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LoadPort\BrooksLoadPort\BrooksLoadPort.sim.cs" />
+    <Compile Include="Devices\LoadPort\BrooksLoadPort\Configuration\BrooksLoadPortConfiguration.cs" />
+    <Compile Include="Devices\LoadPort\BrooksLoadPort\IBrooksLoadPort.cs" />
+    <Compile Include="Devices\LoadPort\BrooksLoadPort\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Devices\Robot\BrooksRobot\BrooksRobot.cs" />
+    <Compile Include="Devices\Robot\BrooksRobot\BrooksRobot.g.cs">
+      <DependentUpon>BrooksRobot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Robot\BrooksRobot\BrooksRobot.sim.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Devices\Robot\BrooksRobot\Conditions\IsMotionProfileValid.cs" />
+    <Compile Include="Devices\Robot\BrooksRobot\Configuration\BrooksRobotConfiguration.cs" />
+    <Compile Include="Devices\Robot\BrooksRobot\IBrooksRobot.cs" />
+    <Compile Include="Devices\Robot\BrooksRobot\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\BrooksSubstrateIdReader.cs" />
+    <Compile Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\BrooksSubstrateIdReader.g.cs">
+      <DependentUpon>BrooksSubstrateIdReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\BrooksSubstrateIdReader.sim.cs" />
+    <Compile Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Configuration\BrooksSubstrateIdReaderConfiguration.cs" />
+    <Compile Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\IBrooksSubstrateIdReader.cs" />
+    <Compile Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Helpers\Helper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="BAI.ClientInitLib.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\ConfigWizardAnswers.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\CTC.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\EFEM.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\EFEM.IO.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\EFEM.LoadPort.AutoHandoff.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\EFEM.Locations.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\InSight.Access.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\Mappers.Spec.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\MessageTranslator.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\NetworkMap.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\OfaWaferSaver.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\System.Config.Default.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\System.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Config\WaferAligner.ConfigParams.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Fab\EFEM.Materials.Rules.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Fab\Materials.Spec.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Fab\PurgeRecipies.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.Bars.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.Docking.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.Navigation.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.Shared.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.SyntaxEditor.Addons.DotNet.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.SyntaxEditor.Addons.Xml.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.SyntaxEditor.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ActiproSoftware.Wizard.WinForms.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Advantech.Adam.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Advantech.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Advantech.Protocol.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ANI.Wpf.Common.Lib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Admin.Client.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Admin.Comm.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Admin.FtpClient.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.AdminGui.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.Client.GUIApp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.ClientLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.CommonLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.CommonLib.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.Server.ConsoleApp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.Server.Service.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.Server.UIApp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ANI.ServerLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ApiAdapterGui.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Apps.BaseTest.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Apps.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Apps.FrameWork.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Apps.GeneralTest.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Apps.OpenLoopFrictionTest.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.AuditConsole.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.AuditLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.AuditorGui.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.CenterFindingCalc.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ClientInitLib.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Configurator.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ConfigWizardLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.DiagLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.DiagLib.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.InfrasLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.InfrasLib.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.InSight.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.LogConsole.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Machine.ECAdapter.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.MaintLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.MaterialsSpecEditor.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.MessageTerminal.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.NetFile.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.Python.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.PythonForm.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ServiceLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ServiceLib.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.SimCtrlLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.SwInstallApp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.SwUpdateApp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.SwUpdateLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.SystemsLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.SystemsLib.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.ToolLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.WaferSaverLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\BAI.WaferSaverLib.XML">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\CommonServiceLocator.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\DevComponents.DotNetBar2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\GalaSoft.MvvmLight.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\GalaSoft.MvvmLight.Extras.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\GalaSoft.MvvmLight.Platform.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\IronPython.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\IronPython.Modules.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\IronPython.SQLite.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\IronPython.Wpf.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\LaunchMsgTrans.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\log4net.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\MessageTranslator.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Microsoft.Dynamic.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Microsoft.Scripting.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Microsoft.Scripting.Metadata.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Microsoft.VisualStudio.CodeCoverage.Shim.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Microsoft.Web.XmlTransform.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Newtonsoft.Json.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Notepad2.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\OptiLogicProtocol.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\PathFindGui.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Renci.SshNet.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Stateless.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\System.Windows.Interactivity.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Third Party Notices.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\Unme.Common.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\WaferEngineTestFixture.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\WpfResources.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Libraries\ZedGraph.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTC\Version.txt" />
+    <Content Include="Devices\Aligner\BrooksAligner\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Efem\BrooksEfem\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Ffu\BrooksFfu\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LightTower\BrooksLightTower\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\BrooksLoadPort\Resources\Configuration4.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\BrooksLoadPort\Resources\Configuration3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\BrooksLoadPort\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\BrooksLoadPort\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Robot\BrooksRobot\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnitySC.Equipment.Abstractions\UnitySC.Equipment.Abstractions.csproj">
+      <Project>{88f78488-bc6a-43ae-9027-4d94b97ad7ee}</Project>
+      <Name>UnitySC.Equipment.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Agileo.EquipmentModeling-Protected">
+      <Version>7.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Devices\Aligner\BrooksAligner\BrooksAligner.device">
+      <DependentUpon>IBrooksAligner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Aligner\BrooksAligner\Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Devices\Aligner\BrooksAligner\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Efem\BrooksEfem\BrooksEfem.device">
+      <DependentUpon>IBrooksEfem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Efem\BrooksEfem\Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Devices\Efem\BrooksEfem\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Ffu\BrooksFfu\BrooksFfu.device">
+      <DependentUpon>IBrooksFfu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Ffu\BrooksFfu\Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Devices\Ffu\BrooksFfu\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LightTower\BrooksLightTower\BrooksLightTower.device">
+      <DependentUpon>IBrooksLightTower.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LightTower\BrooksLightTower\Resources\Messages.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LightTower\BrooksLightTower\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LoadPort\BrooksLoadPort\BrooksLoadPort.device">
+      <DependentUpon>IBrooksLoadPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LoadPort\BrooksLoadPort\Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Devices\LoadPort\BrooksLoadPort\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Robot\BrooksRobot\BrooksRobot.device">
+      <DependentUpon>IBrooksRobot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Robot\BrooksRobot\Resources\Messages.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Robot\BrooksRobot\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\BrooksSubstrateIdReader.device">
+      <DependentUpon>IBrooksSubstrateIdReader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CTC\Libraries\BAI.AdminGui.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.ANI.Client.GUIApp.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.ANI.Server.ConsoleApp.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.ANI.Server.Service.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.ANI.Server.UIApp.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.ApiAdapterGui.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.AuditConsole.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.AuditorGui.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.ClientInitLib.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.Configurator.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.InSight.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.LogConsole.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.MaterialsSpecEditor.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.MessageTerminal.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.Python.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.SwInstallApp.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.SwUpdateApp.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\BAI.SwUpdateLib.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\LaunchMsgTrans.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\MessageTranslator.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\PathFindGui.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\WaferEngineTestFixture.exe.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="CTC\Libraries\WpfResources.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Aligner\BrooksAligner\Resources\en_BrooksAligner.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Efem\BrooksEfem\Resources\en_BrooksEfem.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Ffu\BrooksFfu\Resources\en_BrooksFfu.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\LightTower\BrooksLightTower\Resources\en_BrooksLightTower.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Robot\BrooksRobot\Resources\en_BrooksRobot.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\SubstrateIdReader\BrooksSubstrateIdReader\Resources\en_BrooksSubstrateIdReader.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,348 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <OutputPath>..\..\artifacts\$(Configuration)\build\apps\UnitySC.EFEM.Controller\</OutputPath>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Software_Logo.ico</ApplicationIcon>
+    <RootNamespace>UnitySC.EFEM.Controller</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UnitySC.EFEM.Brooks.GUI\UnitySC.EFEM.Brooks.GUI.csproj" />
+    <ProjectReference Include="..\UnitySC.EFEM.Rorze.GUI\UnitySC.EFEM.Rorze.GUI.csproj" />
+    <ProjectReference Include="..\UnitySC.DataFlow.ProcessModules.GUI\UnitySC.DataFlow.ProcessModules.GUI.csproj" />
+    <ProjectReference Include="..\UnitySC.Equipment.GUI\UnitySC.Equipment.GUI.csproj" />
+    <ProjectReference Include="..\UnitySC.Equipment\UnitySC.Equipment.csproj" />
+    <ProjectReference Include="..\UnitySC.GUI.Common\UnitySC.GUI.Common.csproj" />
+    <ProjectReference Include="..\UnitySC.Readers.Cognex.GUI\UnitySC.Readers.Cognex.GUI.csproj" />
+    <ProjectReference Include="..\UnitySC.ToolControl.ProcessModules.GUI\UnitySC.ToolControl.ProcessModules.GUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Vendor\UIComponents\XamlResources\Views\Equipment\LoadPortResources.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Configuration\XML\DataMonitoring.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="StandardList.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Vendor\ProcessExecution\Instructions\ProcessInstructionResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProcessInstructionResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Recipes\Resources\RecipeValidationResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeValidationResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\UIComponents\Controls\ControlsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ControlsResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Help\About\AboutResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AboutResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Help\SystemInformation\SystemInformationViewResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SystemInformationViewResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\AlarmCenter\AlarmCenterResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AlarmCenterResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\Appearance\AppearancePanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppearancePanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Panels\Maintenance\ServiceMode\UnityServiceModeResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnityServiceModeResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Panels\Setup\HostInterface\HostInterfacePanelResources.resx">
+      <LastGenOutput>HostInterfacePanelResources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\TitlePanel\TitlePanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TitlePanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Resource Include="Software_Logo.ico" />
+    <EmbeddedResource Update="Vendor\Views\Panels\Maintenance\Scenarios\ScenarioResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ScenarioResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\EquipmentSettings\EquipmentSettingsResources.fr.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EquipmentSettingsResources.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\EquipmentSettings\EquipmentSettingsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EquipmentSettingsResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\AccessRights\AccessRightsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AccessRightsResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\AccessRights\Editor\UserEditorResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserEditorResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\GlobalSettings\GlobalSettingsPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GlobalSettingsPanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Alarms\AlarmsResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AlarmsResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Panels\Main\MainResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Recipes\Editors\RecipeEditorPanelResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeEditorPanelResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Recipes\Editors\StepEditor\StepEditorPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StepEditorPanelResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Recipes\RecipeLibraryPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeLibraryPanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\Diagnostic\DiagnosticPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DiagnosticPanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\Recipes\Popup\RecipeGroupEditorResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipeGroupEditorResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\Recipes\RecipesConfigPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RecipesConfigPanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\SetupPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SetupPanelResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Views\Panels\Setup\AppPathConfig\AppPathConfigPanelResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppPathConfigPanelResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Content Include="Manual\UM.xps">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configuration\XML\TagsConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configuration\XML\AccessRights.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\XML\Configuration.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\XML\LocalizationDictionary.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configuration\Scenarios\Connection.scenario">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\ProcessExecution\ExecutionContextFactory.cs">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </Compile>
+    <Compile Update="Vendor\ProcessExecution\Instructions\ProcessInstructionResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ProcessInstructionResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Recipes\Resources\RecipeValidationResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeValidationResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\UIComponents\XamlResources\Shared\IconsGenerator.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IconsGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Help\About\AboutResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AboutResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Help\SystemInformation\SystemInformationViewResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SystemInformationViewResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Maintenance\Scenarios\ScenarioResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ScenarioResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\AccessRights\AccessRightsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AccessRightsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\AccessRights\Editor\UserEditorResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserEditorResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\AlarmCenter\AlarmCenterResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AlarmCenterResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\Appearance\AppearancePanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AppearancePanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\AppPathConfig\AppPathConfigPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AppPathConfigPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\UIComponents\Controls\ControlsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ControlsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Alarms\AlarmsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AlarmsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Recipes\Editors\RecipeEditorPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeEditorPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Recipes\Editors\StepEditor\StepEditorPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StepEditorPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Recipes\RecipeLibraryPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeLibraryPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\Diagnostic\DiagnosticPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DiagnosticPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\EquipmentSettings\EquipmentSettingsResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EquipmentSettingsResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\GlobalSettings\GlobalSettingsPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GlobalSettingsPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\Recipes\Popup\RecipeGroupEditorResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipeGroupEditorResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\Recipes\RecipesConfigPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecipesConfigPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Views\Panels\Setup\SetupPanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SetupPanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Panels\Maintenance\ServiceMode\UnityServiceModeResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UnityServiceModeResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Panels\Setup\HostInterface\HostInterfacePanelResources.Designer.cs">
+      <DependentUpon>HostInterfacePanelResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Views\TitlePanel\TitlePanelResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TitlePanelResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Panels\Main\MainResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MainResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UIComponents\XamlResources\Controls\Primitives\ProgressBar.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="UIComponents\XamlResources\Views\EquipmentResources.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Vendor\UIComponents\XamlResources\Controls\BindableTreeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Panels\Setup\HostInterface\HostInterfacePanelView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Agileo.AlarmModeling.UI-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.Alarms-Protected" Version="7.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+</Project>

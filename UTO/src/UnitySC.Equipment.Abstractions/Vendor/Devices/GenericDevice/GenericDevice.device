@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Vendor">
+              <Types />
+              <Packages>
+                <Package Name="Devices">
+                  <Types />
+                  <Packages>
+                    <Package Name="GenericDevice">
+                      <Types>
+                        <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Vendor.Devices.Enums.OperatingModes, UnitySC.Equipment.Abstractions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                        <DeviceType Name="GenericDevice" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Vendor\Devices\GenericDevice\GenericDevice.device|UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.GenericDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.GenericDevice, UnitySC.Equipment.Abstractions">
+                          <Interruptions>
+                            <Interruption Kind="Abort">
+                              <Documentation>Abort interruption occurs on integration request to stop device execution in a safe state.</Documentation>
+                            </Interruption>
+                          </Interruptions>
+                          <Commands>
+                            <Command Name="Initialize" Type="Void" Timeout="60 s" Category="Initialization">
+                              <Documentation>Initializes the device if needed or if explicitly required.</Documentation>
+                              <Parameters>
+                                <Parameter Name="mustForceInit" Type="Boolean" />
+                              </Parameters>
+                              <PreConditions>
+                                <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                                <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                              </PreConditions>
+                              <PostConditions />
+                            </Command>
+                          </Commands>
+                          <Statuses>
+                            <Status Name="State" Type="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.OperatingModes" />
+                            <Status Name="PreviousState" Type="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.OperatingModes" />
+                          </Statuses>
+                          <Alarms />
+                          <Interlocks />
+                        </DeviceType>
+                      </Types>
+                      <Packages />
+                      <Equipments />
+                    </Package>
+                  </Packages>
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

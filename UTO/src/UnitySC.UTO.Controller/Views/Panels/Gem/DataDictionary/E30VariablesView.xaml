@@ -1,0 +1,286 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.DataDictionary.E30VariablesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataDictionary="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.DataDictionary"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables;assembly=UnitySC.GUI.Common"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors;assembly=UnitySC.GUI.Common"
+    xmlns:e5="clr-namespace:Agileo.Semi.Communication.Abstractions.E5;assembly=Agileo.Semi.Communication.Abstractions"
+    xmlns:gem="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance dataDictionary:DataVariablesPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <DockPanel>
+
+        <Expander
+            DockPanel.Dock="Right"
+            Header="{localize:Static gem:GemGeneralRessources.GEM_DETAIL}"
+            IsExpanded="{Binding DetailsOpen, Mode=TwoWay}"
+            Style="{StaticResource LeftExpanderStyle}">
+            <Grid>
+                <Grid
+                    Width="400"
+                    Margin="20"
+                    DockPanel.Dock="Right"
+                    IsEnabled="{Binding SelectedVariable, Converter={StaticResource NullToFalseConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <controls:PropertyEditor
+                                Width="100"
+                                Margin="0,0,15,0"
+                                PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_ID}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock Style="{StaticResource Headline6TextStyle}" Text="{Binding SelectedVariable.Variable.ID}" />
+                            </controls:PropertyEditor>
+
+                            <controls:PropertyEditor
+                                Grid.Column="1"
+                                PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_NAME}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock
+                                    Margin="10,0"
+                                    Style="{StaticResource Headline6TextStyle}"
+                                    Text="{Binding SelectedVariable.Variable.Name}" />
+                            </controls:PropertyEditor>
+                        </Grid>
+
+                        <UniformGrid
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,15,0,0">
+                            <controls:PropertyEditor
+                                Margin="0,0,15,0"
+                                PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_UNIT}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock Style="{StaticResource Headline6TextStyle}" Text="{Binding SelectedVariable.Variable.Unit}" />
+                            </controls:PropertyEditor>
+
+                            <controls:PropertyEditor PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_FORMAT}" Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock Style="{StaticResource Headline6TextStyle}" Text="{Binding SelectedVariable.Variable.Format}" />
+                            </controls:PropertyEditor>
+                        </UniformGrid>
+
+                        <UniformGrid
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,15,0,0"
+                            Rows="1">
+                            <controls:PropertyEditor
+                                Margin="0,0,15,0"
+                                PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_MINIMUM}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock Style="{StaticResource Headline6TextStyle}" Text="{Binding SelectedVariable.Variable.MinValue, Converter={StaticResource DataItemToStringValueConverter}}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="0,0,0,0"
+                                PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_MAXIMUM}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock Style="{StaticResource Headline6TextStyle}" Text="{Binding SelectedVariable.Variable.MaxValue, Converter={StaticResource DataItemToStringValueConverter}}" />
+                            </controls:PropertyEditor>
+                        </UniformGrid>
+
+                    </Grid>
+
+                    <DockPanel Grid.Row="1">
+                        <ContentPresenter
+                            MaxHeight="500"
+                            Margin="0,0,0,15"
+                            Content="{Binding}"
+                            DockPanel.Dock="Top">
+                            <ContentPresenter.ContentTemplate>
+                                <DataTemplate DataType="{x:Type dataDictionary:BaseE30VariablesPanel}">
+                                    <ContentControl x:Name="ContentControl">
+                                        <DockPanel VerticalAlignment="Top" IsEnabled="{Binding SelectedVariableCanBeEdited}">
+                                            <Button
+                                                Margin="15,0,0,0"
+                                                VerticalAlignment="Bottom"
+                                                markupExtensions:Icon.Geometry="{StaticResource CheckIcon}"
+                                                Command="{Binding ApplyValueCommand}"
+                                                Content="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_APPLY}"
+                                                DockPanel.Dock="Right" />
+                                            <TextBlock
+                                                Margin="0,0,15,0"
+                                                VerticalAlignment="Center"
+                                                DockPanel.Dock="Left"
+                                                Style="{StaticResource PropertyEditorNameTextBlockStyle}"
+                                                Text="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_VALUE}" />
+                                            <TextBox HorizontalAlignment="Stretch" Text="{Binding SelectedValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Key="Enter" Command="{Binding ApplyValueCommand}" />
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                        </DockPanel>
+                                    </ContentControl>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Value="False">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource AndOperatorMultiValueConverter}">
+                                                    <Binding Path="CanEditValueCommand.IsEnabled" />
+                                                    <Binding Path="SelectedVariableCanBeEdited" />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter TargetName="ContentControl" Property="Content">
+                                                <Setter.Value>
+                                                    <controls:PropertyEditor
+                                                        HorizontalContentAlignment="Stretch"
+                                                        PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_VALUE}"
+                                                        Style="{StaticResource BorderedPropertyEditorStyle}">
+                                                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                                            <TextBlock
+                                                                HorizontalAlignment="Center"
+                                                                Style="{StaticResource Subtitle2TextStyle}"
+                                                                Text="{Binding SelectedVariable.Value, Converter={StaticResource DataItemToStringValueConverter}}" />
+                                                        </ScrollViewer>
+                                                    </controls:PropertyEditor>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ContentPresenter.ContentTemplate>
+                        </ContentPresenter>
+                        <controls:PropertyEditor
+                            HorizontalContentAlignment="Stretch"
+                            PropertyName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_DESCRIPTION}"
+                            Style="{StaticResource BorderedPropertyEditorStyle}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBlock Text="{Binding SelectedVariable.Variable.Description}" TextWrapping="Wrap" />
+                            </ScrollViewer>
+                        </controls:PropertyEditor>
+
+                    </DockPanel>
+
+                </Grid>
+            </Grid>
+
+        </Expander>
+
+
+        <dataTables:DataTable DataSource="{Binding DataVariables}" SelectedItem="{Binding SelectedVariable}">
+            <GridView AllowsColumnReorder="True">
+
+                <dataTables:DataTableColumn
+                    Width="160"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_ID}"
+                    SortKey="Variable.ID">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type dataDictionary:E30VariableViewModel}">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Variable.ID}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="200"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_NAME}"
+                    SortKey="Variable.Name">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type dataDictionary:E30VariableViewModel}">
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                Style="{StaticResource Body2TextStyle}"
+                                Text="{Binding Variable.Name}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="200"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_VALUE}"
+                    SortKey="Value">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type dataDictionary:E30VariableViewModel}">
+                            <Grid>
+                                <ContentPresenter x:Name="ContentPresenter" Content="{Binding Value}">
+                                    <ContentPresenter.ContentTemplateSelector>
+                                        <dataTemplateSelectors:GenericDataTemplateSelector>
+                                            <DataTemplate DataType="{x:Type e5:DataList}">
+                                                <Expander ExpandDirection="Down" IsExpanded="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Path=DataContext.IsExpanded, Mode=TwoWay}">
+                                                    <Expander.Header>
+                                                        <TextBlock
+                                                            Margin="-24,0,-20,0"
+                                                            Style="{StaticResource Body2TextStyle}"
+                                                            TextTrimming="CharacterEllipsis">
+                                                            <Run Text="&lt;LST Count=&quot;" /><Run Text="{Binding DataItems.Count, Mode=OneWay}" /><Run Text="&quot; /&gt;" />
+                                                        </TextBlock>
+                                                    </Expander.Header>
+                                                    <TextBlock
+                                                        Margin="0,0,0,10"
+                                                        Style="{StaticResource Body2TextStyle}"
+                                                        Text="{Binding ., Converter={StaticResource DataItemToStringValueConverter}}" />
+                                                </Expander>
+                                            </DataTemplate>
+                                            <DataTemplate DataType="{x:Type e5:DataItem}">
+                                                <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding ., Converter={StaticResource DataItemToStringValueConverter}}" />
+                                            </DataTemplate>
+                                        </dataTemplateSelectors:GenericDataTemplateSelector>
+                                    </ContentPresenter.ContentTemplateSelector>
+                                </ContentPresenter>
+                            </Grid>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="100"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_UNIT}"
+                    SortKey="Variable.Unit">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type dataDictionary:E30VariableViewModel}">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Variable.Unit}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="100"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_FORMAT}"
+                    SortKey="Variable.Format">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type dataDictionary:E30VariableViewModel}">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Variable.Format}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+                <dataTables:DataTableColumn
+                    Width="800"
+                    DisplayName="{localize:Static dataDictionary:DataDictionaryPanelsResources.GEMPANELS_DESCRIPTION}"
+                    SortKey="Variable.Description">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type dataDictionary:E30VariableViewModel}">
+                            <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Variable.Description}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+
+            </GridView>
+        </dataTables:DataTable>
+    </DockPanel>
+</UserControl>

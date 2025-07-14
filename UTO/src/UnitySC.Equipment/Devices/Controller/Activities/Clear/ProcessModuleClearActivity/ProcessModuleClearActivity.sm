@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="2255ea15-a75f-44f5-bdb2-9d312fa1f0f3" name="ProcessModuleClearActivity" access="Public" usings="using UnitySC.Equipment.Abstractions.Vendor.Devices.Activities;" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <stateMachineHasStates Id="581888b7-0138-46fc-87ed-2004c41cde6e">
+      <state Id="87c6ff8e-7c4b-44a5-9445-12166d1cf0e9" name="Activity" nameSpace="ProcessModuleClearActivity" entryAction="ActivityEntry" exitAction="ActivityExit" kind="Normal" entryActionLabel="Entry/ ActivityEntry" exitActionLabel="Exit/ ActivityExit">
+        <vertices>
+          <stateHasNestedStates Id="3462de4b-16e8-48dd-a413-455860393032">
+            <state Id="665a5582-794b-419a-8b3d-ec55be0c698a" name="PreparePm" nameSpace="ProcessModuleClearActivity.Activity" entryAction="PreparePmEntry" kind="Normal" entryActionLabel="Entry/ PreparePmEntry">
+              <successors>
+                <transition Id="402d235f-f403-457e-afe9-d33e998639a5" event="PmDone" label="PmDone" source="ProcessModuleClearActivity.Activity.PreparePm" destination="ProcessModuleClearActivity.Activity.GoInFrontOfPm" nameSpace="ProcessModuleClearActivity.Activity">
+                  <stateMoniker name="/ProcessModuleClearActivity/Activity/GoInFrontOfPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="1ed53424-5c62-4f43-8afc-d9a44be27301">
+            <state Id="82f167d8-67a2-4057-ab36-f9105db09a22" name="GoInFrontOfPm" nameSpace="ProcessModuleClearActivity.Activity" entryAction="GoInFrontOfPmEntry" kind="Normal" entryActionLabel="Entry/ GoInFrontOfPmEntry">
+              <successors>
+                <transition Id="99700187-4caf-4349-ba18-21d27289b93e" event="RobotDone" label="RobotDone" source="ProcessModuleClearActivity.Activity.GoInFrontOfPm" destination="ProcessModuleClearActivity.Activity.PrepareTransferOnPm" nameSpace="ProcessModuleClearActivity.Activity">
+                  <stateMoniker name="/ProcessModuleClearActivity/Activity/PrepareTransferOnPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="67ef8b59-f713-47d2-80c5-f92c5bbf9721">
+            <state Id="33f56452-0266-4e8d-8268-753ec079eee1" name="PrepareTransferOnPm" nameSpace="ProcessModuleClearActivity.Activity" entryAction="PrepareTransferOnPmEntry" kind="Normal" entryActionLabel="Entry/ PrepareTransferOnPmEntry">
+              <successors>
+                <transition Id="e5f97d1c-db0c-4b34-add4-47cd8d12f932" event="PmNotReadyToTransfer" label="PmNotReadyToTransfer" source="ProcessModuleClearActivity.Activity.PrepareTransferOnPm" destination="ProcessModuleClearActivity.Activity.WaitPmReadyToTransfer" nameSpace="ProcessModuleClearActivity.Activity">
+                  <stateMoniker name="/ProcessModuleClearActivity/Activity/WaitPmReadyToTransfer" />
+                </transition>
+                <transition Id="68af4314-cb9d-4516-be6e-863167b6b47d" event="PmReadyToTransfer" label="PmReadyToTransfer" source="ProcessModuleClearActivity.Activity.PrepareTransferOnPm" destination="ProcessModuleClearActivity.Activity.PickOnPm" nameSpace="ProcessModuleClearActivity.Activity">
+                  <stateMoniker name="/ProcessModuleClearActivity/Activity/PickOnPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="48ec782c-2516-413a-b575-1fc20ddc87b7">
+            <state Id="5c32324a-df25-4f63-8e21-af71cd3a4ab6" name="WaitPmReadyToTransfer" nameSpace="ProcessModuleClearActivity.Activity" entryAction="WaitPmReadyToTransferEntry" kind="Normal" entryActionLabel="Entry/ WaitPmReadyToTransferEntry">
+              <successors>
+                <transition Id="11ff6c14-82fd-4b14-a095-3b6d63c6f731" event="PmReadyToTransfer" label="PmReadyToTransfer" source="ProcessModuleClearActivity.Activity.WaitPmReadyToTransfer" destination="ProcessModuleClearActivity.Activity.PrepareTransferOnPm" nameSpace="ProcessModuleClearActivity.Activity">
+                  <stateMoniker name="/ProcessModuleClearActivity/Activity/PrepareTransferOnPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="0c3cfb07-ad65-4a2a-804a-dd4c443edf65">
+            <state Id="c592afc1-815f-4eb5-b8a3-fd666273cd92" name="PickOnPm" nameSpace="ProcessModuleClearActivity.Activity" entryAction="PickOnPmEntry" kind="Normal" entryActionLabel="Entry/ PickOnPmEntry">
+              <successors>
+                <transition Id="f6bdf0ab-1486-4a50-929a-38cdd71bbdfc" event="RobotDone" label="RobotDone" source="ProcessModuleClearActivity.Activity.PickOnPm" destination="ProcessModuleClearActivity.Activity.PostTransferOnPm" nameSpace="ProcessModuleClearActivity.Activity">
+                  <stateMoniker name="/ProcessModuleClearActivity/Activity/PostTransferOnPm" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="a81d8958-182e-44aa-b64e-7cbfcc7b3a42">
+            <state Id="9eee37b8-eb5e-453b-851b-fd8f01aec164" name="PostTransferOnPm" nameSpace="ProcessModuleClearActivity.Activity" entryAction="PostTransferOnPmEntry" kind="Normal" entryActionLabel="Entry/ PostTransferOnPmEntry">
+              <successors>
+                <transition Id="e17a2e66-5cad-45bc-9086-c3f7180164bc" event="PmDone" label="PmDone" source="ProcessModuleClearActivity.Activity.PostTransferOnPm" destination=".FinalState" nameSpace="ProcessModuleClearActivity.Activity">
+                  <finalStateMoniker name="/ProcessModuleClearActivity/FinalState" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+        </vertices>
+        <successors>
+          <transition Id="2e340c7b-2b14-4e48-8705-f65b5a91ac50" event="ActivityDoneEvent" label="ActivityDoneEvent" source="ProcessModuleClearActivity.Activity" destination=".FinalState" nameSpace="ProcessModuleClearActivity">
+            <finalStateMoniker name="/ProcessModuleClearActivity/FinalState" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+    <vertexContainerHasVertices Id="c2e1983b-3ddb-4301-95db-96fa805f188c">
+      <initial Id="a9db9fcb-950a-45ad-adfa-b9a1b532a4b2" name="Initial" nameSpace="ProcessModuleClearActivity">
+        <successors>
+          <transition Id="e7cbd892-c2f6-48b2-af77-9373f78cd10c" source="ProcessModuleClearActivity.Initial" destination="ProcessModuleClearActivity.Activity.PreparePm" nameSpace="ProcessModuleClearActivity">
+            <stateMoniker name="/ProcessModuleClearActivity/Activity/PreparePm" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="802c6aab-c657-4ded-b0c4-defbe0c947a3">
+      <finalState Id="0e5a3137-5b50-435e-8ba9-41a7cf7eec96" name="FinalState" nameSpace="ProcessModuleClearActivity" kind="Final" />
+    </stateMachineHasStates>
+  </vertices>
+</stateMachine>

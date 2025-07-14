@@ -1,0 +1,39 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Style x:Key="MachineModuleViewStyle" TargetType="{x:Type equipment:MachineModuleView}">
+        <d:Style.DataContext>
+            <x:Type Type="equipment:SelectableMachineModuleViewModel" />
+        </d:Style.DataContext>
+        <Setter Property="SelectionState" Value="{Binding SelectionState}" />
+        <Setter Property="IsLocationSelectable" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type equipment:MachineView}}, Path=AreLocationsSelectable}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type equipment:MachineModuleView}">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true">
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource MachineModuleViewStyle}" TargetType="{x:Type equipment:MachineModuleView}" />
+
+</ResourceDictionary>

@@ -1,0 +1,462 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Setup.HostCommunication.HostCommunicationSetupPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:common="clr-namespace:GEM.Common;assembly=GEM"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors;assembly=UnitySC.GUI.Common"
+    xmlns:e30="clr-namespace:Agileo.Semi.Gem.Abstractions.E30;assembly=Agileo.Semi.Gem.Abstractions"
+    xmlns:hostCommunication="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Setup.HostCommunication"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox;assembly=UnitySC.GUI.Common"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    d:DataContext="{d:DesignInstance hostCommunication:HostCommunicationSetupPanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+
+    <UniformGrid Columns="3">
+
+        <controls:Card Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}">
+            <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                <DockPanel>
+                    <GroupBox DockPanel.Dock="Top" Header="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_EQUIPMENT_IDENTIFICATION}">
+                        <StackPanel Orientation="Vertical">
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_MDLN_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_MDLN}">
+                                <TextBox Text="{Binding ModifiedConfig.MDLN, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SOFTREV_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SOFTREV}">
+                                <TextBox Text="{Binding ModifiedConfig.SOFTREV, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_EQPSERIALNUM_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_EQPSERIALNUM}">
+                                <TextBox Text="{Binding ModifiedConfig.EqpSerialNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_E30EQUIPMENTSUPPLIER_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_E30EQUIPMENTSUPPLIER}">
+                                <TextBox Text="{Binding ModifiedConfig.E30EquipmentSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_EQPNAME_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_EQPNAME}">
+                                <TextBox Text="{Binding ModifiedConfig.EqpName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                        </StackPanel>
+                    </GroupBox>
+                    <Separator Margin="10" DockPanel.Dock="Top" />
+                    <GroupBox DockPanel.Dock="Top" Header="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_CONNECTION}">
+                        <StackPanel>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_COMMUNICATION_TYPE_DESCRIPTION}"
+                                PropertyName="Communication Type">
+                                <WrapPanel>
+                                    <RadioButton
+                                        x:Name="HsmsRadioButton"
+                                        Margin="0,0,10,0"
+                                        Content="HSMS"
+                                        GroupName="CommunicationType"
+                                        IsChecked="{Binding ModifiedConfig.HsmsActive, Mode=TwoWay}"
+                                        Style="{StaticResource ChipsRadioButtonStyle}" />
+                                    <RadioButton
+                                        x:Name="Secs1RadioButton"
+                                        Content="SECS-I"
+                                        GroupName="CommunicationType"
+                                        IsChecked="{Binding ModifiedConfig.HsmsActive, Mode=TwoWay, Converter={StaticResource InvertedBoolConverter}}"
+                                        Style="{StaticResource ChipsRadioButtonStyle}" />
+                                </WrapPanel>
+                            </controls:PropertyEditor>
+
+                            <StackPanel Visibility="{Binding ElementName=HsmsRadioButton, Path=IsChecked, Converter={StaticResource FalseToCollapsedConverter}}">
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_MODE_DESCRIPTION}"
+                                    PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_MODE}">
+                                    <WrapPanel>
+                                        <RadioButton
+                                            x:Name="ActiveRadioButton"
+                                            Margin="0,0,10,0"
+                                            Content="Active"
+                                            GroupName="ConnectionMode"
+                                            IsChecked="{Binding ModifiedConfig.Hsms.IsActive, Mode=TwoWay}"
+                                            Style="{StaticResource ChipsRadioButtonStyle}" />
+                                        <RadioButton
+                                            x:Name="PassiveRadioButton"
+                                            Content="Passive"
+                                            GroupName="ConnectionMode"
+                                            IsChecked="{Binding ModifiedConfig.Hsms.IsActive, Mode=TwoWay, Converter={StaticResource InvertedBoolConverter}}"
+                                            Style="{StaticResource ChipsRadioButtonStyle}" />
+                                    </WrapPanel>
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEVICE_ID_DESCRIPTION}"
+                                    PropertyName="Device ID">
+                                    <numericBox:UShortBox Increment="1" Value="{Binding ModifiedConfig.Hsms.DeviceID, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+
+                                <StackPanel Visibility="{Binding ElementName=PassiveRadioButton, Path=IsChecked, Converter={StaticResource FalseToCollapsedConverter}}">
+                                    <controls:PropertyEditor
+                                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                        PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_LOCAL_IP_DESCRIPTION}"
+                                        PropertyName="Local IP">
+                                        <TextBox Text="{Binding ModifiedConfig.Hsms.LocalIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </controls:PropertyEditor>
+                                    <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_LOCAL_TCP_PORT_DESCRIPTION}" PropertyName="Local TCP Port">
+                                        <numericBox:UShortBox Value="{Binding ModifiedConfig.Hsms.LocalPort, UpdateSourceTrigger=PropertyChanged}" />
+                                    </controls:PropertyEditor>
+                                </StackPanel>
+
+                                <StackPanel Visibility="{Binding ElementName=ActiveRadioButton, Path=IsChecked, Converter={StaticResource FalseToCollapsedConverter}}">
+                                    <controls:PropertyEditor
+                                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                        PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_REMOTE_IP_DESCRIPTION}"
+                                        PropertyName="Remote IP">
+                                        <TextBox Text="{Binding ModifiedConfig.Hsms.RemoteIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </controls:PropertyEditor>
+                                    <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_REMOTE_TCP_PORT_DESCRIPTION}" PropertyName="Remote TCP Port">
+                                        <numericBox:UShortBox Value="{Binding ModifiedConfig.Hsms.RemotePort, UpdateSourceTrigger=PropertyChanged}" />
+                                    </controls:PropertyEditor>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding ElementName=Secs1RadioButton, Path=IsChecked, Converter={StaticResource FalseToCollapsedConverter}}">
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_ENTITY_BEHAVIOUR_DESCRIPTION}"
+                                    PropertyName="Entity Behaviour">
+                                    <WrapPanel>
+                                        <RadioButton
+                                            Margin="0,0,10,0"
+                                            Content="Equipment"
+                                            GroupName="EntityBehaviour"
+                                            IsChecked="{Binding EntityBehavior}"
+                                            Style="{StaticResource ChipsRadioButtonStyle}" />
+                                        <RadioButton
+                                            Margin="0,0,10,0"
+                                            Content="Host"
+                                            GroupName="EntityBehaviour"
+                                            Style="{StaticResource ChipsRadioButtonStyle}" />
+                                    </WrapPanel>
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEVICE_ID_DESCRIPTION}"
+                                    PropertyName="Device ID">
+                                    <numericBox:UShortBox Value="{Binding ModifiedConfig.Secs1.DeviceID, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                    PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_BAUD_RATE_DESCRIPTION}"
+                                    PropertyName="Baud Rate">
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Secs1.BaudRate, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SERIAL_PORT_DESCRIPTION}" PropertyName="Serial Port">
+                                    <numericBox:ByteBox Increment="1" Value="{Binding ModifiedConfig.Secs1.SerialPort, UpdateSourceTrigger=PropertyChanged}" />
+                                </controls:PropertyEditor>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </GroupBox>
+                </DockPanel>
+            </ScrollViewer>
+        </controls:Card>
+
+        <controls:Card Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}">
+            <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                <GroupBox Header="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_TIMEOUTS}">
+                    <StackPanel>
+
+                        <StackPanel Visibility="{Binding ElementName=HsmsRadioButton, Path=IsChecked, Converter={StaticResource FalseToCollapsedConverter}}">
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_ESTABLISH_COMMUNICATIONS_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_ESTABLISH_COMMUNICATIONS}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.EstablishCommunicationTimeout, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T3_HSMS_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T3}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Hsms.T3, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T5_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T5}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Hsms.T5, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T6_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T6}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Hsms.T6, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T7_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T7}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Hsms.T7, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T8_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T8}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Hsms.T8, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_LINKTEST_DESCRIPTION}" PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_LINKTEST}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Hsms.LinkTest, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding ElementName=Secs1RadioButton, Path=IsChecked, Converter={StaticResource FalseToCollapsedConverter}}">
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T1_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T1}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Secs1.T1, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T2_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T2}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Secs1.T2, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T3_SECS1_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T3}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Secs1.T3, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T4_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_T4}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECOND}" />
+                                    <numericBox:IntBox Value="{Binding ModifiedConfig.Secs1.T4, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_RETRY_LIMIT_DESCRIPTION}" PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_RETRY_LIMIT}">
+                                <numericBox:IntBox Value="{Binding ModifiedConfig.Secs1.RetryLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                        </StackPanel>
+
+                    </StackPanel>
+                </GroupBox>
+            </ScrollViewer>
+        </controls:Card>
+
+        <controls:Card>
+            <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox Header="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_STATES}">
+                        <StackPanel>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_COMMUNICATION_STATE_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_COMMUNICATION_STATE}">
+                                <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection common:DefaultCommStateType}" SelectedItem="{Binding ModifiedConfig.DefaultStates.DefaultCommState}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_CONTROL_STATE_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_CONTROL_STATE}">
+                                <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection common:DefaultControlStateType}" SelectedItem="{Binding ModifiedConfig.DefaultStates.DefaultControlState}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_ON_LINE_FAIL_SUBSTATE_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_ON_LINE_FAIL_SUBSTATE}">
+                                <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection common:OnLineFailSubstateType}" SelectedItem="{Binding ModifiedConfig.DefaultStates.OnLineFailSubstate}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_ON_LINE_STATE_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_DEFAULT_ON_LINE_STATE}">
+                                <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection common:DefaultOnLineStateType}" SelectedItem="{Binding ModifiedConfig.DefaultStates.DefaultOnLineState}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_TIME_FORMAT_DESCRIPTION}" PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_TIME_FORMAT}">
+                                <controls:ChipsSelector SelectedItem="{Binding ModifiedConfig.DefaultStates.TimeFormat}">
+                                    <controls:ChipsSelector.Items>
+                                        <system:Byte>0</system:Byte>
+                                        <system:Byte>1</system:Byte>
+                                        <system:Byte>2</system:Byte>
+                                    </controls:ChipsSelector.Items>
+                                    <controls:ChipsSelector.ItemTemplateSelector>
+                                        <dataTemplateSelectors:EqualityDataTemplateSelector>
+                                            <dataTemplateSelectors:EqualityDataTemplate DataType="{x:Type system:Byte}" ValueToCompare="0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="12-byte format" />
+                                                    <TextBlock
+                                                        Margin="5,0,0,0"
+                                                        Opacity="{StaticResource MouseOverOpacity}"
+                                                        Text="(YYMMDDhhmmss)" />
+                                                </StackPanel>
+                                            </dataTemplateSelectors:EqualityDataTemplate>
+                                            <dataTemplateSelectors:EqualityDataTemplate DataType="{x:Type system:Byte}" ValueToCompare="1">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="16-byte format" />
+                                                    <TextBlock
+                                                        Margin="5,0,0,0"
+                                                        Opacity="{StaticResource MouseOverOpacity}"
+                                                        Text="(YYYYMMDDhhmmsscc)" />
+                                                </StackPanel>
+                                            </dataTemplateSelectors:EqualityDataTemplate>
+                                            <dataTemplateSelectors:EqualityDataTemplate DataType="{x:Type system:Byte}" ValueToCompare="2">
+                                                <DockPanel>
+                                                    <TextBlock Text="Extended (max 32 byte)" />
+                                                    <TextBlock
+                                                        Margin="5,0,0,0"
+                                                        Opacity="{StaticResource MouseOverOpacity}"
+                                                        Text="(YYYY-MM-DDThh:mm:ss.sTZD)" />
+                                                </DockPanel>
+                                            </dataTemplateSelectors:EqualityDataTemplate>
+                                        </dataTemplateSelectors:EqualityDataTemplateSelector>
+                                    </controls:ChipsSelector.ItemTemplateSelector>
+                                </controls:ChipsSelector>
+                            </controls:PropertyEditor>
+                        </StackPanel>
+                    </GroupBox>
+                    <Separator Margin="10" />
+                    <GroupBox>
+                        <GroupBox.Header>
+                            <DockPanel>
+                                <CheckBox
+                                    VerticalAlignment="Center"
+                                    DockPanel.Dock="Right"
+                                    Foreground="{DynamicResource GroupBoxHeaderForeground}"
+                                    IsChecked="{Binding ModifiedConfig.Secs2Logs.IsHsmsSecsTracerActive}"
+                                    Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                <TextBlock Style="{StaticResource GroupBoxHeaderTextBlockStyle}" Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_SECS2_LOGS}" />
+                            </DockPanel>
+                        </GroupBox.Header>
+                        <StackPanel Orientation="Vertical">
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_FILE_NAME_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_FILE_NAME}">
+                                <TextBox Text="{Binding ModifiedConfig.Secs2Logs.LogFileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_MAXIMUM_FILE_SIZE_DESCRIPTION}"
+                                PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_MAXIMUM_FILE_SIZE}">
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Right"
+                                        Text="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_BYTE}" />
+                                    <numericBox:ULongBox Value="{Binding ModifiedConfig.Secs2Logs.LogFileSize, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor PropertyDescription="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_LOG_MODE_DESCRIPTION}" PropertyName="{localize:Static hostCommunication:HostCommunicationSetupPanelResources.SETUP_HOST_LOG_MODE}">
+                                <controls:ChipsSelector SelectedItem="{Binding ModifiedConfig.Secs2Logs.LogMode}">
+                                    <controls:ChipsSelector.Items>
+                                        <e30:LogMode>All</e30:LogMode>
+                                        <e30:LogMode>DontUse</e30:LogMode>
+                                        <e30:LogMode>ExternalLogging</e30:LogMode>
+                                    </controls:ChipsSelector.Items>
+                                </controls:ChipsSelector>
+                            </controls:PropertyEditor>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </controls:Card>
+
+    </UniformGrid>
+</UserControl>

@@ -1,0 +1,198 @@
+﻿<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataValidation.DataValidationPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox"
+    xmlns:dataValidation="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Help.Develop.DataValidation"
+    d:DataContext="{d:DesignInstance dataValidation:DataValidationPanel, IsDesignTimeCreatable=False}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        KeyboardNavigation.TabNavigation="Cycle"
+        VerticalScrollBarVisibility="Auto">
+        <GroupBox Header="Validation rules">
+            <StackPanel Orientation="Vertical">
+
+                <TextBlock
+                    Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                    TextWrapping="Wrap">
+                    <Run>Validation rules are a way to validate user input on the ViewModel side.</Run>
+                    <LineBreak />
+                    <Run>When a rule is not respected, an error message appears under the input field and the ViewModel is notified in order to allow conditioning the behavior in case of error.</Run>
+                    <LineBreak />
+                    <LineBreak />
+                    <Run>In this example panel, a UserMessage is displayed when an error is present.</Run>
+                </TextBlock>
+
+                <GroupBox Header="Simple validation rules">
+                    <StackPanel Orientation="Vertical">
+
+                        <TextBlock
+                            Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                            TextWrapping="Wrap">
+                            <Run>The</Run>
+                            <Run
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource HighlightBrush}">
+                                INotifyDataErrorInfo
+                            </Run>
+                            <Run>interface allows the ViewModel to specify validation rules for each property.</Run>
+                            <LineBreak />
+                            <Run>When a PropertyChanged event is raised, the validation rules for this property are triggered and displayed under the associated controls.</Run>
+                            <LineBreak />
+                            <Run>The</Run>
+                            <Run
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource HighlightBrush}">
+                                NotifyDataError
+                            </Run>
+                            <Run>and</Run>
+                            <Run
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource HighlightBrush}">
+                                NotifyDataErrorPanel
+                            </Run>
+                            <Run>classes provide an implementation of this interface.</Run>
+                        </TextBlock>
+
+                        <controls:PropertyEditor
+                            PropertyDescription="Only 'true' and 'false' values are accepted."
+                            PropertyName="TextBox example">
+                            <controls:Card
+                                Padding="20"
+                                Style="{StaticResource FilledCardStyle}">
+                                <TextBox
+                                    Width="200"
+                                    HorizontalAlignment="Left"
+                                    KeyboardNavigation.TabIndex="0"
+                                    Text="{Binding StringValue, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:Card>
+                        </controls:PropertyEditor>
+
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Conversion validations">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock
+                            Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                            TextWrapping="Wrap">
+                            <Run>When a property of type other than string is bound with a TextBox, an implicit conversion is automatically handled by WPF.</Run>
+                            <LineBreak />
+                            <Run>This conversion being made on the graphic side, it is not possible to customize the error message or to send the information to the ViewModel.</Run>
+                            <LineBreak />
+                            <LineBreak />
+                            <Run>To overcome this problem, NumericBox controls for each primitive type are available (ByteBox, DecimalBox, DoubleBox, IntBox...).</Run>
+                            <LineBreak />
+                            <Run>If the control's DataContext implements the</Run>
+                            <Run
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource HighlightBrush}">
+                                INotifyConversionErrorInfo
+                            </Run>
+                            <Run>interface, the control stores the conversion error in its DataContext.</Run>
+                            <LineBreak />
+                            <Run>Otherwise, the conversion error is simply displayed on the control.</Run>
+                            <LineBreak />
+                            <Run>The</Run>
+                            <Run
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource HighlightBrush}">
+                                NotifyDataError
+                            </Run>
+                            <Run>and</Run>
+                            <Run
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource HighlightBrush}">
+                                NotifyDataErrorPanel
+                            </Run>
+                            <Run>classes provide an implementation of this interface.</Run>
+                        </TextBlock>
+
+                        <controls:PropertyEditor
+                            PropertyDescription="The input value must be convertible to an integer."
+                            PropertyName="IntBox (Implicit conversion validation)">
+                            <controls:Card
+                                Padding="20"
+                                Style="{StaticResource FilledCardStyle}">
+                                <numericBox:IntBox
+                                    Width="200"
+                                    HorizontalAlignment="Left"
+                                    KeyboardNavigation.TabIndex="1"
+                                    Value="{Binding SimpleIntValue, NotifyOnValidationError=True}" />
+                            </controls:Card>
+                        </controls:PropertyEditor>
+
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Conversion validations and validation rules">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock
+                            Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                            TextWrapping="Wrap">
+                            <Run>Conversion validation is also compatible with validation rules.</Run>
+                            <LineBreak />
+                            <Run>Conversion validation has priority over validation rules.</Run>
+                            <LineBreak />
+                            <Run>If there is no conversion error, then the validation rules are applied.</Run>
+                        </TextBlock>
+
+                        <controls:PropertyEditor
+                            Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                            PropertyDescription="The input value must be greater than 4."
+                            PropertyName="Simple validation rule">
+                            <controls:Card
+                                Padding="20"
+                                Style="{StaticResource FilledCardStyle}">
+                                <numericBox:IntBox
+                                    Width="200"
+                                    HorizontalAlignment="Left"
+                                    KeyboardNavigation.TabIndex="2"
+                                    Value="{Binding IntRuledValue, NotifyOnValidationError=True}" />
+                            </controls:Card>
+                        </controls:PropertyEditor>
+
+                        <controls:PropertyEditor
+                            Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                            PropertyDescription="The minimum value must be lower than the maximum value."
+                            PropertyName="Interdependent validation rules">
+                            <controls:Card
+                                Padding="20"
+                                Style="{StaticResource FilledCardStyle}">
+                                <StackPanel Orientation="Horizontal">
+
+                                    <controls:PropertyEditor
+                                        Margin="{StaticResource VerticalStackPropertyMargin}"
+                                        PropertyName="Minimum value">
+                                        <numericBox:IntBox
+                                            Width="200"
+                                            KeyboardNavigation.TabIndex="3"
+                                            Value="{Binding IntMinComparedValue, NotifyOnValidationError=True}" />
+                                    </controls:PropertyEditor>
+
+                                    <controls:PropertyEditor PropertyName="Maximum value">
+                                        <numericBox:IntBox
+                                            Width="200"
+                                            KeyboardNavigation.TabIndex="4"
+                                            Value="{Binding IntMaxComparedValue, NotifyOnValidationError=True}" />
+                                    </controls:PropertyEditor>
+
+                                </StackPanel>
+                            </controls:Card>
+                        </controls:PropertyEditor>
+
+                    </StackPanel>
+
+                </GroupBox>
+
+            </StackPanel>
+        </GroupBox>
+    </ScrollViewer>
+</UserControl>

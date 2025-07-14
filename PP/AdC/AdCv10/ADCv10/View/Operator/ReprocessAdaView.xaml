@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="ADC.View.Operator.ReprocessAdaView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:ADC.View.Operator"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400" 
+             Background="{StaticResource PanelBackground}">
+    <Grid Margin="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Select files to reprocess:" Style="{StaticResource PanelFieldName}"/>
+        <Grid Grid.Row="1" Background="{DynamicResource GlobalPanelTitleBackground}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <xctk:WatermarkTextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Watermark="Search" Margin="4,2,2,2"/>
+            <Viewbox Grid.Column="1" Height="15" Stretch="Uniform" Margin="2">
+                <ContentControl ContentTemplate="{DynamicResource SearchADCImage}"/>
+            </Viewbox>
+        </Grid>
+        <ListView Grid.Row="2" ItemsSource="{Binding Files}" VirtualizingStackPanel.IsVirtualizing="False" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}" SelectionMode="Extended" MaxHeight="600"> 
+            <ListView.InputBindings>
+                <KeyBinding Gesture="Ctrl+A" Command="{Binding SelectAllCommand}" />
+            </ListView.InputBindings>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <Viewbox Height="15">
+                            <ContentControl ContentTemplate="{StaticResource FileYellowADCImage}" />
+                        </Viewbox>
+                        <TextBlock Text="{Binding FileName}" VerticalAlignment="Center" Margin="3,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <StackPanel Grid.Row="3" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button Margin="4" Command="{Binding ReprocessCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Viewbox Height="22">
+                        <ContentControl ContentTemplate="{StaticResource RunningADCImage}"/>
+                    </Viewbox>
+                    <TextBlock Text="Reprocess" VerticalAlignment="Center" Margin="2"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding CancelCommand}" Margin="4">
+                <TextBlock Text="Close" VerticalAlignment="Center" Margin="6,2"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

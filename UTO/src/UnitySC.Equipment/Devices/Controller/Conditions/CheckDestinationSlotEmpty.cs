@@ -1,0 +1,90 @@
+using System.Collections.ObjectModel;
+using System.Globalization;
+
+using Agileo.EquipmentModeling;
+using Agileo.SemiDefinitions;
+
+using UnitySC.Equipment.Abstractions.Devices.LoadPort;
+using UnitySC.Equipment.Devices.Controller.Resources;
+
+using SlotState = UnitySC.Equipment.Abstractions.Material.SlotState;
+
+namespace UnitySC.Equipment.Devices.Controller
+{
+    public class CheckDestinationSlotEmpty : CSharpCommandConditionBehavior
+    {
+        public override void Check(CommandContext context)
+        {
+            var controller = context.Device as Controller;
+            if (controller == null)
+            {
+                context.AddContextError(string.Format(
+                    CultureInfo.InvariantCulture,
+                    Messages.InvalidDeviceType,
+                    nameof(Controller),
+                    context.Device?.GetType().Name ?? "null"));
+                return;
+            }
+
+            if (context.GetArgument("loadPort") is not ILoadPort)
+            {
+                context.AddContextError(Messages.IncorrectLoadPortSelected);
+                return;
+            }
+
+            var expectedLoadPort = (Abstractions.Devices.LoadPort.LoadPort)context.GetArgument("loadPort");
+
+            if (expectedLoadPort == null)
+            {
+                context.AddContextError(Messages.LoadPortNotAvailable);
+                return;
+            }
+
+            if (expectedLoadPort.CarrierPresence != CassettePresence.Correctly || expectedLoadPort.Carrier == null)
+            {
+                context.AddContextError(Messages.CarrierNotCorrectlyPlaced);
+                return;
+            }
+
+            var expectedDestinationSlot = (byte)context.GetArgument("destinationSlot");
+
+            if (expectedDestinationSlot <= 0)
+            {
+                context.AddContextError(Messages.InvalidDestinationSlot1);
+                return;
+            }
+
+            if (expectedDestinationSlot > expectedLoadPort.Carrier.Capacity)
+            {
+                context.AddContextError(string.Format(
+                    CultureInfo.InvariantCulture,
+                    Messages.InvalidDestinationSlot2,
+                    expectedLoadPort.Carrier.Capacity));
+                return;
+            }
+
+            Collection<SlotState> mappingTable;
+
+            try
+            {
+                mappingTable = expectedLoadPort.Carrier.MappingTable;
+            }
+            catch
+            {
+                context.AddContextError(string.Format(
+                    CultureInfo.InvariantCulture,
+                    Messages.InvalidMapping,
+                    expectedLoadPort.Name));
+                return;
+            }
+
+            if (mappingTable[expectedDestinationSlot - 1] != SlotState.NoWafer)
+            {
+                context.AddContextError(string.Format(
+                    CultureInfo.InvariantCulture,
+                    Messages.SlotEmpty,
+                    expectedDestinationSlot));
+            }
+        }
+    }
+}

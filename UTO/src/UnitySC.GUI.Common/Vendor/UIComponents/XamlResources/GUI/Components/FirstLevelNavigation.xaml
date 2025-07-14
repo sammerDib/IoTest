@@ -1,0 +1,173 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:navigations="clr-namespace:Agileo.GUI.Components.Navigations;assembly=Agileo.GUI"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <SolidColorBrush x:Key="FirstLevelNavigationTabControlBackground" Color="{DynamicResource HorizontalCanvasBackground}" />
+    <SolidColorBrush x:Key="FirstLevelNavigationItemBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="FirstLevelNavigationItemForeground" Color="{DynamicResource HorizontalCanvasForeground}" />
+    <SolidColorBrush x:Key="FirstLevelNavigationItemCheckedBackground" Color="{DynamicResource SelectionBackground}" />
+    <SolidColorBrush x:Key="FirstLevelNavigationItemCheckedForeground" Color="{DynamicResource SelectionForeground}" />
+
+    <system:Double x:Key="FirstLevelNavigationItemHeight">40</system:Double>
+    <system:Double x:Key="FirstLevelNavigationIconSize">22</system:Double>
+    <system:Double x:Key="FirstLevelNavigationItemWidth">NaN</system:Double>
+
+    <!--#region Templates-->
+
+    <DataTemplate x:Key="FirstLevelNavigationElementTemplate" DataType="{x:Type navigations:MenuItem}">
+        <Grid>
+            <Grid HorizontalAlignment="Center" IsEnabled="{Binding IsEnabled}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="FirstColumn" Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ContentPresenter
+                    Width="{StaticResource FirstLevelNavigationIconSize}"
+                    Height="{StaticResource FirstLevelNavigationIconSize}"
+                    Margin="10,5"
+                    HorizontalAlignment="Center"
+                    Content="{Binding Icon}" />
+                <TextBlock
+                    x:Name="Text"
+                    Grid.Column="1"
+                    Padding="0,0,0,3"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSizeBig}"
+                    Text="{Binding LocalizedName}"
+                    TextAlignment="Left"
+                    TextTrimming="CharacterEllipsis" />
+            </Grid>
+            <controls:SalienceViewer
+                x:Name="SalienceViewer"
+                Count="{Binding Saliences.CurrentSalienceCount}"
+                Style="{DynamicResource FirstLevelNavigationSalienceStyle}"
+                Type="{Binding Saliences.CurrentSalienceType}" />
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasIcon}" Value="False">
+                <Setter TargetName="FirstColumn" Property="Width" Value="0" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!--#endregion Templates-->
+
+    <!--#region Styles-->
+
+    <Style
+        x:Key="FirstLevelNavigationTabItemStyle"
+        BasedOn="{x:Null}"
+        TargetType="{x:Type TabItem}">
+        <Setter Property="Height" Value="{StaticResource FirstLevelNavigationItemHeight}" />
+        <Setter Property="Width" Value="{StaticResource FirstLevelNavigationItemWidth}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeader}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Background" Value="{DynamicResource FirstLevelNavigationItemBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource FirstLevelNavigationItemForeground}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+        <Setter Property="Visibility" Value="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Grid
+                        x:Name="Root"
+                        Height="{TemplateBinding Height}"
+                        IsEnabled="{TemplateBinding IsEnabled}">
+
+                        <Rectangle x:Name="Background" Fill="{TemplateBinding Background}" />
+
+                        <Rectangle
+                            x:Name="MouseOverMask"
+                            Fill="{DynamicResource FirstLevelNavigationItemCheckedBackground}"
+                            IsHitTestVisible="True"
+                            Opacity="0" />
+
+                        <!--  TabItem Content  -->
+                        <ContentPresenter
+                            x:Name="ContentSite"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            ContentSource="Header"
+                            ContentTemplate="{StaticResource FirstLevelNavigationElementTemplate}"
+                            RecognizesAccessKey="True"
+                            TextBlock.FontFamily="{TemplateBinding FontFamily}"
+                            TextBlock.FontWeight="{TemplateBinding FontWeight}"
+                            TextBlock.Foreground="{TemplateBinding Foreground}">
+                            <ContentPresenter.Resources>
+                                <Style BasedOn="{StaticResource BaseTextBlockStyle}" TargetType="{x:Type TextBlock}">
+                                    <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabItem}}}" />
+                                </Style>
+                            </ContentPresenter.Resources>
+                        </ContentPresenter>
+
+                        <!--  Useful to add trace when ROOTMENU item is clicked  -->
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="PreviewMouseDown">
+                                <b:CallMethodAction MethodName="LogAction" TargetObject="{Binding}" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Root" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MouseOverMask" Property="Opacity" Value="{StaticResource MouseOverOpacity}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Background" Property="Fill" Value="{DynamicResource FirstLevelNavigationItemCheckedBackground}" />
+                            <Setter TargetName="ContentSite" Property="TextBlock.Foreground" Value="{DynamicResource FirstLevelNavigationItemCheckedForeground}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="FirstLevelNavigationTabControlStyle"
+        BasedOn="{x:Null}"
+        TargetType="{x:Type TabControl}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Background" Value="{DynamicResource FirstLevelNavigationTabControlBackground}" />
+        <Setter Property="TabStripPlacement" Value="Top" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource FirstLevelNavigationTabItemStyle}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <DockPanel>
+                        <!--  Selection Panel  -->
+                        <Grid DockPanel.Dock="{TemplateBinding TabStripPlacement}">
+                            <Rectangle
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Effect="{StaticResource E95ElementsShadow}"
+                                Fill="{TemplateBinding Background}" />
+                            <UniformGrid
+                                x:Name="HeaderPanel"
+                                Panel.ZIndex="1"
+                                Background="{TemplateBinding BorderBrush}"
+                                IsItemsHost="True"
+                                KeyboardNavigation.TabIndex="1"
+                                Rows="1" />
+                        </Grid>
+                    </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="HeaderPanel" Property="Opacity" Value="{StaticResource DisabledOpacity}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion Styles-->
+
+</ResourceDictionary>

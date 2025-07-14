@@ -1,0 +1,262 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.Resources"
+    xmlns:loadPort="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:semiDefinitions="clr-namespace:Agileo.SemiDefinitions;assembly=Agileo.SemiDefinitions">
+
+    <DataTemplate x:Key="E87LoadPortTransferStateTemplate" DataType="{x:Type e87:LoadPort}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_TRANSFER}">
+            <controls:Displayer x:Name="Displayer" Value="{Binding TransferState}" />
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding TransferState}" Value="{x:Static e87:TransferState.OutOfService}">
+                <Setter TargetName="Displayer" Property="Color" Value="Red" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_OUTOFSERVICE}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CancelIcon}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TransferState}" Value="{x:Static e87:TransferState.TransferBlocked}">
+                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_TRANSFERBLOCKED}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource LoaderIcon}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TransferState}" Value="{x:Static e87:TransferState.ReadyToLoad}">
+                <Setter TargetName="Displayer" Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource RoundedDownIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_READYTOLOAD}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TransferState}" Value="{x:Static e87:TransferState.ReadyToUnload}">
+                <Setter TargetName="Displayer" Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_READYTOUNLOAD}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource RoundedUpIcon}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LoadPortTransferStateTemplate" DataType="{x:Type loadPort:LoadPort}">
+
+        <controls:Displayer x:Name="Displayer" />
+
+        <DataTemplate.Triggers>
+
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=LoadLightStateRequested}" Value="{x:Static semiDefinitions:LightState.On}" />
+                    <Condition Binding="{Binding Path=UnloadLightStateRequested}" Value="{x:Static semiDefinitions:LightState.Off}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_READYTOLOAD}" />
+                <Setter TargetName="Displayer" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource RoundedDownIcon}" />
+            </MultiDataTrigger>
+
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=LoadLightStateRequested}" Value="{x:Static semiDefinitions:LightState.Off}" />
+                    <Condition Binding="{Binding Path=UnloadLightStateRequested}" Value="{x:Static semiDefinitions:LightState.On}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_READYTOUNLOAD}" />
+                <Setter TargetName="Displayer" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource RoundedDownIcon}" />
+            </MultiDataTrigger>
+
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=LoadLightStateRequested}" Value="{x:Static semiDefinitions:LightState.Off}" />
+                    <Condition Binding="{Binding Path=UnloadLightStateRequested}" Value="{x:Static semiDefinitions:LightState.Off}" />
+                </MultiDataTrigger.Conditions>
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_TRANSFERBLOCKED}" />
+                <Setter TargetName="Displayer" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource LoaderIcon}" />
+            </MultiDataTrigger>
+
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87LoadPortCarrierIdTemplate" DataType="{x:Type e87:Carrier}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_CARRIER_ID}">
+            <controls:Displayer Color="None" Value="{Binding ObjID}" />
+        </controls:PropertyEditor>
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87CarrierAccessingStateTemplate" DataType="{x:Type e87:Carrier}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_ACCESSING}">
+            <controls:Displayer x:Name="Displayer" Value="{Binding CarrierAccessingStatus}" />
+
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+
+            <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{x:Null}" />
+                <Setter TargetName="Displayer" Property="Color" Value="None" />
+                <Setter TargetName="Displayer" Property="Value" Value="-" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.NotAccessed}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_NOTACCESSED}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.InAccess}">
+                <Setter TargetName="Displayer" Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_INACCESS}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.CarrierComplete}">
+                <Setter TargetName="Displayer" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_CARRIERCOMPLETE}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierAccessingStatus}" Value="{x:Static e87:AccessingStatus.CarrierStopped}">
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_CARRIERSTOPPED}" />
+                <Setter TargetName="Displayer" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CancelIcon}" />
+            </DataTrigger>
+
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87LoadPortAccessModeDisplayTemplate" DataType="{x:Type e87:LoadPort}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_ACCESS_MODE}">
+            <controls:Displayer x:Name="Displayer" Value="{Binding AccessMode}" />
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+
+            <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static e87:AccessMode.Auto}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_AUTO}" />
+                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static e87:AccessMode.Manual}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource ManualIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MANUAL}" />
+                <Setter TargetName="Displayer" Property="Color" Value="Orange" />
+            </DataTrigger>
+
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="LoadPortAccessModeDisplayTemplate" DataType="{x:Type loadPort:LoadPort}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_ACCESS_MODE}">
+            <controls:Displayer x:Name="Displayer" Value="{Binding AccessMode}" />
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+
+            <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static semiDefinitions:LoadingType.Auto}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_AUTO}" />
+                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static semiDefinitions:LoadingType.Manual}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource ManualIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MANUAL}" />
+                <Setter TargetName="Displayer" Property="Color" Value="Orange" />
+            </DataTrigger>
+
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87LoadPortReservationStateTemplate" DataType="{x:Type e87:LoadPort}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_RESERVATION}">
+            <controls:Displayer x:Name="Displayer" Value="{Binding ReservationState}" />
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding ReservationState}" Value="{x:Static e87:ReservationState.Reserved}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_RESERVED}" />
+                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ReservationState}" Value="{x:Static e87:ReservationState.NotReserved}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_NOTRESERVED}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LoadPortReservationStateTemplate" DataType="{x:Type loadPort:LoadPort}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_RESERVATION}">
+            <controls:Displayer
+                x:Name="Displayer"
+                Icon="{StaticResource FilledCircleIcon}"
+                Value="Not Reserved" />
+        </controls:PropertyEditor>
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87LoadPortServiceStatusDisplayTemplate" DataType="{x:Type e87:LoadPort}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_SERVICE_STATUS}">
+            <controls:Displayer
+                x:Name="Displayer"
+                Color="Green"
+                Value="In Service" />
+        </controls:PropertyEditor>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding TransferState}" Value="{x:Static e87:TransferState.OutOfService}">
+                <Setter TargetName="Displayer" Property="Color" Value="Red" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_OUTOFSERVICE}" />
+                <Setter TargetName="Displayer" Property="Value" Value="Out Of Service" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87CarrierIdStatusTemplate" DataType="{x:Type e87:Carrier}">
+        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_STATUS_ID}">
+            <controls:Displayer x:Name="Displayer" Value="{Binding CarrierIdStatus}" />
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+
+            <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{x:Null}" />
+                <Setter TargetName="Displayer" Property="Color" Value="None" />
+                <Setter TargetName="Displayer" Property="Value" Value="-" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.IDNotRead}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_IDNOTREAD}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.VerificationFailed}">
+                <Setter TargetName="Displayer" Property="Color" Value="Red" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CancelIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_VERIFICATIONFAILED}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.VerificationOk}">
+                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_VERIFICATIONOK}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CarrierIdStatus}" Value="{x:Static e87:CarrierIdStatus.WaitingForHost}">
+                <Setter TargetName="Displayer" Property="Color" Value="Orange" />
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource LoaderIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_WAITINGFORHOST}" />
+            </DataTrigger>
+
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="E87LoadPortAssociationStateTemplate" DataType="{x:Type e87:LoadPort}">
+        <controls:PropertyEditor PropertyName="Association">
+            <controls:Displayer x:Name="Displayer" Value="{Binding AssociationState}" />
+        </controls:PropertyEditor>
+
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding AssociationState}" Value="{x:Static e87:AssociationState.Associated}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource CheckedIcon}" />
+                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_ASSOCIATED}" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AssociationState}" Value="{x:Static e87:AssociationState.NotAssociated}">
+                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_NOTASSOCIATED}" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+
+    </DataTemplate>
+
+</ResourceDictionary>

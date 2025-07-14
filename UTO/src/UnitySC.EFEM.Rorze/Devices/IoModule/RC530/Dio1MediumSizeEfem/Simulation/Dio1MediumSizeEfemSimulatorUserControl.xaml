@@ -1,0 +1,136 @@
+<UserControl
+    x:Class="UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.Simulation.Dio1MediumSizeEfemSimulatorUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:simulation="clr-namespace:UnitySC.EFEM.Rorze.Devices.IoModule.RC530.Dio1MediumSizeEfem.Simulation"
+    d:DataContext="{d:DesignInstance Type=simulation:Dio1MediumSizeEfemSimulationData}"
+    d:DesignHeight="800"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <TabControl>
+        <TabItem Header="Inputs/Outputs">
+            <StackPanel Orientation="Horizontal">
+                <GroupBox Header="Inputs">
+                    <StackPanel>
+                        <CheckBox
+                            Margin="5"
+                            Content="I_MaintenanceSwitch"
+                            IsChecked="{Binding I_MaintenanceSwitch}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PressureSensor_VAC"
+                            IsChecked="{Binding I_PressureSensor_VAC}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_Led_PushButton"
+                            IsChecked="{Binding I_Led_PushButton}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PressureSensor_ION_AIR"
+                            IsChecked="{Binding I_PressureSensor_ION_AIR}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_Ionizer1Alarm"
+                            IsChecked="{Binding I_Ionizer1Alarm}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_LightCurtain"
+                            IsChecked="{Binding I_LightCurtain}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PM1_DoorOpened"
+                            IsChecked="{Binding I_PM1_DoorOpened}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PM1_ReadyToLoadUnload"
+                            IsChecked="{Binding I_PM1_ReadyToLoadUnload}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PM2_DoorOpened"
+                            IsChecked="{Binding I_PM2_DoorOpened}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PM2_ReadyToLoadUnload"
+                            IsChecked="{Binding I_PM2_ReadyToLoadUnload}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PM3_DoorOpened"
+                            IsChecked="{Binding I_PM3_DoorOpened}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="I_PM3_ReadyToLoadUnload"
+                            IsChecked="{Binding I_PM3_ReadyToLoadUnload}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Output">
+                    <StackPanel>
+                        <CheckBox
+                            Margin="5"
+                            Content="O_RobotArmNotExtended_PM1"
+                            IsChecked="{Binding O_RobotArmNotExtended_PM1}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_RobotArmNotExtended_PM2"
+                            IsChecked="{Binding O_RobotArmNotExtended_PM2}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_RobotArmNotExtended_PM3"
+                            IsChecked="{Binding O_RobotArmNotExtended_PM3}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_LightningRed"
+                            IsChecked="{Binding O_SignalTower_LightningRed}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_LightningYellow"
+                            IsChecked="{Binding O_SignalTower_LightningYellow}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_LightningGreen"
+                            IsChecked="{Binding O_SignalTower_LightningGreen}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_LightningBlue"
+                            IsChecked="{Binding O_SignalTower_LightningBlue}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_BlinkingRed"
+                            IsChecked="{Binding O_SignalTower_BlinkingRed}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_BlinkingYellow"
+                            IsChecked="{Binding O_SignalTower_BlinkingYellow}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_BlinkingGreen"
+                            IsChecked="{Binding O_SignalTower_BlinkingGreen}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_BlinkingBlue"
+                            IsChecked="{Binding O_SignalTower_BlinkingBlue}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_Buzzer1"
+                            IsChecked="{Binding O_SignalTower_Buzzer1}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_Buzzer2"
+                            IsChecked="{Binding O_SignalTower_Buzzer2}" />
+                        <CheckBox
+                            Margin="5"
+                            Content="O_SignalTower_Buzzer2"
+                            IsChecked="{Binding O_SignalTower_PowerSupply}" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Alarms" Visibility="{Binding IsDeviceWithAlarms, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ContentControl Content="{Binding AlarmSimulationUserControl}" />
+        </TabItem>
+    </TabControl>
+</UserControl>

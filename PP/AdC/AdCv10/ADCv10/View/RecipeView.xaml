@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="ADC.View.RecipeView" 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:graph="clr-namespace:ADC.View.Graph"
+    xmlns:header="clr-namespace:ADC.View.Header"
+    xmlns:local="clr-namespace:ADC.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.InputBindings>
+        <KeyBinding Command="{Binding NewRecipeCommand}" Gesture="CTRL+N" />
+        <KeyBinding Command="{Binding OpenRecipeCommand}" Gesture="CTRL+O" />
+        <KeyBinding Command="{Binding SaveRecipeToBaseCommand}" Gesture="CTRL+S" />
+        <KeyBinding Command="{Binding UndoRecipeCommand}" Gesture="CTRL+Z" />
+        <KeyBinding Command="{Binding RedoRecipeCommand}" Gesture="CTRL+Y" />
+    </UserControl.InputBindings>
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="MenuViewkey">
+            <header:MenuView/>
+        </DataTemplate>
+        <DataTemplate x:Key="EmbeddedMenuViewKey">
+            <header:EmbeddedMenuView/>
+        </DataTemplate>
+
+
+
+        <local:RecipeViewHeaderTemplateSelector 
+            EmbeddedMenuTemplate="{StaticResource EmbeddedMenuViewKey}"
+            MenuTemplate="{StaticResource MenuViewkey}"
+
+            x:Key="RecipeViewHeaderTemplateSelectorKey" />
+
+
+    </UserControl.Resources>
+
+    <Grid>
+        <!--  Main Grid placed behin All other controls.  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Main menu  -->
+        <!--  ViewModel.ViewModelLocator.Instance.MainWindowViewModel.IsEmbedded --> 
+        <!-- <header:MenuView /> -->
+
+
+        <ContentControl ContentTemplateSelector="{StaticResource RecipeViewHeaderTemplateSelectorKey}" Content="{Binding}" />
+
+        <Grid Grid.Row="1">
+            <!--  Main Grid placed behin All other controls.  -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400*" MinWidth="100" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="500*" MinWidth="100" />
+            </Grid.ColumnDefinitions>
+
+            <graph:GraphView DataContext="{Binding RecipeGraphVM}" 
+                             VisibleRect="{Binding VisibleRect, Mode=TwoWay}"
+                             GraphBackground="{Binding Path=DataContext.EditionMode, Converter={StaticResource EditionModeToBackgroundColorConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RecipeView}}}" 
+                             IsEditable="{Binding IsEditable}"
+                             NodeInfoIsVisible="{Binding Path=DataContext.IsRecipeEdited, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RecipeView}}}"
+                             NodeProgessInfoIsVisible="{Binding Path=DataContext.IsRecipeEdited, Converter={StaticResource InvertedBooleanConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RecipeView}}}" />
+
+            <GridSplitter Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                Width="5"
+                HorizontalAlignment="Stretch"
+                Background="{StaticResource SplitterColor}" />
+
+            <ContentPresenter x:Name="ModuleDetails" Grid.Row="0" Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Content="{Binding ModuleDetails}" />
+        </Grid>
+    </Grid>
+</UserControl>

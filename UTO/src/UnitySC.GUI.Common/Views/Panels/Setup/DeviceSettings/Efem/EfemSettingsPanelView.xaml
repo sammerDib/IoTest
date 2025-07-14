@@ -1,0 +1,62 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Efem.EfemSettingsPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:deviceSettings="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings"
+    xmlns:efem="clr-namespace:UnitySC.GUI.Common.Views.Panels.Setup.DeviceSettings.Efem"
+    xmlns:enums="clr-namespace:UnitySC.Equipment.Abstractions.Devices.Efem.Enums;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance efem:EfemSettingsPanel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <Grid>
+        <controls:Card Visibility="{Binding ErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource Headline4TextStyle}"
+                Text="{localize:Static deviceSettings:DeviceSettingsResources.S_SETUP_DEVICE_SETTINGS_ERROR}" />
+        </controls:Card>
+        <UniformGrid Columns="2" Visibility="{Binding SettingsVisibility, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+            <controls:Card>
+                <controls:Card.Margin>
+                    <Thickness Right="{StaticResource PanelMargin}" />
+                </controls:Card.Margin>
+                <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                    <DockPanel>
+                        <GroupBox DockPanel.Dock="Top" Header="{localize:Static efem:EfemSettingsResources.BP_EFEM_SETTINGS}">
+                            <StackPanel Orientation="Vertical">
+                                <controls:PropertyEditor
+                                    Margin="0,20,0,0"
+                                    Orientation="Horizontal"
+                                    PropertyDescription="{localize:Static efem:EfemSettingsResources.LIGHT_CURTAIN_SECURITY_ENABLED_DESCRIPTION}"
+                                    PropertyName="{localize:Static efem:EfemSettingsResources.LIGHT_CURTAIN_SECURITY_ENABLED}">
+                                    <CheckBox IsChecked="{Binding LightCurtainSecurityEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                                </controls:PropertyEditor>
+                                <controls:PropertyEditor
+                                    Margin="0,20,0,0"
+                                    Orientation="Horizontal"
+                                    PropertyDescription="{localize:Static efem:EfemSettingsResources.LIGHT_CURTAIN_WIRING_DESCRIPTION}"
+                                    PropertyName="{localize:Static efem:EfemSettingsResources.LIGHT_CURTAIN_WIRING}">
+                                    <controls:ChipsSelector
+                                        IsEnabled="False"
+                                        SelectedItem="{Binding ModifiedConfig.LightCurtainWiring}"
+                                        ItemsSource="{markupExtensions:EnumCollection {x:Type enums:LightCurtainWiring}}"/>
+                                </controls:PropertyEditor>
+                            </StackPanel>
+                        </GroupBox>
+                    </DockPanel>
+                </ScrollViewer>
+            </controls:Card>
+        </UniformGrid>
+    </Grid>
+</UserControl>

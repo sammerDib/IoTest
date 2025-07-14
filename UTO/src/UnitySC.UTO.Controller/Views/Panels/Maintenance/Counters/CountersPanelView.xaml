@@ -1,0 +1,103 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Maintenance.Counters.CountersPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controller="clr-namespace:UnitySC.UTO.Controller"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:counters="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Maintenance.Counters"
+    xmlns:counters1="clr-namespace:UnitySC.UTO.Controller.Counters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance counters:CountersPanel}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    mc:Ignorable="d">
+    <UniformGrid Columns="2">
+        <controls:Card>
+            <GroupBox Padding="0,10,0,0" Header="{localize:Static counters:CountersPanelResources.COUNTERS}">
+                <StackPanel>
+                    <controls:PropertyEditor
+                        Margin="15,10,5,5"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static counters:CountersPanelResources.COUNTER_START_DESCRIPTION}"
+                        PropertyName="{localize:Static counters:CountersPanelResources.COUNTER_START}"
+                        Style="{StaticResource HorizontalPropertyEditorStyle}">
+                        <controls:Displayer
+                            MinWidth="200"
+                            VerticalAlignment="Top"
+                            Command="{Binding ResetCommand}"
+                            CommandIcon="{StaticResource CancelIcon}"
+                            CommandParameter="{x:Static counters1:CounterDefinition.StartCounter}"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding Source={x:Static controller:App.UtoInstance}, Path=CountersManager.PersistentCounters.StartCounter}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Margin="15,10,5,5"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static counters:CountersPanelResources.COUNTER_FATAL_ERROR_DESCRIPTION}"
+                        PropertyName="{localize:Static counters:CountersPanelResources.COUNTER_FATAL_ERROR}"
+                        Style="{StaticResource HorizontalPropertyEditorStyle}">
+                        <controls:Displayer
+                            MinWidth="200"
+                            VerticalAlignment="Top"
+                            Command="{Binding ResetCommand}"
+                            CommandIcon="{StaticResource CancelIcon}"
+                            CommandParameter="{x:Static counters1:CounterDefinition.FatalErrorCounter}"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding Source={x:Static controller:App.UtoInstance}, Path=CountersManager.PersistentCounters.FatalErrorCounter}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Margin="15,10,5,5"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static counters:CountersPanelResources.COUNTER_START_JOB_DESCRIPTION}"
+                        PropertyName="{localize:Static counters:CountersPanelResources.COUNTER_START_JOB}"
+                        Style="{StaticResource HorizontalPropertyEditorStyle}">
+                        <controls:Displayer
+                            MinWidth="200"
+                            VerticalAlignment="Top"
+                            Command="{Binding ResetCommand}"
+                            CommandIcon="{StaticResource CancelIcon}"
+                            CommandParameter="{x:Static counters1:CounterDefinition.JobCounter}"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding Source={x:Static controller:App.UtoInstance}, Path=CountersManager.PersistentCounters.JobCounter}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Margin="15,10,5,5"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static counters:CountersPanelResources.COUNTER_ABORT_DESCRIPTION}"
+                        PropertyName="{localize:Static counters:CountersPanelResources.COUNTER_ABORT}"
+                        Style="{StaticResource HorizontalPropertyEditorStyle}">
+                        <controls:Displayer
+                            MinWidth="200"
+                            VerticalAlignment="Top"
+                            Command="{Binding ResetCommand}"
+                            CommandIcon="{StaticResource CancelIcon}"
+                            CommandParameter="{x:Static counters1:CounterDefinition.AbortCounter}"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding Source={x:Static controller:App.UtoInstance}, Path=CountersManager.PersistentCounters.AbortCounter}" />
+                    </controls:PropertyEditor>
+
+                    <controls:PropertyEditor
+                        Margin="15,10,5,5"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static counters:CountersPanelResources.COUNTER_PROCESSED_SUBSTRATE_DESCRIPTION}"
+                        PropertyName="{localize:Static counters:CountersPanelResources.COUNTER_PROCESSED_SUBSTRATE}"
+                        Style="{StaticResource HorizontalPropertyEditorStyle}">
+                        <controls:Displayer
+                            MinWidth="200"
+                            VerticalAlignment="Top"
+                            Command="{Binding ResetCommand}"
+                            CommandIcon="{StaticResource CancelIcon}"
+                            CommandParameter="{x:Static counters1:CounterDefinition.ProcessedSubstrateCounter}"
+                            FontSize="{StaticResource FontSizeNormal}"
+                            Value="{Binding Source={x:Static controller:App.UtoInstance}, Path=CountersManager.PersistentCounters.ProcessedSubstrateCounter}" />
+                    </controls:PropertyEditor>
+                </StackPanel>
+            </GroupBox>
+        </controls:Card>
+    </UniformGrid>
+</UserControl>

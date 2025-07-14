@@ -1,0 +1,85 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common.PointNavigationView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:waferDetail="clr-namespace:UnitySC.Shared.ResultUI.Metro.ViewModel.WaferDetail"
+	d:DataContext="{d:DesignInstance waferDetail:MetroResultVM}"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Metro;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+
+		<controls:ImageButton
+			Width="30"
+			Height="30"
+			Padding="2"
+			Command="{Binding ResultPointsList.PreviousMeasureCommand}"
+			ImageGeometry="{StaticResource ArrowLeftGeometry}"
+			ImageGeometryBrush="{StaticResource IconsColor}"
+			Style="{StaticResource LeftImageButton}" />
+		<TextBox
+			Grid.Column="1"
+			HorizontalContentAlignment="Center"
+			BorderThickness="0,1"
+			IsReadOnly="True"
+			Style="{StaticResource TextBoxNotRounded}"
+			Text="{Binding SelectedMeasurePointResultIndex, Mode=OneWay}" />
+		<controls:ImageButton
+			Grid.Column="2"
+			Width="30"
+			Height="30"
+			Margin="0,0,10,0"
+			Padding="2"
+			Command="{Binding ResultPointsList.NextMeasureCommand}"
+			ImageGeometry="{StaticResource ArrowRightGeometry}"
+			ImageGeometryBrush="{StaticResource IconsColor}"
+			Style="{StaticResource RightImageButton}" />
+		<TextBox
+			Grid.Column="3"
+			Text="{Binding SearchPointText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+			<TextBox.InputBindings>
+				<KeyBinding
+					Command="{Binding ValidateSearchCommand}"
+					Gesture="Enter" />
+			</TextBox.InputBindings>
+			<TextBox.Style>
+				<Style
+					BasedOn="{StaticResource TextBoxNotRounded}"
+					TargetType="{x:Type TextBox}">
+					<Setter Property="BorderThickness" Value="1,1,0,1" />
+					<Setter Property="Border.CornerRadius">
+						<Setter.Value>
+							<CornerRadius
+								BottomLeft="3"
+								TopLeft="3" />
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</TextBox.Style>
+		</TextBox>
+		<controls:ImageButton
+			Grid.Column="4"
+			Width="30"
+			Height="30"
+			Command="{Binding ValidateSearchCommand}"
+			ImageGeometry="{StaticResource SearchGeometry}"
+			ImageGeometryBrush="{StaticResource IconsColor}"
+			Style="{StaticResource RightImageButton}" />
+	</Grid>
+</UserControl>

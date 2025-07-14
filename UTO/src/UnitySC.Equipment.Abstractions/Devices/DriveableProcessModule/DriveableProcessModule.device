@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="DriveableProcessModule">
+                  <Types>
+                    <CSharpType PlatformType="UnitySC.Shared.Data.Enum.ActorType, UnitySC.Shared.Data, Version=1.1.3.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Enums.ProcessModuleState, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Shared.Data.Enum.EnumPMTransferState, UnitySC.Shared.Data, Version=1.1.3.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="UnitySC.Shared.TC.Shared.Data.TransferType, UnitySC.Shared.TC.Shared.Data, Version=1.1.3.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.RobotArm, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Enums.MaterialType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <CSharpType PlatformType="Agileo.SemiDefinitions.SampleDimension, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Material.Wafer, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <DeviceType Name="DriveableProcessModule" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\DriveableProcessModule\DriveableProcessModule.device|UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.DriveableProcessModule" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\ProcessModule\ProcessModule.device|UnitySC.Equipment.Abstractions.Devices.ProcessModule.ProcessModule" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.DriveableProcessModule, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="PrepareTransfer" Type="Void" Timeout="60 s">
+                          <Documentation>Prepare the process module (unclamp, move pins...) for material deposit/removal.</Documentation>
+                          <Parameters>
+                            <Parameter Name="transferType" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.TransferType" />
+                            <Parameter Name="arm" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.RobotArm" />
+                            <Parameter Name="materialType" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.MaterialType" />
+                            <Parameter Name="dimension" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.SampleDimension" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ProcessModule.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="PostTransfer" Type="Void" Timeout="60 s">
+                          <Documentation>Prepare the process module (clamp, move pins...) for process</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ProcessModule.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SelectRecipe" Type="Void" Timeout="60 s">
+                          <Documentation>Start recipe on the process module</Documentation>
+                          <Parameters>
+                            <Parameter Name="wafer" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.Wafer" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsIdle, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ProcessModule.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="StartRecipe" Type="Void" Timeout="60 s">
+                          <Documentation>Start recipe on the process module</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ProcessModule.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="AbortRecipe" Type="Void" Timeout="60 s">
+                          <Documentation>Abort recipe on the process module</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.Conditions.IsRecipeRunning, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ProcessModule.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="ResetSmokeDetectorAlarm" Type="Void" Timeout="60 s">
+                          <Documentation>Reset smoke detector alarm</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.ProcessModule.Conditions.IsInService, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="ActorType" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.ActorType" />
+                        <Status Name="ProcessModuleState" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.ProcessModuleState" />
+                        <Status Name="PreviousProcessModuleState" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.ProcessModuleState" />
+                        <Status Name="SelectedRecipe" Type="String" />
+                        <Status Name="RecipeProgress" Type="Ratio" />
+                        <Status Name="TransferState" Type="UnitySC.Equipment.Abstractions.Devices.DriveableProcessModule.EnumPMTransferState" />
+                        <Status Name="TransferValidationState" Type="Boolean" />
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

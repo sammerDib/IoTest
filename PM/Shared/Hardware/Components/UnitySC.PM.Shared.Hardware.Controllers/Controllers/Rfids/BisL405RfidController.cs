@@ -1,0 +1,158 @@
+﻿using System;
+using System.Collections.Generic;
+
+using CommunityToolkit.Mvvm.Messaging;
+
+using UnitySC.PM.Shared.Hardware.Service.Interface;
+using UnitySC.PM.Shared.Hardware.Service.Interface.Rfid;
+using UnitySC.PM.Shared.Status.Service.Interface;
+using UnitySC.Shared.Logger;
+using UnitySC.Shared.Tools.Service;
+
+namespace UnitySC.PM.Shared.Hardware.Controllers.Controllers.Rfids
+{
+    public delegate void TagReadDelegate(String value);
+    public class BisL405RfidController : RfidController
+    {
+
+        private OpcController _opcController;
+
+        private string TagID { get; set; }
+
+        private enum ERfidCmds
+        { ReadTag, RaisePropertiesChanged }
+
+        private enum EFeedbackMsgRfid
+        {
+            State = 0,
+            StateMsg = 1,
+            StatusMsg = 2,
+            IsAliveMsg = 3,
+            DataCarrierMsg = 10
+        }
+
+        public BisL405RfidController(OpcControllerConfig opcControllerConfig, IGlobalStatusServer globalStatusServer,
+            ILogger logger) : base(opcControllerConfig, globalStatusServer, logger)
+        {
+            _opcController = new OpcController(opcControllerConfig, logger, new DeliverMessagesDelegate(DeliverMessages));
+        }
+
+        public override void Init(List<Message> initErrors)
+        {
+            _opcController.Init(initErrors);
+        }
+
+        public override bool ResetController()
+        {
+            try
+            {
+                if (_opcController != null)
+                {
+                    Disconnect();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public override void Connect()
+        {
+            _opcController.Connect();
+        }
+
+        public override void Connect(string deviceId)
+        {
+            Connect();
+        }
+
+        public override void Disconnect()
+        {
+            _opcController.Disconnect();
+        }
+
+        public override void Disconnect(string deviceID)
+        {
+            Disconnect();
+        }
+
+        public void ReadTag()
+        {
+            _opcController.SetMethodValueAsync(ERfidCmds.ReadTag.ToString());
+        }
+
+        public override void TriggerUpdateEvent()
+        {
+            _opcController.SetMethodValueAsync(ERfidCmds.RaisePropertiesChanged.ToString());
+        }
+
+        public void DeliverMessages(string msgName, object value)
+        {
+            EFeedbackMsgRfid index = 0;
+            try
+            {
+                if (!EFeedbackMsgRfid.TryParse(msgName, out index))
+                    Logger.Error($"{ControllerConfig.DeviceID} - unable to parse enum value: <{msgName}>");
+
+                switch (index)
+                {
+                    case EFeedbackMsgRfid.State:
+                        if ((int)value >= 0)
+                        {
+                            State = new DeviceState((DeviceStatus)(int)value);
+                            Messenger.Send(new StateMessage() { State = State });
+                        }
+                        break;
+
+                    case EFeedbackMsgRfid.StateMsg:
+                        if (int.TryParse((string)value, out var state))
+                        {
+                            State = new DeviceState((DeviceStatus)state);
+                            Messenger.Send(new StateMessage() { State = State });
+                        }
+                        break;
+
+                    case EFeedbackMsgRfid.StatusMsg:
+                        if (!String.IsNullOrWhiteSpace((string)value))
+                        {
+                            Messenger.Send(new StatusMessage() { Status = (string)value });
+                        }
+                        break;
+
+                    case EFeedbackMsgRfid.IsAliveMsg:
+                        if (int.TryParse((string)value, out var isAlive))
+                        {
+                            _opcController.NewMeterSubscription = isAlive;
+                        }
+                        break;
+
+                    case EFeedbackMsgRfid.DataCarrierMsg:
+                        if (!String.IsNullOrWhiteSpace((string)value))
+                        {
+                            if ((string)value != TagID)
+                            {
+                                TagID = (string)value;
+                                Messenger.Send(new TagMessage() { Tag = (string)value });
+                            }
+                        }
+                        break;
+
+                    default:
+                        Logger.Warning($"{ControllerConfig.DeviceID} - Unknown message: {msgName} {index}");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"{ControllerConfig.DeviceID} - {ex.Message}: {(string)value} {index}");
+            }
+        }
+
+        public string GetTag()
+        {
+            return TagID;
+        }
+    }
+}

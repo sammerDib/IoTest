@@ -1,0 +1,197 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Production.Equipment.Views.SimplifiedLoadPortViewerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e87="clr-namespace:Agileo.Semi.Gem300.Abstractions.E87;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:equipment="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment"
+    xmlns:equipmentHandling="clr-namespace:UnitySC.UTO.Controller.Views.Panels.EquipmentHandling"
+    xmlns:loadPort="clr-namespace:UnitySC.GUI.Common.Equipment.LoadPort;assembly=UnitySC.GUI.Common"
+    xmlns:loadPorts="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Equipment.LoadPorts"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userMessages="clr-namespace:Agileo.GUI.Services.UserMessages;assembly=Agileo.GUI"
+    x:Name="UserControl"
+    d:DataContext="{d:DesignInstance loadPorts:LoadPortViewer}"
+    d:DesignHeight="490"
+    d:DesignWidth="450"
+    mc:Ignorable="d">
+
+    <controls:Card>
+        <Grid>
+            <GroupBox Padding="10,0,10,10">
+                <GroupBox.Header>
+                    <DockPanel LastChildFill="False">
+                        <TextBlock
+                            Margin="0,0,5,0"
+                            Style="{StaticResource GroupBoxHeaderTextBlockStyle}"
+                            Text="{localize:Static equipmentHandling:EquipmentHandlingResources.EQUIPMENT_LOADPORT}" />
+                        <TextBlock Style="{StaticResource GroupBoxHeaderTextBlockStyle}" Text="{Binding LoadPort.InstanceId}" />
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                            <controls:Icon Data="{StaticResource TimePickerIcon}" />
+                            <TextBlock
+                                Margin="7,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding LoadPort.Carrier.PutTimeStamp}" />
+                        </StackPanel>
+                    </DockPanel>
+                </GroupBox.Header>
+
+                <DockPanel>
+
+                    <Viewbox DockPanel.Dock="Top">
+                        <loadPort:LoadPortLedStatesView LoadPort="{Binding LoadPort}" />
+                    </Viewbox>
+
+                    <loadPort:CarrierIdDisplayer
+                        Margin="0,10,0,0"
+                        DockPanel.Dock="Top"
+                        HeaderPadding="0,0,0,5"
+                        Orientation="Horizontal" />
+
+                    <Grid Margin="0,5,0,0" DockPanel.Dock="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Command="{Binding ProceedCommand}"
+                            Content="{localize:Static equipmentHandling:EquipmentHandlingResources.EQUIPMENT_IN_ACCESS}"
+                            DockPanel.Dock="Bottom"
+                            FontSize="{StaticResource FontSizeBig}" />
+                        <Button
+                            Grid.Column="2"
+                            Command="{Binding ReleaseCommand}"
+                            Content="{localize:Static equipmentHandling:EquipmentHandlingResources.EQUIPMENT_RELEASE}"
+                            FontSize="{StaticResource FontSizeBig}" />
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <loadPort:SimplifiedSlotMapView
+                            Grid.Column="0"
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Bottom"
+                            DataContext="{Binding SimplifiedSlotMapViewModel}"
+                            ItemHeight="11" />
+
+                        <UniformGrid
+                            Grid.Column="1"
+                            Margin="0,10,0,0"
+                            Columns="1">
+                            <UniformGrid.Resources>
+                                <!--  Override the default PropertyDisplayer style to reduce spacing between header and content  -->
+                                <Style BasedOn="{StaticResource {x:Type controls:PropertyEditor}}" TargetType="{x:Type controls:PropertyEditor}">
+                                    <Setter Property="ContentPadding" Value="0,2,0,0" />
+                                </Style>
+                            </UniformGrid.Resources>
+
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                                VerticalAlignment="Top"
+                                PropertyName="{localize:Static equipment:EquipmentResources.CARRIERS_LOT_ID}">
+                                <controls:Displayer Color="None" Value="{Binding LotId}" />
+                            </controls:PropertyEditor>
+
+                            <ContentPresenter
+                                VerticalAlignment="Top"
+                                Content="{Binding}"
+                                ContentTemplate="{StaticResource E87LoadPortTransferStateTemplate}" />
+
+                            <ContentPresenter VerticalAlignment="Top" Content="{Binding}">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate DataType="{x:Type e87:LoadPort}">
+                                        <controls:PropertyEditor PropertyName="{localize:Static equipment:EquipmentResources.LOADPORT_ACCESS_MODE}">
+                                            <controls:Displayer
+                                                x:Name="Displayer"
+                                                Command="{Binding ElementName=UserControl, Path=DataContext.AccessModePopupCommand}"
+                                                CommandIcon="{StaticResource EditIcon}"
+                                                Value="{Binding AccessMode}" />
+                                        </controls:PropertyEditor>
+
+                                        <DataTemplate.Triggers>
+
+                                            <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static e87:AccessMode.Auto}">
+                                                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource FilledCircleIcon}" />
+                                                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_AUTO}" />
+                                                <Setter TargetName="Displayer" Property="Color" Value="Green" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding AccessMode}" Value="{x:Static e87:AccessMode.Manual}">
+                                                <Setter TargetName="Displayer" Property="Icon" Value="{StaticResource ManualIcon}" />
+                                                <Setter TargetName="Displayer" Property="Value" Value="{localize:Static equipment:EquipmentResources.EQUIPMENT_MANUAL}" />
+                                                <Setter TargetName="Displayer" Property="Color" Value="Orange" />
+                                            </DataTrigger>
+
+                                        </DataTemplate.Triggers>
+
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+
+                            <ContentPresenter
+                                VerticalAlignment="Top"
+                                Content="{Binding}"
+                                ContentTemplate="{StaticResource E87CarrierAccessingStateTemplate}" />
+
+                            <ContentPresenter
+                                VerticalAlignment="Top"
+                                Content="{Binding}"
+                                ContentTemplate="{StaticResource E87LoadPortReservationStateTemplate}" />
+
+                        </UniformGrid>
+                    </Grid>
+                </DockPanel>
+
+            </GroupBox>
+            <controls:Card
+                VerticalAlignment="Bottom"
+                Background="{StaticResource SeverityErrorBrush}"
+                Foreground="{StaticResource MessageAreaErrorForeground}"
+                Visibility="{Binding UserMessageDisplayer.DisplayedUserMessage, Converter={StaticResource NullToCollapsedConverter}}">
+                <StackPanel>
+                    <ScrollViewer
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <TextBlock
+                            x:Name="TextBlock"
+                            Margin="16,10,10,10"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Text="{Binding UserMessageDisplayer.DisplayedUserMessage.Message.Value}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="Wrap">
+                        </TextBlock>
+                    </ScrollViewer>
+                    <ItemsControl
+                        Margin="0,0,4,0"
+                        HorizontalAlignment="Right"
+                        ItemsSource="{Binding UserMessageDisplayer.DisplayedUserMessage.Commands}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type userMessages:UserMessageCommand}">
+                                <Button
+                                    MinWidth="80"
+                                    Margin="4,0,4,4"
+                                    VerticalAlignment="Bottom"
+                                    Command="{Binding}"
+                                    Content="{Binding}"
+                                    ContentTemplate="{StaticResource UserMessageButtonTemplate}"
+                                    Foreground="{Binding Foreground, ElementName=TextBlock}"
+                                    Style="{StaticResource MessageAreaCommandButtonStyle}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </controls:Card>
+        </Grid>
+    </controls:Card>
+</UserControl>

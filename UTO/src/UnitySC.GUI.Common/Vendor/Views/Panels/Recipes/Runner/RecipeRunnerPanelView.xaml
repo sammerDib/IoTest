@@ -1,0 +1,534 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Recipes.Runner.RecipeRunnerPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:components="clr-namespace:Agileo.Recipes.Components;assembly=Agileo.Recipes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:processingFramework="clr-namespace:Agileo.ProcessingFramework;assembly=Agileo.ProcessingFramework"
+    xmlns:recipesFolder="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Recipes"
+    xmlns:runner="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Recipes.Runner"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+    xmlns:styleSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.StyleSelectors"
+    xmlns:instructions="clr-namespace:UnitySC.GUI.Common.Vendor.ProcessExecution.Instructions"
+    xmlns:dataTemplateSelectors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.DataTemplateSelectors"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:dataTables="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.DataTables"
+    xmlns:groupSelector="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Components.GroupSelector"
+    d:DataContext="{d:DesignInstance runner:RecipeRunnerPanel, IsDesignTimeCreatable=False}"
+    d:DesignHeight="{StaticResource DesignHeight}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <DockPanel>
+
+        <Expander
+            BorderThickness="1,0,0,0"
+            DockPanel.Dock="Right"
+            ExpandDirection="Left"
+            IsExpanded="{Binding DetailsIsExpanded, Mode=TwoWay}">
+            <Expander.Header>
+                <TextBlock Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_LIBRARY_DETAIL_EXPANDER}">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="90" />
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+            </Expander.Header>
+            <ContentControl
+                Width="800"
+                Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}"
+                Content="{Binding RecipeExecutionViewModel}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate DataType="{x:Type runner:RecipeExecutionViewModel}">
+                        <Grid Margin="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <controls:PropertyEditor
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_NAME}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <TextBlock>
+                                    <Run
+                                        FontWeight="Bold"
+                                        Text="{Binding Component.Id, Mode=OneWay}" />
+                                    <Run Text="{Binding ComponentVersion, Mode=OneWay}" />
+                                </TextBlock>
+                            </controls:PropertyEditor>
+                            <ContentPresenter
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Content="{Binding ExecutionState}">
+                                <ContentPresenter.ContentTemplate>
+                                    <DataTemplate DataType="{x:Type runner:HmiRecipeExecutionState}">
+
+                                        <controls:PropertyEditor
+                                            x:Name="PropertyEditor"
+                                            Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                            Background="{DynamicResource SeverityInformationBrush}"
+                                            Foreground="White"
+                                            PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EXECUTION_STATE}"
+                                            Style="{StaticResource BorderedPropertyEditorStyle}">
+                                            <StackPanel
+                                                Margin="0,0,0,10"
+                                                Orientation="Horizontal">
+                                                <controls:Icon
+                                                    x:Name="Icon"
+                                                    Margin="0,0,8,0"
+                                                    Data="{StaticResource DotIcon}" />
+                                                <TextBlock
+                                                    x:Name="TextBlock"
+                                                    Style="{StaticResource Body1TextStyle}"
+                                                    Text="State" />
+                                                <TextBlock
+                                                    x:Name="CycleBlock"
+                                                    Margin="5,0,0,0"
+                                                    Style="{StaticResource Body1TextStyle}"
+                                                    Text="{Binding DataContext.CycleProgression, RelativeSource={RelativeSource AncestorType=Expander}}"
+                                                    Visibility="Collapsed" />
+                                            </StackPanel>
+                                        </controls:PropertyEditor>
+
+                                        <DataTemplate.Triggers>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.Running}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource PlayIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static recipesFolder:RecipePanelResources.RECIPE_RUNNING}" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.Paused}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource PauseIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static recipesFolder:RecipePanelResources.RECIPE_PAUSED}" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeverityInformationBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.Paused}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource PauseIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static recipesFolder:RecipePanelResources.RECIPE_PAUSED}" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeverityWarningBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.Aborted}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource CancelIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static recipesFolder:RecipePanelResources.RECIPE_ABORTED}" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.Finished}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource CheckedIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static recipesFolder:RecipePanelResources.RECIPE_FINISHED}" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.Finished}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource CheckedIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="{localize:Static recipesFolder:RecipePanelResources.RECIPE_FINISHED}" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeverityWarningBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.NotStarted}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource CloseIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="Not Started" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource BusinessPanelBackground}" />
+                                                <Setter TargetName="PropertyEditor" Property="Foreground" Value="{DynamicResource BusinessPanelForeground}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding}" Value="{x:Static runner:HmiRecipeExecutionState.PausedWithError}">
+                                                <Setter TargetName="Icon" Property="Data" Value="{StaticResource CancelIcon}" />
+                                                <Setter TargetName="TextBlock" Property="Text" Value="Error" />
+                                                <Setter TargetName="PropertyEditor" Property="Background" Value="{DynamicResource SeverityErrorBrush}" />
+                                                <Setter TargetName="CycleBlock" Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ContentPresenter.ContentTemplate>
+                            </ContentPresenter>
+                            <controls:PropertyEditor
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                HorizontalContentAlignment="Stretch"
+                                PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_PROGRESSION}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock HorizontalAlignment="Center">
+                                        <TextBlock>
+                                            <Run
+                                                FontWeight="Bold"
+                                                Text="{Binding HumanizedPercentProgression, Mode=OneWay}" />
+                                            <Run Text="{Binding StepProgression, Mode=OneWay}" />
+                                        </TextBlock>
+                                    </TextBlock>
+                                    <ProgressBar
+                                        Height="15"
+                                        Margin="5,5,5,2"
+                                        Background="Transparent"
+                                        BorderThickness="1"
+                                        Foreground="{DynamicResource SeverityInformationBrush}"
+                                        Maximum="100"
+                                        Value="{Binding PercentProgression}" />
+                                </StackPanel>
+                            </controls:PropertyEditor>
+                            <controls:PropertyEditor
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Margin="{StaticResource HorizontalStackPropertyMargin}"
+                                Orientation="Horizontal"
+                                PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_INSTRUCTIONS}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button
+                                        Margin="0,0,10,0"
+                                        markupExtensions:Icon.Geometry="{DynamicResource SkipIcon}"
+                                        Command="{Binding SkipInstructionCommand}"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                                        ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_SKIP_CURRENT_INSTRUCTION}" />
+                                    <Button
+                                        Margin="0,0,10,0"
+                                        markupExtensions:Icon.Geometry="{DynamicResource JumpIcon}"
+                                        Command="{Binding JumpInstructionCommand}"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                                        ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_JUMP_TO_SELECTED}" />
+                                    <Button
+                                        Margin="0,0,0,0"
+                                        markupExtensions:Icon.Geometry="{DynamicResource ReplayIcon}"
+                                        Command="{Binding ReplayInstructionCommand}"
+                                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                                        ToolTip="{localize:Static recipesFolder:RecipePanelResources.RECIPE_REPLAY_INSTRUCTION}" />
+                                </StackPanel>
+                            </controls:PropertyEditor>
+
+                            <ListView
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                ItemContainerStyle="{x:Null}"
+                                ItemsSource="{Binding InstructionsView}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                SelectedValue="{Binding SelectedInstruction, Mode=TwoWay}">
+                                <ListView.ItemContainerStyleSelector>
+                                    <styleSelectors:GenericStyleSelector>
+                                        <styleSelectors:GenericStyle Type="{x:Type runner:RecipeGroupHeader}">
+                                            <Style
+                                                BasedOn="{StaticResource {x:Type ListBoxItem}}"
+                                                TargetType="{x:Type ListViewItem}">
+                                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                                <Setter Property="Focusable" Value="False" />
+                                                <Setter Property="IsHitTestVisible" Value="False" />
+                                            </Style>
+                                        </styleSelectors:GenericStyle>
+                                        <styleSelectors:GenericStyle Type="{x:Type instructions:ProcessInstruction}">
+                                            <Style
+                                                BasedOn="{StaticResource {x:Type ListBoxItem}}"
+                                                TargetType="{x:Type ListViewItem}">
+                                                <Setter Property="MinHeight" Value="38" />
+                                                <Setter Property="MaxHeight" Value="200" />
+                                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Height" Value="Auto" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </styleSelectors:GenericStyle>
+                                    </styleSelectors:GenericStyleSelector>
+                                </ListView.ItemContainerStyleSelector>
+
+                                <ListView.ItemTemplateSelector>
+                                    <dataTemplateSelectors:GenericDataTemplateSelector>
+                                        <DataTemplate DataType="{x:Type runner:RecipeGroupHeader}">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="{Binding GroupName}" />
+                                                <Separator />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type instructions:ProcessInstruction}">
+                                            <DockPanel
+                                                x:Name="DockPanel"
+                                                Background="Transparent"
+                                                TextElement.Foreground="{DynamicResource BusinessPanelForeground}">
+
+                                                <TextBlock
+                                                    MinWidth="20"
+                                                    Margin="5,6,10,0"
+                                                    VerticalAlignment="Top"
+                                                    Opacity="{StaticResource MouseOverOpacity}">
+                                                    <TextBlock.Text>
+                                                        <markupExtensions:FuncBinding BindingToFunc="{Binding DataContext.InstructionToIndexFunc, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}">
+                                                            <Binding Path="." />
+                                                        </markupExtensions:FuncBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+
+                                                <controls:Icon
+                                                    x:Name="ExecutionIcon"
+                                                    Width="10"
+                                                    Height="10"
+                                                    Margin="0,12,10,2"
+                                                    VerticalAlignment="Top"
+                                                    Data="{StaticResource EmptyDotIcon}"
+                                                    DockPanel.Dock="Left"
+                                                    Visibility="Hidden" />
+
+                                                <controls:Icon
+                                                    x:Name="StateIcon"
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="0,8,10,2"
+                                                    VerticalAlignment="Top" />
+
+                                                <ContentPresenter
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="0,8,10,2"
+                                                    VerticalAlignment="Top"
+                                                    Content="{Binding}"
+                                                    ContentTemplateSelector="{StaticResource ProcessingInstructionIconTemplateSelector}"
+                                                    DockPanel.Dock="Left" />
+
+                                                <TextBlock
+                                                    x:Name="TextBlock"
+                                                    VerticalAlignment="Center"
+                                                    behaviors:AdvancedStringFormatTextBlockBehavior.Definitions="{Binding FormattedLabel}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    ToolTip="{Binding Details}" />
+
+                                            </DockPanel>
+
+                                            <DataTemplate.Triggers>
+
+                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}" Value="True">
+                                                    <Setter TargetName="TextBlock" Property="TextWrapping" Value="Wrap" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Value="True">
+                                                    <DataTrigger.Binding>
+                                                        <markupExtensions:FuncBinding BindingToFunc="{Binding DataContext.HasBreakpointFunc, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}">
+                                                            <Binding Path="." />
+                                                            <Binding
+                                                                Path="DataContext.BreakpointsChangedFlag"
+                                                                RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListView}}" />
+                                                        </markupExtensions:FuncBinding>
+                                                    </DataTrigger.Binding>
+                                                    <Setter TargetName="ExecutionIcon" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                    <Setter TargetName="ExecutionIcon" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="ExecutionIcon" Property="Data" Value="{StaticResource DotIcon}" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                                                    <Setter TargetName="ExecutionIcon" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                    <Setter TargetName="ExecutionIcon" Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding Path=InstructionState}" Value="{x:Static processingFramework:InstructionState.Executing}">
+                                                    <Setter TargetName="StateIcon" Property="Data" Value="{StaticResource PlayIcon}" />
+                                                    <Setter TargetName="StateIcon" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                    <Setter TargetName="DockPanel" Property="Background" Value="{DynamicResource SeverityInformationBackgroundBrush}" />
+                                                    <Setter TargetName="ExecutionIcon" Property="Foreground" Value="{DynamicResource SeverityInformationBrush}" />
+                                                    <Setter TargetName="ExecutionIcon" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="ExecutionIcon" Property="Data" Value="{StaticResource DotIcon}" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding Path=InstructionState}" Value="{x:Static processingFramework:InstructionState.Executed}">
+                                                    <Setter TargetName="StateIcon" Property="Data" Value="{StaticResource CheckIcon}" />
+                                                    <Setter TargetName="StateIcon" Property="Foreground" Value="{DynamicResource SeveritySuccessBrush}" />
+                                                    <Setter TargetName="DockPanel" Property="Background" Value="{DynamicResource SeveritySuccessBackgroundBrush}" />
+                                                </DataTrigger>
+
+                                                <DataTrigger Binding="{Binding Path=InstructionState}" Value="{x:Static processingFramework:InstructionState.Failed}">
+                                                    <Setter TargetName="StateIcon" Property="Data" Value="{StaticResource CloseIcon}" />
+                                                    <Setter TargetName="StateIcon" Property="Foreground" Value="{DynamicResource SeverityErrorBrush}" />
+                                                    <Setter TargetName="DockPanel" Property="Background" Value="{DynamicResource SeverityErrorBackgroundBrush}" />
+                                                </DataTrigger>
+
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </dataTemplateSelectors:GenericDataTemplateSelector>
+                                </ListView.ItemTemplateSelector>
+                            </ListView>
+
+                            <controls:PropertyEditor
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Margin="0,20,0,0"
+                                HorizontalContentAlignment="Left"
+                                Foreground="{DynamicResource SeverityErrorBrush}"
+                                PropertyName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_INSTRUCTION_FAILED}"
+                                Style="{StaticResource BorderedPropertyEditorStyle}">
+                                <controls:PropertyEditor.Visibility>
+                                    <markupExtensions:FuncBinding BindingToFunc="{Binding ErrorIsVisibleFunc}">
+                                        <Binding Path="IsCurrentProgram" />
+                                        <Binding Path="ProgramErrors" />
+                                    </markupExtensions:FuncBinding>
+                                </controls:PropertyEditor.Visibility>
+                                <TextBlock
+                                    Text="{Binding ProgramErrors}"
+                                    TextWrapping="Wrap" />
+                            </controls:PropertyEditor>
+
+                        </Grid>
+
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+
+        </Expander>
+
+        <dataTables:DataTable
+            DataSource="{Binding Recipes}"
+            SelectedItem="{Binding SelectedRecipe}">
+
+            <dataTables:DataTable.LeftAdditionalContent>
+                <Border
+                    BorderBrush="{DynamicResource ListViewBorderBrush}"
+                    BorderThickness="0,0,1,0">
+                    <Expander
+                        VerticalContentAlignment="Stretch"
+                        ExpandDirection="Right"
+                        IsExpanded="True">
+                        <Expander.Header>
+                            <TextBlock Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_GROUPS}">
+                                <TextBlock.LayoutTransform>
+                                    <RotateTransform Angle="-90" />
+                                </TextBlock.LayoutTransform>
+                            </TextBlock>
+                        </Expander.Header>
+                        <groupSelector:GroupSelectorView DataContext="{Binding GroupSelector}">
+                            <groupSelector:GroupSelectorView.GroupTemplate>
+                                <DataTemplate DataType="{x:Type components:RecipeGroup}">
+                                    <DockPanel>
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Subtitle2TextStyle}"
+                                            Text="{Binding Name}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </groupSelector:GroupSelectorView.GroupTemplate>
+                        </groupSelector:GroupSelectorView>
+                    </Expander>
+                </Border>
+            </dataTables:DataTable.LeftAdditionalContent>
+
+            <dataTables:DataTable.BottomAdditionalContent>
+                <Border
+                    BorderBrush="{DynamicResource ListViewBorderBrush}"
+                    BorderThickness="0,1,0,0">
+                    <Expander
+                        HorizontalContentAlignment="Stretch"
+                        ExpandDirection="Up"
+                        IsExpanded="False">
+                        <Expander.Header>
+                            <TextBlock Text="{localize:Static recipesFolder:RecipePanelResources.RECIPE_EQUIPMENT_VISUALIZATION}" />
+                        </Expander.Header>
+                        <Grid
+                            Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}}}"
+                            Height="400" />
+                    </Expander>
+                </Border>
+            </dataTables:DataTable.BottomAdditionalContent>
+
+            <GridView AllowsColumnReorder="True">
+
+                <!--#region GroupName-->
+                <dataTables:DataTableColumn
+                    Width="150"
+                    DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_GROUP}"
+                    SortKey="Header.GroupName">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="components:RecipeComponent">
+                            <TextBlock Text="{Binding Header.GroupName}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion GroupName-->
+
+                <!--#region Name-->
+                <dataTables:DataTableColumn
+                    Width="380"
+                    DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_NAME}"
+                    SortKey="Id">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="components:RecipeComponent">
+                            <TextBlock
+                                Text="{Binding Id}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Name-->
+
+                <!--#region Author-->
+                <dataTables:DataTableColumn
+                    x:Name="AuthorColumn"
+                    Width="175"
+                    DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_AUTHOR}"
+                    SortKey="Header.Author">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="components:RecipeComponent">
+                            <TextBlock
+                                x:Name="TextBlock"
+                                DataContext="{Binding}"
+                                Text="{Binding Header.Author}" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Author-->
+
+                <!--#region Creation Date Time-->
+                <dataTables:DataTableColumn
+                    Width="240"
+                    DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_CREATION_DATE}"
+                    SortKey="Header.CreateDate">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="components:RecipeComponent">
+                            <TextBlock
+                                Text="{Binding Header.CreateDate, StringFormat='dd/MM/yyyy HH:mm:ss'}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Creation Date Time-->
+
+                <!--#region Last Modification Date Time-->
+                <dataTables:DataTableColumn
+                    Width="240"
+                    DisplayName="{localize:Static recipesFolder:RecipePanelResources.RECIPE_MANAGER_RECIPE_MODIFICATION_DATE}"
+                    SortKey="Header.ModificationDate">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate DataType="components:RecipeComponent">
+                            <TextBlock
+                                Text="{Binding Header.ModificationDate, StringFormat='dd/MM/yyyy HH:mm:ss'}"
+                                TextAlignment="Left" />
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </dataTables:DataTableColumn>
+                <!--#endregion Last Modification Date Time-->
+
+            </GridView>
+        </dataTables:DataTable>
+
+    </DockPanel>
+
+</UserControl>

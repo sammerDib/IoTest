@@ -1,0 +1,60 @@
+﻿<UserControl
+	x:Class="UnitySC.Result.StandaloneClient.View.Settings.ViewerSettings"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:settings="clr-namespace:UnitySC.Result.StandaloneClient.View.Settings"
+	xmlns:settingsPages="clr-namespace:UnitySC.Result.StandaloneClient.ViewModel.SettingsPages"
+	xmlns:viewModel="clr-namespace:UnitySC.Result.StandaloneClient.ViewModel"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	d:DataContext="{d:DesignInstance viewModel:SettingVM}"
+	d:DesignHeight="1024"
+	d:DesignWidth="1280"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Result.StandaloneClient;component/View/ResultResource.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<DataTemplate DataType="{x:Type settingsPages:KlarfSettingsPageVM}">
+				<settings:KlarfSettingsPageView />
+			</DataTemplate>
+
+			<DataTemplate DataType="{x:Type settingsPages:HazeSettingsPageVM}">
+				<settings:HazeSettingsPageView />
+			</DataTemplate>
+
+			<DataTemplate DataType="{x:Type settingsPages:ThumbnailSettingsPageVM}">
+				<settings:ThumbnailSettingsPageView />
+			</DataTemplate>
+
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<ListBox
+			Width="200"
+			Margin="5,3"
+			ItemsSource="{Binding SettingsPages}"
+			SelectedItem="{Binding SelectedPage, Mode=TwoWay}">
+			<ListBox.ItemTemplate>
+				<DataTemplate DataType="{x:Type settingsPages:BaseSettingsPageVM}">
+					<TextBlock
+						Margin="3"
+						Text="{Binding PageName}" />
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<ContentPresenter
+			Grid.Column="1"
+			Content="{Binding SelectedPage}" />
+
+	</Grid>
+</UserControl>

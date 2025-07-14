@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Devices">
+          <Types />
+          <Packages>
+            <Package Name="Controller">
+              <Types>
+                <CSharpType PlatformType="Agileo.EquipmentModeling.IMaterialLocationContainer, Agileo.EquipmentModeling, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                <CSharpType PlatformType="Agileo.SemiDefinitions.RobotArm, Agileo.SemiDefinitions, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8191f751bb1f45c3" />
+                <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.Aligner.Enums.AlignType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Enums.EffectorType, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                <CSharpType PlatformType="UnitySC.Equipment.Devices.Controller.JobDefinition.Job, UnitySC.Equipment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                <CSharpType PlatformType="UnitySC.Equipment.Devices.Controller.Activities.WaferFlow.Enum.StopConfig, UnitySC.Equipment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                <DeviceType Name="Controller" IsAbstract="false" Uri="UnitySC.Equipment|Devices\Controller\Controller.device|UnitySC.Equipment.Devices.Controller.Controller" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\Controller\Controller.device|UnitySC.Equipment.Abstractions.Devices.Controller.Controller" BehaviorImplementation="UnitySC.Equipment.Devices.Controller.Controller, UnitySC.Equipment">
+                  <Interruptions />
+                  <Commands>
+                    <Command Name="LoadProcessModule" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="loadPort" Type="UnitySC.Equipment.Devices.Controller.IMaterialLocationContainer" />
+                        <Parameter Name="sourceSlot" Type="Byte" />
+                        <Parameter Name="robotArm" Type="UnitySC.Equipment.Devices.Controller.RobotArm" />
+                        <Parameter Name="alignAngle" Type="Angle" Unit="UnitsNet.Units.AngleUnit.Degree" />
+                        <Parameter Name="alignType" Type="UnitySC.Equipment.Devices.Controller.AlignType" />
+                        <Parameter Name="effectorType" Type="UnitySC.Equipment.Devices.Controller.EffectorType" />
+                        <Parameter Name="processModule" Type="UnitySC.Equipment.Devices.Controller.IMaterialLocationContainer" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsMaintenanceOrEngineering, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckCarrierOpened, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckLoadPortReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckSourceSlotNotEmpty, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckRobotReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckRobotArmEmpty, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckRobotArmEnabled, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckAlignerReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckAlignerEmpty, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckProcessModuleReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckProcessModuleEmpty, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="UnloadProcessModule" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="processModule" Type="UnitySC.Equipment.Devices.Controller.IMaterialLocationContainer" />
+                        <Parameter Name="robotArm" Type="UnitySC.Equipment.Devices.Controller.RobotArm" />
+                        <Parameter Name="effectorType" Type="UnitySC.Equipment.Devices.Controller.EffectorType" />
+                        <Parameter Name="loadPort" Type="UnitySC.Equipment.Devices.Controller.IMaterialLocationContainer" />
+                        <Parameter Name="destinationSlot" Type="Byte" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsMaintenanceOrEngineering, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckCarrierOpened, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckLoadPortReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckDestinationSlotEmpty, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckRobotReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckRobotArmEmpty, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckRobotArmEnabled, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckProcessModuleReady, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckProcessModuleNotEmpty, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="Clean" Type="Void" Timeout="60 s">
+                      <Parameters />
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsMaintenanceOrEngineering, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.AreSubDevicesIdle, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="CreateJob" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="job" Type="UnitySC.Equipment.Devices.Controller.Job" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsIdleOrExecuting, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="StartJobExecution" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="job" Type="UnitySC.Equipment.Devices.Controller.Job" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsIdleOrExecuting, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.CheckJob, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="RequestManualMode" Type="Void" Timeout="60 s">
+                      <Parameters />
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsIdleOrEngineering, UnitySC.Equipment" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="RequestEngineeringMode" Type="Void" Timeout="60 s">
+                      <Parameters />
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsMaintenanceOrIdle, UnitySC.Equipment.Abstractions" />
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsCurrentActivityNull, UnitySC.Equipment.Abstractions" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="Pause" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="jobName" Type="String" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsJobPausable, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="Resume" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="jobName" Type="String" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsJobResumable, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                    <Command Name="Stop" Type="Void" Timeout="60 s">
+                      <Parameters>
+                        <Parameter Name="jobName" Type="String" />
+                        <Parameter Name="stopConfig" Type="UnitySC.Equipment.Devices.Controller.StopConfig" />
+                      </Parameters>
+                      <PreConditions>
+                        <Condition BehaviorImplementation="UnitySC.Equipment.Devices.Controller.IsJobStoppable, UnitySC.Equipment" />
+                      </PreConditions>
+                      <PostConditions />
+                    </Command>
+                  </Commands>
+                  <Statuses>
+                    <Status Name="CurrentActivityStep" Type="String" />
+                    <Status Name="SubstrateThroughput" Type="Double" />
+                  </Statuses>
+                  <Alarms />
+                  <Interlocks>
+                    <Interlock BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Controller.IsRobotInitialized, UnitySC.Equipment.Abstractions" />
+                    <Interlock BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Controller.IsLocationReadyForTransfer, UnitySC.Equipment.Abstractions" />
+                    <Interlock BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Controller.IsLocationServedByRobot, UnitySC.Equipment.Abstractions" />
+                    <Interlock BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Controller.IsSlotValid, UnitySC.Equipment.Abstractions" />
+                    <Interlock BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Controller.IsLocationAccessedByRobot, UnitySC.Equipment.Abstractions" />
+                  </Interlocks>
+                </DeviceType>
+              </Types>
+              <Packages />
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

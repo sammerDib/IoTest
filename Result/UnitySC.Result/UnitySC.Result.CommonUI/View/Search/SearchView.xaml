@@ -1,0 +1,532 @@
+﻿<UserControl
+	x:Class="UnitySC.Result.CommonUI.View.Search.SearchView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:modelDto="clr-namespace:UnitySC.DataAccess.Dto.ModelDto;assembly=UnitySC.DataAccess.Dto"
+	xmlns:search="clr-namespace:UnitySC.Result.CommonUI.ViewModel.Search"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    d:DataContext="{d:DesignInstance search:SearchViewModel}"
+	d:DesignHeight="700"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Result.CommonUI;component/View/ResultResource.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid
+		Margin="5,1"
+		Style="{StaticResource FormGrid}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<!--  Partie critères de recherche  -->
+		<GroupBox
+			Grid.Row="0"
+			Grid.Column="0"
+			Header="Search"
+			IsEnabled="{Binding Source={StaticResource Locator}, Path=MainResultVM.DisplayVM.IsUiBusy, Converter={StaticResource InvertedBooleanConverter}}">
+			<Grid Style="{StaticResource FormGrid}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="10" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<!--  Tool name  -->
+				<Label
+					Grid.Row="0"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Tool name" />
+				<ComboBox
+					Grid.Row="0"
+					Grid.Column="1"
+					ItemsSource="{Binding Tools}"
+					SelectedValue="{Binding SelectedTool}" />
+
+				<!--  Dates  -->
+				<Label
+					Grid.Row="1"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Start date" />
+				<StackPanel
+					Grid.Row="1"
+					Grid.Column="1">
+					<xctk:DateTimePicker
+						x:Name="StartDatePicker"
+						Format="Custom"
+						FormatString="MM/dd/yyyy HH:mm:ss"
+						ShowButtonSpinner="False"
+						Value="{Binding SelectedStartDate}" />
+				</StackPanel>
+				<controls:ImageButton
+					Grid.Row="1"
+					Grid.Column="2"
+					Width="15"
+					Height="15"
+					HorizontalAlignment="Center"
+					Click="startDate_Click"
+					ImageGeometry="{StaticResource CloseGeometry}"
+					ImageGeometryBrush="{StaticResource IconsErrorColor}"
+					Style="{StaticResource ImageButtonWithoutBorder}"
+					ToolTip="Clear date" />
+
+				<Label
+					Grid.Row="2"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="End date" />
+				<xctk:DateTimePicker
+					x:Name="EndDatePicker"
+					Grid.Row="2"
+					Grid.Column="1"
+					Format="Custom"
+					FormatString="MM/dd/yyyy HH:mm:ss"
+					ShowButtonSpinner="False"
+					Value="{Binding SelectedEndDate}" />
+				<controls:ImageButton
+					Grid.Row="2"
+					Grid.Column="2"
+					Width="15"
+					Height="15"
+					Click="endDate_Click"
+					ImageGeometry="{StaticResource CloseGeometry}"
+					ImageGeometryBrush="{StaticResource IconsErrorColor}"
+					Style="{StaticResource ImageButtonWithoutBorder}"
+					ToolTip="Clear date" />
+
+				<!--  Liste des produits  -->
+				<Label
+					Grid.Row="3"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Product type" />
+				<xctk:DropDownButton
+					Grid.Row="3"
+					Grid.Column="1"
+					IsOpen="{Binding ProdSelectionIsOpen, Mode=TwoWay}">
+					<Grid Width="250">
+						<StackPanel
+							HorizontalAlignment="Left"
+							Orientation="Horizontal">
+							<Viewbox
+								Height="18"
+								HorizontalAlignment="Left"
+								Stretch="Uniform" />
+							<TextBlock
+								FontWeight="Normal"
+								Text="{Binding SelectedProduct.Name}" />
+						</StackPanel>
+					</Grid>
+					<xctk:DropDownButton.DropDownContent>
+						<Grid
+							MinWidth="250"
+							MaxHeight="400">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<!--  Search  -->
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="auto" />
+								</Grid.ColumnDefinitions>
+								<xctk:WatermarkTextBox
+									Margin="4,2,2,2"
+									Text="{Binding ProductFilter, UpdateSourceTrigger=PropertyChanged}"
+									Watermark="Search" />
+								<Viewbox
+									Grid.Column="1"
+									Height="15"
+									Margin="2"
+									Stretch="Uniform">
+									<!--<ContentControl ContentTemplate="{DynamicResource Search}" />-->
+								</Viewbox>
+							</Grid>
+							<ListView
+								Grid.Row="1"
+								ItemsSource="{Binding Products}"
+								SelectedItem="{Binding SelectedProduct}"
+								SelectionMode="Single"
+								VirtualizingStackPanel.IsVirtualizing="False">
+								<ListView.ItemTemplate>
+									<DataTemplate DataType="{x:Type modelDto:ResultQuery}">
+										<StackPanel
+											Margin="2"
+											Orientation="Horizontal">
+											<Viewbox Height="15">
+												<!--<ContentControl ContentTemplate="{StaticResource Wafer}" />-->
+											</Viewbox>
+											<TextBlock
+												Margin="3,0"
+												VerticalAlignment="Center"
+												Text="{Binding Name}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+					</xctk:DropDownButton.DropDownContent>
+				</xctk:DropDownButton>
+
+				<!--  Liste des jobs  -->
+				<Label
+					Grid.Row="4"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Lot (*)" />
+				<xctk:DropDownButton
+					Grid.Row="4"
+					Grid.Column="1"
+					IsOpen="{Binding LotSelectionIsOpen, Mode=TwoWay}">
+					<Grid Width="250">
+						<StackPanel
+							HorizontalAlignment="Left"
+							Orientation="Horizontal">
+							<Viewbox
+								Height="18"
+								HorizontalAlignment="Left"
+								Stretch="Uniform" />
+							<TextBlock
+								FontWeight="Normal"
+								Text="{Binding SelectedLot}" />
+						</StackPanel>
+					</Grid>
+					<xctk:DropDownButton.DropDownContent>
+						<Grid
+							MinWidth="250"
+							MaxHeight="400">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<!--  Search  -->
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="auto" />
+								</Grid.ColumnDefinitions>
+								<xctk:WatermarkTextBox
+									Margin="4,2,2,2"
+									Text="{Binding LotFilter, UpdateSourceTrigger=PropertyChanged}"
+									Watermark="Search" />
+								<Viewbox
+									Grid.Column="1"
+									Height="15"
+									Margin="2"
+									Stretch="Uniform">
+									<!--<ContentControl ContentTemplate="{DynamicResource Search}" />-->
+								</Viewbox>
+							</Grid>
+							<ListView
+								Grid.Row="1"
+								ItemsSource="{Binding Lots}"
+								SelectedItem="{Binding SelectedLot}"
+								SelectionMode="Single"
+								VirtualizingStackPanel.IsVirtualizing="False">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<StackPanel
+											Margin="2"
+											Orientation="Horizontal">
+											<Viewbox Height="15">
+												<!--<ContentControl ContentTemplate="{StaticResource Wafer}" />-->
+											</Viewbox>
+											<TextBlock
+												Margin="3,0"
+												VerticalAlignment="Center"
+												Text="{Binding}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+					</xctk:DropDownButton.DropDownContent>
+				</xctk:DropDownButton>
+
+				<!--  Liste des recettes  -->
+				<Label
+					Grid.Row="5"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Job recipe (*)" />
+				<xctk:DropDownButton
+					Grid.Row="5"
+					Grid.Column="1"
+					IsOpen="{Binding RecipeSelectionIsOpen, Mode=TwoWay}">
+					<Grid Width="250">
+						<StackPanel
+							HorizontalAlignment="Left"
+							Orientation="Horizontal">
+							<Viewbox
+								Height="18"
+								HorizontalAlignment="Left"
+								Stretch="Uniform" />
+							<TextBlock
+								FontWeight="Normal"
+								Text="{Binding SelectedRecipe}" />
+						</StackPanel>
+					</Grid>
+					<xctk:DropDownButton.DropDownContent>
+						<Grid
+							MinWidth="250"
+							MaxHeight="400">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<!--  Search  -->
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="auto" />
+								</Grid.ColumnDefinitions>
+								<xctk:WatermarkTextBox
+									Margin="2,2,2,2"
+									Text="{Binding RecipeFilter, UpdateSourceTrigger=PropertyChanged}"
+									Watermark="Search" />
+								<Viewbox
+									Grid.Column="1"
+									Height="15"
+									Margin="2"
+									Stretch="Uniform">
+									<!--<ContentControl ContentTemplate="{DynamicResource Search}" />-->
+								</Viewbox>
+							</Grid>
+							<ListView
+								Grid.Row="1"
+								ItemsSource="{Binding Recipes}"
+								SelectedItem="{Binding SelectedRecipe}"
+								SelectionMode="Single"
+								VirtualizingStackPanel.IsVirtualizing="False">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<StackPanel
+											Margin="2"
+											Orientation="Horizontal">
+											<Viewbox Height="15">
+												<!--<ContentControl ContentTemplate="{StaticResource Wafer}" />-->
+											</Viewbox>
+											<TextBlock
+												Margin="3,0"
+												VerticalAlignment="Center"
+												Text="{Binding}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+					</xctk:DropDownButton.DropDownContent>
+				</xctk:DropDownButton>
+
+				<!--  Liste des process modules  -->
+				<Label
+					Grid.Row="6"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Process module" />
+				<xctk:DropDownButton
+					Grid.Row="6"
+					Grid.Column="1"
+					IsOpen="{Binding ChamberSelectionIsOpen, Mode=TwoWay}">
+					<Grid Width="250">
+						<StackPanel
+							HorizontalAlignment="Left"
+							Orientation="Horizontal">
+							<Viewbox
+								Height="18"
+								HorizontalAlignment="Left"
+								Stretch="Uniform" />
+							<TextBlock
+								FontWeight="Normal"
+								Text="{Binding SelectedPM}" />
+						</StackPanel>
+					</Grid>
+					<xctk:DropDownButton.DropDownContent>
+						<Grid
+							MinWidth="250"
+							MaxHeight="400">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							<!--  Search  -->
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="auto" />
+								</Grid.ColumnDefinitions>
+								<xctk:WatermarkTextBox
+									Margin="4,2,2,2"
+									Text="{Binding ChamberFilter, UpdateSourceTrigger=PropertyChanged}"
+									Watermark="Search" />
+								<Viewbox
+									Grid.Column="1"
+									Height="15"
+									Margin="2"
+									Stretch="Uniform">
+									<!--<ContentControl ContentTemplate="{DynamicResource Search}" />-->
+								</Viewbox>
+							</Grid>
+							<ListView
+								Grid.Row="1"
+								ItemsSource="{Binding Chambers}"
+								SelectedItem="{Binding SelectedPM}"
+								SelectionMode="Single"
+								VirtualizingStackPanel.IsVirtualizing="False">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<StackPanel
+											Margin="2"
+											Orientation="Horizontal">
+											<Viewbox Height="15">
+												<!--<ContentControl ContentTemplate="{StaticResource Wafer}" />-->
+											</Viewbox>
+											<TextBlock
+												Margin="3,0"
+												VerticalAlignment="Center"
+												Text="{Binding}" />
+										</StackPanel>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+						</Grid>
+					</xctk:DropDownButton.DropDownContent>
+				</xctk:DropDownButton>
+
+				<!--  Liste des Results status  -->
+				<Label
+					Grid.Row="7"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Result state" />
+				<ComboBox
+					Grid.Row="7"
+					Grid.Column="1"
+					ItemsSource="{Binding ResultStates}"
+					SelectedItem="{Binding SelectedResultState}" />
+
+				<!--  Liste des Filter tag  -->
+				<Label
+					Grid.Row="8"
+					Grid.Column="0"
+					VerticalAlignment="Center"
+					Content="Specific Tag" />
+				<ComboBox
+					Grid.Row="8"
+					Grid.Column="1"
+					ItemsSource="{Binding ResultFilterTags}"
+					SelectedItem="{Binding SelectedResultFilterTag}" />
+
+				<!--  buttons  -->
+				<StackPanel
+					Grid.Row="10"
+					Grid.Column="0"
+					Margin="0,0,0,5"
+					HorizontalAlignment="Left"
+					Orientation="Horizontal">
+					<controls:ImageButton
+						Width="20"
+						Height="20"
+						Margin="5,5,0,0"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Bottom"
+						Command="{Binding CommandViewerSettings}"
+						ImageGeometry="{StaticResource GearSolidGeometry}"
+						ImageGeometryBrush="{StaticResource IconsColor}"
+						Style="{StaticResource ImageButtonWithoutBorder}"
+						ToolTip="Settings" />
+					<controls:ImageButton
+						Width="20"
+						Height="20"
+						Margin="10,5,5,0"
+						HorizontalAlignment="Left"
+						VerticalAlignment="Bottom"
+						Command="{Binding UpdateFiltersCommand}"
+						ImageGeometry="{StaticResource UpdateGeometry}"
+						ImageGeometryBrush="{StaticResource IconsColor}"
+						Style="{StaticResource ImageButtonWithoutBorder}"
+						ToolTip="Update Combobox Filters content" />
+				</StackPanel>
+
+				<StackPanel
+					Grid.Row="10"
+					Grid.Column="1"
+					Margin="0,0,0,5"
+					HorizontalAlignment="Right"
+					Orientation="Horizontal">
+					<controls:ImageButton
+						Height="30"
+						Margin="0,0,10,0"
+						HorizontalAlignment="Left"
+						Command="{Binding CommandReset}"
+						Content="Reset"
+						ImageGeometry="{StaticResource CloseGeometry}"
+						ImageGeometryBrush="{StaticResource IconsErrorColor}" />
+					<controls:ImageButton
+						Height="30"
+						Margin="0,0,4,0"
+						HorizontalAlignment="Center"
+						Command="{Binding SearchCommand}"
+						Content="Search"
+						ImageGeometry="{StaticResource SearchGeometry}"
+						ImageGeometryBrush="{StaticResource IconsColor}" />
+				</StackPanel>
+			</Grid>
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="MouseDoubleClick">
+					<i:InvokeCommandAction Command="{Binding DropDownButtonCloseCommand}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</GroupBox>
+		<ListView
+			Grid.Row="1"
+			Margin="0,5,0,0"
+			ItemsSource="{Binding JobResultsList}"
+			SelectedItem="{Binding Source={StaticResource Locator}, Path=MainResultVM.DisplayVM.SelectedJob}">
+			<ListView.View>
+				<GridView ScrollViewer.VerticalScrollBarVisibility="Auto">
+					<GridViewColumn
+						DisplayMemberBinding="{Binding Date, StringFormat='MM/dd/yyyy HH:mm:ss'}"
+						Header="Date" />
+					<GridViewColumn
+						DisplayMemberBinding="{Binding LotName}"
+						Header="Lot" />
+					<GridViewColumn
+						DisplayMemberBinding="{Binding RecipeName}"
+						Header="Recipe" />
+					<GridViewColumn
+						DisplayMemberBinding="{Binding RunIter}"
+						Header="Run iter" />
+					<GridViewColumn
+						DisplayMemberBinding="{Binding ToolId}"
+						Header="ToolId" />
+				</GridView>
+			</ListView.View>
+		</ListView>
+	</Grid>
+</UserControl>

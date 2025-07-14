@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{52513F8E-C8B8-4663-B1FF-BEC743E9A14C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ADCEngine</RootNamespace>
+    <AssemblyName>ADCEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Matrox.MatroxImagingLibrary, Version=10.60.452.11242, Culture=neutral, PublicKeyToken=5a83d419d44a9d98, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Shared\ExternalLibraries\MIL\MILXpp6\Matrox.MatroxImagingLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ADC.cs" />
+    <Compile Include="CompatibilityObjSerialiser.cs" />
+    <Compile Include="CompatibiltyManager.cs" />
+    <Compile Include="IAdcExecutor.cs" />
+    <Compile Include="Modules\UnknownModule.cs" />
+    <Compile Include="Parameters\FileParameter.cs" />
+    <Compile Include="Parameters\ReadOnlyDisplayParameter.cs" />
+    <Compile Include="Parameters\ValueComparer.cs" />
+    <Compile Include="Parameters\View\ExpertView\FileParameterExpertView.xaml.cs">
+      <DependentUpon>FileParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\ReadOnlyDisplayParameterView.xaml.cs">
+      <DependentUpon>ReadOnlyDisplayParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\FileParameterSimplifiedView.xaml.cs">
+      <DependentUpon>FileParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Wafers\WaferFactory.cs" />
+    <None Include="Properties\AssemblyInfo.template" />
+    <Compile Include="Recipe\ContextMachine.cs" />
+    <Compile Include="Recipe\InputInfoBase.cs" />
+    <Compile Include="Modules\IDataLoader.cs" />
+    <Compile Include="Modules\IModuleFactory.cs" />
+    <Compile Include="Modules\ExportableParameterAttribute.cs" />
+    <Compile Include="Modules\ModuleBase.cs" />
+    <Compile Include="Modules\QueueModuleBase.cs" />
+    <Compile Include="Modules\RootModule.cs" />
+    <Compile Include="Modules\TerminationModule.cs" />
+    <Compile Include="ObjectBase.cs" />
+    <Compile Include="Parameters\BoolParameter.cs" />
+    <Compile Include="Parameters\ConditionalDoubleParameter.cs" />
+    <Compile Include="Parameters\ConditionalIntParameter.cs" />
+    <Compile Include="Parameters\DoubleParameter.cs" />
+    <Compile Include="Parameters\EnumColorBoxParameter.cs" />
+    <Compile Include="Parameters\EnumParameter.cs" />
+    <Compile Include="Parameters\IntParameter.cs" />
+    <Compile Include="Parameters\ParameterBase.cs" />
+    <Compile Include="Parameters\ParameterNone.cs" />
+    <Compile Include="Parameters\ParameterTemplate.cs" />
+    <Compile Include="Parameters\PathStringParameter.cs" />
+    <Compile Include="Parameters\SeparatorParameter.cs" />
+    <Compile Include="Parameters\StringParameter.cs" />
+    <Compile Include="Parameters\View\Converters\ColorConverter.cs" />
+    <Compile Include="Parameters\View\ExpertView\BoolParameterExpertView.xaml.cs">
+      <DependentUpon>BoolParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\ConditionalDoubleParameterExpertView.xaml.cs">
+      <DependentUpon>ConditionalDoubleParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\DoubleParameterExpertView.xaml.cs">
+      <DependentUpon>DoubleParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\EnumColorBoxExpertView.xaml.cs">
+      <DependentUpon>EnumColorBoxExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\EnumParameterExpertView.xaml.cs">
+      <DependentUpon>EnumParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\ParameterNoneView.xaml.cs">
+      <DependentUpon>ParameterNoneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\PathStringParameterExpertView.xaml.cs">
+      <DependentUpon>PathStringParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\SeparatorParameterView.xaml.cs">
+      <DependentUpon>SeparatorParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ExpertView\StringParameterExpertView.xaml.cs">
+      <DependentUpon>StringParameterExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\ParameterExportView.xaml.cs">
+      <DependentUpon>ParameterExportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\BoolParameterSimplifiedView.xaml.cs">
+      <DependentUpon>BoolParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\ConditionalDoubleParameterSimplifiedView.xaml.cs">
+      <DependentUpon>ConditionalDoubleParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\DoubleParameterSimplifiedView.xaml.cs">
+      <DependentUpon>DoubleParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\EnumColorBoxSimplifiedView.xaml.cs">
+      <DependentUpon>EnumColorBoxSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\EnumParameterSimplifiedView.xaml.cs">
+      <DependentUpon>EnumParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\PathStringParameterSimplifiedView.xaml.cs">
+      <DependentUpon>PathStringParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Parameters\View\SimplifiedView\StringParameterSimplifiedView.xaml.cs">
+      <DependentUpon>StringParameterSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recipe\ExternalRecipeFile.cs" />
+    <Compile Include="Rendering\RenderingViewModelBase.cs" />
+    <Compile Include="Recipe\LayerBase.cs" />
+    <Compile Include="Recipe\MatrixBase.cs" />
+    <Compile Include="TransferToRobotStub.cs" />
+    <Compile Include="Wafers\FlatWafer.cs" />
+    <Compile Include="Recipe\Recipe.cs" />
+    <Compile Include="Wafers\RectangularWafer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wafers\NotchWafer.cs" />
+    <Compile Include="Scheduler.cs" />
+    <Compile Include="Wafers\WaferBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ModuleCompatibility.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{ABA2C6A4-BCB4-478A-BE76-CB62AB4941E9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PP.Shared\UnitySC.PP.Shared.csproj">
+      <Project>{0823cc91-c37b-4afa-8b42-9395592b1844}</Project>
+      <Name>UnitySC.PP.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADC.Ressources\ADC.Ressources.csproj">
+      <Project>{ea3291cc-3303-4703-983d-3bd499a7e49e}</Project>
+      <Name>ADC.Ressources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\AdcTools\AdcTools.csproj">
+      <Project>{2d6ad4b4-1775-45ef-ac20-85a6da7fd953}</Project>
+      <Name>AdcTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComRobot\AdcRobotExchange\AdcRobotExchange.csproj">
+      <Project>{0B2F9160-2203-4CDD-B9A6-1723EFA2F17D}</Project>
+      <Name>AdcRobotExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MergeContext\AcquisitionAdcExchange\AcquisitionAdcExchange.csproj">
+      <Project>{3c26d6d9-8b32-447f-8e21-e65e81b5ed29}</Project>
+      <Name>AcquisitionAdcExchange</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Parameters\View\ExpertView\BoolParameterExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\ConditionalDoubleParameterExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\DoubleParameterExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\EnumColorBoxExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\EnumParameterExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\FileParameterExpertView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\ParameterNoneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\PathStringParameterExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\ReadOnlyDisplayParameterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\SeparatorParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Parameters\View\ExpertView\StringParameterExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\ParameterExportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\BoolParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\ConditionalDoubleParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\DoubleParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\EnumColorBoxSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\EnumParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\FileParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\PathStringParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Parameters\View\SimplifiedView\StringParameterSimplifiedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

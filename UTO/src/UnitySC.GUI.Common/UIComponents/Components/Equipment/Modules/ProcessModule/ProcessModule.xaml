@@ -1,0 +1,173 @@
+<equipment:MachineModuleView
+    x:Class="UnitySC.GUI.Common.UIComponents.Components.Equipment.Modules.ProcessModule.ProcessModule"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:equipment="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment"
+    xmlns:locationSourceDestination="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment.LocationSourceDestination"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:processModule="clr-namespace:UnitySC.GUI.Common.UIComponents.Components.Equipment.Modules.ProcessModule"
+    xmlns:vendorControls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:wafer="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.EquipmentHandling.Wafer"
+    x:Name="UserControlProcessModule"
+    d:DataContext="{d:DesignInstance processModule:ProcessModuleViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="200"
+    d:DesignWidth="800"
+    Style="{StaticResource MachineModuleViewStyle}"
+    mc:Ignorable="d">
+    <controls:AdornedControl
+        HorizontalAdornerPlacement="Inside"
+        IsAdornerVisible="True"
+        VerticalAdornerPlacement="Outside">
+
+        <controls:AdornedControl.AdornerContent>
+            <Grid Margin="0,-25,0,0" IsHitTestVisible="False">
+                <locationSourceDestination:LocationSourceDestination
+                    Margin="-45,60,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    RenderTransformOrigin="0.5,0.5"
+                    SelectionState="{Binding ElementName=UserControlProcessModule, Path=SelectionState}">
+                    <locationSourceDestination:LocationSourceDestination.RenderTransform>
+                        <RotateTransform Angle="270" />
+                    </locationSourceDestination:LocationSourceDestination.RenderTransform>
+                </locationSourceDestination:LocationSourceDestination>
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Text="{Binding Module.DeviceType.Name}" />
+                <StackPanel
+                    Margin="0,25,-25,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Orientation="Vertical">
+                    <vendorControls:Icon Foreground="{DynamicResource SeverityErrorBrush}">
+                        <vendorControls:Icon.Style>
+                            <Style BasedOn="{StaticResource {x:Type vendorControls:Icon}}" TargetType="{x:Type vendorControls:Icon}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Module.IsCommunicating}" Value="False">
+                                        <Setter Property="Data" Value="{StaticResource DisconnectedIcon}" />
+                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Module.IsCommunicating}" Value="True" />
+                                            <Condition Binding="{Binding Module.State}" Value="Maintenance" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Data" Value="{StaticResource WarningIcon}" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </vendorControls:Icon.Style>
+                    </vendorControls:Icon>
+                </StackPanel>
+            </Grid>
+        </controls:AdornedControl.AdornerContent>
+
+
+        <Grid>
+
+            <Viewbox HorizontalAlignment="Center" VerticalAlignment="Top">
+                <Grid RenderTransformOrigin="0.5,0.5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <Control
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Template="{StaticResource ProcessModule}" />
+
+                        <Control
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch"
+                            Template="{StaticResource ProcessModuleOpened}" />
+
+                        <locationSourceDestination:RectangleSourceDestination SelectionState="{Binding ElementName=UserControlProcessModule, Path=SelectionState}" />
+                    </Grid>
+
+                    <Rectangle
+                        Grid.Row="1"
+                        Height="3"
+                        Fill="Black">
+                        <Rectangle.Style>
+                            <Style TargetType="{x:Type Rectangle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Module.IsDoorOpen}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Module.IsDoorOpen}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=(equipment:ModuleOrientation.Orientation), RelativeSource={RelativeSource Self}}" Value="{x:Static equipment:ModuleOrientationValue.Left}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="90" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=(equipment:ModuleOrientation.Orientation), RelativeSource={RelativeSource Self}}" Value="{x:Static equipment:ModuleOrientationValue.Top}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="180" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=(equipment:ModuleOrientation.Orientation), RelativeSource={RelativeSource Self}}" Value="{x:Static equipment:ModuleOrientationValue.Right}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="270" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=(equipment:ModuleOrientation.Orientation), RelativeSource={RelativeSource Self}}" Value="{x:Static equipment:ModuleOrientationValue.Bottom}">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="0" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
+            </Viewbox>
+
+            <wafer:Wafer
+                x:Name="Wafer"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                DetectionError="{Binding Module.SubstrateDetectionError}"
+                Source="{Binding Module.SimplifiedWaferId}"
+                Status="{Binding Module.WaferStatus}"
+                WaferSize="{Binding Module.WaferDimension}">
+                <wafer:Wafer.Style>
+                    <Style TargetType="{x:Type wafer:Wafer}">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Module.Location.Material}" Value="{x:Null}" />
+                                    <Condition Binding="{Binding Module.SubstrateDetectionError}" Value="false" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </wafer:Wafer.Style>
+            </wafer:Wafer>
+
+        </Grid>
+    </controls:AdornedControl>
+</equipment:MachineModuleView>

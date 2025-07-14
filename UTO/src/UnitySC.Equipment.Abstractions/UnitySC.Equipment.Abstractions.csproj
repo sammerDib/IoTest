@@ -1,0 +1,338 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>UnitySC.Equipment.Abstractions</RootNamespace>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Devices\AbstractDataFlowManager\AbstractDataFlowManager.device" />
+    <None Remove="Devices\LightTower\Resources\Configuration.xml" />
+    <None Remove="Devices\SmifLoadPort\SmifLoadPort.device" />
+  </ItemGroup>
+
+  <ItemGroup Label="GenericDevice">
+    <Compile Update="Devices\AbstractDataFlowManager\AbstractDataFlowManager.g.cs">
+      <DependentUpon>AbstractDataFlowManager.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\AbstractDataFlowManager\Resources\Messages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Controller\Controller.g.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Controller.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\DriveableProcessModule\DriveableProcessModule.g.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DriveableProcessModule.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\NotCommunicatingProcessModule\NotCommunicatingProcessModule.g.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NotCommunicatingProcessModule.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\NotCommunicatingProcessModule\Resources\Messages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\ReaderPositioner\ReaderPositioner.g.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReaderPositioner.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\SmifLoadPort\SmifLoadPort.g.cs">
+      <DependentUpon>SmifLoadPort.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\SubstrateIdReader\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Vendor\Communication\CommunicatingDevice\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Vendor\Devices\GenericDevice\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup Label="Aligner">
+    <Compile Update="Devices\Aligner\Aligner.g.cs">
+      <DependentUpon>Aligner.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\AbstractDataFlowManager\AbstractDataFlowManager.device">
+      <DependentUpon>IAbstractDataFlowManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Aligner\Aligner.device">
+      <DependentUpon>IAligner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Controller\Controller.device">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\DriveableProcessModule\DriveableProcessModule.device">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IDriveableProcessModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\ProcessModule\ProcessModule.device">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IProcessModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\ReaderPositioner\ReaderPositioner.device">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IReaderPositioner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\SmifLoadPort\SmifLoadPort.device">
+      <DependentUpon>ISmifLoadPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Devices\Aligner\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Update="Devices\AbstractDataFlowManager\Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Devices\Aligner\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="Robot">
+    <Compile Update="Devices\Robot\Robot.g.cs">
+      <DependentUpon>Robot.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\Robot\Robot.device">
+      <DependentUpon>IRobot.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Devices\Robot\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Update="Devices\NotCommunicatingProcessModule\Resources\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Devices\Robot\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="LoadPort">
+    <Compile Update="Devices\LoadPort\LoadPort.g.cs">
+      <DependentUpon>LoadPort.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\LoadPort\LoadPort.device">
+      <DependentUpon>ILoadPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Devices\LoadPort\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Update="Devices\LoadPort\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="ProcessModule">
+    <Compile Update="Devices\ProcessModule\ProcessModule.g.cs">
+      <DependentUpon>ProcessModule.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\ProcessModule\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Update="Devices\ProcessModule\Resources\Messages.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="Efem">
+    <Compile Update="Devices\Efem\Efem.g.cs">
+      <DependentUpon>Efem.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\Efem\Efem.device">
+      <DependentUpon>IEfem.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Devices\Efem\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Update="Devices\Efem\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="LightTower">
+    <Compile Update="Devices\LightTower\LightTower.g.cs">
+      <DependentUpon>LightTower.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\LightTower\LightTower.device">
+      <DependentUpon>ILightTower.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="SubstrateIdReader">
+    <Compile Update="Devices\SubstrateIdReader\SubstrateIdReader.g.cs">
+      <DependentUpon>SubstrateIdReader.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\SubstrateIdReader\SubstrateIdReader.device">
+      <DependentUpon>ISubstrateIdReader.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="Ffu">
+    <Compile Update="Devices\Ffu\Ffu.g.cs">
+      <DependentUpon>Ffu.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Devices\Ffu\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Include="Devices\Ffu\Ffu.device">
+      <DependentUpon>IFfu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Devices\Ffu\Resources\Messages.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Devices\SubstrateIdReader\Resources\Messages.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Communication\CommunicatingDevice\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Vendor\Devices\GenericDevice\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Label="UnityCommunicatingDevice">
+    <Compile Update="Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.g.cs">
+      <DependentUpon>UnityCommunicatingDevice.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device">
+      <DependentUpon>IUnityCommunicatingDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Devices\UnityCommunicatingDevice\Resources\Messages.Designer.cs">
+      <DependentUpon>Messages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <EmbeddedResource Update="Devices\UnityCommunicatingDevice\Resources\Messages.resx">
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Vendor\Communication\CommunicatingDevice\CommunicatingDevice.g.cs">
+      <DependentUpon>CommunicatingDevice.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Devices\GenericController\GenericController.g.cs">
+      <DependentUpon>GenericController.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Devices\GenericDevice\GenericDevice.g.cs">
+      <DependentUpon>GenericDevice.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Devices\ProcessModule\ProcessModule.g.cs">
+      <DependentUpon>ProcessModule.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Vendor\Devices\RecipeProcessModule\RecipeProcessModule.g.cs">
+      <DependentUpon>RecipeProcessModule.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Vendor\Communication\CommunicatingDevice\CommunicatingDevice.device">
+      <DependentUpon>ICommunicatingDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vendor\Devices\GenericController\GenericController.device">
+      <DependentUpon>IGenericController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vendor\Devices\GenericDevice\GenericDevice.device">
+      <DependentUpon>IGenericDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vendor\Devices\ProcessModule\ProcessModule.device">
+      <DependentUpon>IProcessModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vendor\Devices\RecipeProcessModule\RecipeProcessModule.device">
+      <DependentUpon>IRecipeProcessModule.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Devices\LoadPort\Simulation\CarrierConfigurations\Views\CarrierConfigurationsUserControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Devices\LoadPort\Simulation\Controls\LoadPortControlView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Devices\LoadPort\Simulation\Controls\MappingView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Devices\LoadPort\Simulation\LoadPortSimulationView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Agileo.Drivers-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.EquipmentModeling-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.GUI-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.MessageDataBus-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.ProcessingFramework-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.Semi.Gem.Abstractions-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.SemiDefinitions-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.StateMachine-Protected" Version="7.3.1" />
+    <PackageReference Include="Agileo.UserControls-Protected" Version="7.3.1" />
+    <PackageReference Include="GEM-Protected" Version="7.3.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Devices\Efem\Configuration\" />
+    <Folder Include="Devices\Ffu\Configuration\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj" />
+  </ItemGroup>
+  
+</Project>

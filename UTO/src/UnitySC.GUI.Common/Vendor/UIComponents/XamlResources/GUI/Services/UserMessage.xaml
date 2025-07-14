@@ -1,0 +1,125 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:userMessages="clr-namespace:Agileo.GUI.Services.UserMessages;assembly=Agileo.GUI">
+
+    <Style
+        x:Key="MessageAreaCommandButtonStyle"
+        BasedOn="{StaticResource FlatBaseButtonStyle}"
+        TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <DataTemplate x:Key="UserMessageButtonTemplate" DataType="{x:Type userMessages:UserMessageCommand}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="Column0" Width="Auto" />
+                <ColumnDefinition x:Name="Column1" Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--  Icon  -->
+            <ContentPresenter
+                x:Name="Icon"
+                Grid.Column="0"
+                Width="16"
+                Height="16"
+                MaxWidth="{StaticResource MaxSubCommandIconSize}"
+                MaxHeight="{StaticResource MaxSubCommandIconSize}"
+                Margin="7,0,7,0"
+                VerticalAlignment="Center"
+                Content="{Binding Icon}" />
+            <!--  Text  -->
+            <TextBlock
+                x:Name="Text"
+                Grid.Column="1"
+                Margin="0,0,7,0"
+                VerticalAlignment="Center"
+                Style="{StaticResource Subtitle1TextStyle}"
+                Text="{Binding LocalizedName}"
+                TextAlignment="Left"
+                TextWrapping="Wrap" />
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasIcon}" Value="false">
+                <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="Text" Property="Margin" Value="7,0" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding LocalizedName}" Value="">
+                <Setter TargetName="Text" Property="Margin" Value="0" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="UserMessageTemplate" DataType="{x:Type userMessages:UserMessage}">
+        <DockPanel
+            MinHeight="30"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Rectangle
+                Height="{StaticResource UnderlineThicknessSize}"
+                VerticalAlignment="Stretch"
+                DockPanel.Dock="Bottom"
+                Fill="Black"
+                Opacity="0.2" />
+            <DockPanel>
+                <ItemsControl
+                    Margin="0,0,4,0"
+                    DockPanel.Dock="Right"
+                    ItemsSource="{Binding Commands}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type userMessages:UserMessageCommand}">
+                            <Button
+                                MinWidth="80"
+                                Margin="4,0,4,4"
+                                VerticalAlignment="Bottom"
+                                Command="{Binding}"
+                                Content="{Binding}"
+                                ContentTemplate="{StaticResource UserMessageButtonTemplate}"
+                                Foreground="{Binding Foreground, ElementName=TextBlock}"
+                                Style="{StaticResource MessageAreaCommandButtonStyle}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <ContentPresenter
+                    x:Name="Icon"
+                    Width="18"
+                    Height="18"
+                    Margin="16,0,0,0"
+                    VerticalAlignment="Center"
+                    Content="{Binding Icon}" />
+                <ScrollViewer
+                    MaxHeight="100"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+                    <TextBlock
+                        x:Name="TextBlock"
+                        Margin="16,10,10,10"
+                        FontSize="{Binding FontSize, RelativeSource={RelativeSource Self}}"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        Text="{Binding Message.Value}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap">
+                        <TextBlock.ToolTip>
+                            <ToolTip Visibility="{Binding Message.Value, Converter={StaticResource TextToVisibilityConverter}}">
+                                <TextBlock Text="{Binding Message.Value}" />
+                            </ToolTip>
+                        </TextBlock.ToolTip>
+                    </TextBlock>
+                </ScrollViewer>
+            </DockPanel>
+        </DockPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+                <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+</ResourceDictionary>

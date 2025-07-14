@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="ADCEngine.View.ParameterExportView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ADCEngine.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="600"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightBlue"/>
+            </Style.Resources>
+            <Style.Triggers>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="IsSelected" Value="True" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="150" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ToggleButton Grid.Column="0" IsChecked="{Binding IsExported, Mode=TwoWay}" VerticalAlignment="Center" Style="{StaticResource ToggleButtonFavorite}"/>
+        <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center"/>
+        <!--<CheckBox Grid.Column="1" Content="Show"
+            IsChecked="{Binding IsExported}" VerticalAlignment="Center"/>-->
+       
+        <TextBlock Grid.Column="2" Text="Show as"
+                   Visibility="{Binding IsExported, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="5,0"/>
+        <TextBox Grid.Column="3" Text="{Binding ExportLabel}"
+            Visibility="{Binding IsExported, Converter={StaticResource BooleanToVisibilityConverter}}"  VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>

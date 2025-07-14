@@ -1,0 +1,529 @@
+<UserControl
+    x:Class="UnitySC.GUI.Common.Vendor.Views.Tools.ThemeBuilder.ColorPalette.ColorPaletteView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:colorPalette="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Tools.ThemeBuilder.ColorPalette"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize"
+    xmlns:main="clr-namespace:UnitySC.GUI.Common.Resources"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:themeBuilder="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Tools.ThemeBuilder"
+    d:DataContext="{d:DesignInstance colorPalette:ColorPaletteViewModel}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="ThemeChangerButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="100" />
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <controls:Card Background="{TemplateBinding Background}" CornerRadius="3">
+                                <Grid>
+                                    <ContentPresenter Content="{TemplateBinding Content}" />
+                                    <Border
+                                        x:Name="Mask"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Background="Black"
+                                        CornerRadius="3"
+                                        Opacity="0" />
+                                    <DockPanel>
+                                        <TextBlock
+                                            Margin="5"
+                                            HorizontalAlignment="Left"
+                                            DockPanel.Dock="Bottom"
+                                            FontSize="{StaticResource FontSizeSmall}"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            Opacity="0.5"
+                                            Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}, Path=Tag}" />
+                                        <TextBlock
+                                            x:Name="ClickText"
+                                            Margin="0,20,0,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontSize="{StaticResource FontSizeHeader}"
+                                            Foreground="White"
+                                            Text="{localize:Static themeBuilder:ThemeBuilderResources.APPLY}"
+                                            Visibility="Hidden" />
+                                    </DockPanel>
+                                </Grid>
+                        </controls:Card>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ClickText" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="Mask" Property="Opacity" Value="0.3" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ClickText" Property="FontSize" Value="14" />
+                                <Setter TargetName="Mask" Property="Opacity" Value="0.3" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel>
+        <GroupBox Header="{localize:Static main:L10N.TOOL_COLOR_PALETTE}">
+            <UniformGrid Columns="4">
+
+                <!--#region Unis-->
+                <Button
+                    Background="#FFFFFFFF"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FF616161"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="White">
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FFF1F1F1</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FFFFFFFF</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FFFFFFFF</Color>
+                            <Color>#FFFFFFFF</Color>
+                            <Color>#FFE5E5E5</Color>
+                            <Color>#FFFFFFFF</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FFE5E5E5</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FFE8E8E8"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FF616161"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Light Grey">
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FFE3E3E3</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FFE8E8E8</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FFE8E8E8</Color>
+                            <Color>#FFE8E8E8</Color>
+                            <Color>#FFE5E5E5</Color>
+                            <Color>#FFE8E8E8</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FF616161</Color>
+                            <Color>#FFE5E5E5</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FF616469"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FFEEEEEE"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Dark Grey">
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FF535659</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF616469</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF616469</Color>
+                            <Color>#FF616469</Color>
+                            <Color>#FF42454A</Color>
+                            <Color>#FF616469</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF42454A</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FF2E3136"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FFEEEEEE"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Black">
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FF1D2124</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF2E3136</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF42454A</Color>
+                            <Color>#FF2E3136</Color>
+                            <Color>#FF42454A</Color>
+                            <Color>#FF2E3136</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF42454A</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FF2B3940"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FFB9C0C6"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Petrol">
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FF212C32</Color>
+                            <Color>#FFB9C0C6</Color>
+                            <Color>#FF2B3940</Color>
+                            <Color>#FFB9C0C6</Color>
+                            <Color>#FFB9C0C6</Color>
+                            <Color>#FF212C32</Color>
+                            <Color>#FF2B3940</Color>
+                            <Color>#FF212C32</Color>
+                            <Color>#FF2B3940</Color>
+                            <Color>#FFB9C0C6</Color>
+                            <Color>#FFB9C0C6</Color>
+                            <Color>#FF212C32</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <!--#endregion Unis-->
+
+                <!--#region Variant-->
+                <Button
+                    Background="#FF3B4047"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FFCDCFD4"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Ades">
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FF313438</Color>
+                            <Color>#FF47494D</Color>
+                            <Color>#FFCDCFD4</Color>
+                            <Color>#FF3B4047</Color>
+                            <Color>#FFD2D3D4</Color>
+                            <Color>#FFDADCE0</Color>
+                            <Color>#FF3B4047</Color>
+                            <Color>#FF535E64</Color>
+                            <Color>#FF535E64</Color>
+                            <Color>#FFD2D3D4</Color>
+                            <Color>#FFD2D3D4</Color>
+                            <Color>#99D6D6D6</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFCDCFD4"
+                        Opacity="1"
+                        Points="0,0 100,0, 100,100" />
+                </Button>
+                <Button
+                    Background="#FF2B2929"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FFF1F1F1"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Maverick">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="1"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FFF1F1F1</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FFFFFFFF</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FFFFFFFF</Color>
+                            <Color>#FF2B2929</Color>
+                            <Color>#FFDCDDDE</Color>
+                            <Color>#FFF5F6F7</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#99D6D6D6</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FF404040"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FFACAEB2"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Penumbra">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FF373737"
+                        Opacity="1"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FF252627</Color>
+                            <Color>#FFC3C3C3</Color>
+                            <Color>#FF373737</Color>
+                            <Color>#FFC3C3C3</Color>
+                            <Color>#FFACAEB2</Color>
+                            <Color>#FF373737</Color>
+                            <Color>#FF404040</Color>
+                            <Color>#FF505050</Color>
+                            <Color>#FF2D2D2D</Color>
+                            <Color>#FFACAEB2</Color>
+                            <Color>#FFACAEB2</Color>
+                            <Color>#99D6D6D6</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FF464646"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#EEEEEE"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Simplfy">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#EEEEEE"
+                        Opacity="1"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FFF1F1F1</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#FFDBDBDB</Color>
+                            <Color>#FFDBDBDB</Color>
+                            <Color>#FFEEEEEE</Color>
+                            <Color>#FF464646</Color>
+                            <Color>#99D6D6D6</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#FFF6F7F8"
+                    Command="{Binding ChangeThemeCommand}"
+                    Foreground="#FF47494D"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="SoftLight">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFE9EBEC"
+                        Opacity="1"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#FFC4C6C7</Color>
+                            <Color>#FF47494D</Color>
+                            <Color>#FFE9EBEC</Color>
+                            <Color>#FF47494D</Color>
+                            <Color>#FF47494D</Color>
+                            <Color>#FFE9EBEC</Color>
+                            <Color>#FFF6F7F8</Color>
+                            <Color>#FFD3D8DA</Color>
+                            <Color>#FFD3D8DA</Color>
+                            <Color>#FF47494D</Color>
+                            <Color>#FF47494D</Color>
+                            <Color>#99D6D6D6</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <!--#endregion Variant-->
+
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="{localize:Static themeBuilder:ThemeBuilderResources.ACCENT}">
+            <UniformGrid Columns="4">
+                <Button
+                    Background="#c62828"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Red">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#c62828</Color>
+                            <Color>#32c62828</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#ad1457"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Pink">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#ad1457</Color>
+                            <Color>#32ad1457</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#6a1b9a"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Purple">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#6a1b9a</Color>
+                            <Color>#326a1b9a</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#1565c0"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Blue">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#1565c0</Color>
+                            <Color>#321565c0</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#00838f"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Cyan">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#00838f</Color>
+                            <Color>#3200838f</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#2e7d32"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Green">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#2e7d32</Color>
+                            <Color>#322e7d32</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#ff8f00"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Yellow">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#ff8f00</Color>
+                            <Color>#32ff8f00</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#d84315"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Orange">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#d84315</Color>
+                            <Color>#32d84315</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#eeeeee"
+                    Command="{Binding ChangeAccentCommand}"
+                    Foreground="Black"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="White">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#eeeeee</Color>
+                            <Color>#32eeeeee</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+                <Button
+                    Background="#212121"
+                    Command="{Binding ChangeAccentCommand}"
+                    Style="{StaticResource ThemeChangerButtonStyle}"
+                    Tag="Black">
+                    <Polygon
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFFFFF"
+                        Opacity="0.2"
+                        Points="0,0 100,0, 100,100" />
+                    <Button.CommandParameter>
+                        <x:Array Type="Color">
+                            <Color>#212121</Color>
+                            <Color>#32212121</Color>
+                        </x:Array>
+                    </Button.CommandParameter>
+                </Button>
+            </UniformGrid>
+        </GroupBox>
+    </StackPanel>
+</UserControl>

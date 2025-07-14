@@ -1,0 +1,805 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Gem.Jobs.ControlJobs.ControlJobDetailsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controlJobs="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Jobs.ControlJobs"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:e40="clr-namespace:Agileo.Semi.Gem300.Abstractions.E40;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:e94="clr-namespace:Agileo.Semi.Gem300.Abstractions.E94;assembly=Agileo.Semi.Gem300.Abstractions"
+    xmlns:gem="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem"
+    xmlns:jobs="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Jobs"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:markupExtensions="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:processJobs="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Gem.Jobs.ProcessJobs"
+    d:DataContext="{d:DesignInstance controlJobs:ControlJobDetailsViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="CarrierItemTemplate" DataType="{x:Type ItemsControl}">
+            <DockPanel x:Name="CarrierFooBar">
+                <Button
+                    Margin="5"
+                    markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                    Background="Transparent"
+                    Command="{x:Static jobs:JobsPanel.GoToCarrierFromIdCommand}"
+                    CommandParameter="{Binding}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                <TextBlock
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding}" />
+            </DockPanel>
+            <DataTemplate.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter TargetName="CarrierFooBar" Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Opacity="{StaticResource ClickedOpacity}" Color="{DynamicResource SelectionBackground}" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+        <DataTemplate x:Key="MaterialOutSpecItemTemplate" DataType="{x:Type controlJobs:CorrespondingMaterialOutSpecViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    FontSize="{StaticResource FontSizeSmall}"
+                    Foreground="{DynamicResource HeaderedContentControlHeaderForeground}"
+                    Text="{localize:Static controlJobs:ControlJobResources.CJ_MTL_OUT_SPEC_SOURCE}" />
+                <DockPanel Grid.Row="1">
+                    <Button
+                        Margin="5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        markupExtensions:Icon.Geometry="{DynamicResource SelectionIcon}"
+                        Background="Transparent"
+                        Command="{Binding DataContext.EditCarrierSlotMapCommand, ElementName=ItemsControlCarrierDetails}"
+                        CommandParameter="{Binding Source}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static gem:GemGeneralRessources.GEM_EDIT_SLOTMAP}" />
+                    <Button
+                        Margin="5"
+                        markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                        Background="Transparent"
+                        Command="{x:Static jobs:JobsPanel.GoToCarrierFromIdCommand}"
+                        CommandParameter="{Binding Source.Carrier.ObjID}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding Source.Carrier.ObjID}" />
+                </DockPanel>
+                <TextBlock
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    FontSize="{StaticResource FontSizeSmall}"
+                    Foreground="{DynamicResource HeaderedContentControlHeaderForeground}"
+                    Text="{localize:Static controlJobs:ControlJobResources.CJ_MTL_OUT_SPEC_DESTINATION}" />
+                <DockPanel Grid.Row="3">
+                    <Button
+                        Margin="5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        markupExtensions:Icon.Geometry="{DynamicResource SelectionIcon}"
+                        Background="Transparent"
+                        Command="{Binding DataContext.EditCarrierSlotMapCommand, ElementName=ItemsControlCarrierDetails}"
+                        CommandParameter="{Binding Destination}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static gem:GemGeneralRessources.GEM_EDIT_SLOTMAP}" />
+                    <Button
+                        Margin="5"
+                        markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                        Background="Transparent"
+                        Command="{x:Static jobs:JobsPanel.GoToCarrierFromIdCommand}"
+                        CommandParameter="{Binding Destination.Carrier.ObjID}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource SquareIconifiedButtonStyle}" />
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding Destination.Carrier.ObjID}" />
+                </DockPanel>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <DockPanel
+        Width="675"
+        Margin="20"
+        LastChildFill="True">
+
+        <ContentPresenter
+            x:Name="ContentPresenterJobId"
+            Content="{Binding}"
+            DockPanel.Dock="Top">
+            <ContentPresenter.ContentTemplate>
+                <DataTemplate DataType="{x:Type controlJobs:ControlJobDetailsViewModel}">
+                    <Control x:Name="Control">
+                        <Control.Template>
+                            <ControlTemplate>
+                                <TextBlock
+                                    Margin="0,0,0,10"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource Headline6TextStyle}"
+                                    Text="{Binding ObjId}" />
+                            </ControlTemplate>
+                        </Control.Template>
+                    </Control>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsInCreation}" Value="True">
+                            <Setter TargetName="Control" Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <DockPanel Margin="0,0,0,10">
+                                            <TextBlock
+                                                Margin="0,0,10,0"
+                                                DockPanel.Dock="Left"
+                                                Style="{StaticResource Headline6TextStyle}"
+                                                Text="{localize:Static controlJobs:ControlJobResources.CJ_CONTROL_JOB_ID}" />
+                                            <TextBox Text="{Binding CreationObjId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DockPanel>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ContentPresenter.ContentTemplate>
+        </ContentPresenter>
+
+        <DockPanel Margin="0,0,5,0" LastChildFill="True">
+
+            <Grid Margin="0,10,0,5" DockPanel.Dock="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="2"
+                    markupExtensions:Icon.Geometry="{StaticResource SaveIcon}"
+                    Command="{Binding SaveJobCommand}"
+                    Content="{localize:Static gem:GemGeneralRessources.GEM_SAVE}"
+                    DockPanel.Dock="Bottom"
+                    FontSize="{StaticResource FontSizeBig}"
+                    Visibility="{Binding IsSaveCommandVisible, Converter={StaticResource FalseToCollapsedConverter}}" />
+                <Button
+                    Grid.Column="0"
+                    markupExtensions:Icon.Geometry="{StaticResource CancelIcon}"
+                    Command="{Binding CancelJobCommand}"
+                    Content="{localize:Static gem:GemGeneralRessources.GEM_CANCEL}"
+                    FontSize="{StaticResource FontSizeBig}"
+                    Visibility="{Binding IsCancelCommandVisible, Converter={StaticResource FalseToCollapsedConverter}}" />
+            </Grid>
+            <Expander
+                DockPanel.Dock="Bottom"
+                Header="{localize:Static gem:GemGeneralRessources.GEM_ERROR}"
+                Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <ScrollViewer MaxHeight="250" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Errors}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="1" IsItemsHost="True" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type gem:Error}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Style="{StaticResource Body1TextStyle}" Text="{Binding Id}" />
+                                    <TextBlock Style="{StaticResource Body2TextStyle}" Text="{Binding Description}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Expander>
+            <Expander DockPanel.Dock="Bottom" IsExpanded="{Binding IsPauseEventListOpened, UpdateSourceTrigger=PropertyChanged}">
+                <Expander.Header>
+                    <StackPanel
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Grid Visibility="{Binding Converter={StaticResource NullToHiddenConverter}}">
+                            <Button
+                                Margin="0,0,10,0"
+                                markupExtensions:Icon.Geometry="{DynamicResource AddIcon}"
+                                Background="Transparent"
+                                Command="{Binding AddPauseEventsCommand}"
+                                Style="{StaticResource SquareIconifiedButtonStyle}"
+                                ToolTip="{localize:Static gem:GemGeneralRessources.GEM_ADD}"
+                                Visibility="{Binding IsInCreation, Converter={StaticResource FalseToCollapsedConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                        <TextBlock VerticalAlignment="Center" Text="{localize:Static gem:GemGeneralRessources.GEM_PAUSEEVENT}" />
+                    </StackPanel>
+                </Expander.Header>
+                <Grid MaxHeight="250">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}}">
+                        <ItemsControl
+                            AlternationCount="2"
+                            ItemsSource="{Binding PauseEvents}"
+                            Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel
+                                        x:Name="FooBar"
+                                        Margin="0,0,0,10"
+                                        Orientation="Horizontal">
+                                        <TextBlock Text="{Binding .}" />
+                                    </StackPanel>
+                                    <DataTemplate.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                            <Setter TargetName="FooBar" Property="Background" Value="{DynamicResource AlternationBackground}" />
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}">
+                        <ItemsControl
+                            x:Name="ItemsControlEditPauseEvent"
+                            AlternationCount="2"
+                            ItemsSource="{Binding CreationPauseEvents}"
+                            Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel x:Name="DockPanelEditPauseEvent">
+                                        <Button
+                                            Margin="5"
+                                            markupExtensions:Icon.Geometry="{DynamicResource DeleteIcon}"
+                                            Background="Transparent"
+                                            Command="{Binding DataContext.DeletePauseEventsCommand, ElementName=ItemsControlEditPauseEvent}"
+                                            CommandParameter="{Binding}"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource SquareIconifiedButtonStyle}"
+                                            ToolTip="{localize:Static gem:GemGeneralRessources.GEM_DELETE}" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource Body2TextStyle}"
+                                            Text="{Binding}" />
+                                    </DockPanel>
+                                    <DataTemplate.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                            <Setter TargetName="DockPanelEditPauseEvent" Property="Background" Value="{DynamicResource AlternationBackground}" />
+                                        </Trigger>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                            <Setter TargetName="DockPanelEditPauseEvent" Property="Background" Value="Transparent" />
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Expander>
+
+            <Expander DockPanel.Dock="Bottom" Header="{localize:Static controlJobs:ControlJobResources.CJ_MTL_OUT_SPEC}">
+                <Grid MaxHeight="250">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}}">
+                        <ItemsControl
+                            HorizontalContentAlignment="Stretch"
+                            AlternationCount="2"
+                            ItemTemplate="{StaticResource MaterialOutSpecItemTemplate}"
+                            ItemsSource="{Binding MaterialOutSpecification}" />
+                    </ScrollViewer>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}">
+                        <Grid>
+                            <controls:ButtonsBox
+                                Margin="5,5,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Panel.ZIndex="1"
+                                markupExtensions:Icon.Geometry="{StaticResource AddIcon}"
+                                Content="{localize:Static gem:GemGeneralRessources.GEM_ADD_MATERIAL}">
+                                <Button
+                                    HorizontalContentAlignment="Left"
+                                    markupExtensions:Icon.Geometry="{StaticResource CarrierIcon}"
+                                    Background="Transparent"
+                                    Command="{Binding AddMaterialOutSpecificationCommand}"
+                                    Content="{localize:Static gem:GemGeneralRessources.GEM_CARRIER}" />
+                            </controls:ButtonsBox>
+                            <controls:PropertyEditor
+                                Padding="0"
+                                HorizontalContentAlignment="Stretch"
+                                DockPanel.Dock="Top"
+                                HeaderPadding="5,2,5,2"
+                                PropertyName=" ">
+                                <DockPanel Margin="0,10,0,0">
+                                    <ItemsControl
+                                        x:Name="ItemsControlMaterialOutSpecificationDetails"
+                                        AlternationCount="2"
+                                        ItemsSource="{Binding CreationMaterialOutSpecification}"
+                                        Style="{StaticResource VirtualizedItemsControlStyle}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type controlJobs:CorrespondingMaterialOutSpecViewModel}">
+                                                <GroupBox>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            HorizontalAlignment="Center"
+                                                            FontSize="{StaticResource FontSizeSmall}"
+                                                            Foreground="{DynamicResource HeaderedContentControlHeaderForeground}"
+                                                            Text="{localize:Static controlJobs:ControlJobResources.CJ_MTL_OUT_SPEC_SOURCE}" />
+
+                                                        <DockPanel Grid.Row="1" VerticalAlignment="Top">
+                                                            <Button
+                                                                Margin="5,0"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                markupExtensions:Icon.Geometry="{DynamicResource SelectionIcon}"
+                                                                Background="Transparent"
+                                                                Command="{Binding DataContext.EditCarrierSlotMapCommand, ElementName=ItemsControlMaterialOutSpecificationDetails}"
+                                                                CommandParameter="{Binding Source}"
+                                                                DockPanel.Dock="Right"
+                                                                Style="{StaticResource SquareIconifiedButtonStyle}"
+                                                                ToolTip="{localize:Static gem:GemGeneralRessources.GEM_EDIT_SLOTMAP}" />
+                                                            <TextBlock
+                                                                Margin="5,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Center"
+                                                                Text="{Binding Source.Carrier.ObjID}" />
+                                                        </DockPanel>
+                                                        <TextBlock
+                                                            Grid.Row="2"
+                                                            HorizontalAlignment="Center"
+                                                            FontSize="{StaticResource FontSizeSmall}"
+                                                            Foreground="{DynamicResource HeaderedContentControlHeaderForeground}"
+                                                            Text="{localize:Static controlJobs:ControlJobResources.CJ_MTL_OUT_SPEC_DESTINATION}" />
+
+                                                        <DockPanel Grid.Row="3" VerticalAlignment="Top">
+                                                            <Button
+                                                                Margin="5,0"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                markupExtensions:Icon.Geometry="{DynamicResource SelectionIcon}"
+                                                                Background="Transparent"
+                                                                Command="{Binding DataContext.EditCarrierSlotMapCommand, ElementName=ItemsControlMaterialOutSpecificationDetails}"
+                                                                CommandParameter="{Binding Destination}"
+                                                                DockPanel.Dock="Right"
+                                                                Style="{StaticResource SquareIconifiedButtonStyle}"
+                                                                ToolTip="{localize:Static gem:GemGeneralRessources.GEM_EDIT_SLOTMAP}" />
+                                                            <TextBlock
+                                                                Margin="5,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Center"
+                                                                Text="{Binding Destination.Carrier.ObjID}" />
+                                                        </DockPanel>
+                                                        <Button
+                                                            Grid.Row="4"
+                                                            Margin="5,0"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            markupExtensions:Icon.Geometry="{DynamicResource DeleteIcon}"
+                                                            Background="Transparent"
+                                                            Command="{Binding DataContext.DeleteMaterialOutSpecificationCommand, ElementName=ItemsControlMaterialOutSpecificationDetails}"
+                                                            CommandParameter="{Binding}"
+                                                            DockPanel.Dock="Right"
+                                                            Style="{StaticResource SquareIconifiedButtonStyle}"
+                                                            ToolTip="{localize:Static gem:GemGeneralRessources.GEM_DELETE}" />
+                                                    </Grid>
+                                                </GroupBox>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Expander>
+
+            <Expander DockPanel.Dock="Bottom" Header="{localize:Static gem:GemGeneralRessources.GEM_CARRIER}">
+                <Grid MaxHeight="250">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}}">
+                        <ItemsControl
+                            HorizontalContentAlignment="Stretch"
+                            AlternationCount="2"
+                            ItemTemplate="{StaticResource CarrierItemTemplate}"
+                            ItemsSource="{Binding InputSpecCarriers}" />
+                    </ScrollViewer>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}">
+                        <Grid>
+                            <controls:ButtonsBox
+                                Margin="5,5,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Panel.ZIndex="1"
+                                markupExtensions:Icon.Geometry="{StaticResource AddIcon}"
+                                Content="{localize:Static gem:GemGeneralRessources.GEM_ADD_MATERIAL}">
+                                <Button
+                                    HorizontalContentAlignment="Left"
+                                    markupExtensions:Icon.Geometry="{StaticResource CarrierIcon}"
+                                    Background="Transparent"
+                                    Command="{Binding AddCarrierInputCommand}"
+                                    Content="{localize:Static gem:GemGeneralRessources.GEM_CARRIER}" />
+                            </controls:ButtonsBox>
+                            <controls:PropertyEditor
+                                Padding="0"
+                                HorizontalContentAlignment="Stretch"
+                                DockPanel.Dock="Top"
+                                HeaderPadding="5,2,5,2"
+                                PropertyName=" ">
+                                <DockPanel Margin="0,10,0,0">
+                                    <ItemsControl
+                                        x:Name="ItemsControlCarrierDetails"
+                                        AlternationCount="2"
+                                        ItemsSource="{Binding CreationInputSpecCarriers}"
+                                        Style="{StaticResource VirtualizedItemsControlStyle}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type jobs:CorrespondingCarrierSlotMapViewModel}">
+                                                <DockPanel VerticalAlignment="Top">
+                                                    <Button
+                                                        Margin="5,0"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        markupExtensions:Icon.Geometry="{DynamicResource DeleteIcon}"
+                                                        Background="Transparent"
+                                                        Command="{Binding DataContext.DeleteCarrierInputCommand, ElementName=ItemsControlCarrierDetails}"
+                                                        CommandParameter="{Binding}"
+                                                        DockPanel.Dock="Right"
+                                                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                                                        ToolTip="{localize:Static gem:GemGeneralRessources.GEM_DELETE}" />
+                                                    <TextBlock
+                                                        Margin="5,0"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding Carrier.ObjID}" />
+
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DockPanel>
+                            </controls:PropertyEditor>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Expander>
+
+            <Grid Margin="0,10,0,0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <controls:PropertyEditor
+                    x:Name="PropertyEditorState"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,5,5"
+                    PropertyName="{localize:Static gem:GemGeneralRessources.GEM_STATE}"
+                    Tag="{Binding State}">
+                    <StackPanel Orientation="Horizontal">
+                        <controls:Icon
+                            x:Name="IconState"
+                            Margin="0,0,5,0"
+                            VerticalAlignment="Center"
+                            Data="{StaticResource ActivesIcon}"
+                            Visibility="Collapsed">
+                            <controls:Icon.Style>
+                                <Style BasedOn="{StaticResource {x:Type controls:Icon}}" TargetType="{x:Type controls:Icon}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static e94:State.EXECUTING}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Data" Value="{StaticResource ActivesIcon}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Static e94:State.WAITINGFORSTART}">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Setter Property="Data" Value="{StaticResource WaitTimeIcon}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding State}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:Icon.Style>
+                        </controls:Icon>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource Body2TextStyle}"
+                            Text="{Binding State, Converter={StaticResource TextToHumanizedTextConverter}}"
+                            Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Style="{StaticResource Body2TextStyle}"
+                            Text="{Binding CreationState}"
+                            Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}" />
+                    </StackPanel>
+                    <controls:PropertyEditor.Style>
+                        <Style BasedOn="{StaticResource BorderedPropertyEditorStyle}" TargetType="{x:Type controls:PropertyEditor}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static e94:State.WAITINGFORSTART}">
+                                    <Setter Property="Background" Value="{DynamicResource SeverityInformationBackgroundBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource SeverityInformationBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static e94:State.EXECUTING}">
+                                    <Setter Property="Background" Value="{DynamicResource SeverityInformationBackgroundBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource SeverityInformationBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static e94:State.PAUSED}">
+                                    <Setter Property="Background" Value="{DynamicResource SeverityWarningBackgroundBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource SeverityWarningBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="{x:Static e94:State.COMPLETED}">
+                                    <Setter Property="Background" Value="{DynamicResource SeveritySuccessBackgroundBrush}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource SeveritySuccessBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:PropertyEditor.Style>
+                </controls:PropertyEditor>
+
+                <controls:PropertyEditor
+                    x:Name="PropertyEditorStartMethod"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5,0,5,5"
+                    PropertyName="{localize:Static controlJobs:ControlJobResources.CJ_START_METHOD}"
+                    Style="{StaticResource BorderedPropertyEditorStyle}"
+                    Tag="{Binding StartMethod}">
+                    <Grid Visibility="{Binding Converter={StaticResource NullToHiddenConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Style="{StaticResource Body2TextStyle}"
+                                Text="{Binding StartMethod, Converter={StaticResource TextToHumanizedTextConverter}}"
+                                Visibility="{Binding IsInGlobalEdition, Converter={StaticResource TrueToCollapsedConverter}}" />
+                            <StackPanel
+                                Margin="0,13,0,0"
+                                Orientation="Horizontal"
+                                Visibility="{Binding IsInEdition, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=Default}">
+                                <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection e94:StartMethod}" SelectedItem="{Binding EditingStartMethod}">
+                                    <controls:ChipsSelector.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type e94:StartMethod}">
+                                            <TextBlock Text="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                        </DataTemplate>
+                                    </controls:ChipsSelector.ItemTemplate>
+                                </controls:ChipsSelector>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}">
+                            <controls:ChipsSelector ItemsSource="{markupExtensions:EnumCollection e94:StartMethod}" SelectedItem="{Binding CreationStartMethod}">
+                                <controls:ChipsSelector.ItemTemplate>
+                                    <DataTemplate DataType="e94:StartMethod">
+                                        <TextBlock Text="{Binding Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                    </DataTemplate>
+                                </controls:ChipsSelector.ItemTemplate>
+                            </controls:ChipsSelector>
+                        </StackPanel>
+                    </Grid>
+                </controls:PropertyEditor>
+
+                <controls:PropertyEditor
+                    x:Name="PropertyEditorDataCollectionPlan"
+                    Grid.Column="2"
+                    Margin="5,0,0,5"
+                    HorizontalContentAlignment="Stretch"
+                    PropertyName="{localize:Static controlJobs:ControlJobResources.CJ_COLLECTION_PLAN}"
+                    Style="{StaticResource BorderedPropertyEditorStyle}"
+                    Tag="{Binding StartMethod}">
+                    <Grid>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource Body2TextStyle}"
+                            Text="{Binding CollectionPlanId}"
+                            Visibility="{Binding IsInCreation, Converter={StaticResource TrueToHiddenConverter}}" />
+                        <TextBox
+                            VerticalAlignment="Center"
+                            IsEnabled="False"
+                            Text="{Binding CreationCollectionPlanId}"
+                            VerticalScrollBarVisibility="Disabled"
+                            Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}" />
+                    </Grid>
+                </controls:PropertyEditor>
+
+            </Grid>
+
+            <Grid Margin="0,5,0,0" HorizontalAlignment="Stretch">
+                <StackPanel
+                    Margin="5,5,5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Panel.ZIndex="1"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="{localize:Static processJobs:ProcessJobsResources.PJ_PROCESS_JOB}" />
+                    <Button
+                        markupExtensions:Icon.Geometry="{DynamicResource AddIcon}"
+                        Command="{Binding AddProcessJobCommand}"
+                        Style="{StaticResource SquareIconifiedButtonStyle}"
+                        ToolTip="{localize:Static gem:GemGeneralRessources.GEM_ADD}"
+                        Visibility="{Binding IsInCreation, Converter={StaticResource FalseToHiddenConverter}}" />
+                </StackPanel>
+                <controls:PropertyEditor
+                    x:Name="PropertyEditorProcess"
+                    HorizontalContentAlignment="Stretch"
+                    HeaderPadding="5,2,5,5"
+                    PropertyName=""
+                    Style="{StaticResource BorderedPropertyEditorStyle}">
+                    <ScrollViewer HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Orientation="Vertical" Visibility="{Binding Converter={StaticResource NullToHiddenConverter}}">
+                            <Grid Visibility="{Binding Path=DataContext.IsInCreation, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, Converter={StaticResource FalseToCollapsedConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBlock
+                                    Foreground="{DynamicResource SeverityErrorBrush}"
+                                    Style="{StaticResource Body2TextStyle}"
+                                    Text="{localize:Static controlJobs:ControlJobResources.CJ_ERROR_PJ_COUNT}"
+                                    Visibility="{Binding Path=DataContext.CreationProcessJobs, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, Converter={StaticResource InvertedEmptyCollectionToCollapsedConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                            <ItemsControl AlternationCount="2" ItemsSource="{Binding ProcessJobs}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel x:Name="FooBar">
+                                            <TextBlock
+                                                MinWidth="100"
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding ObjID}" />
+                                            <Grid Margin="10,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="Black"
+                                                    Text="{Binding Path=JobState, Converter={StaticResource TextToHumanizedTextConverter}}"
+                                                    TextAlignment="Center" />
+                                            </Grid>
+                                            <TextBlock
+                                                Width="150"
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Path=ProcessStart, Converter={StaticResource TextToHumanizedTextConverter}}" />
+                                            <TextBlock
+                                                MinWidth="50"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Path=RecipeID}" />
+                                            <ContentPresenter x:Name="ContentPresenterJobId" Content="{Binding}">
+                                                <ContentPresenter.ContentTemplate>
+                                                    <DataTemplate DataType="{x:Type e40:IProcessJob}">
+                                                        <Control x:Name="ContentPresenterCarrier">
+                                                            <Control.Template>
+                                                                <ControlTemplate>
+                                                                    <Expander ExpandDirection="Down" IsExpanded="{Binding Path=DataContext.IsCarrierListOpened, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}}">
+                                                                        <Expander.Header>
+                                                                            <StackPanel Margin="-24,0,-20,0" Orientation="Horizontal">
+                                                                                <TextBlock
+                                                                                    Margin="0,0,5,0"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                                    Text="{Binding CarrierIDSlotsAssociation.Count, Mode=OneWay}" />
+                                                                                <TextBlock
+                                                                                    VerticalAlignment="Center"
+                                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                                    Text="{localize:Static gem:GemGeneralRessources.GEM_CARRIERS}" />
+                                                                            </StackPanel>
+
+                                                                        </Expander.Header>
+                                                                        <ItemsControl AlternationCount="2" ItemsSource="{Binding CarrierIDSlotsAssociation}">
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <DockPanel>
+                                                                                        <Button
+                                                                                            Margin="5,0,0,0"
+                                                                                            markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                                                                                            Background="Transparent"
+                                                                                            Command="{x:Static jobs:JobsPanel.GoToCarrierFromIdCommand}"
+                                                                                            CommandParameter="{Binding CarrierID}"
+                                                                                            DockPanel.Dock="Right"
+                                                                                            Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                                                                        <TextBlock
+                                                                                            VerticalAlignment="Center"
+                                                                                            Style="{StaticResource Body2TextStyle}"
+                                                                                            Text="{Binding CarrierID}" />
+                                                                                    </DockPanel>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                    </Expander>
+                                                                </ControlTemplate>
+                                                            </Control.Template>
+                                                        </Control>
+                                                        <DataTemplate.Triggers>
+                                                            <DataTrigger Binding="{Binding CarrierIDSlotsAssociation.Count}" Value="1">
+                                                                <Setter TargetName="ContentPresenterCarrier" Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate>
+                                                                            <DockPanel>
+                                                                                <Button
+                                                                                    Margin="5,0,0,0"
+                                                                                    markupExtensions:Icon.Geometry="{StaticResource GoToIcon}"
+                                                                                    Background="Transparent"
+                                                                                    Command="{x:Static jobs:JobsPanel.GoToCarrierFromIdCommand}"
+                                                                                    CommandParameter="{Binding CarrierIDSlotsAssociation[0].CarrierID}"
+                                                                                    DockPanel.Dock="Right"
+                                                                                    Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                                                                <TextBlock
+                                                                                    HorizontalAlignment="Center"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Style="{StaticResource Body2TextStyle}"
+                                                                                    Text="{Binding CarrierIDSlotsAssociation[0].CarrierID}" />
+                                                                            </DockPanel>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <DataTrigger />
+                                                        </DataTemplate.Triggers>
+                                                    </DataTemplate>
+                                                </ContentPresenter.ContentTemplate>
+                                            </ContentPresenter>
+                                        </DockPanel>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter TargetName="FooBar" Property="Background" Value="{DynamicResource AlternationBackground}" />
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl
+                                Margin="{StaticResource HalfHorizontalStackPropertyMargin}"
+                                AlternationCount="2"
+                                ItemsSource="{Binding CreationProcessJobs, UpdateSourceTrigger=PropertyChanged}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel x:Name="FooBar">
+                                            <Button
+                                                Margin="5,0"
+                                                markupExtensions:Icon.Geometry="{StaticResource DeleteIcon}"
+                                                Background="Transparent"
+                                                Command="{Binding DataContext.DeleteProcessJobCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}"
+                                                CommandParameter="{Binding}"
+                                                DockPanel.Dock="Right"
+                                                Style="{StaticResource SquareIconifiedButtonStyle}" />
+                                            <TextBlock
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding}" />
+                                        </DockPanel>
+                                        <DataTemplate.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter TargetName="FooBar" Property="Background" Value="{DynamicResource AlternationBackground}" />
+                                            </Trigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:PropertyEditor>
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+</UserControl>

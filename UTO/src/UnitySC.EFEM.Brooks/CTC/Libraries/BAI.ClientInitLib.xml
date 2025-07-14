@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BAI.ClientInitLib</name>
+    </assembly>
+    <members>
+        <member name="T:BAI.CTC.ClientInit.ClientLibLoader">
+             <summary>
+             Loads ExpressConnect client libraries.
+             </summary>
+             <remarks>
+                 <para>
+                     Client must call the method(s) in ClientLibLoader before any other calls are made to
+            			either of the two client libraries BAI.InfrasLib.dll and BAI.SystemsLib.dll
+                 </para>
+                 <para>
+                     The two critical directories are defined by default in BAI.ClientInitLib.dll.config.
+                     <list type="definition">
+                         <item>
+                             <term>CTC_BIN</term>
+                             <description>where the two libraries will be loaded from if not found in current directory</description>
+                         </item>
+                         <item>
+                             <term>CTC_ROOT</term>
+                             <description>where the top CTC directory resides for configuration and wafer presistence files</description>
+                         </item>
+            			</list>
+            			Client can optionally call <see cref="M:BAI.CTC.ClientInit.ClientLibLoader.SetCTCBinPath(System.String)"/> or <see cref="M:BAI.CTC.ClientInit.ClientLibLoader.SetCTCRootPath(System.String)"/>, once only for each,
+            			to override the default values.
+            		</para>
+            		<para>
+            		    Calling order:
+            		    <list type="number">
+            		        <item>
+            		            <description>Optionally call (once only) <see cref="M:BAI.CTC.ClientInit.ClientLibLoader.SetCTCBinPath(System.String)"/> to override default value for CTC_BIN.</description>
+            		        </item>
+            		        <item>
+            		            <description>Optionally call (once only) <see cref="M:BAI.CTC.ClientInit.ClientLibLoader.SetCTCRootPath(System.String)"/> to override default value for CTC_ROOT.</description>
+            		        </item>
+            		        <item>
+            		            <description>
+            		                <para>Call <see cref="M:BAI.CTC.ClientInit.ClientLibLoader.InitializeLoader"/> - this sets up two things:</para>
+            		                <para>Handling .NET runtime assembly resolve event (when it could not find one of the two libraries).</para>
+            		                <para>Handling .NET runtime assembly load event to call BAI.InfrasLib.dll to set CTC_ROOT.</para>
+            		            </description>
+            		        </item>
+            		    </list>
+            		</para>
+            		<para>
+            		    Because the CLR resolves all the types in a method before executing it, you will not be able
+            		    to start using Brooks types in the same method where you call <see cref="M:BAI.CTC.ClientInit.ClientLibLoader.InitializeLoader"/>.
+            		    Please put your code that uses Brooks types in a different method.
+            		    <code>
+             public static void Main(string[] args)
+             {
+                 ClientLibLoader.InitializeLoader();
+                 // Don't start using Brooks types in this method.
+                 RealMain(args);
+             }
+            
+             static void RealMain(string[] args)
+             {
+                 //Ok to use Brooks types here.
+             }
+            		    </code>
+            		</para>
+             </remarks>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.ClientLibLoader.InitializeLoader">
+            <summary>
+            Loads the Brooks assemblies.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            Throw if the Brooks assemblies also exist in the application's code base folder.
+            This will prevent the Brooks API from working correctly.
+            </exception>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.ClientLibLoader.GetCTCRootPath">
+            <summary>
+            Gets the root of the Brooks CTC folder.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.ClientLibLoader.GetCTCBinPath">
+            <summary>
+            Gets the folder that contains the Brooks assemblies.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.ClientLibLoader.SetCTCRootPath(System.String)">
+            <summary>
+            Sets the Brooks CTC folder location.
+            </summary>
+            <param name="ctc_root"></param>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.ClientLibLoader.SetCTCBinPath(System.String)">
+            <summary>
+            Sets the folder location of the Brooks assemblies.
+            </summary>
+            <param name="ctc_bin"></param>
+        </member>
+        <member name="T:BAI.CTC.ClientInit.LogUtil">
+            <summary>
+            A utility for writing critual messages to Windows Event Log.
+            </summary>
+            <remarks>
+            Logged events will be under "Application" name, from source "BAI.ClientInitLib".
+            </remarks>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.LogUtil.LogError(System.String)">
+            <summary>
+            Log an error message.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.LogUtil.LogWarning(System.String)">
+            <summary>
+            Log a warning message.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.LogUtil.LogInfo(System.String)">
+            <summary>
+            Log an info message.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:BAI.CTC.ClientInit.LogUtil.LogEvent(System.Diagnostics.EventLogEntryType,System.String)">
+            <summary>
+            Log a message.
+            </summary>
+            <param name="eventType"></param>
+            <param name="eventMessage"></param>
+        </member>
+    </members>
+</doc>

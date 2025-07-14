@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+
+using AcquisitionAdcExchange;
+
+using ADCEngine;
+
+using BasicModules.DataLoader;
+
+using UnitySC.Shared.Data.Enum;
+
+namespace DataLoaderModule_LightSpeed
+{
+    ///////////////////////////////////////////////////////////////////////
+    // Module
+    ///////////////////////////////////////////////////////////////////////
+
+    // The Buffer loaeded should be in Unsigned int 16bit (the value is in nanometers)
+    public class LightSpeedLSEModule : FullImageDataLoaderBase
+    {
+        public enum eDirection { Forward, Backward };
+        public override string DisplayName { get { return Factory.ModuleName + "-" + Id + "\n" + LayerName; } }
+        public override string LayerName { get { return "LSE" + "-" + paramDirection.Value.ToString(); } }
+
+        public override ActorType DataLoaderActorType => ActorType.HeLioS;
+        public override IEnumerable<ResultType> CompatibleResultTypes => GetExpectedResultTypes();
+
+        //=================================================================
+        // Paramètres du XML
+        //=================================================================
+        public readonly EnumParameter<eDirection> paramDirection;
+
+        //=================================================================
+        // Constructeur
+        //=================================================================
+        public LightSpeedLSEModule(IModuleFactory factory, int id, Recipe recipe)
+            : base(factory, id, recipe)
+        {
+            paramDirection = new EnumParameter<eDirection>(this, "Direction");
+        }
+
+        //=================================================================
+        //
+        //=================================================================
+        public override bool FilterImage(ResultType resultType, int NoCumn = -1)
+        {
+            if (resultType.GetActorType() != ActorType.HeLioS)
+                return false;
+
+            return GetExpectedResultTypes().Contains(resultType);
+        }
+
+        private List<ResultType> GetExpectedResultTypes()
+        {
+            List<ResultType> expectedResTypes = new List<ResultType>();
+            if (paramDirection.Value == eDirection.Forward) //aka WIDE
+            {
+                expectedResTypes.Add(ResultType.HLS_Amplitude_WideFW); // (int)eChannelID.Amplitude_Forward;
+            }
+            else if (paramDirection.Value == eDirection.Backward) // AKA narrow
+            {
+                expectedResTypes.Add(ResultType.HLS_Amplitude_NarrowBW); // (int)eChannelID.Amplitude_Backward;
+            }
+            else
+            {
+                throw new ApplicationException("unkown image type: " + paramDirection.Value);
+            }
+
+            return expectedResTypes;
+        }
+
+        //=================================================================
+        // 
+        //=================================================================
+        protected override void OnInit()
+        {
+            base.OnInit();
+            Layer.name = LayerName;
+        }
+
+    }
+}

@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="ADCConfiguration.View.Recipe.RecipeHistory"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ADCView="clr-namespace:ADC.View.Graph;assembly=ADCEditor"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:ADCConfiguration.View.Recipe"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Background="{StaticResource GlobalBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!--Recipe explorer is open -->
+        <Grid Width="280" Visibility="{Binding RecipeExplorerIsOpen, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+            <!-- Recipe list-->
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Style="{StaticResource BorderPanel}" Margin="0" CornerRadius="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <!-- Search-->
+                    <Grid Background="{StaticResource GlobalPanelTitleBackground}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <xctk:WatermarkTextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" Watermark="Search recipes" Margin="2" />
+                        <Viewbox Grid.Column="1" Height="15" Stretch="Uniform" Margin="2">
+                            <ContentControl ContentTemplate="{StaticResource SearchADCImage}"/>
+                        </Viewbox>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding RecipeTypes}" SelectedItem="{Binding SelectedRecipeType}" MinWidth="80" Margin="2"/>
+                        <Button Grid.Column="3" Command="{Binding CommandCollapseRecipeExplorer}" ToolTip="Collapse recipes">
+                            <Viewbox Stretch="Uniform" Height="15" Margin="2,0" ToolTip="Recipe">
+                                <ContentControl ContentTemplate="{StaticResource CollapseHorizontalADCImage}"/>
+                            </Viewbox>
+                        </Button>
+                    </Grid>
+                    <!-- List-->
+                    <ListView ItemsSource="{Binding Recipes}" SelectedItem="{Binding SelectedRecipe}" Grid.Row="1" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Viewbox Stretch="Uniform" Height="25" Margin="4,0" ToolTip="Recipe">
+                                        <ContentControl ContentTemplate="{StaticResource RecipeFileADCImage}"/>
+                                    </Viewbox>
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource Title2}" />
+                                    <TextBlock Text="v" Style="{StaticResource ValidTitle2}" Margin="4,0,0,0"/>
+                                    <TextBlock Text="{Binding Version}" Style="{StaticResource ValidTitle2}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+        <!-- Recipe explorer is collapse-->
+        <Grid Width="50" Visibility="{Binding RecipeExplorerIsOpen, Converter={StaticResource InvertedBooleanToVisibilityConverter}, FallbackValue=Visible}">
+            <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Style="{StaticResource BorderPanel}" Margin="0" CornerRadius="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button Command="{Binding CommandExpandRecipeExplorer}" ToolTip="Display recipes">
+                        <Viewbox Stretch="Uniform" Height="30" Margin="4,0">
+                            <ContentControl ContentTemplate="{StaticResource RecipeFileADCImage}"/>
+                        </Viewbox>
+                    </Button>                  
+                </Grid>
+            </Border>          
+        </Grid>
+        <local:RecipeHistoryDetail  Grid.Column="1" DataContext="{Binding RecipeHistoryDetailVM}"/>       
+    </Grid>
+</UserControl>

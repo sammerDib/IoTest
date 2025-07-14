@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="UnitySC" xmlns="http://www.agileo-automation.com/devices">
+  <Types />
+  <Packages>
+    <Package Name="Equipment">
+      <Types />
+      <Packages>
+        <Package Name="Abstractions">
+          <Types />
+          <Packages>
+            <Package Name="Devices">
+              <Types />
+              <Packages>
+                <Package Name="Ffu">
+                  <Types>
+                    <CSharpType PlatformType="UnitySC.Equipment.Abstractions.Devices.Ffu.Enum.FfuSpeedUnit, UnitySC.Equipment.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                    <DeviceType Name="Ffu" IsAbstract="true" Uri="UnitySC.Equipment.Abstractions|Devices\Ffu\Ffu.device|UnitySC.Equipment.Abstractions.Devices.Ffu.Ffu" SuperTypeUri="UnitySC.Equipment.Abstractions|Devices\UnityCommunicatingDevice\UnityCommunicatingDevice.device|UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.UnityCommunicatingDevice" BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Ffu.Ffu, UnitySC.Equipment.Abstractions">
+                      <Interruptions />
+                      <Commands>
+                        <Command Name="SetFfuSpeed" Type="Void" Timeout="60 s">
+                          <Documentation>Set 0 to stop FFU</Documentation>
+                          <Parameters>
+                            <Parameter Name="setPoint" Type="Double" />
+                            <Parameter Name="unit" Type="UnitySC.Equipment.Abstractions.Devices.Ffu.FfuSpeedUnit" />
+                          </Parameters>
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.Ffu.Conditions.IsFfuSpeedValid, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                        <Command Name="SetDateAndTime" Type="Void" Timeout="60 s">
+                          <Documentation>Send current date and time to hardware in order to synchronize logs.</Documentation>
+                          <Parameters />
+                          <PreConditions>
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Devices.UnityCommunicatingDevice.Conditions.IsCommunicating, UnitySC.Equipment.Abstractions" />
+                            <Condition BehaviorImplementation="UnitySC.Equipment.Abstractions.Vendor.Devices.GenericDevice.Conditions.IsNotBusy, UnitySC.Equipment.Abstractions" />
+                          </PreConditions>
+                          <PostConditions />
+                        </Command>
+                      </Commands>
+                      <Statuses>
+                        <Status Name="FanSpeed" Type="RotationalSpeed" Unit="UnitsNet.Units.RotationalSpeedUnit.RevolutionPerMinute" />
+                        <Status Name="DifferentialPressure" Type="Pressure" Unit="UnitsNet.Units.PressureUnit.Millipascal" IsLoggingActivated="false" />
+                        <Status Name="HasAlarm" Type="Boolean" />
+                      </Statuses>
+                      <Alarms />
+                      <Interlocks />
+                    </DeviceType>
+                  </Types>
+                  <Packages />
+                  <Equipments />
+                </Package>
+              </Packages>
+              <Equipments />
+            </Package>
+          </Packages>
+          <Equipments />
+        </Package>
+      </Packages>
+      <Equipments />
+    </Package>
+  </Packages>
+  <Equipments />
+</Package>

@@ -1,0 +1,220 @@
+﻿<UserControl
+	x:Class="UnitySC.Result.CommonUI.View.Search.DisplayView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:search="clr-namespace:UnitySC.Result.CommonUI.View.Search"
+	xmlns:searchVm="clr-namespace:UnitySC.Result.CommonUI.ViewModel.Search"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Result.CommonUI;component/View/ResultResource.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<DataTemplate
+				x:Key="PProcVmTemplate"
+				DataType="{x:Type searchVm:PPViewModel}">
+				<Grid>
+
+					<Button
+						x:Name="Button"
+						Height="20"
+						Background="Transparent"
+						BorderBrush="Transparent"
+						BorderThickness="1"
+						ClickMode="Press"
+						Command="{Binding Source={StaticResource Locator}, Path=MainResultVM.DisplayVM.SelectPostProcessCommand}"
+						CommandParameter="{Binding}" />
+
+					<StackPanel
+						Margin="1,1"
+						IsHitTestVisible="False"
+						Orientation="Horizontal">
+						<Image
+							x:Name="Image"
+							Height="16"
+							Margin="0,0,2,0"
+							Source="{StaticResource CircleUnChecked}" />
+						<TextBlock
+							Margin="3,0"
+							VerticalAlignment="Center"
+							Text="{Binding ResultLabelName}" />
+					</StackPanel>
+
+				</Grid>
+
+				<DataTemplate.Triggers>
+					<DataTrigger Value="True">
+						<DataTrigger.Binding>
+							<MultiBinding Converter="{StaticResource ReferenceEqualsMultiConverter}">
+								<Binding
+									Path="MainResultVM.DisplayVM.SelectedPostProcessModule"
+									Source="{StaticResource Locator}" />
+								<Binding Path="." />
+							</MultiBinding>
+						</DataTrigger.Binding>
+						<Setter TargetName="Image" Property="Source" Value="{StaticResource CircleChecked}" />
+					</DataTrigger>
+				</DataTemplate.Triggers>
+
+			</DataTemplate>
+
+			<DataTemplate
+				x:Key="ProcessModuleTemplate"
+				DataType="{x:Type searchVm:PMViewModel}">
+				<Grid>
+
+					<Button
+						x:Name="Button"
+						Height="20"
+						Background="Transparent"
+						BorderBrush="Transparent"
+						BorderThickness="1"
+						ClickMode="Press"
+						Command="{Binding Source={StaticResource Locator}, Path=MainResultVM.DisplayVM.SelectProcessModuleCommand}"
+						CommandParameter="{Binding}" />
+
+					<StackPanel
+						Margin="1,1"
+						IsHitTestVisible="False"
+						Orientation="Horizontal">
+						<Image
+							x:Name="Image"
+							Height="16"
+							MinWidth="0,0,2,0"
+							Source="{StaticResource CircleUnChecked}" />
+						<TextBlock
+							Margin="3,0"
+							VerticalAlignment="Center"
+							Text="{Binding LabelName}" />
+					</StackPanel>
+
+				</Grid>
+
+				<DataTemplate.Triggers>
+					<DataTrigger Value="True">
+						<DataTrigger.Binding>
+							<MultiBinding Converter="{StaticResource ReferenceEqualsMultiConverter}">
+								<Binding
+									Path="MainResultVM.DisplayVM.SelectedProcessModule"
+									Source="{StaticResource Locator}" />
+								<Binding Path="." />
+							</MultiBinding>
+						</DataTrigger.Binding>
+						<Setter TargetName="Image" Property="Source" Value="{StaticResource CircleChecked}" />
+					</DataTrigger>
+				</DataTemplate.Triggers>
+
+			</DataTemplate>
+
+			<ControlTemplate x:Key="MetroLegendTemplate">
+				<GroupBox
+					Margin="0,5,0,0"
+					Header="Legend">
+					<StackPanel>
+						<controls:ToleranceDisplayer
+							Tolerance="Good"
+							Value="Good">
+							<Control.ToolTip>
+								<TextBlock Text="All measures at this position are within tolerance scope." />
+							</Control.ToolTip>
+						</controls:ToleranceDisplayer>
+						<controls:ToleranceDisplayer
+							Margin="0,5,0,0"
+							Tolerance="Warning"
+							Value="Warning">
+							<Control.ToolTip>
+								<TextBlock Text="At least one (or more) measures at this position are outside tolerance scope." />
+							</Control.ToolTip>
+						</controls:ToleranceDisplayer>
+						<controls:ToleranceDisplayer
+							Margin="0,5,0,0"
+							Tolerance="Bad"
+							Value="Bad">
+							<Control.ToolTip>
+								<TextBlock Text="All measures at this position are outside tolerance scope." />
+							</Control.ToolTip>
+						</controls:ToleranceDisplayer>
+						<controls:ToleranceDisplayer
+							Margin="0,5,0,0"
+							Tolerance="NotMeasured"
+							Value="Not Measured">
+							<Control.ToolTip>
+								<TextBlock Text="At least one measure has not be done, for HW issue reason or Sensor out of range issue or bad quality." />
+							</Control.ToolTip>
+						</controls:ToleranceDisplayer>
+					</StackPanel>
+				</GroupBox>
+			</ControlTemplate>
+
+		</ResourceDictionary>
+
+	</UserControl.Resources>
+
+	<DockPanel
+		MinWidth="150"
+		Margin="5,0"
+		DataContext="{Binding Source={StaticResource Locator}, Path=MainResultVM.DisplayVM}"
+		LastChildFill="False">
+
+		<!--  List process modules  -->
+		<GroupBox
+			DockPanel.Dock="Top"
+			Header="Process module">
+			<ItemsControl
+				ItemTemplate="{StaticResource ProcessModuleTemplate}"
+				ItemsSource="{Binding ProcessModules}" />
+		</GroupBox>
+
+		<!--  Postprocessing results Format  -->
+		<GroupBox
+			Margin="0,5,0,0"
+			DockPanel.Dock="Top"
+			Header="Process results"
+			Visibility="{Binding SelectedProcessModule.PostProcessList.Count, Converter={StaticResource CountIsZeroToVisibilityConverter}, FallbackValue={x:Static Visibility.Collapsed}}">
+			<ItemsControl
+				ItemTemplate="{StaticResource PProcVmTemplate}"
+				ItemsSource="{Binding SelectedProcessModule.PostProcessList}" />
+		</GroupBox>
+
+		<!--  Acquisition results Format  -->
+		<GroupBox
+			Margin="0,5,0,0"
+			DockPanel.Dock="Top"
+			Header="Acquisition results"
+			Visibility="{Binding SelectedProcessModule.AcquisitionList.Count, Converter={StaticResource CountIsZeroToVisibilityConverter}, FallbackValue={x:Static Visibility.Collapsed}}">
+			<ItemsControl
+				ItemTemplate="{StaticResource PProcVmTemplate}"
+				ItemsSource="{Binding SelectedProcessModule.AcquisitionList}" />
+		</GroupBox>
+
+		<ContentPresenter
+			Margin="0,0,0,35"
+			Content="{Binding SelectedPostProcessModule.ResultType}"
+			DockPanel.Dock="Bottom">
+			<ContentPresenter.ContentTemplateSelector>
+				<search:ResultTypeTemplateSelector>
+
+					<search:ResultTypeTemplateSelector.AnalyzeTemplate>
+						<DataTemplate>
+							<Control Template="{StaticResource MetroLegendTemplate}" />
+						</DataTemplate>
+					</search:ResultTypeTemplateSelector.AnalyzeTemplate>
+
+					<search:ResultTypeTemplateSelector.DefaultTemplate>
+						<DataTemplate>
+							<!--  Empty template to display nothing  -->
+						</DataTemplate>
+					</search:ResultTypeTemplateSelector.DefaultTemplate>
+
+				</search:ResultTypeTemplateSelector>
+			</ContentPresenter.ContentTemplateSelector>
+		</ContentPresenter>
+
+	</DockPanel>
+</UserControl>

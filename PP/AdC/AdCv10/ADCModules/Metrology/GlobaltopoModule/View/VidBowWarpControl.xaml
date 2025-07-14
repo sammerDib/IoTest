@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="GlobaltopoModule.View.VidBowWarpControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"             
+             xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools"
+             xmlns:GlobaltopoModule="clr-namespace:GlobaltopoModule"          
+             mc:Ignorable="d"              
+             d:DesignHeight="300" d:DesignWidth="600"
+             Loaded="UserControl_Loaded">
+
+    <Grid>
+        <DataGrid x:Name="dataGrid" Margin="10,10,10,10" ItemsSource="{Binding ReportClassViewModelList}" AutoGenerateColumns="False"
+                  CellEditEnding="DataGrid_CellEditEnding" 
+                  CanUserAddRows="False" CanUserDeleteRows="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Measure" Binding="{Binding VidLabel}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="VID Number" Binding="{Binding VidNumber}"/>
+
+              <DataGridTemplateColumn Header="VID Label" MinWidth="100" SortMemberPath="VidLabel">
+              <!--       <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding VidList}" SelectedItem="{Binding VidObject, UpdateSourceTrigger=PropertyChanged}" 
+                                      IsTextSearchEnabled="True" TextSearch.TextPath="Label">
+                                <ComboBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ComboBox.ItemsPanel>
+                                <ComboBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ComboBoxItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <TextBlock>
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0} - {1}">
+                                                                <Binding Path="Id" />
+                                                                <Binding Path="Label" />
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ComboBox.ItemContainerStyle>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Label}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  -->
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+    
+</UserControl>

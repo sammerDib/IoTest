@@ -1,0 +1,39 @@
+﻿<Window x:Class="AdcBasicObjects.RangeComparatorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:AdcTools="clr-namespace:AdcTools;assembly=AdcTools"
+        xmlns:local="clr-namespace:AdcBasicObjects"
+        mc:Ignorable="d" 
+        Width="300" Height="200"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <AdcTools:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+        <AdcTools:InvertedBooleanConverter x:Key="InvertedBooleanConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <CheckBox x:Name="checkBox" HorizontalAlignment="Left" Margin="0,15,0,0" VerticalAlignment="Top" 
+            IsChecked="{Binding Value.HasMin}" />
+        <Label Content="Min:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="29,10,0,0"/>
+        <xctk:DoubleUpDown
+            Value="{Binding Value.Min}" AllowInputSpecialValues="None" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="99,10,0,0" Width="154" Height="26" 
+            Visibility="{Binding Value.HasMin, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        
+        <CheckBox HorizontalAlignment="Left" Margin="0,46,0,0" VerticalAlignment="Top" 
+                  IsChecked="{Binding Value.HasMax}"/>
+        <Label Content="Max:" HorizontalAlignment="Left" Margin="27,41,0,0" VerticalAlignment="Top"/>
+        <xctk:DoubleUpDown
+            Value="{Binding Value.Max}" AllowInputSpecialValues="None" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="99,41,0,0" Width="154" Height="26" 
+            Visibility="{Binding Value.HasMax, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <Button Content="OK" Margin="0,0,168,10" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="74" Click="ButtonOk_Click"
+                IsEnabled="{Binding Value.IsValid}"/>
+        <Button Content="Delete" Margin="0,0,89,10" HorizontalAlignment="Right" Width="74" Height="22" VerticalAlignment="Bottom" Click="ButtonDelete_Click"/>
+        <Button Content="Cancel" Margin="0,0,10,10" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="74" Click="ButtonCancel_Click"/>
+    </Grid>
+</Window>

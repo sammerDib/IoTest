@@ -1,0 +1,139 @@
+<UserControl
+    x:Class="UnitySC.UTO.Controller.Views.Panels.Setup.DataFlow.DataFlowSetupPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors;assembly=UnitySC.GUI.Common"
+    xmlns:controls="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls;assembly=UnitySC.GUI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:enum="clr-namespace:UnitySC.Equipment.Devices.Controller.Activities.WaferFlow.Enum;assembly=UnitySC.Equipment"
+    xmlns:loadPort="clr-namespace:UnitySC.Equipment.Abstractions.Devices.LoadPort;assembly=UnitySC.Equipment.Abstractions"
+    xmlns:local="clr-namespace:UnitySC.UTO.Controller.Views.Panels.Setup.DataFlow"
+    xmlns:localize="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions.Localize;assembly=UnitySC.GUI.Common"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericBox="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Controls.NumericBox;assembly=UnitySC.GUI.Common"
+    d:DataContext="{d:DesignInstance local:DataFlowSetupPanel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignWidth="{StaticResource DesignWidth}"
+    Background="Transparent"
+    Style="{StaticResource BusinessPanelViewStyle}"
+    mc:Ignorable="d">
+    <UniformGrid Columns="2">
+        <controls:Card Margin="{behaviors:MarginAssist Right={StaticResource PanelMargin}}">
+            <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="20" Orientation="Vertical">
+                    <controls:PropertyEditor
+                        Margin="{StaticResource HorizontalStackPropertyMargin}"
+                        VerticalAlignment="Top"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.DATAFLOW_FOLDERNAME_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.DATAFLOW_FOLDERNAME}">
+                        <TextBox Text="{Binding ModifiedConfig.DataFlowFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        VerticalAlignment="Top"
+                        PropertyDescription="ToolKey used by DataAccess user service."
+                        PropertyName="ToolKey">
+                        <TextBox Text="{Binding ModifiedConfig.ToolKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </controls:PropertyEditor>
+                </StackPanel>
+            </ScrollViewer>
+        </controls:Card>
+        <controls:Card>
+            <ScrollViewer behaviors:ScrollViewerAssist.IsAutoHideEnabled="True" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="20" Orientation="Vertical">
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        VerticalAlignment="Top"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.CARRIER_PICK_ORDER_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.CARRIER_PICK_ORDER}">
+                        <controls:ChipsSelector SelectedItem="{Binding ModifiedConfig.CarrierPickOrder}">
+                            <controls:ChipsSelector.ItemsSource>
+                                <x:Array Type="{x:Type loadPort:CarrierPickOrder}">
+                                    <loadPort:CarrierPickOrder>BottomToTop</loadPort:CarrierPickOrder>
+                                    <loadPort:CarrierPickOrder>TopToBottom</loadPort:CarrierPickOrder>
+                                </x:Array>
+                            </controls:ChipsSelector.ItemsSource>
+                        </controls:ChipsSelector>
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        VerticalAlignment="Top"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.STOP_CONFIGURATION_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.STOP_CONFIGURATION}">
+                        <controls:ChipsSelector SelectedItem="{Binding StopConfigModified}">
+                            <controls:ChipsSelector.ItemsSource>
+                                <x:Array Type="{x:Type enum:StopConfig}">
+                                    <enum:StopConfig>CancelProcess</enum:StopConfig>
+                                    <enum:StopConfig>FinishProcessForWaferInPm</enum:StopConfig>
+                                    <enum:StopConfig>FinishProcessForAllWafersOnTools</enum:StopConfig>
+                                </x:Array>
+                            </controls:ChipsSelector.ItemsSource>
+                        </controls:ChipsSelector>
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.UNLOAD_CARRIER_AFTER_ABORT_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.UNLOAD_CARRIER_AFTER_ABORT}">
+                        <CheckBox IsChecked="{Binding ModifiedConfig.UnloadCarrierAfterAbort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.UNLOAD_CARRIER_BETWEEN_JOBS_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.UNLOAD_CARRIER_BETWEEN_JOBS}">
+                        <CheckBox IsChecked="{Binding ModifiedConfig.UnloadCarrierBetweenJobs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.DISABLE_PARALLEL_CJ_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.DISABLE_PARALLEL_CJ}">
+                        <CheckBox IsChecked="{Binding ModifiedConfig.DisableParallelControlJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        VerticalAlignment="Top"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.INACTIVITY_TIMEOUT_DURATION_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.INACTIVITY_TIMEOUT_DURATION}">
+                        <DockPanel VerticalAlignment="Top">
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                DockPanel.Dock="Right"
+                                Text="{localize:Static local:DataFlowPanelResources.UNITS_MINUTES}" />
+                            <numericBox:UIntBox HorizontalContentAlignment="Left" Value="{Binding ModifiedConfig.InactivityTimeoutDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.JOB_RECREATE_AFTER_INIT_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.JOB_RECREATE_AFTER_INIT}">
+                        <CheckBox IsChecked="{Binding ModifiedConfig.JobRecreateAfterInit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.START_HOT_LOT_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.START_HOT_LOT}">
+                        <CheckBox IsChecked="{Binding ModifiedConfig.StartHotLot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToggleSettingCheckBoxStyle}" />
+                    </controls:PropertyEditor>
+                    <controls:PropertyEditor
+                        Margin="0,20,0,0"
+                        VerticalAlignment="Top"
+                        PropertyDescription="{localize:Static local:DataFlowPanelResources.WAFER_RESULT_RECEPTION_TIMEOUT_DURATION_DESCRIPTION}"
+                        PropertyName="{localize:Static local:DataFlowPanelResources.WAFER_RESULT_RECEPTION_TIMEOUT_DURATION}">
+                        <DockPanel VerticalAlignment="Top">
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                DockPanel.Dock="Right"
+                                Text="{localize:Static local:DataFlowPanelResources.UNITS_MINUTES}" />
+                            <numericBox:UIntBox HorizontalContentAlignment="Left" Value="{Binding ModifiedConfig.ResultReceptionTimeoutDuration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                    </controls:PropertyEditor>
+                </StackPanel>
+            </ScrollViewer>
+        </controls:Card>
+    </UniformGrid>
+</UserControl>

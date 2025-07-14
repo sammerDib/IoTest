@@ -1,0 +1,775 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BE7AB906-DA9F-4D07-B07B-E19B9EA1B6F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.EFEM.Rorze</RootNamespace>
+    <AssemblyName>UnitySC.EFEM.Rorze</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Devices\Aligner\RA420\Configuration\RA420Configuration.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\AlignerCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\AlignerDriver.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\AlignerOriginSearchParameter.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\AlignParameters.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\ChuckSubstrateZAxisMovement.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\ErrorControllerId.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\OperationMode.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\OperationStatus.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\OriginReturnCompletion.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\XAxisPosition.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\YAxisPosition.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\ZAxisMovement.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Enums\ZAxisPosition.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\AlignCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\CancelSubstrateChuckCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\ChuckSubstrateCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\GetSubstratePresenceCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\GetSubstrateSizeCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\HomeCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\PostmanCommands\SetSubstrateSizeCommand.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\RorzeAlignerCancelCodeInterpreter.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Status\AlignerGpioStatus.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Status\AlignerGposStatus.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Status\AlignerStatus.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Status\AlignerSubstratePresenceStatus.cs" />
+    <Compile Include="Devices\Aligner\RA420\Driver\Status\AlignerSubstrateSizeStatus.cs" />
+    <Compile Include="Devices\Aligner\RA420\IRA420.cs" />
+    <Compile Include="Devices\Aligner\RA420\RA420.cs" />
+    <Compile Include="Devices\Aligner\RA420\RA420.g.cs">
+      <DependentUpon>RA420.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Aligner\RA420\RA420.sim.cs" />
+    <Compile Include="Devices\Aligner\RA420\Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Aligner\RA420\Simulation\RA420SimulationData.cs" />
+    <Compile Include="Devices\Aligner\RA420\Simulation\RA420SimulatorUserControl.xaml.cs">
+      <DependentUpon>RA420SimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Efem\MediumSizeEfem\MediumSizeEfem.cs" />
+    <Compile Include="Devices\Efem\MediumSizeEfem\MediumSizeEfem.g.cs">
+      <DependentUpon>MediumSizeEfem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Efem\MediumSizeEfem\MediumSizeEfem.sim.cs" />
+    <Compile Include="Devices\Efem\MediumSizeEfem\IMediumSizeEfem.cs" />
+    <Compile Include="Devices\LoadPort\RE201\RE201.g.cs">
+      <DependentUpon>RE201.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LoadPort\RV101\Driver\RV101Command.cs" />
+    <Compile Include="Devices\LoadPort\RV101\RV101.g.cs">
+      <DependentUpon>RV101.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Robot\MapperRR75x\Converters\RobotMappingPositionConverter.cs" />
+    <Compile Include="Devices\Efem\SlimEfem\SlimEfem.cs" />
+    <Compile Include="Devices\Efem\SlimEfem\SlimEfem.g.cs">
+      <DependentUpon>SlimEfem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Efem\SlimEfem\SlimEfem.sim.cs" />
+    <Compile Include="Devices\Efem\SlimEfem\ISlimEfem.cs" />
+    <Compile Include="Devices\Efem\UniversalEfem\IUniversalEfem.cs" />
+    <Compile Include="Devices\Efem\UniversalEfem\UniversalEfem.cs" />
+    <Compile Include="Devices\Efem\UniversalEfem\UniversalEfem.g.cs">
+      <DependentUpon>UniversalEfem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Efem\UniversalEfem\UniversalEfem.sim.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\MapperRR75x.g.cs">
+      <DependentUpon>MapperRR75x.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Robot\RR75x\Converters\RobotStoppingPositionConverter.cs" />
+    <Compile Include="Devices\Ffu\Ffu.g.cs">
+      <DependentUpon>Ffu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Ffu\IFfu.cs" />
+    <Compile Include="Devices\Ffu\Ffu.cs" />
+    <Compile Include="Devices\Ffu\Ffu.sim.cs" />
+    <Compile Include="Devices\Ffu\Simulator\FfuSimulationData.cs" />
+    <Compile Include="Devices\Ffu\Simulator\FfuSimulatorUserControl.xaml.cs">
+      <DependentUpon>FfuSimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\EK9000\Configuration\EK9000Configuration.cs" />
+    <Compile Include="Devices\IoModule\EK9000\Driver\EK9000Driver.cs" />
+    <Compile Include="Devices\IoModule\EK9000\Driver\EventArgs\ConnectionEventArgs.cs" />
+    <Compile Include="Devices\IoModule\EK9000\EK9000.cs" />
+    <Compile Include="Devices\IoModule\EK9000\EK9000.g.cs">
+      <DependentUpon>EK9000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\EK9000\EK9000.sim.cs" />
+    <Compile Include="Devices\IoModule\EK9000\Enums\Inputs.cs" />
+    <Compile Include="Devices\IoModule\EK9000\Enums\Outputs.cs" />
+    <Compile Include="Devices\IoModule\EK9000\IEK9000.cs" />
+    <Compile Include="Devices\IoModule\EK9000\Simulation\EK9000SimulationData.cs" />
+    <Compile Include="Devices\IoModule\EK9000\Simulation\EK9000SimulatorUserControl.xaml.cs">
+      <DependentUpon>EK9000SimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\GenericRC5xx\Configuration\GenericRC5xxConfiguration.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\Enums\CommandProcessing.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\Enums\OperationMode.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\GenericRC5xxCommand.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\GenericRC5xxDriver.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\PostmanCommands\ChangeOutputSignalCommand.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\PostmanCommands\GetIoSignalCommand.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\Status\IoStatus.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\Driver\Status\SignalData.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\GenericRC5xx.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\GenericRC5xx.g.cs">
+      <DependentUpon>GenericRC5xx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\GenericRC5xx\GenericRC5xx.sim.cs" />
+    <Compile Include="Devices\IoModule\GenericRC5xx\IGenericRC5xx.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Dio1MediumSizeEfem.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Dio1MediumSizeEfem.g.cs">
+      <DependentUpon>Dio1MediumSizeEfem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Dio1MediumSizeEfem.sim.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Driver\Dio1MediumSizeEfemDriver.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Driver\PostmanCommands\GetDio1SignalCommand.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Driver\Statuses\Dio1MediumSizeEfemSignalData.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\IDio1MediumSizeEfem.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Simulation\Dio1MediumSizeEfemSimulationData.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Simulation\Dio1MediumSizeEfemSimulatorUserControl.xaml.cs">
+      <DependentUpon>Dio1MediumSizeEfemSimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC530\Dio1\Dio1.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\Dio1.g.cs">
+      <DependentUpon>Dio1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC530\Dio1\Dio1.sim.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\Driver\Dio1Driver.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\Driver\PostmanCommands\GetDio1SignalCommand.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\Driver\Statuses\Dio1SignalData.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\IDio1.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\Simulation\Dio1SimulationData.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio1\Simulation\Dio1SimulatorUserControl.xaml.cs">
+      <DependentUpon>Dio1SimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC530\Dio2\Dio2.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\Dio2.g.cs">
+      <DependentUpon>Dio2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC530\Dio2\Dio2.sim.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\Driver\Dio2Driver.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\Driver\PostmanCommands\GetDio2SignalCommand.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\Driver\Statuses\Dio2SignalData.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\IDio2.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\Simulation\Dio2SimulationData.cs" />
+    <Compile Include="Devices\IoModule\RC530\Dio2\Simulation\Dio2SimulatorUserControl.xaml.cs">
+      <DependentUpon>Dio2SimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC530\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\IoModule\RC530\Driver\Enums\RC530EventTargetParameter.cs" />
+    <Compile Include="Devices\IoModule\RC530\Driver\PostmanCommands\RC530EventCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Conditions\IsFfuSpeedInRange.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Dio0.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Dio0.g.cs">
+      <DependentUpon>Dio0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC550\Dio0\Dio0.sim.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Configuration\Dio0Configuration.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Dio0Command.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Dio0Driver.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Enums\IoModuleIds.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Enums\IoModuleInError.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Enums\RC550EventTargetParameter.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\GetDio0SignalCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\GetGeneralInputOutputCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\GetPressureFromSensorsCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\GetRotationalFansSpeedCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\RC550EventCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\StartFanRotationCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\PostmanCommands\StopFanRotationCommand.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Statuses\E84SignalData.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Statuses\FanDetectionSignalData.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Statuses\FansRotationSpeed.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Statuses\LayingPlanLoadPortSignalData.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Statuses\PressureSensorsValues.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Driver\Statuses\RC550GeneralIoStatus.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\IDio0.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\IoModule\RC550\Dio0\Simulation\Dio0SimulationData.cs" />
+    <Compile Include="Devices\IoModule\RC550\Dio0\Simulation\Dio0SimulatorUserControl.xaml.cs">
+      <DependentUpon>Dio0SimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LightTower\ILightTower.cs" />
+    <Compile Include="Devices\LightTower\LightTower.cs" />
+    <Compile Include="Devices\LightTower\LightTower.g.cs">
+      <DependentUpon>LightTower.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LightTower\LightTower.sim.cs" />
+    <Compile Include="Devices\LightTower\Simulator\LightTowerSimulationData.cs" />
+    <Compile Include="Devices\LightTower\Simulator\LightTowerSimulatorUserControl.xaml.cs">
+      <DependentUpon>LightTowerSimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LoadPort\LayingPlanLoadPort\Helpers\Converters.cs" />
+    <Compile Include="Devices\LoadPort\LayingPlanLoadPort\ILayingPlanLoadPort.cs" />
+    <Compile Include="Devices\LoadPort\LayingPlanLoadPort\LayingPlanLoadPort.cs" />
+    <Compile Include="Devices\LoadPort\LayingPlanLoadPort\LayingPlanLoadPort.g.cs">
+      <DependentUpon>LayingPlanLoadPort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LoadPort\LayingPlanLoadPort\LayingPlanLoadPort.sim.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Constants.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\CommandConstants\CarrierTypeConstants.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\CarrierDataProperty.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\CarrierType.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\ErrorControllerId.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\GetCarrierTypeParameter.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\LoadPortIndicators.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\RE201SlotState.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\ReleaseCarrierParameters.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\SecureCarrierParameters.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Enums\SystemDataProperty.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\EventArgs\MappingEventArgs.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Helpers\CarrierTypeConverter.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\GetCarrierTypeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\GpioCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\GposCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\HomeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\InitializeStatusCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\MappingPatternAcquisitionCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\OriginSearchCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\PerformWaferMappingCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\RE201Command.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\ReleaseCarrierCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\SecureCarrierCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\SetCarrierTypeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\SetLightCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\PostmanCommands\StatusAcquisitionCommand.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\RE201Command.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\LoadPortDriver.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\RorzeLoadPortCancelCodeInterpreter.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Status\CarrierTypeStatus.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Status\RE201GpioStatus.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Status\RE201GposStatus.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Driver\Status\RE201LoadPortStatus.cs" />
+    <Compile Include="Devices\LoadPort\RE201\Helpers\Converters.cs" />
+    <Compile Include="Devices\LoadPort\RE201\IRE201.cs" />
+    <Compile Include="Devices\LoadPort\RE201\RE201.cs" />
+    <Compile Include="Devices\LoadPort\RE201\RE201.sim.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Configuration\RorzeLoadPortConfiguration.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\Enums\OperationMode.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\Enums\OperationStatus.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\Enums\OriginReturnCompletion.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\Enums\Rs232Settings.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\EventArgs\CarrierIdReceivedEventArgs.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\EventArgs\LoadPortEventArgs.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\PostmanCommands\ReadCarrierIdCommand.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\Status\InfoPadsInputStatus.cs" />
+    <Compile Include="Devices\LoadPort\RorzeLoadPort\Driver\Status\LoadPortStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Constants.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\CommandConstants\CarrierTypeConstants.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\CarrierDataProperty.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\CarrierType.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\ErrorControllerId.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\GetCarrierTypeParameter.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\LoadPortIndicators.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\ReleaseCarrierParameters.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\RV101SlotState.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\SecureCarrierParameters.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Enums\SystemDataProperty.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\EventArgs\MappingEventArgs.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Helpers\CarrierTypeConverter.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\LoadPortDriver.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\GetCarrierTypeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\GpioCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\GposCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\InitializeStatusCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\MappingPatternAcquisitionCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\OriginSearchCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\PerformWaferMappingCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\ReleaseCarrierCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\RV101Command.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\SecureCarrierCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\SetCarrierTypeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\SetLightCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\PostmanCommands\StatusAcquisitionCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\RorzeLoadPortCancelCodeInterpreter.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Status\CarrierTypeStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Status\LoadPortGpioStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Status\LoadPortGposStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Driver\Status\RV101LoadPortStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV101\Helpers\Converters.cs" />
+    <Compile Include="Devices\LoadPort\RV101\IRV101.cs" />
+    <Compile Include="Devices\LoadPort\RV101\RV101.cs" />
+    <Compile Include="Devices\LoadPort\RV101\RV101.sim.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Constants.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\CommandConstants\CarrierTypeConstants.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\CarrierDataProperty.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\CarrierType.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\E84ParameterProperty.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\E84TransferRequest.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\ErrorControllerId.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\GetCarrierTypeParameter.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\LoadPortIndicators.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\LoadPortOriginSearchParameter.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\ReleaseCarrierParameters.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\RV201SlotState.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\SecureCarrierParameters.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\SystemDataProperty.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Enums\YAxisPositions.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\EventArgs\E84TransferEventArgs.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\EventArgs\MappingEventArgs.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Helpers\CarrierTypeConverter.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\LoadPortDriver.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\E84LoadCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\E84UnloadCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\GetCarrierTypeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\GpioCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\GposCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\InitializeStatusCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\MappingPatternAcquisitionCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\OriginSearchCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\PerformWaferMappingCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\ReleaseCarrierCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\RV201Command.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\SecureCarrierCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\SetCarrierTypeCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\SetLightCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\PostmanCommands\StatusAcquisitionCommand.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\RorzeLoadPortCancelCodeInterpreter.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\RV201Command.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Status\CarrierTypeStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Status\LoadPortGpioStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Status\LoadPortGposStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Driver\Status\RV201LoadPortStatus.cs" />
+    <Compile Include="Devices\LoadPort\RV201\Helpers\Converters.cs" />
+    <Compile Include="Devices\LoadPort\RV201\IRV201.cs" />
+    <Compile Include="Devices\LoadPort\RV201\RV201.cs" />
+    <Compile Include="Devices\LoadPort\RV201\RV201.g.cs">
+      <DependentUpon>RV201.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\LoadPort\RV201\RV201.sim.cs" />
+    <Compile Include="Devices\ReaderPositioner\IReaderPositioner.cs" />
+    <Compile Include="Devices\ReaderPositioner\ReaderPositioner.cs" />
+    <Compile Include="Devices\ReaderPositioner\ReaderPositioner.g.cs">
+      <DependentUpon>ReaderPositioner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\ReaderPositioner\ReaderPositioner.sim.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\Configuration\ModuleMappingPosition.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\Configuration\SampleSizeMappingPositions.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\IMapperRR75x.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\Configuration\MapperRR75xConfiguration.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\MapperRR75x.cs" />
+    <Compile Include="Devices\Robot\MapperRR75x\MapperRR75x.sim.cs" />
+    <Compile Include="Devices\Robot\RR75x\Configuration\ModuleStoppingPosition.cs" />
+    <Compile Include="Devices\Robot\RR75x\Configuration\RR75xConfiguration.cs" />
+    <Compile Include="Devices\Robot\RR75x\Configuration\SampleSizeStoppingPositions.cs" />
+    <Compile Include="Devices\Robot\RR75x\Converters\IRorzeStoppingPositionConverterCallBack.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\ErrorCode.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\ErrorControllerId.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\ExtendRobotArmParameters.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\GetWaferPresenceParameter.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\GoToPosVisitingHomeParameters.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\LoadUnloadWaferParameters.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\OperationMode.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\OperationStatus.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\OriginReturnCompletion.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\ReleaseWaferRetentionParameter.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\RetainingWaferOption.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\RobotOriginSearchParameters.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Enums\RR75xSlotState.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\EventArgs\MappingEventArgs.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\EventArgs\SubstratePresenceAndHistoryEventArgs.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\ExchangeWaferCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\ExtendRobotArmCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\GetWaferPresenceAndHistoryCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\GoToPosVisitingHomeCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\LoadWaferCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\MappingPatternAcquisitionCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\PerformWaferMappingCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\ReleaseWaferRetentionCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\RetainWaferCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\RobotMacroCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\SetMappingSensorCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\SetMotionSpeedCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\TransferWaferCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\PostmanCommands\UnloadWaferCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\RobotCommand.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\RobotDriver.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\RorzeRobotCancelCodeInterpreter.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Status\RobotGpioStatus.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Status\RobotGposStatus.cs" />
+    <Compile Include="Devices\Robot\RR75x\Driver\Status\RobotStatus.cs" />
+    <Compile Include="Devices\Robot\RR75x\IRR75x.cs" />
+    <Compile Include="Devices\Robot\RR75x\RR75x.cs" />
+    <Compile Include="Devices\Robot\RR75x\RR75x.g.cs">
+      <DependentUpon>RR75x.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Robot\RR75x\RR75x.sim.cs" />
+    <Compile Include="Devices\Robot\RR75x\Simulation\RR75xSimulationData.cs" />
+    <Compile Include="Devices\Robot\RR75x\Simulation\RR75xSimulatorUserControl.xaml.cs">
+      <DependentUpon>RR75xSimulatorUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Drivers\DevicePart.cs" />
+    <Compile Include="Drivers\EFEMEventsToFacade.cs" />
+    <Compile Include="Drivers\Enums\CommandProcessing.cs" />
+    <Compile Include="Drivers\Enums\EventParameters.cs" />
+    <Compile Include="Drivers\Enums\OperationMode.cs" />
+    <Compile Include="Drivers\Enums\ResetErrorParameter.cs" />
+    <Compile Include="Drivers\EventArgs\GetDeviceDataEventArgs.cs" />
+    <Compile Include="Drivers\EventArgs\VersionAcquisitionEventArgs.cs" />
+    <Compile Include="Drivers\PostmanCommands\ConnectionCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\EventCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\GetDataSubCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\GpioCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\GposCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\InitializeStatusCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\OriginSearchCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\PauseCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\ResetErrorCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\RorzeCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\RorzeSubCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\SetDataSubCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\SetDateAndTimeCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\StatusAcquisitionCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\StopCommand.cs" />
+    <Compile Include="Drivers\PostmanCommands\VersionAcquisitionCommand.cs" />
+    <Compile Include="Drivers\RC530\RorzeRC530CancelCodeInterpreter.cs" />
+    <Compile Include="Drivers\RC550\RorzeRC550CancelCodeInterpreter.cs" />
+    <Compile Include="Drivers\RorzeConstants.cs" />
+    <Compile Include="Drivers\RorzeMessage.cs" />
+    <Compile Include="Drivers\SubCommandMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Devices\Aligner\RA420\Conditions\" />
+    <Folder Include="Devices\Aligner\RA420\Interlocks\" />
+    <Folder Include="Devices\Ffu\Conditions\" />
+    <Folder Include="Devices\Ffu\Interlocks\" />
+    <Folder Include="Devices\IoModule\EK9000\Conditions\" />
+    <Folder Include="Devices\IoModule\EK9000\Interlocks\" />
+    <Folder Include="Devices\IoModule\RC550\Dio0\Interlocks\" />
+    <Folder Include="Devices\LoadPort\LayingPlanLoadPort\Configuration\" />
+    <Folder Include="Devices\LoadPort\RE201\Interlocks\" />
+    <Folder Include="Devices\LoadPort\RV101\Conditions\" />
+    <Folder Include="Devices\LoadPort\RV101\Interlocks\" />
+    <Folder Include="Devices\LoadPort\RV201\Conditions\" />
+    <Folder Include="Devices\LoadPort\RV201\Interlocks\" />
+    <Folder Include="Devices\ReaderPositioner\Conditions\" />
+    <Folder Include="Devices\ReaderPositioner\Interlocks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Devices\Aligner\RA420\Resources\en_RA420.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Efem\MediumSizeEfem\Resources\en_MediumSizeEfem.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Efem\SlimEfem\Resources\en_SlimEfem.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Efem\UniversalEfem\Resources\en_UniversalEfem.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Ffu\Resources\en_Ffu.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\IoModule\EK9000\Resources\en_EK9000.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Resources\en_Dio1EfemMediumSize.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\IoModule\RC530\Dio1\Resources\en_Dio1.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\IoModule\RC530\Dio2\Resources\en_Dio2.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\IoModule\RC550\Dio0\Resources\en_Dio0.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\LightTower\Resources\en_LightTower.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\LoadPort\LayingPlanLoadPort\Resources\en_LayingPlanLoadPort.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\LoadPort\RV101\Resources\en_RV101.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\LoadPort\RV201\Resources\en_RV201.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Devices\Robot\RR75x\Resources\en_RR75x.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Devices\Aligner\RA420\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Efem\MediumSizeEfem\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Efem\SlimEfem\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Efem\UniversalEfem\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Ffu\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\IoModule\EK9000\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\IoModule\RC530\Dio1\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\IoModule\RC530\Dio2\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\IoModule\RC550\Dio0\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LightTower\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\LayingPlanLoadPort\Resources\Configuration4.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\LayingPlanLoadPort\Resources\Configuration3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\LayingPlanLoadPort\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\LayingPlanLoadPort\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RE201\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RE201\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RE201\Resources\Configuration3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RE201\Resources\Configuration4.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV101\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV101\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV101\Resources\Configuration3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV101\Resources\Configuration4.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV201\Resources\Configuration1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV201\Resources\Configuration2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV201\Resources\Configuration3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\LoadPort\RV201\Resources\Configuration4.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Robot\MapperRR75x\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Robot\RR75x\Resources\Configuration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Devices\Robot\RR75x\Resources\ConfigurationSmif.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Devices\Aligner\RA420\RA420.device">
+      <DependentUpon>IRA420.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Aligner\RA420\Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Devices\Aligner\RA420\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Efem\MediumSizeEfem\MediumSizeEfem.device">
+      <DependentUpon>IMediumSizeEfem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Efem\SlimEfem\SlimEfem.device">
+      <DependentUpon>ISlimEfem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Efem\UniversalEfem\UniversalEfem.device">
+      <DependentUpon>IUniversalEfem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Ffu\Ffu.device">
+      <DependentUpon>IFfu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\EK9000\EK9000.device">
+      <DependentUpon>IEK9000.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\GenericRC5xx\GenericRC5xx.device">
+      <DependentUpon>IGenericRC5xx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Dio1MediumSizeEfem.device">
+      <DependentUpon>IDio1MediumSizeEfem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\RC530\Dio1\Dio1.device">
+      <DependentUpon>IDio1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\RC530\Dio2\Dio2.device">
+      <DependentUpon>IDio2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\RC550\Dio0\Dio0.device">
+      <DependentUpon>IDio0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\IoModule\RC550\Dio0\Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LightTower\LightTower.device">
+      <DependentUpon>ILightTower.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LoadPort\LayingPlanLoadPort\LayingPlanLoadPort.device">
+      <DependentUpon>ILayingPlanLoadPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LoadPort\RE201\RE201.device">
+      <DependentUpon>IRE201.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LoadPort\RV101\RV101.device">
+      <DependentUpon>IRV101.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\LoadPort\RV201\RV201.device">
+      <DependentUpon>IRV201.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\ReaderPositioner\ReaderPositioner.device">
+      <DependentUpon>IReaderPositioner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Robot\MapperRR75x\MapperRR75x.device">
+      <DependentUpon>IMapperRR75x.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Devices\Robot\RR75x\RR75x.device">
+      <DependentUpon>IRR75x.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Devices\Aligner\RA420\Simulation\RA420SimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Ffu\Simulator\FfuSimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\IoModule\EK9000\Simulation\EK9000SimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\IoModule\RC530\Dio1MediumSizeEfem\Simulation\Dio1MediumSizeEfemSimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\IoModule\RC530\Dio1\Simulation\Dio1SimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\IoModule\RC530\Dio2\Simulation\Dio2SimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\IoModule\RC550\Dio0\Simulation\Dio0SimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\LightTower\Simulator\LightTowerSimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Devices\Robot\RR75x\Simulation\RR75xSimulatorUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnitySC.Equipment.Abstractions\UnitySC.Equipment.Abstractions.csproj">
+      <Project>{88F78488-BC6A-43AE-9027-4D94B97AD7EE}</Project>
+      <Name>UnitySC.Equipment.Abstractions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Agileo.Common.Communication.Modbus-Protected">
+      <Version>7.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="Agileo.SemiDefinitions-Protected">
+      <Version>7.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

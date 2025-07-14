@@ -1,0 +1,589 @@
+﻿<core:PickerControlBase
+    x:Class="UnitySC.GUI.Common.Vendor.UIComponents.UserControls.ColorPicker.ColorSliders"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:core="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.UserControls.ColorPicker.Core"
+    xmlns:converters="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Converters"
+    xmlns:behaviors="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.Behaviors"
+    xmlns:colorPicker="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.UserControls.ColorPicker"
+    x:Name="UserControl"
+    d:DesignHeight="150"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+
+            <converters:RangeConstrainedDoubleToDoubleConverter
+                x:Key="HueChannelConverter"
+                Max="359"
+                Min="0" />
+            <converters:RangeConstrainedDoubleToDoubleConverter
+                x:Key="HundredChannelConverter"
+                Max="100"
+                Min="0" />
+            <converters:RangeConstrainedDoubleToDoubleConverter
+                x:Key="TwoFiftyFiveChannelConverter"
+                Max="255"
+                Min="0" />
+
+            <ControlTemplate
+                x:Key="HsvColoSlidersTemplate"
+                TargetType="{x:Type Control}">
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="55" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="RowDefinition">
+                                    <Setter Property="Height" Value="Auto" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=UserControl, Path=ShowAlpha}" Value="False">
+                                            <Setter Property="Height" Value="0" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="H" />
+                    <core:HsvColorSlider
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="360"
+                        Minimum="0"
+                        SliderHsvType="H"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="1"
+                        Value="{Binding Path=Color.HsvH, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="5"
+                        Text="{Binding Path=Color.HsvH, Converter={StaticResource HueChannelConverter}, StringFormat=N1, ElementName=UserControl}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="S" />
+                    <core:HsvColorSlider
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="100"
+                        Minimum="0"
+                        SliderHsvType="S"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="2"
+                        Value="{Binding Path=Color.HsvS, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="6"
+                        Text="{Binding Path=Color.HsvS, Converter={StaticResource HundredChannelConverter}, ElementName=UserControl, StringFormat=N1}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="V" />
+                    <core:HsvColorSlider
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="100"
+                        Minimum="0"
+                        SliderHsvType="V"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="3"
+                        Value="{Binding Path=Color.HsvV, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="7"
+                        Text="{Binding Path=Color.HsvV, Converter={StaticResource HundredChannelConverter}, ElementName=UserControl, StringFormat=N1}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="A" />
+                    <Grid
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0">
+                        <core:RgbColorSlider
+                            CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                            IsEnabled="{Binding ElementName=UserControl, Path=ShowAlpha}"
+                            IsMoveToPointEnabled="True"
+                            Maximum="255"
+                            Minimum="0"
+                            SliderArgbType="A"
+                            SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                            TabIndex="4"
+                            Value="{Binding Path=Color.A, Mode=TwoWay, ElementName=UserControl}" />
+                        <Border
+                            Panel.ZIndex="-1"
+                            BorderThickness="0"
+                            CornerRadius="5"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor">
+                            <Border.Background>
+                                <ImageBrush
+                                    ImageSource="Images/TransparentBackground.png"
+                                    TileMode="Tile"
+                                    Viewport="0,0,8,8"
+                                    ViewportUnits="Absolute" />
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        IsEnabled="{Binding ElementName=UserControl, Path=ShowAlpha}"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="8"
+                        Text="{Binding Path=Color.A, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=UserControl, StringFormat=N0}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </Grid>
+            </ControlTemplate>
+
+            <ControlTemplate
+                x:Key="HslColoSlidersTemplate"
+                TargetType="{x:Type Control}">
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="55" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="RowDefinition">
+                                    <Setter Property="Height" Value="Auto" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=UserControl, Path=ShowAlpha}" Value="False">
+                                            <Setter Property="Height" Value="0" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="H" />
+                    <core:HslColorSlider
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="360"
+                        Minimum="0"
+                        SliderHslType="H"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="1"
+                        Value="{Binding Path=Color.HslH, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="5"
+                        Text="{Binding Path=Color.HslH, Converter={StaticResource HueChannelConverter}, StringFormat=N1, ElementName=UserControl}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="S" />
+                    <core:HslColorSlider
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="100"
+                        Minimum="0"
+                        SliderHslType="S"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="2"
+                        Value="{Binding Path=Color.HslS, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="6"
+                        Text="{Binding Path=Color.HslS, Converter={StaticResource HundredChannelConverter}, ElementName=UserControl, StringFormat=N1}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="L" />
+                    <core:HslColorSlider
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="100"
+                        Minimum="0"
+                        SliderHslType="L"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="3"
+                        Value="{Binding Path=Color.HslL, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="7"
+                        Text="{Binding Path=Color.HslL, Converter={StaticResource HundredChannelConverter}, ElementName=UserControl, StringFormat=N1}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="A" />
+                    <Grid
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0">
+                        <core:RgbColorSlider
+                            CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                            IsEnabled="{Binding ElementName=UserControl, Path=ShowAlpha}"
+                            IsMoveToPointEnabled="True"
+                            Maximum="255"
+                            Minimum="0"
+                            SliderArgbType="A"
+                            SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                            TabIndex="4"
+                            Value="{Binding Path=Color.A, Mode=TwoWay, ElementName=UserControl}" />
+                        <Border
+                            Panel.ZIndex="-1"
+                            BorderThickness="0"
+                            CornerRadius="5"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor">
+                            <Border.Background>
+                                <ImageBrush
+                                    ImageSource="Images/TransparentBackground.png"
+                                    TileMode="Tile"
+                                    Viewport="0,0,8,8"
+                                    ViewportUnits="Absolute" />
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        IsEnabled="{Binding ElementName=UserControl, Path=ShowAlpha}"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="8"
+                        Text="{Binding Path=Color.A, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=UserControl, StringFormat=N0}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </Grid>
+            </ControlTemplate>
+
+            <ControlTemplate
+                x:Key="RgbColoSlidersTemplate"
+                TargetType="{x:Type Control}">
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="55" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition>
+                            <RowDefinition.Style>
+                                <Style TargetType="RowDefinition">
+                                    <Setter Property="Height" Value="Auto" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=UserControl, Path=ShowAlpha}" Value="False">
+                                            <Setter Property="Height" Value="0" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </RowDefinition.Style>
+                        </RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="R" />
+                    <core:RgbColorSlider
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="255"
+                        Minimum="0"
+                        SliderArgbType="R"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="1"
+                        Value="{Binding Path=Color.RgbR, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="5"
+                        Text="{Binding Path=Color.RgbR, Converter={StaticResource TwoFiftyFiveChannelConverter}, StringFormat=N0, ElementName=UserControl}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="G" />
+                    <core:RgbColorSlider
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="255"
+                        Minimum="0"
+                        SliderArgbType="G"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="2"
+                        Value="{Binding Path=Color.RgbG, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="6"
+                        Text="{Binding Path=Color.RgbG, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=UserControl, StringFormat=N0}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="B" />
+                    <core:RgbColorSlider
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0"
+                        CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                        IsMoveToPointEnabled="True"
+                        Maximum="255"
+                        Minimum="0"
+                        SliderArgbType="B"
+                        SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                        TabIndex="3"
+                        Value="{Binding Path=Color.RgbB, Mode=TwoWay, ElementName=UserControl}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="7"
+                        Text="{Binding Path=Color.RgbB, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=UserControl, StringFormat=N0}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="A" />
+                    <Grid
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Height="12"
+                        Margin="0,0,5,0">
+                        <core:RgbColorSlider
+                            CurrentColorState="{Binding Path=ColorState, ElementName=UserControl}"
+                            IsEnabled="{Binding ElementName=UserControl, Path=ShowAlpha}"
+                            IsMoveToPointEnabled="True"
+                            Maximum="255"
+                            Minimum="0"
+                            SliderArgbType="A"
+                            SmallChangeBindable="{Binding ElementName=UserControl, Path=SmallChange}"
+                            TabIndex="4"
+                            Value="{Binding Path=Color.A, Mode=TwoWay, ElementName=UserControl}" />
+                        <Border
+                            Panel.ZIndex="-1"
+                            BorderThickness="0"
+                            CornerRadius="5"
+                            RenderOptions.BitmapScalingMode="NearestNeighbor">
+                            <Border.Background>
+                                <ImageBrush
+                                    ImageSource="Images/TransparentBackground.png"
+                                    TileMode="Tile"
+                                    Viewport="0,0,8,8"
+                                    ViewportUnits="Absolute" />
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Margin="0,2"
+                        IsEnabled="{Binding ElementName=UserControl, Path=ShowAlpha}"
+                        Style="{StaticResource ReducedTextBoxStyle}"
+                        TabIndex="8"
+                        Text="{Binding Path=Color.A, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=UserControl, StringFormat=N0}"
+                        TextAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextBoxFocusBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </Grid>
+            </ControlTemplate>
+
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <Control>
+        <Control.Style>
+            <Style TargetType="{x:Type Control}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=UserControl, Path=SlidersType}" Value="{x:Static colorPicker:ColorSlidersType.Hsl}">
+                        <Setter Property="Template" Value="{StaticResource HslColoSlidersTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ElementName=UserControl, Path=SlidersType}" Value="{x:Static colorPicker:ColorSlidersType.Hsv}">
+                        <Setter Property="Template" Value="{StaticResource HsvColoSlidersTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ElementName=UserControl, Path=SlidersType}" Value="{x:Static colorPicker:ColorSlidersType.Rgb}">
+                        <Setter Property="Template" Value="{StaticResource RgbColoSlidersTemplate}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Control.Style>
+    </Control>
+
+</core:PickerControlBase>

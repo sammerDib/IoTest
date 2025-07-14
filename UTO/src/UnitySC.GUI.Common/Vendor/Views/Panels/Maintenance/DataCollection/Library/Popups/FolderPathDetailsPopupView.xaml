@@ -1,0 +1,43 @@
+﻿<UserControl
+	x:Class="UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Library.Popups.FolderPathDetailsPopupView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fileWriter="clr-namespace:Agileo.DataMonitoring.DataWriter.File;assembly=Agileo.DataMonitoring.DataWriter.File"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:popups="clr-namespace:UnitySC.GUI.Common.Vendor.Views.Panels.Maintenance.DataCollection.Library.Popups"
+	xmlns:dependencyObjects="clr-namespace:UnitySC.GUI.Common.Vendor.UIComponents.MarkupExtensions"
+	x:Name="UserControl"
+	d:DataContext="{d:DesignInstance {x:Type popups:FolderPathDetailsPopup}, IsDesignTimeCreatable=True}"
+	d:DesignHeight="300"
+	d:DesignWidth="640"
+	mc:Ignorable="d">
+	<ScrollViewer
+		HorizontalScrollBarVisibility="Disabled"
+		VerticalScrollBarVisibility="Auto">
+		<ItemsControl
+			x:Name="ItemsControl"
+			ItemsSource="{Binding FileDataWriters}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate DataType="{x:Type fileWriter:FileDataWriter}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.9*" />
+							<ColumnDefinition Width="0.1*" />
+						</Grid.ColumnDefinitions>
+						<TextBlock
+							VerticalAlignment="Center"
+							Text="{Binding OutputFile}" />
+						<Button
+							Grid.Column="1"
+							Margin="4"
+							dependencyObjects:Icon.Geometry="{StaticResource OpenFolderIcon}"
+							Command="{Binding DataContext.OpenFolderCommand, ElementName=UserControl}"
+							CommandParameter="{Binding}"
+							Style="{StaticResource SquareIconifiedButtonStyle}" />
+					</Grid>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</ScrollViewer>
+</UserControl>

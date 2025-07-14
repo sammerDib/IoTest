@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stateMachine xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="a4bcdca4-0582-4a60-baba-e28d6b2c7df1" name="AlignerActivity" access="Public" usings="using UnitySC.Equipment.Abstractions.Vendor.Devices.Activities;" xmlns="http://schemas.microsoft.com/dsltools/AASM">
+  <vertices>
+    <vertexContainerHasVertices Id="35b06b6a-2437-455a-819b-691677ced7b0">
+      <initial Id="fd74bb0a-c9a0-4611-9fbb-b48d819a1e27" name="Initial" nameSpace="AlignerActivity">
+        <successors>
+          <transition Id="bc895e50-0913-4b60-9bfd-75e10c234430" source="AlignerActivity.Initial" destination="AlignerActivity.Activity.CheckReaderConfig" nameSpace="AlignerActivity">
+            <stateMoniker name="/AlignerActivity/Activity/CheckReaderConfig" />
+          </transition>
+        </successors>
+      </initial>
+    </vertexContainerHasVertices>
+    <stateMachineHasStates Id="6f817bc6-4c4c-4295-85ff-bcd29bdee8ad">
+      <state Id="6b1e45c6-9215-45c6-8bdf-b95e21197d01" name="Activity" nameSpace="AlignerActivity" entryAction="ActivityEntry" exitAction="ActivityExit" kind="Normal" entryActionLabel="Entry/ ActivityEntry" exitActionLabel="Exit/ ActivityExit">
+        <vertices>
+          <stateHasNestedStates Id="4cbf753f-3c44-4066-aeae-eec3181d8a9a">
+            <state Id="37487013-b160-4b49-a795-0646b059d999" name="AlignToScribeAngle" nameSpace="AlignerActivity.Activity" entryAction="AlignToScribeAngleEntry" kind="Normal" entryActionLabel="Entry/ AlignToScribeAngleEntry">
+              <successors>
+                <transition Id="2985c8e4-f3d9-474e-9470-c19c88bbffdf" event="AlignerDone" label="AlignerDone" source="AlignerActivity.Activity.AlignToScribeAngle" destination="AlignerActivity.Activity.ReadSubstrateId" nameSpace="AlignerActivity.Activity">
+                  <stateMoniker name="/AlignerActivity/Activity/ReadSubstrateId" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="b73871ae-395f-49c2-ad1f-de21f80b6cae">
+            <state Id="30f0d44c-c350-4d7f-a7b8-4918cb517e4f" name="ReadSubstrateId" nameSpace="AlignerActivity.Activity" entryAction="ReadSubstrateIdEntry" kind="Normal" entryActionLabel="Entry/ ReadSubstrateIdEntry">
+              <successors>
+                <transition Id="954b3bed-d3ff-4bcc-ab18-a62d3e02c19e" event="ReaderDone" condition="SubstrateIdVerificationEnabled" label="ReaderDone  [ SubstrateIdVerificationEnabled ]" source="AlignerActivity.Activity.ReadSubstrateId" destination="AlignerActivity.Activity.WaitProceedOrCancelSubstrate" nameSpace="AlignerActivity.Activity">
+                  <stateMoniker name="/AlignerActivity/Activity/WaitProceedOrCancelSubstrate" />
+                </transition>
+                <transition Id="3d1d2571-db58-4829-87bf-25d10f5d3760" event="ReaderDone" condition="SubstrateIdVerificationDisabled" label="ReaderDone  [ SubstrateIdVerificationDisabled ]" source="AlignerActivity.Activity.ReadSubstrateId" destination="AlignerActivity.Activity.Align" nameSpace="AlignerActivity.Activity">
+                  <stateMoniker name="/AlignerActivity/Activity/Align" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="3de3f649-7fd4-4889-b843-9a1d5b8f2b89">
+            <state Id="b14a6ee0-dbf2-49ba-806e-fb24b06ffa85" name="WaitProceedOrCancelSubstrate" nameSpace="AlignerActivity.Activity" kind="Normal">
+              <successors>
+                <transition Id="93f83355-6b27-4c8a-b417-d62d69417582" event="ProceedWithSubstrate" label="ProceedWithSubstrate" source="AlignerActivity.Activity.WaitProceedOrCancelSubstrate" destination="AlignerActivity.Activity.Align" nameSpace="AlignerActivity.Activity">
+                  <stateMoniker name="/AlignerActivity/Activity/Align" />
+                </transition>
+                <transition Id="0c031037-5fd4-4ae5-bc40-7e4b65d5d8de" event="CancelSubstrate" label="CancelSubstrate" source="AlignerActivity.Activity.WaitProceedOrCancelSubstrate" destination="AlignerActivity.Final" nameSpace="AlignerActivity.Activity">
+                  <finalStateMoniker name="/AlignerActivity/Final" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="c5464c7d-d9e1-42cf-880e-320f362750f4">
+            <state Id="dec51d04-b075-4492-b00e-6a990ebb0182" name="Align" nameSpace="AlignerActivity.Activity" entryAction="AlignEntry" kind="Normal" entryActionLabel="Entry/ AlignEntry">
+              <successors>
+                <transition Id="6d7cc325-63f7-4f02-b6c2-aa0a44ee9bb0" event="AlignerDone" label="AlignerDone" source="AlignerActivity.Activity.Align" destination="AlignerActivity.Final" nameSpace="AlignerActivity.Activity">
+                  <finalStateMoniker name="/AlignerActivity/Final" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+          <stateHasNestedStates Id="4cdf7582-4e93-4169-8296-1d5aa88a922f">
+            <state Id="be3e1894-7606-423f-b3a8-b282b9612238" name="CheckReaderConfig" nameSpace="AlignerActivity.Activity" kind="Normal">
+              <successors>
+                <transition Id="a23ddc8c-581e-40b2-a113-c3c3422a7d64" condition="SubstrateReaderEnabled" label="[ SubstrateReaderEnabled ]" source="AlignerActivity.Activity.CheckReaderConfig" destination="AlignerActivity.Activity.AlignToScribeAngle" nameSpace="AlignerActivity.Activity">
+                  <stateMoniker name="/AlignerActivity/Activity/AlignToScribeAngle" />
+                </transition>
+                <transition Id="1460cffa-58ff-458b-9407-e524df3c59db" condition="SubstrateReaderDisabled" label="[ SubstrateReaderDisabled ]" source="AlignerActivity.Activity.CheckReaderConfig" destination="AlignerActivity.Activity.Align" nameSpace="AlignerActivity.Activity">
+                  <stateMoniker name="/AlignerActivity/Activity/Align" />
+                </transition>
+              </successors>
+            </state>
+          </stateHasNestedStates>
+        </vertices>
+        <successors>
+          <transition Id="4066c781-7a9f-482a-9ef3-206953120fa6" event="ActivityDoneEvent" label="ActivityDoneEvent" source="AlignerActivity.Activity" destination="AlignerActivity.Final" nameSpace="AlignerActivity">
+            <finalStateMoniker name="/AlignerActivity/Final" />
+          </transition>
+        </successors>
+      </state>
+    </stateMachineHasStates>
+    <stateMachineHasStates Id="b2cef10f-22e0-453e-bd47-ca32e04e677f">
+      <finalState Id="ade3b5e5-e527-4221-8804-0d901d92e12c" name="Final" nameSpace="AlignerActivity" kind="Final" />
+    </stateMachineHasStates>
+  </vertices>
+</stateMachine>

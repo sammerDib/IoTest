@@ -1,0 +1,83 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Common.View.ThumbnailsDefectsView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:view="clr-namespace:UnitySC.Shared.ResultUI.Common.View"
+	xmlns:viewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel"
+    xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+	d:DataContext="{d:DesignInstance viewModel:ThumbnailsDefectsVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ListView
+            Margin="15,5,0,0" HorizontalAlignment="Stretch"
+            ItemsSource="{Binding FilteredThumbnails}"
+            SelectionChanged="ListView_SelectionChanged"
+            SelectedItem="{Binding ThumbnailSelectedDefect}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <vwp:VirtualizingWrapPanel AllowDifferentSizedItems="True" SpacingMode="None"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                    <Setter Property="Background" Value="Bisque" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <Grid>
+                            <Image Source="{Binding Source}" Height="120" HorizontalAlignment="Stretch" 
+                                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                   Stretch="Uniform" Margin="0,0,2,0"/>
+                            <Border Width="15" Height="15" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="3"
+                                    ToolTip="Categorie color">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{Binding ColorCategory}" />
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                        <TextBlock Text="{Binding Title}" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <Border Grid.Row="1" Background="#FFFFFFFF" BorderBrush="Bisque" VerticalAlignment="Bottom" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Loading ... " HorizontalAlignment="Center" FontSize="13"/>
+                <ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding ComputationProgress, Mode=OneWay}" IsIndeterminate="False"/>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run Text="{Binding ComputationProgress, Mode=OneWay, StringFormat={}{0:0}%}"></Run>
+                    <Run Text="of"></Run>
+                    <Run Text="{Binding TotalThumbnails}"/>
+                    <Run Text="images"></Run>
+                </TextBlock>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

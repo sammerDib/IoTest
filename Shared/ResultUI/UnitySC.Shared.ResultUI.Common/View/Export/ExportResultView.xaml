@@ -1,0 +1,144 @@
+﻿<UserControl
+	x:Class="UnitySC.Shared.ResultUI.Common.View.ExportResultView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:viewModel="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel"        
+    xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	xmlns:export="clr-namespace:UnitySC.Shared.ResultUI.Common.ViewModel.Export"
+	d:DataContext="{d:DesignInstance export:ExportResultVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<Grid>
+		<Border
+			Background="{StaticResource WindowBackground}"
+			CornerRadius="3">
+			<Border.Effect>
+				<DropShadowEffect
+					BlurRadius="5"
+					Direction="-90"
+					Opacity="0.3"
+					RenderingBias="Performance"
+					ShadowDepth="1"
+					Color="Black" />
+			</Border.Effect>
+		</Border>
+		<StackPanel
+			Margin="10"
+			HorizontalAlignment="Stretch"
+			IsEnabled="{Binding IsExporting, Converter={StaticResource InvertedBooleanConverter}}"
+			Orientation="Vertical">
+			<Label>Target Destination Path</Label>
+			<Grid HorizontalAlignment="Stretch">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<TextBox
+					Grid.Row="0"
+					Grid.Column="0"
+					MinWidth="300"
+					HorizontalAlignment="Stretch"
+					Text="{Binding TargetPath, Mode=TwoWay}" />
+				<sharedControls:ImageButton
+					Grid.Row="0"
+					Grid.Column="1"
+					Margin="4,0,0,0"
+					HorizontalAlignment="Stretch"
+					Command="{Binding OpenTargetFolderCommand}"
+					ImageGeometry="{StaticResource FolderGeometry}"
+					ImageGeometryBrush="{StaticResource IconsColor}" />
+			</Grid>
+			<Label Margin="0,8,0,0">Target Name</Label>
+			<TextBox
+				MinWidth="150"
+				Margin="0,4"
+				HorizontalAlignment="Stretch"
+				Text="{Binding TargetName, Mode=TwoWay}" />
+			<StackPanel
+                Visibility="{Binding DisplayZipArchive, Converter={converters:BooleanToVisibilityConverter}}"
+				Margin="0,8,0,0"
+				Orientation="Horizontal">
+				<ToggleButton
+					Height="18"
+					Margin="0,0,15,0"
+					IsChecked="{Binding UseZipArchive}"
+					Style="{StaticResource ToggleAnimatedSwitchNew}" />
+				<Label>Export in Zip Archive</Label>
+			</StackPanel>
+			<GroupBox
+				Margin="0,8,0,0"
+				Header="Export Content">
+				<StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal"  Visibility="{Binding DisplayExportResultData, Converter={converters:BooleanToVisibilityConverter}}">
+                        <ToggleButton
+							Height="18"
+							Margin="4,0,15,0"
+							IsChecked="{Binding ExportResultData}"
+							Style="{StaticResource ToggleAnimatedSwitchNew}" />
+						<Label>Result File</Label>
+					</StackPanel>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding DisplayExportResultThumbnails, Converter={converters:BooleanToVisibilityConverter}}">
+						<ToggleButton
+							Height="18"
+							Margin="4,0,15,0"
+							IsChecked="{Binding ExportResultThumbnails}"
+							Style="{StaticResource ToggleAnimatedSwitchNew}" />
+						<Label>Thumbnails</Label>
+					</StackPanel>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding DisplayExportSnapshot, Converter={converters:BooleanToVisibilityConverter}}">
+						<ToggleButton
+							Height="18"
+							Margin="4,0,15,0"
+							IsChecked="{Binding ExportSnapshot}"
+							Style="{StaticResource ToggleAnimatedSwitchNew}" />
+						<Label>Snapshot</Label>
+					</StackPanel>
+					<ItemsControl ItemsSource="{Binding AdditionalEntries}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate DataType="{x:Type export:ExportEntry}">
+								<StackPanel Orientation="Horizontal">
+									<ToggleButton
+										Height="18"
+										Margin="4,0,15,0"
+										IsChecked="{Binding IsChecked}"
+										Style="{StaticResource ToggleAnimatedSwitchNew}" />
+									<Label Content="{Binding EntryName}" />
+								</StackPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+			</GroupBox>
+			<sharedControls:ImageButton
+				Margin="0,8,0,0"
+				HorizontalAlignment="Right"
+				VerticalContentAlignment="Center"
+				Command="{Binding SaveExportCommand}"
+				ImageGeometry="{StaticResource SaveGeometry}"
+				Style="{StaticResource HighlightedImageButton}"
+				ToolTip="Launch selected contents exportation">
+				Save Export
+			</sharedControls:ImageButton>
+		</StackPanel>
+		<xctk:BusyIndicator
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			d:IsHidden="true"
+			BusyContent="Exporting... "
+			IsBusy="{Binding IsExporting}" />
+	</Grid>
+
+</UserControl>

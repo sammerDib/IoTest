@@ -1,0 +1,627 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3617DC34-18B5-42B4-A08C-27EBD937E6EF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ADC</RootNamespace>
+    <AssemblyName>ADCEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>$(SolutionDir)\Output\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <NoWarn>MSB3270</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\ADC.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>AdcEditor.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ADC.App</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Behaviors\PasswordBoxBindingBehiavor.cs" />
+    <Compile Include="BusinessServices\BusinessServiceBase.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Controls\ADCHelpDisplay.xaml.cs">
+      <DependentUpon>ADCHelpDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PopupWindow.xaml.cs">
+      <DependentUpon>PopupWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AdcEnum\MetaBlocState.cs" />
+    <Compile Include="AdcEnum\RecipeEditionMode.cs" />
+    <Compile Include="Controls\RegexTextBox.cs" />
+    <Compile Include="EmbeddedView.xaml.cs">
+      <DependentUpon>EmbeddedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\SelectedModuleChanged.cs" />
+    <Compile Include="Messages\SelectExpotedParameters.cs" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App.config.sample">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App.config.Prod">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\AssemblyInfo.template" />
+    <Compile Include="Services\PopUpWindow.xaml.cs">
+      <DependentUpon>PopUpWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\DatabaseService.cs" />
+    <Compile Include="UndoRedo\Command\AddChildCommand.cs" />
+    <Compile Include="UndoRedo\Command\CopyNodesCommand.cs" />
+    <Compile Include="UndoRedo\Command\DeleteNodesCommand.cs" />
+    <Compile Include="UndoRedo\Command\ICommand.cs" />
+    <Compile Include="UndoRedo\Command\InsertChildCommand.cs" />
+    <Compile Include="UndoRedo\Command\IUndoableCommand.cs" />
+    <Compile Include="UndoRedo\Command\NodesDragCommand.cs" />
+    <Compile Include="UndoRedo\Command\PasteNodesCommand.cs" />
+    <Compile Include="User\ADCUserSupervisor.cs" />
+    <Compile Include="ViewModel\Ada\ChamberTreeView\ChamberViewModel.cs" />
+    <Compile Include="ViewModel\Ada\ChamberTreeView\RootTreeViewModel.cs" />
+    <Compile Include="ViewModel\Ada\ChamberTreeView\ToolViewModel.cs" />
+    <Compile Include="ViewModel\Ada\DataLoaderPathViewModel.cs" />
+    <Compile Include="ViewModel\Ada\DataloaderViewModel.cs" />
+    <Compile Include="ViewModel\Ada\EnterProductionInfoViewModel.cs" />
+    <Compile Include="ViewModel\Ada\NewAdaViewModel.cs" />
+    <Compile Include="ViewModel\Ada\SelectAdaViewModel.cs" />
+    <Compile Include="ViewModel\ClosableViewModel.cs" />
+    <Compile Include="ViewModel\Graph\RecipeGraphViewModel.cs" />
+    <Compile Include="ViewModel\MergedRecipe\PicturePathSelectionFolderViewModel.cs" />
+    <Compile Include="ViewModel\MergedRecipe\PicturePathSelectionFullImageViewModel.cs" />
+    <Compile Include="ViewModel\MergedRecipe\PicturePathSelectionViewModelBase.cs" />
+    <Compile Include="ViewModel\MergedRecipe\PicturesSelectionViewModel.cs" />
+    <Compile Include="ViewModel\Operator\OperatorViewModel.cs" />
+    <Compile Include="ViewModel\Operator\ReprocessAdaViewModel.cs" />
+    <Compile Include="ViewModel\Operator\WaferInfoViewModel.cs" />
+    <Compile Include="Model\ServiceRecipe.cs" />
+    <Compile Include="Services\PopUpService.cs" />
+    <Compile Include="Services\Services.cs" />
+    <Compile Include="Services\ShutdownService.cs" />
+    <Compile Include="UndoRedo\CilpBoard.cs" />
+    <Compile Include="UndoRedo\UndoRedoManager.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\ModuleNodeViewModel.cs" />
+    <Compile Include="ViewModel\RecipeViewModel_Rendering.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\Ada\ChamberTreeView.xaml.cs">
+      <DependentUpon>ChamberTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Ada\EnterProductionInfoView.xaml.cs">
+      <DependentUpon>EnterProductionInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Ada\NewAdaView.xaml.cs">
+      <DependentUpon>NewAdaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Ada\SelectAdaView.xaml.cs">
+      <DependentUpon>SelectAdaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Converters\EditionModeToBackgroundColorConverter.cs" />
+    <Compile Include="View\Converters\EditionModeToNodeColorConverter.cs" />
+    <Compile Include="View\Converters\ModuleStateToImageDictionaryConverter.cs" />
+    <Compile Include="View\Converters\ColorIndexToColorConverter.cs" />
+    <Compile Include="View\Converters\PathToFileNameConverter.cs" />
+    <Compile Include="View\Converters\StringIsNullOrEmptyToVisibilityConverter.cs" />
+    <Compile Include="View\Graph\GraphView.xaml.cs">
+      <DependentUpon>GraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Graph\GraphView_ZoomAndPan.cs">
+      <DependentUpon>GraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Header\EmbeddedMenuView.xaml.cs">
+      <DependentUpon>EmbeddedMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Header\OperatorMenuView.xaml.cs">
+      <DependentUpon>OperatorMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MergedRecipe\PicturesSelection.xaml.cs">
+      <DependentUpon>PicturesSelection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Operator\OperatorView.xaml.cs">
+      <DependentUpon>OperatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Operator\ReprocessAdaView.xaml.cs">
+      <DependentUpon>ReprocessAdaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Operator\WaferInfoView.xaml.cs">
+      <DependentUpon>WaferInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Parameters\EmptyView.xaml.cs">
+      <DependentUpon>EmptyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\ImageMemoryViewModel.cs" />
+    <Compile Include="ViewModel\SelectModuleViewModel.cs" />
+    <Compile Include="View\Header\MenuView.xaml.cs">
+      <DependentUpon>MenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RunTime\LogControl.xaml.cs">
+      <DependentUpon>LogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Parameters\ParametersExportDialog.xaml.cs">
+      <DependentUpon>ParametersExportDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Parameters\ParametersExpertView.xaml.cs">
+      <DependentUpon>ParametersExpertView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeView.xaml.cs">
+      <DependentUpon>RecipeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RenderingView.xaml.cs">
+      <DependentUpon>RenderingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RunTime\RunTimeView.xaml.cs">
+      <DependentUpon>RunTimeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Parameters\ParametersSimplifiedView.xaml.cs">
+      <DependentUpon>ParametersSimplifiedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SelectModuleDialog.xaml.cs">
+      <DependentUpon>SelectModuleDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\RecipeViewModel.cs" />
+    <Compile Include="View\Graph\MouseHandlingMode.cs" />
+    <Page Include="Controls\ADCHelpDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PopupWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EmbeddedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Services\PopUpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\GlobalStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\FormStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ImageDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Ada\ChamberTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Ada\EnterProductionInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Ada\NewAdaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Ada\SelectAdaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataProvider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Graph\GraphResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Graph\GraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Header\EmbeddedMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Header\OperatorMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MergedRecipe\PicturesSelection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Operator\OperatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Operator\ReprocessAdaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Operator\WaferInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Parameters\EmptyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Header\MenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RenderingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RunTime\LogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Parameters\ParametersExportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Parameters\ParametersExpertView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RunTime\RunTimeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Parameters\ParametersSimplifiedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SelectModuleDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Header\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Compile Include="View\Header\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\Graph\Arrow.cs" />
+    <Compile Include="View\Graph\ConnectionBadIndicator.cs" />
+    <Compile Include="View\Graph\ConnectionOkIndicator.cs" />
+    <Compile Include="View\Graph\CurvedArrow.cs" />
+    <Page Include="View\Converters\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="AdcEditor.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\Fonts\Titillium-Black.otf" />
+    <Resource Include="Resources\Fonts\Titillium-Bold.otf" />
+    <Resource Include="Resources\Fonts\Titillium-BoldItalic.otf" />
+    <Resource Include="Resources\Fonts\Titillium-BoldUpright.otf" />
+    <Resource Include="Resources\Fonts\Titillium-Light.otf" />
+    <Resource Include="Resources\Fonts\Titillium-LightItalic.otf" />
+    <Resource Include="Resources\Fonts\Titillium-LightUpright.otf" />
+    <Resource Include="Resources\Fonts\Titillium-Regular.otf" />
+    <Resource Include="Resources\Fonts\Titillium-RegularItalic.otf" />
+    <Resource Include="Resources\Fonts\Titillium-RegularUpright.otf" />
+    <Resource Include="Resources\Fonts\Titillium-Semibold.otf" />
+    <Resource Include="Resources\Fonts\Titillium-SemiboldItalic.otf" />
+    <Resource Include="Resources\Fonts\Titillium-SemiboldUpright.otf" />
+    <Resource Include="Resources\Fonts\Titillium-Thin.otf" />
+    <Resource Include="Resources\Fonts\Titillium-ThinItalic.otf" />
+    <Resource Include="Resources\Fonts\Titillium-ThinUpright.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5c0a-4f7e-a355-8d03680b3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97c741a4-6213-470b-9eb1-f19f61df281c}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Implementation\UnitySC.PM.Shared.UserManager.Service.Implementation.csproj">
+      <Project>{72D98D6F-3DC3-4148-A141-B2AD4C17C9DB}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\PM\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Interface\UnitySC.PM.Shared.UserManager.Service.Interface.csproj">
+      <Project>{606809FE-7DFF-4ED0-82A9-EEB525A97BD8}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79f7e968-c5fd-4307-9127-c9c96691e505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Proxy\UnitySC.Shared.Proxy.csproj">
+      <Project>{90BDBE2A-B307-4FE9-95AB-09A0673C2345}</Project>
+      <Name>UnitySC.Shared.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{ABA2C6A4-BCB4-478A-BE76-CB62AB4941E9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PP.Shared\UnitySC.PP.Shared.csproj">
+      <Project>{0823cc91-c37b-4afa-8b42-9395592b1844}</Project>
+      <Name>UnitySC.PP.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Client\UnitySC.PP.AdC.Client.Proxy\UnitySC.PP.ADC.Client.Proxy.csproj">
+      <Project>{B203837B-FDC7-48CD-9B2F-A13E8D78F1CC}</Project>
+      <Name>UnitySC.PP.ADC.Client.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADC.Ressources\ADC.Ressources.csproj">
+      <Project>{EA3291CC-3303-4703-983D-3BD499A7E49E}</Project>
+      <Name>ADC.Ressources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AdcBasicObjects\AdcBasicObjects.csproj">
+      <Project>{2261bf78-6856-4a67-9d4c-904a911aef74}</Project>
+      <Name>AdcBasicObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADCEngine\ADCEngine.csproj">
+      <Project>{52513f8e-c8b8-4663-b1ff-bec743e9a14c}</Project>
+      <Name>ADCEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADCModules\BasicModules\BasicModules.csproj">
+      <Project>{BBE52789-8212-4EF4-857F-733D9761DD2B}</Project>
+      <Name>BasicModules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\AdcTools\AdcTools.csproj">
+      <Project>{2d6ad4b4-1775-45ef-ac20-85a6da7fd953}</Project>
+      <Name>AdcTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\libProcessing\LibProcessing.csproj">
+      <Project>{4BE42CD7-805D-47B3-863F-263671BF30E9}</Project>
+      <Name>LibProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ComRobot\AdcRobotExchange\AdcRobotExchange.csproj">
+      <Project>{0b2f9160-2203-4cdd-b9a6-1723efa2f17d}</Project>
+      <Name>AdcRobotExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GUI\AdornedControl\AdornedControl.csproj">
+      <Project>{94b81cb7-f8a6-44bc-bd71-e927f701e0d8}</Project>
+      <Name>AdornedControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GUI\GraphModel\GraphModel.csproj">
+      <Project>{669475da-8f89-4657-b917-0b0c126bcd1d}</Project>
+      <Name>GraphModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GUI\GraphUI\GraphUI.csproj">
+      <Project>{b7ca1480-c144-40ac-ab97-a626f800d5b4}</Project>
+      <Name>GraphUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GUI\Utils\Utils.csproj">
+      <Project>{e7d6707b-d6ef-4fa8-9374-dc3b7d3cdfd6}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GUI\ZoomAndPan\ZoomAndPan.csproj">
+      <Project>{468adede-6f5e-40c0-99c9-c6dac4fac934}</Project>
+      <Name>ZoomAndPan</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MergeContext\AcquisitionAdcExchange\AcquisitionAdcExchange.csproj">
+      <Project>{3c26d6d9-8b32-447f-8e21-e65e81b5ed29}</Project>
+      <Name>AcquisitionAdcExchange</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MergeContext\Context\MergeContext.Context.csproj">
+      <Project>{3e2f7c06-0c12-4058-aeee-e91a9c77845f}</Project>
+      <Name>MergeContext.Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MergeContext\MergeContext\MergeContext.csproj">
+      <Project>{1cc7cc6a-8d00-4ded-9277-b63422938c1d}</Project>
+      <Name>MergeContext</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\background.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ADC.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\bigbang_red.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\LogoUnity.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Agileo.Common.Access-Protected">
+      <Version>7.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmValidation">
+      <Version>3.1.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration\ModuleConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration\ClientConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(SolutionDir)\AdCv10\ADCEngine\ModuleCompatibility.xml" "$(SolutionDir)\Output\$(ConfigurationName)\"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
