@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.Calibration.CalibrationsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:headers="clr-namespace:UnitySC.PM.EME.Client.Controls.Headers;assembly=UnitySC.PM.EME.Client.Controls"
+             xmlns:local="clr-namespace:UnitySC.PM.EME.Client.Modules.Calibration"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.EME.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.EME.Client.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:stageMoveControl="clr-namespace:UnitySC.PM.EME.Client.Controls.StageMoveControl;assembly=UnitySC.PM.EME.Client.Controls"
+             xmlns:wizardControl="clr-namespace:UnitySC.Shared.UI.Controls.WizardNavigationControl;assembly=UnitySC.Shared.UI"
+             xmlns:lightingDashboard="clr-namespace:UnitySC.PM.EME.Client.Controls.Lights;assembly=UnitySC.PM.EME.Client.Controls"       
+             d:DataContext="{d:DesignInstance Type=local:CalibrationsVM}"
+             d:DesignHeight="450"
+             d:DesignWidth="1000"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource PanelBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Menu  -->
+        <Border Background="Transparent"
+                BorderBrush="{StaticResource MainHeaderBackground}"
+                BorderThickness="2"
+                CornerRadius="4">
+            <wizardControl:WizardNavigationControl MinHeight="15"
+                                                   Margin="5,2"
+                                                   VerticalAlignment="Bottom"
+                                                   BorderThickness="0"
+                                                   IsSynchronizedWithCurrentItem="True"
+                                                   ItemsSource="{Binding NavigationManager.AllPages}"
+                                                   SelectedItem="{Binding NavigationManager.CurrentPage, Mode=TwoWay}" />
+        </Border>
+
+        <!--  Content  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" MinWidth="300" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Controls  -->
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto">
+                <Border Padding="0,0,1,0"
+                        Background="{StaticResource LeftPaneBackgroundBrush}"
+                        BorderBrush="{StaticResource LeftPaneBorderBrush}"
+                        BorderThickness="0,0,1,0">
+                    <Grid Width="320">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="CONTROLS" Style="{StaticResource HeaderLabelStyle}" />
+                        <!--  Stage  -->
+                        <StackPanel Grid.Row="1">
+                            <lightingDashboard:LightingDashboard Margin="2"/>
+                            <stageMoveControl:StageMoveControl Margin="2"
+                                                               WaferDimentionalCharac="{markupextensions:ChuckViewModelBinding SelectedWaferCategory.DimentionalCharacteristic}" IsAutofocusCameraAvailable="True" IsQuickFocusAvailable="True"/>
+
+                            <StackPanel Margin="10"
+                                        Orientation="Horizontal">
+                                <Label Margin="0,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Content="WAFER CATEGORY" />
+                                <!--  Wafer categories  -->
+                                <ComboBox MaxWidth="200"
+                                          HorizontalAlignment="Center"
+                                          ItemsSource="{markupextensions:ChuckViewModelBinding WaferCategories}"
+                                          SelectedItem="{markupextensions:ChuckViewModelBinding SelectedWaferCategory,Mode=TwoWay}"
+                                          IsEnabled="{markupextensions:AxesViewModelBinding IsReadyToStartMove}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ScrollViewer>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <!--  Camera  -->
+                <Label Grid.Row="0"
+                       Content="CAMERA" Style="{StaticResource HeaderLabelStyle}"/>
+                <ContentControl Grid.Row="1"
+                                Content="{Binding StandardCameraViewModel}" />
+            </Grid>
+
+            <GridSplitter Grid.Column="2"
+                          Width="5"
+                          HorizontalAlignment="Stretch" />
+
+            <!-- Calibration settings -->
+
+            <Border Grid.Column="3">
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <!--  Algo  -->
+                    <Label Grid.Row="0"
+                           Content="CALIBRATION" Style="{StaticResource HeaderLabelStyle}"/>
+                    <ContentControl Grid.Row="1"
+                                    Content="{Binding NavigationManager.CurrentPage}" />
+                </Grid>
+
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

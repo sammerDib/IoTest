@@ -1,0 +1,190 @@
+<UserControl x:Class="UnitySC.PM.EME.Client.Recipe.View.RecipeExecutionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:UnitySC.PM.EME.Client.Recipe.ViewModel"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:exec="clr-namespace:UnitySC.PM.EME.Service.Interface.Recipe.Execution;assembly=UnitySC.PM.EME.Service.Interface"
+             xmlns:converter="clr-namespace:UnitySC.PM.EME.Client.Shared.Converter;assembly=UnitySC.PM.EME.Client.Shared"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:RecipeExecutionViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="5,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Content="Saving acquisition images" Style="{StaticResource TitleLevel2}" Margin="0,20,0,0" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0" >
+                    <TextBlock Text="Enable custom path" VerticalAlignment="Center"/>
+                    <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}"
+                  IsChecked="{Binding EnableCustomPath}"
+                  Margin="6" />
+                </StackPanel>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MaxWidth="400" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Text="{Binding CustomAcquisitionsFolder}"
+                             IsEnabled="{Binding EnableCustomPath}"
+                             VerticalContentAlignment="Center"
+                             Grid.Column="0" />
+                    <Button Command="{Binding BrowseCustomAcquisitionsFolder}"
+                            IsEnabled="{Binding EnableCustomPath}"
+                            Margin="3,0,0,0"
+                            Grid.Column="1">...</Button>
+                </Grid>
+                <ListBox Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                         ItemsSource="{Binding ThumbnailsWithPaths}"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5" HorizontalAlignment="Stretch" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+                                <Image Source="{Binding Item1}" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+                            <b:InvokeCommandAction
+                               Command="{Binding DataContext.OpenImageInExplorer, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                               CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </ListBox>
+            </Grid>
+            <controls:ImageGroupBox Grid.Column="1" Margin="10"
+                                    Header="Camera"
+                                    Image="{StaticResource Camera}"
+                                    Background="{StaticResource CameraBackground}">
+                <Border HorizontalAlignment="Center"
+                        Background="{StaticResource CameraBackground}">
+                    <Image Source="{Binding Image, Converter={converter:ServiceImageToCachedBitmapSourceConverter}}"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                </Border>
+            </controls:ImageGroupBox>
+        </Grid>
+        
+        <Border Grid.Row="1"
+                BorderBrush="{StaticResource SeparatorBrush}"
+                BorderThickness="0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <controls:ImageButton Grid.Column="0"
+                                      MinWidth="90"
+                                      Margin="10"
+                                      HorizontalAlignment="Left"
+                                      Command="{Binding ExecuteRecipeCommand}"
+                                      Content="Execute"
+                                      ImageGeometryRight="{StaticResource RightArrowGeometry}"
+                                      ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}"
+                                      Style="{StaticResource HighlightedImageButton}"
+                                      Visibility="{Binding Path=IsRecipeExecuting, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                <controls:ImageButton Grid.Column="0"
+                                      MinWidth="90"
+                                      Margin="10"
+                                      HorizontalAlignment="Left"
+                                      Command="{Binding CancelRecipeCommand}"
+                                      Content="Cancel"
+                                      ImageGeometryRight="{StaticResource CloseGeometry}"
+                                      Style="{StaticResource RightImageButton}"
+                                      Visibility="{Binding Path=IsRecipeExecuting, Converter={converters:BooleanToVisibilityConverter}}" />
+                <Image Grid.Column="1"
+                       Margin="5"
+                       d:Source="{StaticResource ValidWithCircle}"
+                       Source="{Binding ExecutionStatus, Converter={viewModels:ExecutionStatusToImageConverter}}"
+                       Style="{StaticResource Icon}"
+                       ToolTip="{Binding ExecutionStatus}" />
+
+                <ProgressBar Grid.Column="2" Minimum="0" Maximum="{Binding TotalImages}"
+                             Value="{Binding ImageIndex}" Margin="10"
+                             Visibility="{Binding TotalImages, Converter={converters:IntToVisibilityConverter}}">
+                    <ProgressBar.Style>
+                        <Style TargetType="ProgressBar">
+                            <Style.Triggers>
+                                <DataTrigger Value="{x:Static exec:ExecutionStatus.Canceled}"
+                                             Binding="{Binding ExecutionStatus}">
+                                    <Setter Property="Foreground" Value="Gold" />
+                                </DataTrigger>
+                                <DataTrigger Value="{x:Static exec:ExecutionStatus.Failed}"
+                                             Binding="{Binding ExecutionStatus}">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ProgressBar.Style>
+                </ProgressBar>
+
+                <TextBlock Grid.Column="3" VerticalAlignment="Center"
+                           Visibility="{Binding TotalImages, Converter={converters:IntToVisibilityConverter}}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} / {1}">
+                            <Binding Path="ImageIndex" />
+                            <Binding Path="TotalImages" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <StackPanel Grid.Column="4"
+                            Margin="10"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Visibility="{Binding EnableCycling, Converter={converters:BooleanToVisibilityConverter}}">
+                    <controls:ImageButton MinWidth="90"
+                                          Command="{Binding StopCyclingCommand}"
+                                          Content="Stop"
+                                          ImageGeometryRight="{StaticResource StopGeometry}"
+                                          Style="{StaticResource RightImageButton}"
+                                          Visibility="{Binding Path=IsCycling, Converter={converters:BooleanToVisibilityConverter}}" />
+                    <controls:ImageButton MinWidth="90"
+                                          Command="{Binding StartCyclingCommand}"
+                                          Content="Cycling"
+                                          ImageGeometryRight="{StaticResource ReplayGeometry}"
+                                          ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}"
+                                          Style="{StaticResource HighlightedImageButton}"
+                                          Visibility="{Binding Path=IsCycling, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

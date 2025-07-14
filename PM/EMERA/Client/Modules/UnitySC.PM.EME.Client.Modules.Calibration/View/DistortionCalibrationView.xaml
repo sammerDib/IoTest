@@ -1,0 +1,109 @@
+﻿<UserControl
+    x:Class="UnitySC.PM.EME.Client.Modules.Calibration.View.DistortionCalibrationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"    
+    xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.Calibration.ViewModel"
+    d:DataContext="{d:DesignInstance Type=vm:DistortionCalibrationVM}"
+    d:DesignHeight="450"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <controls:ImageGroupBox ImageGeometry="{StaticResource GridGeometry}" 
+                                ImageGeometryBrush="{StaticResource IconsColor}" 
+                                Header="{Binding Name}"
+                                d:Header="Distortion Calibration">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <controls:ImageButton
+                    Margin="6"
+                    Command="{Binding StartDistortionCalibration}"
+                    Content="Start Distortion Calibration"
+                    ImageGeometry="{StaticResource PlayGeometry}"
+                    ImageGeometryBrush="{StaticResource IconsColor}" />
+
+                <!--  Result  Status  -->
+                <StackPanel
+                    Margin="0,5"
+                    Orientation="Horizontal"
+                    Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock Margin="4,0" Text="{Binding Result.Status.State}" />
+                    <TextBlock Text="{Binding Result.Status.Message}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}">
+
+                <TextBlock Text="Distortion Matrix: " />
+
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}, {1}, {2},">
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[0]" />
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[1]" />
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[2]" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}, {1}, {2},">
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[3]" />
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[4]" />
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[5]" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}, {1}, {2}">
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[6]" />
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[7]" />
+                            <Binding Path="Result.DistortionData.NewOptimalCameraMat[8]" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <controls:ImageButton Grid.Row="0" Grid.Column="0"
+              Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"
+              Command="{Binding SaveCalibration}" Content="Save"
+              ImageGeometry="{StaticResource SaveGeometry}"
+              ImageGeometryBrush="{StaticResource HighLightBrush}"
+              MinWidth="120"/>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding ValidationErrorMessage}" Margin="5,5,10,0" Visibility="{Binding ValidationErrorMessage, Converter={converters:EmptyStringToVisibilityConverter}}" Foreground="DarkRed" HorizontalAlignment="Right"></TextBlock>
+
+            </StackPanel>
+
+            <Grid Grid.Row="2" Background="{StaticResource HeaderLeftBackgroundBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="144" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                 <controls:ImageButton Grid.Row="2" Grid.Column="0" Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" Margin="10" HorizontalAlignment="Right"  VerticalContentAlignment="Center" Command="{Binding ValidateChoice}" MinWidth="120">VALIDATE</controls:ImageButton>
+            </Grid>
+
+        </Grid>
+    </controls:ImageGroupBox>
+</UserControl>

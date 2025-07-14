@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{26199698-F4B0-4215-9D0D-6BB213C7A24D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>UnitySC.PM.LIGHTSPEED.Service.Host</RootNamespace>
+    <AssemblyName>UnitySC.PM.LIGHTSPEED.Service.Host</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="LightspeedWindowsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LightspeedWindowsService.Designer.cs">
+      <DependentUpon>LightspeedWindowsService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="log.LIGHTSPEED.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Common\UnitySC.PM.Shared.Hardware.Common.csproj">
+      <Project>{ddad1006-f8e4-4904-9004-0810a47ca810}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Implementation\UnitySC.PM.Shared.Hardware.Service.Implementation.csproj">
+      <Project>{E7D74FE4-F983-439F-BF5E-BB548B08A498}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Implementation\UnitySC.PM.Shared.Status.Service.Implementation.csproj">
+      <Project>{f6a1a9a8-40b1-4015-a228-6f548edf8755}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53bd49c3-c5ce-4ead-8261-a95c2a003a5e}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.LIGHTSPEED.Data\UnitySC.PM.LIGHTSPEED.Data.csproj">
+      <Project>{13C4466F-F0E9-45BA-A0C3-646197857A88}</Project>
+      <Name>UnitySC.PM.LIGHTSPEED.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.LIGHTSPEED.Service.Implementation\UnitySC.PM.LIGHTSPEED.Service.Implementation.csproj">
+      <Project>{f60fa39c-8038-4cb8-b873-b643ea78338c}</Project>
+      <Name>UnitySC.PM.LIGHTSPEED.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.LIGHTSPEED.Service.Interface\UnitySC.PM.LIGHTSPEED.Service.Interface.csproj">
+      <Project>{8651902c-8d52-49c3-8ed0-a94e3fbd8a2d}</Project>
+      <Name>UnitySC.PM.LIGHTSPEED.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HardwareConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MvvmLightLibs">
+      <Version>5.4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="SimpleInjector">
+      <Version>5.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Unclassified.NetRevisionTask">
+      <Version>0.3.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

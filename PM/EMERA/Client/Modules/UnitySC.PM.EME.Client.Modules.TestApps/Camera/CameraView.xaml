@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestApps.Camera.CameraView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:image="clr-namespace:UnitySC.PM.EME.Client.Controls.Camera;assembly=UnitySC.PM.EME.Client.Controls"
+             xmlns:converterEme="clr-namespace:UnitySC.PM.EME.Client.Shared.Converter;assembly=UnitySC.PM.EME.Client.Shared"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:local="clr-namespace:UnitySC.PM.EME.Client.Modules.TestApps.Camera"
+             d:DataContext="{d:DesignInstance Type=local:CameraViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="480" d:DesignWidth="512">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="150" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <image:ZoombableImage ImageSource="{Binding Image, Converter={converterEme:ServiceImageToCachedBitmapSourceConverter}}"
+                                  CanvasWidth="{Binding FullImageWidth}" CanvasHeight="{Binding FullImageHeight}"
+                                  ImageCropArea="{Binding ImageCropArea}"
+                                  Scale="{Binding Zoom, Mode=OneWayToSource}"
+                                  CanvasTopLeftPosition="{Binding ImageReferentialOrigin, Mode=OneWayToSource}"
+                                  ImagePortion="{Binding ImagePortion, Mode=OneWayToSource}" />
+
+            <local:Ruler StartPoint="{Binding RulerStartPoint, Mode=OneWayToSource}"
+                         EndPoint="{Binding RulerEndPoint, Mode=OneWayToSource}"
+                         DistanceValueText="{Binding DistanceValueText}"
+                         Visibility="{
+                            Binding IsRulerActivated, 
+                            Converter={converters:BooleanToVisibilityConverter}
+                         }" />
+
+            <image:Scale ScaleLengthValue="{Binding ScaleTextValue}"
+                         Width="{Binding ScaleLengthInPixel}"
+                         VerticalAlignment="Bottom" Margin="30" />
+
+            <sharedControls:ImageToggleButton ImageGeometry="{StaticResource Size2CenteredGeometry}"
+                                              ToolTip="Ruler to measure distance and intensity profile."
+                                              IsEnabled="{Binding Image, Converter={converters:IsNotNullToBooleanConverter}}"
+                                              IsChecked="{Binding IsRulerActivated, Mode=OneWayToSource}"
+                                              VerticalAlignment="Top" HorizontalAlignment="Right"
+                                              Width="30" Margin="25, 5" Padding="1" />
+
+        </Grid>
+
+        <GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch"
+                      Visibility="{
+                        Binding IsRulerActivated, 
+                        Converter={converters:BooleanToVisibilityConverter}
+                      }" />
+
+        <local:ProfileGraph Points="{Binding IntensityPoints}"
+                            Maximum="{Binding Maximum}"
+                            Visibility="{
+                                Binding IsRulerActivated, 
+                                Converter={converters:BooleanToVisibilityConverter}
+                            }" 
+                            Grid.Row="2"/>
+    </Grid>
+    
+</UserControl>

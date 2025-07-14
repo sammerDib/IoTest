@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance.LiseHFView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"   
+             xmlns:PmEnum="clr-namespace:UnitySC.Shared.Data.Enum;assembly=UnitySC.Shared.Data"
+             xmlns:laser="clr-namespace:UnitySC.PM.Shared.Hardware.ClientProxy.Laser;assembly=UnitySC.PM.Shared.Hardware.ClientProxy"             
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <controls:ImageGroupBox Image="{StaticResource Position}" Header="Laser" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="130"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Info:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Laser temperature (C)" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding LaserTemperature}" IsEnabled="False"/>
+                        <TextBlock Grid.Column="3" Grid.Row="1" Text="Interlock" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="4" Grid.Row="1" Text="{Binding InterlockStatus}" IsEnabled="False"/>
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Crystal temperature (C)" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CrystalTemperature}" Margin="0,5,0,0" IsEnabled="False"/>
+
+                        <TextBlock Grid.Column="0" Grid.Row="5" Text="Measurement:" FontWeight="Bold" TextDecorations="Underline"  VerticalAlignment="Center" Margin="5,5,5,0"/>
+                        <TextBlock Grid.Column="0" Grid.Row="6" Text="Laser power ON" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding LaserPowerStatus}" IsEnabled="false"/>
+                    </Grid>
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:ImageButton Grid.Column="0" Grid.Row="1" Margin="0,5,2,5" Image="{StaticResource Play}" Content="Turn on" Command="{Binding PowerOnCommand}" />
+                        <controls:ImageButton  Grid.Column="1" Grid.Row="1" Margin="2,5,0,5" Image="{StaticResource Stop}" Content="Turn off" Command="{Binding PowerOffCommand}"/>
+                    </Grid>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource ResWaferWait}" Header="Shutter" Grid.Column="0" Grid.Row="3" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Info:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Shutter iris position" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Text="{Binding ShutterIrisPosition}" Margin="0,5,0,5" IsEnabled="False"/>
+                        <controls:ImageButton Grid.Column="3" Margin="0,5,2,0" Image="{StaticResource ConnectionOk}" Content="Open" Command="{Binding OpenShutterCommand}" />
+                        <controls:ImageButton Grid.Column="4" Margin="2,5,0,0" Image="{StaticResource ConnectionKo}" Content="Close" Command="{Binding CloseShutterCommand}"/>
+                    </Grid>
+
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource ResWaferNotProcess}" Header="Multi-position slider" Grid.Column="1" Grid.Row="0" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Position" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Margin="0,4,0,2" Width="70" Height="25" Text="{Binding BeamShaperPosition}" IsEnabled="false" ></TextBox>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Move position" VerticalAlignment="Center" Margin="0,5,0,0"></TextBlock>
+                        <!--<controls:ImageButton Grid.Row="1" Grid.Column="1" Margin="0"  Content="Pos 0" Command="{Binding AttenuationMoveAbsPosition0Command}" />
+                        <controls:ImageButton Grid.Row="1" Grid.Column="2" Margin="0"  Content="Pos 1" Command="{Binding AttenuationMoveAbsPosition1Command}" />
+                        <controls:ImageButton Grid.Row="1" Grid.Column="3" Margin="0"  Content="Pos 2" Command="{Binding AttenuationMoveAbsPosition2Command}" />
+                        <controls:ImageButton Grid.Row="1" Grid.Column="4" Margin="0"  Content="Pos 3" Command="{Binding AttenuationMoveAbsPosition3Command}" />-->
+                        <StackPanel Orientation="Horizontal"  Grid.Row="1" Grid.Column="1">
+                            <RadioButton x:Name="isPos0" GroupName="BeamShaperFlow" Content="Pos 0" Margin="0,5,10,0"                                    
+                                    IsChecked="{Binding Path=AttenuationPosition, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:ServoPosition.Pos0}}"/>
+                            <RadioButton x:Name="isPos1" GroupName="BeamShaperFlow" Content="Pos 1" Margin="0,5,10,0"                                    
+                                    IsChecked="{Binding Path=AttenuationPosition, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:ServoPosition.Pos1}}"/>
+                            <RadioButton x:Name="isPos2" GroupName="BeamShaperFlow" Content="Pos 2" Margin="0,5,10,0"                                    
+                                    IsChecked="{Binding Path=AttenuationPosition, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:ServoPosition.Pos2}}"/>
+                            <RadioButton x:Name="isPos3" GroupName="BeamShaperFlow" Content="Pos 3" Margin="0,5,0,0"                                    
+                                    IsChecked="{Binding Path=AttenuationPosition, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:ServoPosition.Pos3}}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2" Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="170"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:ImageButton Grid.Column="0" Margin="2" Image="{StaticResource Home}" Content="Home" Command="{Binding AttenuationHomePositionCommand}" />
+                    </Grid>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource Module}" Header="Servo motor" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Position (deg)" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,4,0,2" Width="80" Height="25" Text="{Binding FastAttenuationPosition}" IsEnabled="false" ></TextBox>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Position absolute (deg)" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,4,0,2" Width="80" Text="{Binding FastAttenuationAbsPositionSetpoint}" IsEnabled="true"></TextBox>
+                        <controls:ImageButton Grid.Column="2" Grid.Row="1" Margin="10,2,0,2" Width="100" Height="25" Image="{StaticResource Valid}" Content="Move" Command="{Binding FastAttenuationMoveAbsPositionCommand}"/>
+                    </Grid>
+                </Grid>
+            </controls:ImageGroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

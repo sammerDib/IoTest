@@ -1,0 +1,583 @@
+﻿<UserControl x:Class="UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance.RotatorsKitCalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"   
+             xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:PmEnum="clr-namespace:UnitySC.Shared.Data.Enum;assembly=UnitySC.Shared.Data"
+             xmlns:laser="clr-namespace:UnitySC.PM.Shared.Hardware.ClientProxy.Laser;assembly=UnitySC.PM.Shared.Hardware.ClientProxy" xmlns:behaviors="clr-namespace:UnitySC.Shared.UI.Behaviors;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="910" d:DesignWidth="1300">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <controls:ImageGroupBox Image="{StaticResource Position}" Header="Laser" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Info:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Laser temperature (C)" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding LaserTemperature}" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Grid.Row="1" Text="PSU temperature (C)" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="4" Grid.Row="1" Text="{Binding PsuTemperature}" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Interlock" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding InterlockStatus}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                        <TextBlock Grid.Column="0" Grid.Row="5" Text="Measurement:" FontWeight="Bold" TextDecorations="Underline"  VerticalAlignment="Center" Margin="5,5,5,0"/>
+                        <TextBlock Grid.Column="0" Grid.Row="6" Text="Power feadback (mW)" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding PowerLaser}" IsEnabled="false"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Power (mW)" Width="70" Margin="5" VerticalAlignment="Center" FontWeight="Bold" />
+                        <xctk:DoubleUpDown Grid.Column="1" Minimum="0" Margin="1,5,1,5" Maximum="{Binding ROI.WaferRadius}" Increment="1" Value="{Binding PowerSetpoint, Mode=TwoWay}" MinWidth="110" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <controls:ImageButton Grid.Column="2" Margin="10,0,0,2" Image="{StaticResource Valid}" Content="Apply" Command="{Binding ApplyPowerCommand}" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Current (%)" Width="70" Margin="5" VerticalAlignment="Center" FontWeight="Bold" />
+                        <xctk:DoubleUpDown Grid.Column="1" Minimum="0" Margin="1,5,1,5" Maximum="{Binding ROI.WaferRadius}" Increment="1" Value="{Binding CurrentSetpoint, Mode=TwoWay}" MinWidth="110"/>
+                        <controls:ImageButton Grid.Column="2" Margin="10,2,0,0" Image="{StaticResource Valid}" Content="Apply" Command="{Binding ApplyCurrentCommand}" MinWidth="100"/>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:ImageButton Grid.Column="0" Grid.Row="1" Margin="0,5,2,5" Image="{StaticResource Play}" Content="Turn on" Command="{Binding PowerOnCommand}" />
+                        <controls:ImageButton  Grid.Column="1" Grid.Row="1" Margin="2,5,0,5" Image="{StaticResource Stop}" Content="Turn off" Command="{Binding PowerOffCommand}"/>
+                    </Grid>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource ResWaferNotProcess}" Header="Rotary stages" Grid.Column="0" Grid.Row="3" Grid.RowSpan="1" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Position (deg)" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Row="0" Margin="190,0,109,0" Width="80" Height="25" Text="{Binding BeamShaperPosition}" IsEnabled="false" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Position absolute (deg)" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,4,0,2" Height="25" Width="80" Text="{Binding AbsPositionSetpoint}" IsEnabled="true" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <controls:ImageButton Grid.Column="2" Grid.Row="1" Margin="10,2,0,0" Width="100" Height="25" Image="{StaticResource Valid}" Content="Move" Command="{Binding MoveAbsPositionCommand}" />
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:ImageButton Grid.Column="0" Margin="2" Image="{StaticResource Home}" Content="Home" Command="{Binding HomePositionCommand}" />
+                        <StackPanel Orientation="Horizontal"  Grid.Row="0" Grid.Column="3">
+                            <RadioButton x:Name="isAttenuation" GroupName="BeamShaperFlow" Content="Attenuation" VerticalAlignment="Center"                                     
+                                    IsChecked="{Binding Path=BeamShaperFlow, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:BeamShaperFlow.Attenuation}}"/>
+                            <RadioButton x:Name="isPolarisation" GroupName="BeamShaperFlow" Content="Polarisation"  VerticalAlignment="Center" Margin="15,0,0,0"                                   
+                                    IsChecked="{Binding Path=BeamShaperFlow, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:BeamShaperFlow.Polarisation}}"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource Info}" Header="Characterization" Grid.Column="0" Grid.Row="5" Grid.RowSpan="2" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="HS" Margin="0,10,0,0" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="HT" Margin="0,10,0,0" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Text="Polarisation (deg) :" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="P" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="S" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding HSP_PolarAngle}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding HTP_PolarAngle}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding HSS_PolarAngle}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="4" Text="{Binding HTS_PolarAngle}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" Text="RFactors :" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="P" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock Grid.Row="5" Grid.Column="1" Text="S" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding HSP_RFactor}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Row="4" Grid.Column="4" Text="{Binding HTP_RFactor}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding HSS_RFactor}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Row="5" Grid.Column="4" Text="{Binding HTS_RFactor}" Margin="0,10,0,10" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                    <!--<controls:ImageButton Grid.Row="6" Grid.Column="7" Margin="5,4,0,2" Height="25" Image="{StaticResource Valid}" Content="Apply" Command="{Binding WideSetOutputVoltageCommand}"/>-->
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource ResWaferNotProcess}" Header="MPPCs" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="Wide" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Grid.Column="3" Grid.Row="0" Text="Narrow" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Voltage status" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding MppcWideStateSignals}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="1" Text="{Binding MppcNarrowStateSignals}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Voltage (V)" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding MppcWideOutputVoltage}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding MppcNarrowOutputVoltage}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="3" Text="Current (mA)" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding MppcWideOutputCurrent}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="3" Text="{Binding MppcNarrowOutputCurrent}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Temperature (°C)" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding MppcWideSensorTemperature}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding MppcNarrowSensorTemperature}" Margin="0,5,0,0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="5" Text="Turn On/Off soft" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <ToggleButton x:Name="playButtonWide" Grid.Column="1" Grid.Row="5" Margin="0,10,0,5" Command="{Binding WidePowerOnCommand}" CommandParameter="{Binding ElementName=playButtonWide, Path=IsChecked}" IsChecked="True"
+                              BorderThickness="2">
+                        <Grid Height="20">
+                            <Image Source="{StaticResource Play}" Visibility="{Binding ElementName=playButtonWide, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+                            <Image Source="{StaticResource Stop}" Visibility="{Binding ElementName=playButtonWide, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                    </ToggleButton>
+                    <ToggleButton x:Name="playButtonNarrow" Grid.Column="3" Grid.Row="5"  Margin="0,10,0,5" Command="{Binding NarrowPowerOnCommand}" CommandParameter="{Binding ElementName=playButtonNarrow, Path=IsChecked}" IsChecked="True"
+                              BorderThickness="2">
+                        <Grid Height="20">
+                            <Image Source="{StaticResource Play}" Visibility="{Binding ElementName=playButtonNarrow, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+                            <Image Source="{StaticResource Stop}" Visibility="{Binding ElementName=playButtonNarrow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                    </ToggleButton>
+
+                    <TextBlock Grid.Column="0" Grid.Row="6" Text="Calibration:" FontWeight="Bold" TextDecorations="Underline"  VerticalAlignment="Center" Margin="5,10,5,0"/>
+                    <TextBlock Grid.Column="0" Grid.Row="7" Text="Wide voltage (V)" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="7" Margin="0,4,0,2" Text="{Binding WideOutputVoltage}" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <controls:ImageButton Grid.Column="2" Grid.Row="7" Grid.ColumnSpan="2" Margin="5,4,0,2" Height="25" Image="{StaticResource Valid}" Content="Apply" Command="{Binding WideSetOutputVoltageCommand}"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="8" Text="Narrow voltage (V)" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <TextBox Grid.Column="1" Grid.Row="8" Margin="0,4,0,2" Text="{Binding NarrowOutputVoltage}" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <controls:ImageButton Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="2"  Margin="5,4,0,2" Height="25" Image="{StaticResource Valid}" Content="Apply" Command="{Binding NarrowSetOutputVoltageCommand}"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="9" Text="Relay" VerticalAlignment="Center" Margin="0,5,5,0"/>
+                    <ToggleButton x:Name="playButtonRelay" Grid.Column="1" Grid.Row="9" Grid.ColumnSpan="3" Width="150" Margin="0,10,0,5" Command="{Binding MppcManageRelayCommand}" CommandParameter="{Binding ElementName=playButtonRelay, Path=IsChecked}"
+                              BorderThickness="2">
+                        <Grid Height="20">
+                            <Image Source="{StaticResource Play}" Visibility="{Binding ElementName=playButtonRelay, Path=IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+                            <Image Source="{StaticResource Stop}" Visibility="{Binding ElementName=playButtonRelay, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Grid>
+                    </ToggleButton>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource ResWaferWait}" Header="Shutter" Grid.Column="1" Grid.Row="3" Grid.RowSpan="2" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Info:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Shutter iris position" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Height="25" Text="{Binding ShutterIrisPosition}" Margin="0,5,0,5" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <controls:ImageButton Name="ShutterOpen" Grid.Column="3" Margin="0,0,2,0" Image="{StaticResource ConnectionOk}" Content="Open" Command="{Binding OpenShutterCommand}">
+                            <controls:ImageButton.Style>
+                                <Style TargetType="controls:ImageButton" BasedOn="{StaticResource {x:Type controls:ImageButton}}">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsShutterMonitoringRunning}" Value="true">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:ImageButton.Style>
+                        </controls:ImageButton>
+                        <controls:ImageButton Grid.Column="4" Margin="2,0,0,0" Image="{StaticResource ConnectionKo}" Content="Close" Command="{Binding CloseShutterCommand}">
+                            <controls:ImageButton.Style>
+                                <Style TargetType="controls:ImageButton" BasedOn="{StaticResource {x:Type controls:ImageButton}}">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsShutterMonitoringRunning}" Value="true">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:ImageButton.Style>
+                        </controls:ImageButton>
+                    </Grid>
+
+                    <TextBlock Grid.Row="2" Text="Monitoring:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,10,5,0"/>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Number of cycles" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox Grid.Column="1" Width="80" Height="25" Text="{Binding NumberOfCycles}" Margin="-1,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    </Grid>
+                    <Grid Grid.Row="5" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Row="5" Grid.Column="0" Margin="2" HorizontalAlignment="Left" >
+                            <controls:ImageButton Content="Abort" Image="{StaticResource Stop}" Command="{Binding AbortShutterMonitoringCommand}"
+                                          Visibility="{Binding IsShutterMonitoringRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <controls:ImageButton Content="Run" Image="{StaticResource Play}" Command="{Binding RunShutterMonitoringCommand}"
+                                          Visibility="{Binding IsShutterMonitoringRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="79*"/>
+                                <ColumnDefinition Width="212*"/>
+                            </Grid.ColumnDefinitions>
+                            <ProgressBar Height="30" Margin="4,4,4,5" Minimum="0" Maximum="100" Value="{Binding ShutterMonitoringIncrement}" Grid.ColumnSpan="2" />
+                            <Label Content="{Binding IncLabelShutterMonitoring}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Margin="61,0,0,0" />
+                        </Grid>
+                        <TextBox Grid.Column="2" Text="{Binding StepShutterMonitoring}" Margin="4" IsEnabled="false" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    </Grid>
+
+
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource Running}" Header="LUT calibrate settings" Grid.Column="1" Grid.Row="5" Grid.RowSpan="2" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Range:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="HS angle (deg)" Margin="0,10,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding HsRangeCalibrate.CalibrateStartAngle}" Margin="10,10,10,10" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="to" Margin="0,10,0,10"/>
+                    <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding HsRangeCalibrate.CalibrateEndAngle}" Margin="10,10,10,10" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="4" Text="by" Margin="0,10,0,10"/>
+                    <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding HsRangeCalibrate.AngleSteps}" Margin="10,10,0,10" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="6" Text="steps" Margin="10,10,30,10"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="HT angle (deg)" Margin="0,10,0,10"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding HtRangeCalibrate.CalibrateStartAngle}" Margin="10,10,10,10" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="to" Margin="0,10,0,10"/>
+                    <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding HtRangeCalibrate.CalibrateEndAngle}" Margin="10,10,10,10" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="4" Text="by" Margin="0,10,0,10"/>
+                    <TextBox Grid.Row="2" Grid.Column="5" Text="{Binding HtRangeCalibrate.AngleSteps}" Margin="10,10,0,10" IsEnabled="true" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="6" Text="steps" Margin="10,10,30,10"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Parameter:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Number of averages" Margin="0,10,0,10" Grid.ColumnSpan="2"/>
+                    <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding NumberAverages}" Margin="-10,10,10,10" IsEnabled="true" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Output:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,5,5,0"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="File name" Margin="0,10,0,10"/>
+                    <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding SaveFilename}" Margin="0,10,10,10" IsEnabled="true" Grid.ColumnSpan="3"/>
+                    <TextBlock Grid.Row="6" Grid.Column="5" Text="{Binding DefaultDirectory}" Margin="0,10,0,10" Grid.ColumnSpan="2"/>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource Module}" Header="Optical powermeters" Grid.Column="2" Grid.Row="0" Grid.RowSpan="5" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="1" Text="HS" VerticalAlignment="Center" HorizontalAlignment="Center" Height="14" Width="18"/>
+                    <TextBlock Grid.Column="3" Text="HT" VerticalAlignment="Center" HorizontalAlignment="Center" Height="14" Width="16"/>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Device:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,0,5,0" Height="14"/>
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Responsivity (mA/W)" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding PowermeterEditResponsivityHs}" KeyDown="OnKeyDownHandler" Margin="0,5,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    <TextBox Grid.Column="3" Grid.Row="2" Text="{Binding PowermeterEditResponsivityHt}" KeyDown="OnKeyDownHandler" Margin="0,5,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="3" Text="Auto range" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"></TextBlock>
+                    <CheckBox Grid.Column="1" Grid.Row="3" x:Name="checkBoxAutoRangeHs" IsChecked="{Binding PowermeterHsAutoRangeIsEnabled}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="16" Width="16"/>
+                    <CheckBox Grid.Column="3" Grid.Row="3" x:Name="checkBoxAutoRangeHt" IsChecked="{Binding PowermeterHtAutoRangeIsEnabled}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="16" Width="16"/>
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Ranges" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"></TextBlock>
+                    <ComboBox Grid.Column="1" Grid.Row="4" ItemsSource="{Binding PowermeterRangesHs}" DisplayMemberPath="Range" SelectedIndex ="{Binding SelectedRangeHs}" />
+                    <ComboBox Grid.Column="3" Grid.Row="4" ItemsSource="{Binding PowermeterRangesHt}" DisplayMemberPath="Range" SelectedIndex ="{Binding SelectedRangeHt}" />
+                    <TextBlock Grid.Column="0" Grid.Row="5" Text="Zero adjust (pW)" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"></TextBlock>
+                    <Grid Grid.Column="1" Grid.Row="5" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:ImageButton Grid.Column="0" Margin="0,0,-1,0" Height="25" Image="{StaticResource ExportMetablock}" Command="{Binding StartDarkAdjustHsCommand}" Grid.ColumnSpan="2"/>
+                        <TextBox Grid.Column="1" Text="{Binding PowermeterDarkOffsetHs}" Margin="7,0,-78,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="False"/>
+                    </Grid>
+                    <Grid Grid.Column="3" Grid.Row="5" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <controls:ImageButton Grid.Column="0" Margin="0,0,-1,0" Height="25" Image="{StaticResource ExportMetablock}" Command="{Binding StartDarkAdjustHtCommand}" Grid.ColumnSpan="2"/>
+                        <TextBox Grid.Column="1" Text="{Binding PowermeterDarkOffsetHt}" Margin="7,0,-78,1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="False"/>
+                    </Grid>
+
+                    <TextBlock Grid.Column="0" Grid.Row="6" Text="Measurement:" FontWeight="Bold" TextDecorations="Underline" VerticalAlignment="Center" Margin="5,0,5,0" Height="14"/>
+                    <TextBlock Grid.Column="0" Grid.Row="7" Text="Responsivity (mA/W)" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"/>
+                    <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding PowermeterResponsivityHs}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding PowermeterResponsivityHt}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="8" Text="Raw power (mW)" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"/>
+                    <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding PowermeterRawPowerHs}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="8" Text="{Binding PowermeterRawPowerHt}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="9" Text="Calc power (mW)" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"/>
+                    <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding PowermeterCalcPowerHs}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="9" Text="{Binding PowermeterCalcPowerHt}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="10" Text="Current (mA)" VerticalAlignment="Center" Margin="0,0,5,0" Height="14"/>
+                    <TextBox Grid.Column="1" Grid.Row="10" Text="{Binding PowermeterCurrentHs}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <TextBox Grid.Column="3" Grid.Row="10" Text="{Binding PowermeterCurrentHt}" Margin="0,5,0,0" IsEnabled="false" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource InsertModuleAfter}" Header="IOs summary" Grid.Column="2" Grid.Row="5" Grid.RowSpan="2" >
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="5">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <DataGrid x:Name="InputList"
+                                ItemsSource="{Binding InputList}"
+                                AutoGenerateColumns="False"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                IsReadOnly="True" VerticalAlignment="TOP"
+                                Grid.Column="0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Input Name" Binding="{Binding Name}" />
+                                    <DataGridTemplateColumn Header="State">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Value, UpdateSourceTrigger=PropertyChanged}" IsEnabled=" false" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <DataGrid x:Name="OutputList"
+                                ItemsSource="{Binding OutputList}"
+                                AutoGenerateColumns="False"
+                                SelectionMode="Single"
+                                SelectionUnit="FullRow"
+                                IsReadOnly="True"  VerticalAlignment="TOP"
+                                Grid.Column="1">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Output Name" Binding="{Binding Name}" />
+                                    <DataGridTemplateColumn Header="State">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:ImageGroupBox>
+        </Grid>
+        <controls:ImageGroupBox Image="{StaticResource Stats}" Header="CusLUT calibrate" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Column="0" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                        <RadioButton x:Name="isCustomCalib" GroupName="CalibrationType" Content="Custom LUT calibrate" Margin="10,0,10,10"                                    
+                                    IsChecked="{Binding Path=CalibrationType, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:ECalibrationType.Custom}}"/>
+                        <RadioButton x:Name="isAutoCalib" GroupName="CalibrationType" Content="Generate LUT attenuation xml" Margin="10,0,0,10"                                    
+                                    IsChecked="{Binding Path=CalibrationType, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:ECalibrationType.Auto}}"/>
+                    </StackPanel>
+                    <!--<StackPanel Orientation="Horizontal" Grid.Column="3">
+                        <RadioButton x:Name="isHs" GroupName="PowerIlluminationFlow" Content="High Sensitivity" Margin="0,0,10,10"                                    
+                                    IsChecked="{Binding Path=PowerIlluminationFlow, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:PowerIlluminationFlow.HS}}"/>
+                        <RadioButton x:Name="isHt" GroupName="PowerIlluminationFlow" Content="High Throughput" Margin="10,0,0,10"                                    
+                                    IsChecked="{Binding Path=PowerIlluminationFlow, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static PmEnum:PowerIlluminationFlow.HT}}"/>
+                    </StackPanel>-->
+                    <StackPanel  Grid.Column="2" >
+                        <ComboBox Name="cb_lutName" ItemsSource="{Binding LutNames}" DisplayMemberPath="Name" SelectedIndex ="{Binding SelectedIndexLutName}" IsEnabled="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="1" CornerRadius="2,2,5,5" BorderThickness="1,1,1,1" BorderBrush="{StaticResource PanelBorderColor}" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0" Margin="2" HorizontalAlignment="Left" >
+                            <controls:ImageButton Content="Abort" Image="{StaticResource Stop}" Command="{Binding AbortCalibrateCommand}"
+                                          Visibility="{Binding IsCalibrateRunning, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <controls:ImageButton Content="Run" Image="{StaticResource Play}" Command="{Binding RunCalibrateCommand}"
+                                          Visibility="{Binding IsCalibrateRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <ProgressBar Height="30" Margin="4" Minimum="0" Maximum="100" Value="{Binding Increment}" />
+                            <Label Content="{Binding IncLabel}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                        <TextBox Grid.Column="2" Text="{Binding Step}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="4" IsEnabled="false" Height="30" />
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </controls:ImageGroupBox>
+    </Grid>
+</UserControl>

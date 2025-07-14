@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.Calibration.View.CameraMagnificationCalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.Calibration.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"        
+             d:DataContext="{d:DesignInstance Type=vm:CameraMagnificationCalibrationVM}"
+             d:DesignHeight="450"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <controls:ImageGroupBox ImageGeometry="{StaticResource CameraGeometry}" 
+                                ImageGeometryBrush="{StaticResource IconsColor}" 
+                                Header="{Binding Name}"
+                                d:Header="Camera Magnification">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Background="{StaticResource PanelBackground}">
+                <controls:ImageButton Margin="6"
+                                      Command="{Binding MeasurePixelSize}"
+                                      Content="Measure pixel size"
+                                      ImageGeometry="{StaticResource PlayGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}" />
+                <StackPanel Margin="0,5"
+                            Orientation="Horizontal"
+                            Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}">
+                    <TextBlock Margin="4,0"
+                               d:Text="Success"
+                               Text="{Binding Result.Status.State}" />
+                    <TextBlock Text="{Binding Result.Status.Message}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}">
+                    <TextBlock d:Text="Measured pixel size: 2.20 µm/pixel"
+                               Text="{Binding Path=Result.PixelSize.Micrometers, StringFormat='Measured pixel size: {0:F2} µm/pixel'}"
+                               Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}" />
+                    <Image Source="{StaticResource WarningWithCircle}"
+                           Style="{StaticResource Icon}"
+                           ToolTip="Pixel size should be at 1% close to the target"
+                           Visibility="{Binding IsGreenMarkDisplayed, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                    <Image Source="{StaticResource ValidWithCircle}"
+                           Style="{StaticResource Icon}"
+                           ToolTip="Measured pixel size match with the target !"
+                           Visibility="{Binding IsGreenMarkDisplayed, Converter={converters:BooleanToVisibilityConverter}}" />
+                </StackPanel>
+
+                <TextBlock d:Text="Target pixel size: 2.00 µm/pixel"
+                           Text="{Binding Path=TargetPixelSize.Micrometers, StringFormat='Target pixel size: {0:F2} µm/pixel'}"
+                           Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}" />
+                <controls:ImageButton Grid.Row="0" Grid.Column="1" Width="100"
+              Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"
+              Command="{Binding SaveCalibration}" Content="Save"
+              ImageGeometry="{StaticResource SaveGeometry}"
+              ImageGeometryBrush="{StaticResource HighLightBrush}"
+              MinWidth="120"/>
+
+            </StackPanel>
+            <Grid Grid.Row="1" Background="{StaticResource HeaderLeftBackgroundBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="144" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding ValidationErrorMessage}" Margin="5,5,10,0" Visibility="{Binding ValidationErrorMessage, Converter={converters:EmptyStringToVisibilityConverter}}" Foreground="DarkRed" HorizontalAlignment="Right"></TextBlock>
+                <controls:ImageButton Grid.Row="2" Grid.Column="0" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource ButtonForegroundBrush}" Command="{Binding SkipCommand}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="120">Skip</controls:ImageButton>
+                <controls:ImageButton Grid.Row="2" Grid.Column="1" Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" Margin="10" HorizontalAlignment="Right"  VerticalContentAlignment="Center" Command="{Binding ValidateChoice}" MinWidth="120">VALIDATE</controls:ImageButton>
+            </Grid>
+            <xctk:BusyIndicator BusyContent="{Binding BusyMessage}"
+                            DisplayAfter="0"
+                            IsBusy="{Binding IsBusy}">
+                <xctk:BusyIndicator.BusyContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="4">
+                            <TextBlock Margin="6"
+                                   HorizontalAlignment="Center"
+                                   Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.BusyMessage}" />
+                            <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Cancel}"
+                                Content="Cancel" />
+                        </StackPanel>
+                    </DataTemplate>
+                </xctk:BusyIndicator.BusyContentTemplate>
+            </xctk:BusyIndicator>
+        </Grid>
+    </controls:ImageGroupBox>
+</UserControl>

@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestAlgo.View.AutoFocusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.TestAlgo.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:AutoFocusVM}"
+             d:DesignHeight="450" d:DesignWidth="350">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Style="{StaticResource FormGrid}">
+        <controls:ImageGroupBox ImageGeometry="{StaticResource CameraGeometry}"
+                                ImageGeometryBrush="{StaticResource IconsColor}"
+                                Header="{Binding Name}">
+            <StackPanel Orientation="Vertical">
+                <Label Content="Camera Autofocus:"
+                       FontSize="16" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Scan Range" />
+                    <ComboBox ItemsSource="{Binding ScanRanges}"
+                              SelectedItem="{Binding SelectedRange}"
+                              Width="100" />
+                </StackPanel>
+                <controls:ImageButton ImageGeometry="{StaticResource PlayGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}"
+                                      Content="Start Camera Autofocus"
+                                      Command="{Binding StartCameraAutoFocus}"
+                                      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" />
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding CameraAutoFocusResult, Converter={StaticResource NullToVisibilityConverter}}"
+                            Margin="0,5">
+                    <TextBlock Text="{Binding CameraAutoFocusResult.Status.State}" Margin="4,0" />
+                    <TextBlock Text="{Binding CameraAutoFocusResult.Status.Message}" />
+                </StackPanel>
+                <StackPanel Visibility="{Binding CameraAutoFocusResult, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock Text="{Binding Path=CameraAutoFocusResult.ZPosition, StringFormat='Z Position at focus: {0}mm'}" />
+                </StackPanel>
+                
+                <Separator />
+
+                <Label Content="Distance Sensor Autofocus:"
+                       FontSize="16" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Target Distance" />
+                    <TextBox Text="{Binding TargetDistance}" MinWidth="50" />
+                </StackPanel>
+                <controls:ImageButton ImageGeometry="{StaticResource PlayGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}"
+                                      Content="Start Distance Sensor Autofocus"
+                                      Command="{Binding StartDistanceSensorAutoFocus}"
+                                      HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" />
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding DistanceSensorAutoFocusResult, Converter={StaticResource NullToVisibilityConverter}}"
+                            Margin="0,5">
+                    <TextBlock Text="{Binding DistanceSensorAutoFocusResult.Status.State}" Margin="4,0" />
+                    <TextBlock Text="{Binding DistanceSensorAutoFocusResult.Status.Message}" />
+                </StackPanel>
+                <StackPanel Visibility="{Binding DistanceSensorAutoFocusResult, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock Text="{Binding Path=DistanceSensorAutoFocusResult.Z, StringFormat='Z Position at focus: {0}mm'}" />
+                </StackPanel>
+
+            </StackPanel>
+        </controls:ImageGroupBox>
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true"
+                            BusyContent="{Binding BusyMessage}"
+                            DisplayAfter="0">
+            <xctk:BusyIndicator.BusyContentTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="4">
+                        <TextBlock Margin="6"
+                                   HorizontalAlignment="Center"
+                                   Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.BusyMessage}" />
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.CancelCommand}"
+                                Content="Cancel" />
+                    </StackPanel>
+                </DataTemplate>
+            </xctk:BusyIndicator.BusyContentTemplate>
+        </xctk:BusyIndicator>
+    </Grid>
+</UserControl>

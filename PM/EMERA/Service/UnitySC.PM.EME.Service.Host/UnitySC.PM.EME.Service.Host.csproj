@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{108F65A6-9744-4F59-B70D-15EC24C5098B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>UnitySC.PM.EME.Service.Host</RootNamespace>
+    <AssemblyName>UnitySC.PM.EME.Service.Host</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>PMServer.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceProcess" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationRunner.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ConsoleSignalHandler.cs" />
+    <Compile Include="EmeServer.cs" />
+    <Compile Include="EMEServiceConfigurationManager.cs" />
+    <Compile Include="EmeWindowsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EmeWindowsService.Designer.cs">
+      <DependentUpon>EmeWindowsService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorHandler.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5c0a-4f7e-a355-8d03680b3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.PM.Service.Interface\UnitySC.Shared.Dataflow.PM.Service.Interface.csproj">
+      <Project>{2F5F6FB2-6DFC-4FAC-891E-3BA88F3B7A33}</Project>
+      <Name>UnitySC.Shared.Dataflow.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Proxy\UnitySC.Shared.Dataflow.Proxy.csproj">
+      <Project>{C1EBE8D6-7253-4A2E-85C1-E05D0190984F}</Project>
+      <Name>UnitySC.Shared.Dataflow.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj">
+      <Project>{468DB3CC-73CB-46B8-94F2-5829D24AF3AA}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Implementation\UnitySC.Shared.TC.PM.Service.Implementation.csproj">
+      <Project>{AA51C330-3024-4106-ABD9-19F194DB9218}</Project>
+      <Name>UnitySC.Shared.TC.PM.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Interface\UnitySC.Shared.TC.PM.Service.Interface.csproj">
+      <Project>{D4E1FE6A-B948-4F37-942D-F2C03B598510}</Project>
+      <Name>UnitySC.Shared.TC.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\Service\UnitySC.Shared.TC.Shared.Service.Interface\UnitySC.Shared.TC.Shared.Service.Interface.csproj">
+      <Project>{33001885-19d0-466e-88a9-5024983e8397}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79F7E968-C5FD-4307-9127-C9C96691E505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.FDC.Interface\UnitySC.Shared.FDC.Interface.csproj">
+      <Project>{8A288ABB-F8C5-40B3-ABEC-051409043B7F}</Project>
+      <Name>UnitySC.Shared.FDC.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.FDC\UnitySC.Shared.FDC.csproj">
+      <Project>{3F3CC7E4-7DE0-40B8-8C4F-096B5F1E0CDA}</Project>
+      <Name>UnitySC.Shared.FDC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Proxy\UnitySC.Shared.Proxy.csproj">
+      <Project>{90BDBE2A-B307-4FE9-95AB-09A0673C2345}</Project>
+      <Name>UnitySC.Shared.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Implementation\UnitySC.PM.Shared.Flow.Implementation.csproj">
+      <Project>{80484A41-7523-430E-B56E-1433457DA5FB}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Common\UnitySC.PM.Shared.Hardware.Common.csproj">
+      <Project>{ddad1006-f8e4-4904-9004-0810a47ca810}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Core\UnitySC.PM.Shared.Hardware.Core.csproj">
+      <Project>{0b138ae8-3243-4d88-867f-3111dd8fb6ff}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Implementation\UnitySC.PM.Shared.Hardware.Service.Implementation.csproj">
+      <Project>{e7d74fe4-f983-439f-bf5e-bb548b08a498}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04ad1c23-71c2-46c4-880e-bc5cc2541da4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Implementation\UnitySC.PM.Shared.Status.Service.Implementation.csproj">
+      <Project>{f6a1a9a8-40b1-4015-a228-6f548edf8755}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53bd49c3-c5ce-4ead-8261-a95c2a003a5e}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Implementation\UnitySC.PM.Shared.UserManager.Service.Implementation.csproj">
+      <Project>{72d98d6f-3dc3-4148-a141-b2ad4c17c9db}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Interface\UnitySC.PM.Shared.UserManager.Service.Interface.csproj">
+      <Project>{606809fe-7dff-4ed0-82a9-eeb525a97bd8}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hardware\UnitySC.PM.EME.Hardware\UnitySC.PM.EME.Hardware.csproj">
+      <Project>{edd38f09-9da4-4e8b-b388-fd13176eec37}</Project>
+      <Name>UnitySC.PM.EME.Hardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TC\UnitySC.PM.EME.TC\UnitySC.PM.EME.TC.csproj">
+      <Project>{4f675830-79d2-41c7-bee1-9daebca35c75}</Project>
+      <Name>UnitySC.PM.EME.TC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.Service.Core.Recipe\UnitySC.PM.EME.Service.Core.Recipe.csproj">
+      <Project>{18E0C603-DEDC-40B3-84D6-AA1F21F31F7B}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Recipe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.EME.Service.Core.Calibration\UnitySC.PM.EME.Service.Core.Calibration.csproj">
+      <Project>{94336578-b961-47e9-a74d-d7adfef5b129}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Calibration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.EME.Service.Core.Context\UnitySC.PM.EME.Service.Core.Context.csproj">
+      <Project>{E3C63C0D-1A89-496D-9E5A-8DF038988E75}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.EME.Service.Core.Referentials\UnitySC.PM.EME.Service.Core.Referentials.csproj">
+      <Project>{C479E5B7-73B7-4A22-8790-74592E2F35CB}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Referentials</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.EME.Service.Core.Shared\UnitySC.PM.EME.Service.Core.Shared.csproj">
+      <Project>{99e63fee-1a70-48df-bf4b-7fa9b549970e}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.EME.Service.Implementation\UnitySC.PM.EME.Service.Implementation.csproj">
+      <Project>{7D23C8BA-0743-4225-A265-1BE02B0F9B9E}</Project>
+      <Name>UnitySC.PM.EME.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.EME.Service.Interface\UnitySC.PM.EME.Service.Interface.csproj">
+      <Project>{010D57AA-CFB3-4BCC-857C-15DB015290B7}</Project>
+      <Name>UnitySC.PM.EME.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector">
+      <Version>5.4.6</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PMServer.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo "Post build event"
+echo "--------------------------------------"  
+echo "Copy service configuration and calibration files"
+echo "--------------------------------------"  
+echo "Configuration and calibration: $(SolutionDir)_ServiceConfigurationAndCalibration*"
+echo "Destination: $(ProjectDir)bin"
+xcopy  "$(SolutionDir)_ServiceConfigurationAndCalibration" "$(ProjectDir)bin" /Y /E  /D</PostBuildEvent>
+  </PropertyGroup>
+</Project>

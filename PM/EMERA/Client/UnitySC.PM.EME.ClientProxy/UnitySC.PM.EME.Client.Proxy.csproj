@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{D344632E-77E6-402A-AEF1-5590905F08C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.EME.Client.Proxy</RootNamespace>
+    <AssemblyName>UnitySC.PM.EME.Client.Proxy</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algo\AlgoSupervisor.cs" />
+    <Compile Include="Axes\AxesVM.cs" />
+    <Compile Include="Axes\Increment.cs" />
+    <Compile Include="Axes\EmeraMotionAxesSupervisor.cs" />
+    <Compile Include="Axes\Position.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Calibration\CalibrationSupervisor.cs" />
+    <Compile Include="Camera\CameraBench.cs" />
+    <Compile Include="Camera\CameraSupervisorEx.cs" />
+    <Compile Include="Chiller\ChangedMessages.cs" />
+    <Compile Include="Chiller\ChillerSupervisor.cs" />
+    <Compile Include="Chiller\ChillerViewModel.cs" />
+    <Compile Include="Chuck\ChangedMessages.cs" />
+    <Compile Include="Chuck\ChuckStatus.cs" />
+    <Compile Include="Chuck\ChuckSupervisorEx.cs" />
+    <Compile Include="Chamber\ChamberSupervisor.cs" />
+    <Compile Include="Chamber\ChamberVM.cs" />
+    <Compile Include="Chamber\ChangedMessages.cs" />
+    <Compile Include="Chuck\ChuckVM.cs" />
+    <Compile Include="Dispatcher\Dispatcher.cs" />
+    <Compile Include="Dispatcher\IDispatcher.cs" />
+    <Compile Include="FilterWheel\FilterWheelBench.cs" />
+    <Compile Include="FilterWheel\FilterWheelSupervisor.cs" />
+    <Compile Include="KeyboardMouseHook\IKeyboardMouseHook.cs" />
+    <Compile Include="KeyboardMouseHook\KeyboardMouseHook.cs" />
+    <Compile Include="KeyboardMouseHook\KeyMouseCapture.cs" />
+    <Compile Include="Light\ChangedMessages.cs" />
+    <Compile Include="Light\LightBench.cs" />
+    <Compile Include="Light\LightsSupervisor.cs" />
+    <Compile Include="Light\LightVM.cs" />
+    <Compile Include="Light\NoLightsDefinedException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recipe\EMERecipeSupervisor.cs" />
+    <Compile Include="ServiceLocator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5c0a-4f7e-a355-8d03680b3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{d1d97c03-4864-48c6-8f97-c666629bfb4c}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Base\UnitySC.Shared.Format.Base.csproj">
+      <Project>{9C64DC4B-5DFB-4E28-8C2E-C5907B6D729F}</Project>
+      <Name>UnitySC.Shared.Format.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{EEE94F55-381C-4FCE-A35C-3AEAE3EC7C63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97c741a4-6213-470b-9eb1-f19f61df281c}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.PM.EME.Service.Interface\UnitySC.PM.EME.Service.Interface.csproj">
+      <Project>{010D57AA-CFB3-4BCC-857C-15DB015290B7}</Project>
+      <Name>UnitySC.PM.EME.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FlowsConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Flows>
+    <FlowConfigurationBase xsi:type="AutoExposureConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <DefaultAutoExposureSetting WaferSide="Front"
+                                  Measure="BrightFieldMeasure" InitialExposureTimeMs="20"
+                                  DefaultExposureTimeMsIfFailure="85" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="220"/>
+      <DefaultAutoExposureSetting WaferSide="Front" Measure="BacklightMeasure" InitialExposureTimeMs="20"
+                                  DefaultExposureTimeMsIfFailure="85" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="220"/>
+      <DefaultAutoExposureSetting WaferSide="Front" Measure="DeflectometryMeasure" InitialExposureTimeMs="20"
+                                  DefaultExposureTimeMsIfFailure="105" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="220"/>
+      <DefaultAutoExposureSetting WaferSide="Front" Measure="HighAngleDarkFieldMeasure" InitialExposureTimeMs="200"
+                                  DefaultExposureTimeMsIfFailure="5085" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="30"/>
+      <DefaultAutoExposureSetting WaferSide="Back" Measure="BrightFieldMeasure" InitialExposureTimeMs="20"
+                                  DefaultExposureTimeMsIfFailure="85" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="220"/>
+      <DefaultAutoExposureSetting WaferSide="Back" Measure="DeflectometryMeasure" InitialExposureTimeMs="20"
+                                  DefaultExposureTimeMsIfFailure="105" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="220"/>
+      <DefaultAutoExposureSetting WaferSide="Back" Measure="HighAngleDarkFieldMeasure" InitialExposureTimeMs="200"
+                                  DefaultExposureTimeMsIfFailure="5085" RatioSaturated="0.03"
+                                  SaturationTolerance="10" TargetSaturation="30"/>
+      <IgnoreAutoExposureFailure>false</IgnoreAutoExposureFailure>
+      <DefaultEdgeExclusionLength Unit="Micrometer" Value="3000"/>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="SaveImageConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <UsePerspectiveCalibration>true</UsePerspectiveCalibration>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="CorrectorConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <AreApplied>false</AreApplied>>
+      <WaferDiameterTolerancePercent>2.5</WaferDiameterTolerancePercent>
+      <NotchWidth Unit="Millimeter" Value="3"/>
+      <NotchDetectionWidthFactor>18</NotchDetectionWidthFactor>
+      <NotchDetectionDeviationFactor>3.7</NotchDetectionDeviationFactor>
+      <NotchDetectionSimilarityThreshold>0.6</NotchDetectionSimilarityThreshold>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="AcquirePhaseImagesForPeriodAndDirectionConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="ComputePhaseMapAndMaskForPeriodAndDirectionConfiguration">
+      <EnhancedMaskEdgeFilterConfiguration Side="Front">
+        <WaferDiameter Unit="Millimeter" Value="300"/>
+        <FilterEdgeWidth Unit="Millimeter" Value="3"/>
+      </EnhancedMaskEdgeFilterConfiguration>
+      <EnhancedMaskEdgeFilterConfiguration Side="Back">
+        <WaferDiameter Unit="Millimeter" Value="300"/>
+        <FilterEdgeWidth Unit="Millimeter" Value="6"/>
+      </EnhancedMaskEdgeFilterConfiguration>
+      <WriteReportMode>NeverWrite</WriteReportMode>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="ComputeRawCurvatureMapForPeriodAndDirectionConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="AdjustCurvatureDynamicsForRawCurvatureMapConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <DefaultCurvatureDynamicsCoefficient>0.0060</DefaultCurvatureDynamicsCoefficient>
+      <TargetBackgroundLevel>20</TargetBackgroundLevel>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="ComputeLowAngleDarkFieldImageConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <PercentageOfLowSaturation>0.03</PercentageOfLowSaturation>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="CurvatureDynamicsCalibrationConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <NumberOfPhaseShifts>8</NumberOfPhaseShifts>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="ComputeUnwrappedPhaseMapForDirectionConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <ProduceUntiltedSlopeMaps>true</ProduceUntiltedSlopeMaps>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="GlobalTopoCameraCalibrationConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="GlobalTopoSystemCalibrationConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+      <UseAllCheckerBoards>true</UseAllCheckerBoards>
+      <EdgeExclusionInMm>50</EdgeExclusionInMm>
+      <NbPtsScreen>500</NbPtsScreen>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="SystemUniformityCalibrationConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+    </FlowConfigurationBase>
+    <FlowConfigurationBase xsi:type="ComputeNanoTopoConfiguration">
+      <WriteReportMode>NeverWrite</WriteReportMode>
+    </FlowConfigurationBase>
+  </Flows>
+</FlowsConfiguration>

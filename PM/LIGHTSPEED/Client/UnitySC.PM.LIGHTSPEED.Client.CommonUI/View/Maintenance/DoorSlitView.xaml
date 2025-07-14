@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance.DoorSlitView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="IO">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Fill="{StaticResource ImageValidColor}" Height="20" Width="20" Margin="2" Stroke="{StaticResource ImageMainColor}" StrokeThickness="1" Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <Ellipse Fill="Transparent" Height="20" Width="20" Margin="2" Stroke="{StaticResource ImageMainColor}" StrokeThickness="1" Visibility="{Binding IsEnabled, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                    <TextBlock Text="{Binding Name}" Margin="2,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </DataTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Images -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageDictionary.xaml"/>
+
+                <!-- Converter -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Converters/BasicConverter.xaml"/>
+
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto" MinWidth="150"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <controls:ImageButton Image="{StaticResource Test}" Command="{Binding OpenDoor}" Content=" Open DoorSlit" Margin="5"/>
+            <controls:ImageButton Image="{StaticResource CloseFile}" Command="{Binding CloseDoor}" Content="Close DoorSlit" Margin="5"/>
+        </StackPanel>
+
+        <controls:ImageGroupBox Image="{StaticResource Play}" Header="Cycling scenario" Grid.Row="1" >
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsStarted, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                    <TextBlock Text="Nb cycles" Margin="2" VerticalAlignment="Center"/>
+                    <xctk:IntegerUpDown Minimum="0" Maximum="20000" Margin="2" Increment="10" Value="{Binding NbCycles}" VerticalAlignment="Center" />
+                    <controls:ImageButton Image="{StaticResource Play}" Command="{Binding StartCycling}" Content="Start Cycling" Margin="5" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Visibility="{Binding IsStarted, Converter={StaticResource BooleanToVisibilityConverter}}" Orientation="Horizontal">
+                    <controls:ImageButton Image="{StaticResource Stop}" Command="{Binding StopCycling}" Content="Stop Cycling" Margin="5" VerticalAlignment="Center" />
+                    <TextBlock Text="Cycles count" VerticalAlignment="Center" Margin="5"/>
+                    <TextBlock Text="{Binding CyclesCount}" Margin="5" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+        </controls:ImageGroupBox>
+        <controls:ImageGroupBox Image="{StaticResource Comment}" Header="Commands and status logs" Grid.Row="2" >
+            <TextBlock Margin="2" Text="{Binding Log}" VerticalAlignment="Top" TextWrapping="Wrap"/>
+        </controls:ImageGroupBox>
+        <StackPanel Grid.Column="1" Grid.RowSpan="3">
+            <controls:ImageGroupBox Image="{StaticResource Input}" Header="Input">
+                <ItemsControl ItemsSource="{Binding Inputs}" ItemTemplate="{StaticResource IO}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </controls:ImageGroupBox>
+            <controls:ImageGroupBox Image="{StaticResource Output}" Header="Ouput">
+                <ItemsControl ItemsSource="{Binding Outputs}" ItemTemplate="{StaticResource IO}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </controls:ImageGroupBox>
+        </StackPanel>
+    </Grid>
+</UserControl>

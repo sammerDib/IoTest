@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4F675830-79D2-41C7-BEE1-9DAEBCA35C75}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.EME.TC</RootNamespace>
+    <AssemblyName>UnitySC.PM.EME.TC</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="EMEHandlingManager.cs" />
+    <Compile Include="EMEPMTCManager.cs" />
+    <Compile Include="EMEStatusVariableOperations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Proxy\UnitySC.Shared.Dataflow.Proxy.csproj">
+      <Project>{C1EBE8D6-7253-4A2E-85C1-E05D0190984F}</Project>
+      <Name>UnitySC.Shared.Dataflow.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj">
+      <Project>{097A017C-AB63-42BD-987B-6BC537EE36F2}</Project>
+      <Name>UnitySC.Shared.Dataflow.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Implementation\UnitySC.Shared.TC.PM.Operations.Implementation.csproj">
+      <Project>{5b0fc3a1-6d00-4681-bbda-76c81fbb1c3a}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj">
+      <Project>{468DB3CC-73CB-46B8-94F2-5829D24AF3AA}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Implementation\UnitySC.Shared.TC.PM.Service.Implementation.csproj">
+      <Project>{aa51c330-3024-4106-abd9-19f194db9218}</Project>
+      <Name>UnitySC.Shared.TC.PM.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Interface\UnitySC.Shared.TC.PM.Service.Interface.csproj">
+      <Project>{D4E1FE6A-B948-4F37-942D-F2C03B598510}</Project>
+      <Name>UnitySC.Shared.TC.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\Service\UnitySC.Shared.TC.Shared.Service.Interface\UnitySC.Shared.TC.Shared.Service.Interface.csproj">
+      <Project>{33001885-19D0-466E-88A9-5024983E8397}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{5256D984-4871-4D6A-9CAF-CE8F45A51A70}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Implementation\UnitySC.Shared.TC.Shared.Operations.Implementation.csproj">
+      <Project>{A4277C28-D526-4801-A4BF-A21106FC07A0}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Interface\UnitySC.Shared.TC.Shared.Operations.Interface.csproj">
+      <Project>{B5FB9569-4BCF-435A-8C3D-1A051C47F24D}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Proxy\UnitySC.Shared.Proxy.csproj">
+      <Project>{90BDBE2A-B307-4FE9-95AB-09A0673C2345}</Project>
+      <Name>UnitySC.Shared.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Axes\UnitySC.PM.Shared.Hardware.Axes.csproj">
+      <Project>{F5DF897E-39CA-4C8F-A324-7DC38F7FBE53}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Axes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Common\UnitySC.PM.Shared.Hardware.Common.csproj">
+      <Project>{DDAD1006-F8E4-4904-9004-0810A47CA810}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Core\UnitySC.PM.Shared.Hardware.Core.csproj">
+      <Project>{0B138AE8-3243-4D88-867F-3111DD8FB6FF}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53BD49C3-C5CE-4EAD-8261-A95C2A003A5E}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hardware\UnitySC.PM.EME.Hardware\UnitySC.PM.EME.Hardware.csproj">
+      <Project>{EDD38F09-9DA4-4E8B-B388-FD13176EEC37}</Project>
+      <Name>UnitySC.PM.EME.Hardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.PM.EME.Service.Interface\UnitySC.PM.EME.Service.Interface.csproj">
+      <Project>{010D57AA-CFB3-4BCC-857C-15DB015290B7}</Project>
+      <Name>UnitySC.PM.EME.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.Service.Core.Recipe\UnitySC.PM.EME.Service.Core.Recipe.csproj">
+      <Project>{18E0C603-DEDC-40B3-84D6-AA1F21F31F7B}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Recipe</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

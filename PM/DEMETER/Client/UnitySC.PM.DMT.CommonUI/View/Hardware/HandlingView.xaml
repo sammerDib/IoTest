@@ -1,0 +1,307 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.CommonUI.View.Hardware.HandlingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.DMT.CommonUI.View.Hardware"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Facilities-->
+        <controls:ImageGroupBox  Grid.Row="0" Grid.Column="0" Image="{StaticResource Setting}" Header="Facilities" Margin="1,1,1,1">
+            <Grid Grid.Row="1" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <!--FFU -->
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="FFU" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageErrorColor}" Background="{StaticResource ImageErrorColor}" Visibility="{Binding InterlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource Error}" Height="25" />
+                        <TextBlock Grid.Column="1" Text="Alarm" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding FFuState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                        <TextBlock Grid.Column="1" Text="Running" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0"/>
+                    </Grid>
+                </Border>
+                <!--Air -->
+                <TextBlock Grid.Column="2" Grid.Row="0" Text="Air " HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                <Border Grid.Column="3" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageErrorColor}" Background="{StaticResource ImageErrorColor}" Visibility="{Binding InterlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource Error}" Height="25" />
+                        <TextBlock Grid.Column="1" Text="Alarm" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                    </Grid>
+                </Border>                
+                <Border Grid.Column="3" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding InterlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                        <TextBlock Grid.Column="1" Text="Ok" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </controls:ImageGroupBox>
+
+        <!--Safety-->
+        <controls:ImageGroupBox Grid.Row="0" Grid.Column="2"  Image="{StaticResource Info}" Header="Safety"  Margin="1,1,1,1">
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <!--Interlock -->
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Interlock" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageErrorColor}" Background="{StaticResource ImageErrorColor}" Visibility="{Binding InterlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource Error}" Height="25" />
+                        <TextBlock Grid.Column="1" Text="Opened" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding InterlockState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                        <TextBlock Grid.Column="1" Text="Closed" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0"/>
+                    </Grid>
+                </Border>
+                
+                <!--Mode -->
+                <TextBlock Grid.Column="2" Grid.Row="1" Text="Mode" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                <Border Grid.Column="3" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageWarningColor}" Background="{StaticResource ImageWarningColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource WarningWithCircle}" Height="25" />
+                        <TextBlock Grid.Column="1"  Text="Maintenance" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                    <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                        <TextBlock Grid.Column="1"  Text="Run" VerticalAlignment="Center" FontWeight="Bold" Margin="20,0,0,0"/>
+                    </Grid>
+                </Border>
+                        
+            </Grid>
+        </controls:ImageGroupBox>
+
+        <!--Handling -->
+        <controls:ImageGroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Image="{StaticResource Position}" Header="Handling"  Margin="1,1,1,1">
+            <Grid Margin="0,5,0,0" VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="500"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="/ViewModel/Hardware/WithoutChuck_PSD.png" Margin="0,0,0,0" Stretch="None" />
+                <Image Grid.Column="0" Source="/ViewModel/Hardware/ChuckOnly_PSD.png" Margin="0,0,0,0" Stretch="None" />
+                <Image Grid.Column="0" Source="/ViewModel/Hardware/WaferOnly_PSD.png" Margin="0,0,0,0" Stretch="None" />
+                <Grid Grid.Column="2" Margin="0,40,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!--Arm feedback -->
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="EFEM Arm feedback state" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                    <Border Grid.Column="1" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageWarningColor}" Background="{StaticResource ImageWarningColor}" Visibility="{Binding FFuState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource WarningWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="Extended" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="3" Grid.Row="0" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="Retracted" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <!--Wafer presence -->
+                    <TextBlock Grid.Row="1" Text="Wafer presence" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                    <Border Grid.Column="1" Grid.Row="1" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding FFuState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="Yes" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="1" BorderThickness="1.3" BorderBrush="{StaticResource ImageWarningColor}" Background="{StaticResource ImageWarningColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource WarningWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="No" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <!--Wafer sensor -->
+                    <TextBlock Grid.Row="2" Text="Wafer sensor" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                    <Border Grid.Column="1" Grid.Row="2" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding FFuState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="Yes" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="2" BorderThickness="1.3" BorderBrush="{StaticResource ImageWarningColor}" Background="{StaticResource ImageWarningColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource WarningWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="No" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!--Chuck position -->
+                    <TextBlock Grid.Row="3" Text="Chuck position" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                    <Border Grid.Column="1" Grid.Row="3" BorderThickness="1.3" BorderBrush="{StaticResource ImageWarningColor}" Background="{StaticResource ImageWarningColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource WarningWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="Processing" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="3" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding FFuState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="Loading" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!--Arm extended enable -->
+                    <TextBlock Grid.Row="4" Text="Arm extended enable" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"></TextBlock>
+                    <Border Grid.Column="1" Grid.Row="4" BorderThickness="1.3" BorderBrush="{StaticResource ImageWarningColor}" Background="{StaticResource ImageWarningColor}" Visibility="{Binding MaintenanceState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource WarningWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="1" Text="No" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="4" BorderThickness="1.3" BorderBrush="{StaticResource ImageValidColor}" Background="{StaticResource ImageValidColor}" Visibility="{Binding FFuState, Converter={StaticResource BooleanToVisibilityConverter}}" CornerRadius="4" Margin="2,2">
+                        <Grid  Margin="4,2" HorizontalAlignment="Left" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{StaticResource ValidWithCircle}" Height="25" />
+                            <TextBlock Grid.Column="4" Text="Yes" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Margin="8,0,0,0"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </controls:ImageGroupBox>
+
+        <!--Handling control-->
+        <controls:ImageGroupBox Grid.Row="4"  Grid.Column="0" Grid.ColumnSpan="3" Image="{StaticResource Running}" Header="Handling control"  Margin="1,1,1,1">
+            <Grid Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <controls:ImageButton Grid.Column="0" Margin="0,0,10,0" Image="{StaticResource Previous}" Content="Processing position" HorizontalContentAlignment="Left" Visibility="{Binding InteerlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                <controls:ImageButton Grid.Column="1" Margin="0,0,10,0" Image="{StaticResource Next}" Content ="Loading position" HorizontalContentAlignment="Left" Visibility="{Binding InteerlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                <controls:ImageButton Grid.Row="0" Grid.Column="3" Margin="0,0,10,0" Image="{StaticResource PowerOFF}" Content="FS Sensor Power"  HorizontalContentAlignment="Left" Visibility="{Binding InteerlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                <controls:ImageButton Grid.Row="0" Grid.Column="3" Margin="0,0,10,0" Image="{StaticResource PowerON}" Content="FS Sensor Power" HorizontalContentAlignment="Left" Visibility="{Binding InteerlockState, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <controls:ImageButton Grid.Row="1" Grid.Column="3" Margin="0,0,10,0" Image="{StaticResource PowerOFF}" Content="BS Sensor Power" HorizontalContentAlignment="Left" Visibility="{Binding InteerlockState, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                <controls:ImageButton Grid.Row="1" Grid.Column="3" Margin="0,0,10,0" Image="{StaticResource PowerON}" Content="BS Sensor Power" HorizontalContentAlignment="Left" Visibility="{Binding InteerlockState, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            </Grid>
+        </controls:ImageGroupBox>
+    </Grid>
+</UserControl>

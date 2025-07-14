@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.Calibration.View.ChuckParallelismCalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.Calibration.ViewModel"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:ChuckParallelismCalibrationVM}" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+<controls:ImageGroupBox ImageGeometry="{StaticResource MoveGeometry}" 
+                                ImageGeometryBrush="{StaticResource IconsColor}" 
+                                Header="{Binding Name}"
+                                d:Header="Chuck parallelism">
+            <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Background="{StaticResource PanelBackground}">
+                <controls:ImageButton Content="Start cycling over x-axis" 
+                                  Command="{Binding StartCyclingOverXaxis}"
+                                  Visibility="{Binding IsCyclingOverXaxis, Converter={converters:InvertedBooleanToVisibilityConverter}}"
+                                  IsEnabled="{Binding IsCyclingOverYaxis, Converter={converters:InvertedBooleanConverter}}"
+                                  ImageGeometry="{StaticResource PlayGeometry}" 
+                                  ImageGeometryBrush="{StaticResource IconsColor}" 
+                                  Margin="6" />
+                <controls:ImageButton Content="Stop cycling over x-axis" 
+                                  Command="{Binding StopCyclingOverXaxis}"
+                                  Visibility="{Binding IsCyclingOverXaxis, Converter={converters:BooleanToVisibilityConverter}}"
+                                  ImageGeometry="{StaticResource StopGeometry}" 
+                                  ImageGeometryBrush="{StaticResource IconsColor}" 
+                                  Margin="6" />
+
+                <controls:ImageButton Content="Start cycling over y-axis" 
+                                  Command="{Binding StartCyclingOverYaxis}"
+                                  Visibility="{Binding IsCyclingOverYaxis, Converter={converters:InvertedBooleanToVisibilityConverter}}"
+                                  IsEnabled="{Binding IsCyclingOverXaxis, Converter={converters:InvertedBooleanConverter}}"
+                                  ImageGeometry="{StaticResource PlayGeometry}" 
+                                  ImageGeometryBrush="{StaticResource IconsColor}" 
+                                  Margin="6"/>
+                <controls:ImageButton Content="Stop cycling over y-axis" 
+                                  Command="{Binding StopCyclingOverYaxis}"
+                                  Visibility="{Binding IsCyclingOverYaxis, Converter={converters:BooleanToVisibilityConverter}}"
+                                  ImageGeometry="{StaticResource StopGeometry}" 
+                                  ImageGeometryBrush="{StaticResource IconsColor}" 
+                                  Margin="6" />
+            </StackPanel>
+            <Grid Grid.Row="1" Background="{StaticResource HeaderLeftBackgroundBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.ColumnSpan="2" Text="{Binding ValidationErrorMessage}" Margin="5,5,10,0" Visibility="{Binding ValidationErrorMessage, Converter={converters:EmptyStringToVisibilityConverter}}" Foreground="DarkRed" HorizontalAlignment="Right"></TextBlock>
+                <controls:ImageButton Grid.Row="1" Grid.Column="0" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource ButtonForegroundBrush}" Command="{Binding SkipCommand}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="120">Skip</controls:ImageButton>
+                <controls:ImageButton Grid.Row="1" Grid.Column="1" Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" Margin="10" HorizontalAlignment="Right"  VerticalContentAlignment="Center" Command="{Binding ValidateChoice}" MinWidth="120">VALIDATE</controls:ImageButton>
+            </Grid>
+        </Grid>
+    </controls:ImageGroupBox>
+</UserControl>

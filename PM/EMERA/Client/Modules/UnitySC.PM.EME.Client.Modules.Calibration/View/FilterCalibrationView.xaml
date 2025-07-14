@@ -1,0 +1,434 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.Calibration.View.FilterCalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:emeconverters="clr-namespace:UnitySC.PM.EME.Client.Shared.Converter;assembly=UnitySC.PM.EME.Client.Shared"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"          
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.Calibration.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=vm:FilterCalibrationVM}"
+             d:DesignHeight="450"
+             d:DesignWidth="320"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="TextBoxVisibilityStyle"
+                   TargetType="TextBox">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsSelected}"
+                                 Value="True">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="TextBlockVisibilityStyle"
+                   BasedOn="{StaticResource {x:Type TextBlock}}"
+                   TargetType="TextBlock">
+                <Setter Property="Visibility" Value="Visible" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsSelected}"
+                                 Value="True">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="ImageButtonVisibilityStyle"
+                   BasedOn="{StaticResource {x:Type controls:ImageButton}}"
+                   TargetType="controls:ImageButton">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsSelected}"
+                                 Value="True">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="ButtonVisibilityStyle"
+                   BasedOn="{StaticResource {x:Type Button}}"
+                   TargetType="Button">
+                <Setter Property="Visibility" Value="Collapsed" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsSelected}"
+                                 Value="True">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="StackPanelVisibilityStyle" TargetType="StackPanel">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="DataGrid" x:Key="dataGridStyle">
+                <Setter Property="Background" Value="#FFFFFF"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="#D3D3D3"/>
+                <Setter Property="RowHeight" Value="30"/>
+                <Setter Property="AlternatingRowBackground" Value="#F9F9F9"/>
+                <Setter Property="AutoGenerateColumns" Value="False"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="RowStyle">
+                    <Setter.Value>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#333333"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridRow">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <DataGridCellsPresenter />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#E6F0FF"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#007ACC"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <controls:ImageGroupBox d:Header="Filter"
+                            Header="{Binding Name}"
+                            ImageGeometry="{StaticResource FilterGeometry}"
+                            ImageGeometryBrush="{StaticResource IconsColor}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ScrollViewer CanContentScroll="True"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel Background="{StaticResource PanelBackground}">
+                    <ListView Margin="6"
+                              IsEnabled="{Binding FilterWheelBench.IsLoading, Converter={converters:InvertedBooleanConverter}}"
+                              ItemsSource="{Binding Filters}"
+                              SelectedItem="{Binding CurrentFilter, Mode=TwoWay}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Width="auto"
+                                                DisplayMemberBinding="{Binding Path=Index}"
+                                                Header="Slot" />
+                                <GridViewColumn Width="auto"
+                                                Header="Name">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate d:DataType="{x:Type vm:FilterVM}">
+                                            <Grid MinWidth="80">
+                                                <TextBox x:Name="textBox"
+                                                         MinWidth="60"
+                                                         Style="{StaticResource TextBoxVisibilityStyle}"
+                                                         Text="{Binding Path=Name, Mode=TwoWay}" />
+                                                <TextBlock x:Name="textBlock"
+                                                           Style="{StaticResource TextBlockVisibilityStyle}"
+                                                           Text="{Binding Path=Name}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="120"
+                                                Header="Filter">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate d:DataType="{x:Type vm:FilterVM}">
+                                            <ComboBox ItemsSource="{Binding FilterTypes}"
+                                                      SelectedItem="{Binding Type}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="140"
+                                                Header="Position">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate d:DataType="{x:Type vm:FilterVM}">
+                                            <StackPanel Margin="6,2"
+                                                        HorizontalAlignment="Center"
+                                                        Orientation="Horizontal">
+                                                <controls:ImageButton Width="25"
+                                                                      Height="25"
+                                                                      Margin="5,0"
+                                                                      Command="{Binding DataContext.MoveLeft, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                      CommandParameter="{Binding}"
+                                                                      ImageGeometry="{StaticResource MinusGeometry}"
+                                                                      ImageGeometryBrush="{StaticResource IconsColor}"
+                                                                      Style="{StaticResource ImageButtonVisibilityStyle}" />
+                                                <TextBox x:Name="TextPosition"
+                                                         Width="50"
+                                                         Height="25"
+                                                         HorizontalContentAlignment="Right"
+                                                         VerticalContentAlignment="Center"
+                                                         Text="{Binding Position, Mode=TwoWay, StringFormat='{}{0:F2}'}">
+                                                    <TextBox.InputBindings>
+                                                        <KeyBinding Key="Enter"
+                                                                    Command="{Binding DataContext.Move, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                    CommandParameter="{Binding ElementName=TextPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                                                    </TextBox.InputBindings>
+                                                </TextBox>
+                                                <controls:ImageButton Width="25"
+                                                                      Height="25"
+                                                                      Margin="5,0"
+                                                                      Command="{Binding DataContext.MoveRight, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                      CommandParameter="{Binding}"
+                                                                      ImageGeometry="{StaticResource PlusGeometry}"
+                                                                      ImageGeometryBrush="{StaticResource IconsColor}"
+                                                                      Style="{StaticResource ImageButtonVisibilityStyle}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="auto"
+                                                Header="State">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate d:DataType="{x:Type vm:FilterVM}">
+                                            <Image Source="{Binding Path=InstallationState, Converter={vm:FilterInstallationStateToImageDictionaryConverter}}"
+                                                   Style="{StaticResource Icon}"
+                                                   ToolTip="{Binding InstallationState}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="80"
+                                                Header="Validation">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Command="{Binding DataContext.ValidateFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="Validate"
+                                                    Style="{StaticResource ButtonVisibilityStyle}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <StackPanel Orientation="Horizontal">
+                        <controls:ImageButton MinWidth="120"
+                                              Margin="10"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Command="{Binding ReloadDefaultCalibration}"
+                                              Content="Reload Default"
+                                              ImageGeometry="{StaticResource UndoGeometry}"
+                                              ImageGeometryBrush="{StaticResource HighLightBrush}" />
+                        <controls:ImageButton Width="140"
+                                              Margin="10"
+                                              Command="{Binding StartCalibration}"
+                                              Content="Launch calibration"
+                                              ImageGeometry="{StaticResource PlayGeometry}"
+                                              ImageGeometryBrush="{StaticResource IconsColor}" />
+                    </StackPanel>
+
+                    <DataGrid x:Name="CalibrationResultGrid"
+                              Style="{StaticResource dataGridStyle}" 
+                              ItemsSource="{Binding CalibrationResult}"
+                              SelectedItem="{Binding CurrentCalibrationFilter}"
+                              GridLinesVisibility="Horizontal"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserSortColumns="False"
+                              CanUserResizeColumns="True"
+                              CanUserReorderColumns="False"
+                              Margin="6"
+                              IsReadOnly="False"                              >
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontWeight="Bold" Margin="0 0 10 0"
+                                                   VerticalAlignment="Center"                                                  
+                                                    HorizontalAlignment="Center">
+                                            <TextBlock.ToolTip>
+                                                <TextBlock >
+                                                     <Run Text="{Binding Name}" />
+                                                    <Run Text=" Type = " />
+                                                    <Run Text="{Binding Type}" />
+                                                    <Run Text=" Position = " />
+                                                    <Run Text="{Binding Position}" />
+                                                </TextBlock>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Shift X">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <controls:LabelUnit Content="{Binding ShiftX.Value, Mode=OneWay}"
+                                                            ContentStringFormat="{}{0:N2}"
+						                                    Unit="{Binding ShiftX.UnitSymbol, Mode=OneWay}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <controls:TextBoxUnit LengthValue="{Binding ShiftX, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" 
+                                                            VerticalContentAlignment="Center" 
+                                                            HorizontalContentAlignment="Center" 
+                                                            sharedExtensions:TextBoxMaskExt.Mask="Decimal" 
+                                                            sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Shift Y">
+                                <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:LabelUnit Content="{Binding ShiftY.Value, Mode=OneWay}"
+                                                                 ContentStringFormat="{}{0:N2}"
+                                                                 Unit="{Binding ShiftY.UnitSymbol, Mode=OneWay}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <controls:TextBoxUnit LengthValue="{Binding ShiftY, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" 
+                                                            VerticalContentAlignment="Center" 
+                                                            HorizontalContentAlignment="Center" 
+                                                            sharedExtensions:TextBoxMaskExt.Mask="Decimal" 
+                                                            sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />      
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="PixelSize">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <controls:LabelUnit Content="{Binding PixelSize.Value, Mode=OneWay}"
+                                                           ContentStringFormat="{}{0:N2}"
+                                                           Unit="{Binding PixelSize.UnitSymbol, Mode=OneWay}" />            
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <controls:TextBoxUnit LengthValue="{Binding PixelSize, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" 
+                                                               VerticalContentAlignment="Center" 
+                                                               HorizontalContentAlignment="Center" 
+                                                               sharedExtensions:TextBoxMaskExt.Mask="Decimal" 
+                                                               sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />        
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Distance">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DistanceOnFocus, StringFormat='{}{0:F0}'}"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding DistanceOnFocus, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" 
+	                                              VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="State">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding Path=CalibrationState, Converter={vm:FilterCalibrationStateToImageDictionaryConverter}}"
+                                                Style="{StaticResource Icon}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Operations" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal"  Style="{StaticResource StackPanelVisibilityStyle}">
+                                            <controls:ImageButton Width="30"
+                                                    ImageGeometry="{StaticResource AutofocusGeometry}"
+                                                    Margin="5,0"
+                                                    ImageGeometryBrush="{StaticResource ButtonForegroundBrush}"
+                                                    ToolTip="Run AutoFocus"                                                   
+                                                    Command="{Binding DataContext.RunAutoFocus, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    CommandParameter="{Binding}" />
+                                            <controls:ImageButton Width="30"
+                                                    ImageGeometry="{StaticResource TrashGeometry}"
+                                                    Margin="5,0"
+                                                    ImageGeometryBrush="{StaticResource ImageErrorColor}"
+                                                    ToolTip="Delete filter"                                                   
+                                                    Command="{Binding DataContext.DeleteCalibrationItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    CommandParameter="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <controls:ImageButton Width="100"
+                                          Margin="10"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          Command="{Binding SaveFilter}"
+                                          Content="Save"
+                                          ImageGeometry="{StaticResource SaveGeometry}"
+                                          ImageGeometryBrush="{StaticResource HighLightBrush}" />
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <Grid Grid.Row="1"
+                  Background="{StaticResource HeaderLeftBackgroundBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <controls:ImageButton Grid.Column="0"
+                                      MinWidth="120"
+                                      Margin="10"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center"
+                                      Command="{Binding SkipCommand}"
+                                      ImageGeometryRight="{StaticResource RightArrowGeometry}"
+                                      ImageGeometryRightBrush="{StaticResource ButtonForegroundBrush}">
+                    Skip
+                </controls:ImageButton>
+                <controls:ImageButton Grid.Column="1"
+                                      MinWidth="120"
+                                      Margin="10"
+                                      HorizontalAlignment="Right"
+                                      VerticalContentAlignment="Center"
+                                      Command="{Binding ValidateChoice}"
+                                      ImageGeometryRight="{StaticResource RightArrowGeometry}"
+                                      ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}"
+                                      Style="{StaticResource HighlightedImageButton}">
+                    VALIDATE
+                </controls:ImageButton>
+            </Grid>
+
+            <xctk:BusyIndicator Grid.Row="0"
+                                BusyContent="{Binding BusyMessage}"
+                                DisplayAfter="0"
+                                IsBusy="{Binding IsBusy}">
+                <xctk:BusyIndicator.BusyContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="4">
+                            <TextBlock Margin="6"
+                                       HorizontalAlignment="Center"
+                                       Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.BusyMessage}" />
+                            <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.CancelCalibrationCalibration}"
+                                    Content="Cancel" />
+                        </StackPanel>
+                    </DataTemplate>
+                </xctk:BusyIndicator.BusyContentTemplate>
+            </xctk:BusyIndicator>
+        </Grid>
+    </controls:ImageGroupBox>
+</UserControl>

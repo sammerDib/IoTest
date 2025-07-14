@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{E17AB098-6E3A-4A00-8C32-F18838851AA7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.EME.Client.Controls</RootNamespace>
+    <AssemblyName>UnitySC.PM.EME.Client.Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Camera\RoiSelector.xaml.cs">
+      <DependentUpon>RoiSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Camera\StandardCameraView.xaml.cs">
+      <DependentUpon>StandardCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Camera\StandardCameraViewModel.cs" />
+    <Compile Include="Extensions\SliderExtension.cs" />
+    <Compile Include="Cursors\CustomCursors.cs" />
+    <Compile Include="Camera\Scale.cs" />
+    <Compile Include="Extensions\SimpleTextBoxMaskExt.cs" />
+    <Compile Include="Headers\HeaderLeft.cs" />
+    <Compile Include="Headers\HeaderRight.cs" />
+    <Compile Include="Camera\ZoomableImage.xaml.cs">
+      <DependentUpon>ZoomableImage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Lights\LightingDashboard.xaml.cs">
+      <DependentUpon>LightingDashboard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MarkupExtensions\ChuckViewModelBinding.cs" />
+    <Compile Include="MarkupExtensions\LightBenchBinding.cs" />
+    <Compile Include="MarkupExtensions\AxesViewModelBinding.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="StageMoveControl\StageMoveButton.cs" />
+    <Compile Include="StageMoveControl\StageMoveControl.xaml.cs">
+      <DependentUpon>StageMoveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StageMoveControl\WaferNavigationControl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77F22706-7C58-4193-AE97-85347CBDE3A2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04ad1c23-71c2-46c4-880e-bc5cc2541da4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.PM.EME.Service.Interface\UnitySC.PM.EME.Service.Interface.csproj">
+      <Project>{010D57AA-CFB3-4BCC-857C-15DB015290B7}</Project>
+      <Name>UnitySC.PM.EME.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.EME.Client.Shared\UnitySC.PM.EME.Client.Shared.csproj">
+      <Project>{ba61082a-1b78-48ee-8ee0-704208209f9d}</Project>
+      <Name>UnitySC.PM.EME.Client.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.EME.ClientProxy\UnitySC.PM.EME.Client.Proxy.csproj">
+      <Project>{d344632e-77e6-402a-aef1-5590905f08c9}</Project>
+      <Name>UnitySC.PM.EME.Client.Proxy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Camera\RoiSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Camera\StandardCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Camera\ThumbStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Camera\ZoomableImage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Lights\LightingDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StageMoveControl\StageMoveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\WizardNavigationControlStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\UnityStylesEme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Cursors\Cross.cur" />
+    <Resource Include="Cursors\Measure.cur" />
+    <Resource Include="Cursors\No.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource\ViewFinder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

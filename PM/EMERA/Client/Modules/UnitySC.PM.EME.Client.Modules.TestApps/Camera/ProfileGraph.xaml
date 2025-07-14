@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestApps.Camera.ProfileGraph"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lcu="http://schemas.lightningchart.com/chartingMVVM/"
+             mc:Ignorable="d" d:DesignHeight="150" d:DesignWidth="512"
+             x:Name="ProfileGraphControl">
+
+    <lcu:LightningChart ColorTheme="LightGray">
+        <lcu:LightningChart.Title>
+            <lcu:ChartTitle Visible="False" />
+        </lcu:LightningChart.Title>
+
+        <lcu:LightningChart.ChartBackground>
+            <lcu:Fill GradientColor="{StaticResource ExtremelyLightGreyColor}" GradientFill="Solid" />
+        </lcu:LightningChart.ChartBackground>
+
+        <lcu:LightningChart.ViewXY>
+            <lcu:ViewXY>
+                <lcu:ViewXY.GraphBackground>
+                    <lcu:Fill GradientColor="{StaticResource ExtremelyLightGreyColor}" GradientFill="Solid" />
+                </lcu:ViewXY.GraphBackground>
+                <lcu:ViewXY.XAxes>
+                    <lcu:AxisX Minimum="0" Maximum="{Binding ElementName=ProfileGraphControl, Path=Points.Length}"
+                               AutoFormatLabels="True" ValueType="Number"
+                               LabelsVisible="False" AxisColor="{StaticResource ExtremelyDarkGreyColor}">
+                        <lcu:AxisX.Title>
+                            <lcu:AxisXTitle Text="Position" Color="{StaticResource ExtremelyDarkGreyColor}"
+                                            Font="Arial">
+                                <lcu:AxisXTitle.Shadow>
+                                    <lcu:TextShadow Style="Off" />
+                                </lcu:AxisXTitle.Shadow>
+                            </lcu:AxisXTitle>
+                        </lcu:AxisX.Title>
+                        <lcu:AxisX.MajorDivTickStyle>
+                            <lcu:AxisTickStyle Alignment="Far" LineLength="8"
+                                               Color="{StaticResource ExtremelyDarkGreyColor}" />
+                        </lcu:AxisX.MajorDivTickStyle>
+                        <lcu:AxisX.MinorDivTickStyle>
+                            <lcu:AxisTickStyle Alignment="Far" LineLength="6"
+                                               Color="{StaticResource ExtremelyDarkGreyColor}" />
+                        </lcu:AxisX.MinorDivTickStyle>
+                        <lcu:AxisX.MajorGrid>
+                            <lcu:GridOptions Visible="True" Pattern="Dot" PatternScale="2" Color="Black" />
+                        </lcu:AxisX.MajorGrid>
+                    </lcu:AxisX>
+                </lcu:ViewXY.XAxes>
+                <lcu:ViewXY.YAxes>
+                    <lcu:AxisY Minimum="0" Maximum="{Binding ElementName=ProfileGraphControl, Path=Maximum}"
+                               AutoFormatLabels="True" ValueType="Number"
+                               LabelsColor="{StaticResource ExtremelyDarkGreyColor}"
+                               AxisColor="{StaticResource ExtremelyDarkGreyColor}">
+                        <lcu:AxisY.Title>
+                            <lcu:AxisYTitle Text="Intensity" Color="{StaticResource ExtremelyDarkGreyColor}"
+                                            Font="Arial">
+                                <lcu:AxisYTitle.Shadow>
+                                    <lcu:TextShadow Style="Off" />
+                                </lcu:AxisYTitle.Shadow>
+                            </lcu:AxisYTitle>
+                        </lcu:AxisY.Title>
+                        <lcu:AxisY.MajorDivTickStyle>
+                            <lcu:AxisTickStyle Alignment="Near" LineLength="8"
+                                               Color="{StaticResource ExtremelyDarkGreyColor}" />
+                        </lcu:AxisY.MajorDivTickStyle>
+                        <lcu:AxisY.MinorDivTickStyle>
+                            <lcu:AxisTickStyle Alignment="Near" LineLength="6"
+                                               Color="{StaticResource ExtremelyDarkGreyColor}" />
+                        </lcu:AxisY.MinorDivTickStyle>
+                        <lcu:AxisY.MajorGrid>
+                            <lcu:GridOptions Visible="True" Pattern="Dot" PatternScale="2" Color="Black" />
+                        </lcu:AxisY.MajorGrid>
+                    </lcu:AxisY>
+                </lcu:ViewXY.YAxes>
+                <lcu:ViewXY.PointLineSeries>
+                    <lcu:PointLineSeries Points="{Binding ElementName=ProfileGraphControl, Path=Points}">
+                        <lcu:PointLineSeries.LineStyle>
+                            <lcu:LineStyle Color="Firebrick" AntiAliasing="Normal" Width="2" />
+                        </lcu:PointLineSeries.LineStyle>
+                    </lcu:PointLineSeries>
+                </lcu:ViewXY.PointLineSeries>
+            </lcu:ViewXY>
+        </lcu:LightningChart.ViewXY>
+    </lcu:LightningChart>
+</UserControl>

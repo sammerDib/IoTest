@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestAlgo.View.PatternRecView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:Emeconverters="clr-namespace:UnitySC.PM.EME.Client.Shared.Converter;assembly=UnitySC.PM.EME.Client.Shared"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="1000" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid x:Name="MainGrid">
+        <controls:ImageGroupBox ImageGeometry="{StaticResource ImageGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Header="{Binding Name}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                    <StackPanel Orientation="Vertical">
+                        <!-- Input -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="AUto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <controls:ImageButton ImageGeometry="{StaticResource AcquireImageGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Take ref image" Command="{Binding TakeImage}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" Visibility="{Binding RefImageSource,Converter={StaticResource InvertedNullToVisibilityConverter}}" />
+                            <GroupBox  Grid.Column="1" Header="Reference Image" Visibility="{Binding RefImageSource,Converter={StaticResource NullToVisibilityConverter}}" Margin="4" MaxHeight="350">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Image  Source="{Binding RefImageSource}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+
+                                    
+                                    <Viewbox>
+                                        <Canvas Width="{Binding RefImageSource.Width}" Height="{Binding RefImageSource.Height}">
+                                            <Rectangle 
+                                                       Canvas.Left="{Binding RoiRect.Left}" Canvas.Top="{Binding RoiRect.Top}" Width="{Binding RoiRect.Width}" Height="{Binding RoiRect.Height}"
+                                                       Stroke="{StaticResource HighLightBrush}" StrokeThickness="3"></Rectangle>
+                                        </Canvas>
+                                    </Viewbox>
+
+                                    <controls:ImageButton Grid.Row="1" Image="{StaticResource Delete}" Content="Delete" Command="{Binding DeleteImage}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,0" />
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                        <Separator />
+
+                        <StackPanel Visibility="{Binding RefImageSource,Converter={StaticResource NullToVisibilityConverter}}">
+                            <TextBlock Background="LightGray" Padding="5,2">PATTERN REC</TextBlock>
+                            <WrapPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                <CheckBox Margin="0,7" IsChecked="{Binding UseImagePreprocessingPatternRec}" Height="22">Use Image Preprocessing</CheckBox>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,5" Visibility="{Binding UseImagePreprocessingPatternRec, Converter={converters:BooleanToVisibilityConverter}}">
+                                    <TextBlock Text="Gamma" Margin="22,2,2,2" VerticalAlignment="Center" />
+                                    <xctk:DoubleUpDown Minimum="0.05" Maximum="0.9" Value="{Binding PatternRecGamma}" Increment="0.05" Margin="2" VerticalAlignment="Center" MinWidth="60" />
+                                </StackPanel>
+                            </WrapPanel>
+                            <controls:ImageButton Width="200" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Start Pattern Rec" Command="{Binding StartPatternRec}" VerticalAlignment="Center"  Margin="10,2" HorizontalAlignment="Right" />
+
+                            <!-- Result -->
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,5">
+                                <Image Source="{Binding Result.Status.State, Converter={Emeconverters:FlowStateToImageDictionaryConverter}}" Style="{StaticResource Icon}" />
+                                <TextBlock Text="{Binding Result.Status.State}" Margin="4,0" />
+                                <TextBlock Text="{Binding Result.Status.Message}" />
+                            </StackPanel>
+                            <!-- Result flow -->
+                            <Grid Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}" Style="{StaticResource FormGrid}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Shift (µm)" Grid.Row="0" />
+                                <TextBlock Text="Confidence" Grid.Row="1" />
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                    <TextBlock Text="x: " />
+                                    <TextBox Text="{Binding Result.ShiftX, StringFormat='{}{0:F3}'}" IsReadOnly="True" Margin="2,0" MinWidth="20" />
+                                    <TextBlock Text="y: " />
+                                    <TextBox Text="{Binding Result.ShiftY, StringFormat='{}{0:F3}'}" IsReadOnly="True" Margin="2,0" MinWidth="20" />
+                                    <controls:ImageButton Width="150" ImageGeometry="{StaticResource TargetGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="To Shifted Position" Command="{Binding GotoShiftPosCommand}" VerticalAlignment="Center"  Margin="30,2" HorizontalAlignment="Right" />
+
+                                </StackPanel>
+                                <TextBox Text="{Binding Result.Confidence}" Grid.Row="1" IsReadOnly="True" Grid.Column="1" Width="40" HorizontalAlignment="Left" />
+                                <GroupBox  Grid.ColumnSpan="2" Header="Result Image" Margin="4" Grid.Row="2" MaxHeight="350">
+                                    <Image  Source="{Binding Result.ControlImage.WpfBitmapSource}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                                </GroupBox>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding RefImageSource,Converter={StaticResource NullToVisibilityConverter}}">
+                            <TextBlock Background="LightGray" Margin="0,10,0,0" Padding="5,2">IMAGE PREPROCESSING</TextBlock>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="5" Visibility="{Binding RefImageSource,Converter={StaticResource NullToVisibilityConverter}}">
+                                    <TextBlock Text="Gamma"  VerticalAlignment="Center" />
+                                    <xctk:DoubleUpDown Minimum="0.05" Maximum="0.9" Value="{Binding ImagePreprocessingGamma}" Increment="0.05" Margin="2" VerticalAlignment="Center" MinWidth="60" />
+                                </StackPanel>
+                                <controls:ImageButton Grid.Row="1" Width="200" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Start Image Preprocessing" Command="{Binding StartImagePreprocessing}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,2" />
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding CurrentImagePreprocessingResult, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,5">
+                                <Image Source="{Binding CurrentImagePreprocessingResult.Status.State, Converter={Emeconverters:FlowStateToImageDictionaryConverter}}" Style="{StaticResource Icon}" />
+                                <TextBlock Text="{Binding CurrentImagePreprocessingResult.Status.State}" Margin="4,0" />
+                                <TextBlock Text="{Binding CurrentImagePreprocessingResult.Status.Message}" />
+                            </StackPanel>
+                            <GroupBox  Grid.ColumnSpan="2" Header="Result Image" Margin="4" MaxHeight="350" Visibility="{Binding CurrentImagePreprocessingResult, Converter={StaticResource NullToVisibilityConverter}}">
+                                <Image  Source="{Binding CurrentImagePreprocessingResult.PreprocessedImage.WpfBitmapSource}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+                            </GroupBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </controls:ImageGroupBox>
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="{Binding BusyMessage}" DisplayAfter="0" />
+    </Grid>
+</UserControl>

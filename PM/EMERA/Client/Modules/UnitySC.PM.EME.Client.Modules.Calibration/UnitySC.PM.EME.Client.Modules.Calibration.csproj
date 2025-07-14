@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{9B4A20A7-1327-4265-89EC-C8852957C05F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.EME.Client.Modules.Calibration</RootNamespace>
+    <AssemblyName>UnitySC.PM.EME.Client.Modules.Calibration</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <SonarQubeTestProject>
+    </SonarQubeTestProject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_HMI\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug_HMI\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CalibrationsView.xaml.cs">
+      <DependentUpon>CalibrationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalibrationsVM.cs" />
+    <Compile Include="CalibrationConfiguration.cs" />
+    <Compile Include="ViewModel\DistanceSensorCalibrationVM.cs" />
+    <Compile Include="ViewModel\FilterConverter.cs" />
+    <Compile Include="ViewModel\CameraMagnificationCalibrationVM.cs" />
+    <Compile Include="ViewModel\ChuckParallelismCalibrationVM.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\AxisOrthogonalityCalibrationVM.cs" />
+    <Compile Include="ViewModel\CalibrationWizardStepBaseVM.cs" />
+    <Compile Include="ViewModel\DistortionCalibrationVM.cs" />
+    <Compile Include="ViewModel\FilterCalibrationVM.cs" />
+    <Compile Include="ViewModel\FilterInstallationState.cs" />
+    <Compile Include="ViewModel\FilterVM.cs" />
+    <Compile Include="ViewModel\ChuckManagerCalibrationVM.cs" />
+    <Compile Include="ViewModel\Navigation\NavigationManagerForCalibration.cs" />
+    <Compile Include="View\CameraMagnificationCalibrationView.xaml.cs">
+      <DependentUpon>CameraMagnificationCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ChuckParallelismCalibrationView.xaml.cs">
+      <DependentUpon>ChuckParallelismCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AxisOrthogonalityCalibrationView.xaml.cs">
+      <DependentUpon>AxisOrthogonalityCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DistantSensorCalibrationView.xaml.cs">
+      <DependentUpon>DistantSensorCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DistortionCalibrationView.xaml.cs">
+      <DependentUpon>DistortionCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FilterCalibrationView.xaml.cs">
+      <DependentUpon>FilterCalibrationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ChuckManagerCalibrationView.xaml.cs">
+      <DependentUpon>ChuckManagerCalibrationView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77F22706-7C58-4193-AE97-85347CBDE3A2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{eee94f55-381c-4fce-a35c-3aeae3ec7c63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04ad1c23-71c2-46c4-880e-bc5cc2541da4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97c741a4-6213-470b-9eb1-f19f61df281c}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Service\UnitySC.PM.EME.Service.Interface\UnitySC.PM.EME.Service.Interface.csproj">
+      <Project>{010d57aa-cfb3-4bcc-857c-15db015290b7}</Project>
+      <Name>UnitySC.PM.EME.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.Client.Controls\UnitySC.PM.EME.Client.Controls.csproj">
+      <Project>{e17ab098-6e3a-4a00-8c32-f18838851aa7}</Project>
+      <Name>UnitySC.PM.EME.Client.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.Client.Shared\UnitySC.PM.EME.Client.Shared.csproj">
+      <Project>{ba61082a-1b78-48ee-8ee0-704208209f9d}</Project>
+      <Name>UnitySC.PM.EME.Client.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.ClientProxy\UnitySC.PM.EME.Client.Proxy.csproj">
+      <Project>{d344632e-77e6-402a-aef1-5590905f08c9}</Project>
+      <Name>UnitySC.PM.EME.Client.Proxy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CalibrationsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ResourceDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Style\WizardNavigationControlStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CameraMagnificationCalibrationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ChuckParallelismCalibrationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AxisOrthogonalityCalibrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DistantSensorCalibrationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\DistortionCalibrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FilterCalibrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ChuckManagerCalibrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.CommonUI.View.Hardware.CameraView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:vm="clr-namespace:UnitySC.PM.DMT.CommonUI.ViewModel.Hardware"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:UnitySC.PM.DMT.CommonUI.View.Hardware"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <vm:CameraVM x:Key="DesignViewModel"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../ResourcesDictionnary.xaml"/>
+                <ResourceDictionary Source="../DataTemplate.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel d:DataContext="{StaticResource DesignViewModel}">
+        <StackPanel Orientation="Vertical" >
+            <CheckBox x:Name="liveCheckBox" Content="Live preview" IsChecked="{Binding IsChecked, FallbackValue=True}"
+                      Command="{Binding LivePreviewCommand}" CommandParameter="{Binding ElementName=liveCheckBox, Path=IsChecked}"/>
+        </StackPanel>
+
+        <!-- Screen -->
+        <controls:ImageGroupBox Header="Screen" Image="{StaticResource Fringes}" Background="{StaticResource CameraBackground}"
+                                Visibility="{Binding ElementName=liveCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Width="512" Height="288" Background="{Binding ScreenColor}" HorizontalAlignment="Center">
+                <Image Source="{Binding ScreenBitmapSource}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </Border>
+        </controls:ImageGroupBox>
+
+        <!-- Camera -->
+        <controls:ImageGroupBox Header="Camera" Image="{StaticResource Camera}" Background="{StaticResource CameraBackground}"
+                                Visibility="{Binding ElementName=liveCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Height="360" HorizontalAlignment="Center" Background="{StaticResource CameraBackground}">
+                <Image x:Name="CameraImage" Source="{Binding CameraBitmapSource}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </Border>
+        </controls:ImageGroupBox>
+        
+    </StackPanel>
+
+</UserControl>

@@ -1,0 +1,204 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Recipe.View.AcquisitionsEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:UnitySC.PM.EME.Client.Recipe.ViewModel"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:extensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:AcquisitionsEditorViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!--  Images  -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageDictionary.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageGeometries.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,5,0">
+                    <Hyperlink Command="{Binding DeleteAll}">Delete all acquisitions</Hyperlink>
+                </TextBlock>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
+                    <Grid>
+                        <controls:ImageButton Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                              ImageGeometry="{StaticResource InsertRowGeometry}"
+                                              Style="{StaticResource ImageButtonWithoutBorder}"
+                                              ToolTip="Add Acquisition" Margin="5"
+                                              Command="{Binding AddAcquisition}">
+                            <controls:ImageButton.RenderTransform>
+                                <TranslateTransform Y="-5">
+                                </TranslateTransform>
+                            </controls:ImageButton.RenderTransform>
+                        </controls:ImageButton>
+
+                        <ItemsControl ItemsSource="{Binding AcquisitionsViewModel}" AlternationCount="2" Margin="32,15,0,15">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="4" BorderThickness="1"
+                                            BorderBrush="{StaticResource ListItemStaticBorderColor}">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="LightGray" />
+                                                <Style.Triggers>
+                                                    <DataTrigger
+                                                        Binding="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(ItemsControl.AlternationIndex)}"
+                                                        Value="1">
+                                                        <Setter Property="Background" Value="White" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid>
+                                            <!-- Readonly -->
+                                            <Grid
+                                                Visibility="{Binding InEdition, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="75" />
+                                                </Grid.ColumnDefinitions>
+                                                <!-- Content-->
+                                                <Grid>
+                                                    <Grid VerticalAlignment="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="150" />
+                                                            <ColumnDefinition Width="200" />
+                                                            <ColumnDefinition Width="200" />
+                                                            <ColumnDefinition Width="200" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="{Binding Name}" Margin="10,0"
+                                                                   FontWeight="Bold" VerticalAlignment="Center"
+                                                                   ToolTip="Name" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding CurrentLight.Name}"
+                                                                   Margin="10,0" VerticalAlignment="Center"
+                                                                   ToolTip="Light" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding CurrentFilter.Name}"
+                                                                   Margin="10,0" VerticalAlignment="Center"
+                                                                   ToolTip="Filter">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="{x:Type TextBlock}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CurrentFilter.Type}" Value="Unknown">
+                                                                            <Setter Property="Foreground" Value="Red" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Grid.Column="3" Margin="10,0"
+                                                                   VerticalAlignment="Center" ToolTip="Exposure Time">
+                                                            <Run Text="{Binding ExposureTime, StringFormat={}{0:F3}}" />
+                                                            <Run Text=" ms" />
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </Grid>
+                                                <!-- Button-->
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <controls:ImageButton Width="30"
+                                                                          ImageGeometry="{StaticResource TrashGeometry}"
+                                                                          Margin="5,0"
+                                                                          ImageGeometryBrush="{StaticResource ImageErrorColor}"
+                                                                          ToolTip="Delete"
+                                                                          Command="{Binding DataContext.DeleteAcquisition, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                          CommandParameter="{Binding}" />
+                                                    <controls:ImageButton Width="30"
+                                                                          ImageGeometry="{StaticResource PencilGeometry}"
+                                                                          Margin="5,0"
+                                                                          ImageGeometryBrush="{StaticResource ImageMainColor}"
+                                                                          ToolTip="Edit"
+                                                                          Command="{Binding DataContext.ChangeAcquisitionEdition, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                          CommandParameter="{Binding}" />
+                                                </StackPanel>
+                                            </Grid>
+                                            <!-- In edition -->
+                                            <Grid
+                                                Visibility="{Binding InEdition, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="75" />
+                                                </Grid.ColumnDefinitions>
+                                                <!-- Content-->
+                                                <Grid VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="150" />
+                                                        <ColumnDefinition Width="200" />
+                                                        <ColumnDefinition Width="200" />
+                                                        <ColumnDefinition Width="200" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox Grid.Column="0" MinWidth="80" Text="{Binding Name}"
+                                                             VerticalAlignment="Center" Margin="5,0,0,0"
+                                                             ToolTip="{Binding Name}" />
+                                                    <Grid Grid.Column="1">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Light"
+                                                                VerticalAlignment="Center" Margin="5" />
+                                                        <ComboBox Grid.Column="1"
+                                                                ItemsSource="{Binding Lights}"
+                                                               SelectedItem="{Binding CurrentLight}" Margin="10" />
+                                                    </Grid>
+                                                    <Grid Grid.Column="2">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Filter"
+                                                                VerticalAlignment="Center" Margin="5" />
+                                                       <ComboBox Grid.Column="1"
+                                                               ItemsSource="{Binding Path = Filters}"
+                                                               SelectedItem="{Binding CurrentFilter}" Margin="10" />
+                                                    </Grid>
+                                                    <Grid Grid.Column="3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Exposure Time"
+                                                                   VerticalAlignment="Center" Margin="5" />
+                                                        <controls:TextBoxUnit Grid.Column="1"
+                                                                              Text="{Binding ExposureTime, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:F3}}"
+                                                                              extensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                                                                              extensions:TextBoxMaskExt.MaximumValue="{Binding Camera.MaxExposureTime}"
+                                                                              extensions:TextBoxMaskExt.MinimumValue="{Binding Camera.MinExposureTime}"
+                                                                              Unit="ms"
+                                                                              Margin="5"
+                                                                              VerticalContentAlignment="Center" />
+                                                    </Grid>
+                                                </Grid>
+                                                <!-- Button-->
+                                                <Button Grid.Column="1" Content="Ok" Width="30" ToolTip="Apply change"
+                                                        Style="{StaticResource HighlightedButton}" Margin="5,0"
+                                                        Command="{Binding DataContext.ChangeAcquisitionEdition, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                        CommandParameter="{Binding}" HorizontalAlignment="Right" />
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

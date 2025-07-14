@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1F1426D1-838C-4E37-8598-8533BF310975}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.Shared.Hardware.Controllers</RootNamespace>
+    <AssemblyName>UnitySC.PM.Shared.Hardware.Controllers</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- other property settings -->
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ACS.SPiiPlusNET">
+      <HintPath>..\..\Libs\ACS.SPiiPlusNET.dll</HintPath>
+    </Reference>
+    <Reference Include="Aerotech.Common, Version=3.13.0.107, Culture=neutral, PublicKeyToken=478e72719c32735e">
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\Aerotech\Aerotech.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Aerotech.Ensemble, Version=5.6.0.17, Culture=neutral, PublicKeyToken=478e72719c32735e">
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\Aerotech\Aerotech.Ensemble.dll</HintPath>
+    </Reference>
+    <Reference Include="CServerIOService">
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\ServerIO_WAGO\CServerIOService.dll</HintPath>
+    </Reference>
+    <Reference Include="NationalInstruments.DAQmx, Version=21.3.45.49317, Culture=neutral, PublicKeyToken=4febd62461bf11a4, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\NationalInstruments.DAQmx.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\Axes\ACS\ACSAxis.cs" />
+    <Compile Include="Controllers\Axes\ACS\ACSController.cs" />
+    <Compile Include="Controllers\Axes\ACS\ACSDummyController.cs" />
+    <Compile Include="Controllers\Axes\Aerotech\AerotechAxis.cs" />
+    <Compile Include="Controllers\Axes\Aerotech\AerotechController.cs" />
+    <Compile Include="Controllers\Axes\Aerotech\AerotechDummyController.cs" />
+    <Compile Include="Controllers\Axes\Aerotech\AerotechMotionController.cs" />
+    <Compile Include="Controllers\Axes\Aerotech\AerotechMotionDummyController.cs" />
+    <Compile Include="Controllers\Axes\AxesControllerBase.cs" />
+    <Compile Include="Controllers\Axes\CNC\CNCMotionController.cs" />
+    <Compile Include="Controllers\Axes\CNC\CNCMotionDummyController.cs" />
+    <Compile Include="Controllers\Axes\IO\DummyPSDIoMotionController.cs" />
+    <Compile Include="Controllers\Axes\IO\IoMotionController.cs" />
+    <Compile Include="Controllers\Axes\Owis\OwisMotionController.cs" />
+    <Compile Include="Controllers\Axes\Owis\OwisMotionDummyController.cs" />
+    <Compile Include="Controllers\Axes\Parallax\ParallaxMotionDummyController.cs" />
+    <Compile Include="Controllers\Axes\Parallax\ParallaxMotionController.cs" />
+    <Compile Include="Controllers\Axes\PI\Dummy\PIE709DummyController.cs" />
+    <Compile Include="Controllers\Axes\Thorlabs\ThorlabsMotionDummyController.cs" />
+    <Compile Include="Controllers\Axes\Thorlabs\ThorlabsMotionController.cs" />
+    <Compile Include="Controllers\Chambers\ChamberController.cs" />
+    <Compile Include="Controllers\Chambers\ChamberDummyController.cs" />
+    <Compile Include="Controllers\Chambers\EMEChamberController.cs" />
+    <Compile Include="Controllers\Chambers\PSDChamberController.cs" />
+    <Compile Include="Controllers\Chucks\IoChuckController.cs" />
+    <Compile Include="Controllers\Chucks\IoChuckDummyController.cs" />
+    <Compile Include="Controllers\Chucks\EMEChuckController.cs" />
+    <Compile Include="Controllers\Chucks\USPChuckControllerBase.cs" />
+    <Compile Include="Controllers\Chucks\PSDChuckController.cs" />
+    <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\Axes\Newport\SMC100Api.cs" />
+    <Compile Include="Controllers\Axes\Newport\SMC100Controller.cs" />
+    <Compile Include="Controllers\Axes\Newport\SMC100MotionController.cs" />
+    <Compile Include="Controllers\Axes\Newport\SMC100Utils.cs" />
+    <Compile Include="Controllers\Axes\Phytron\MCCController.cs" />
+    <Compile Include="Controllers\Axes\Phytron\MCCControllerUtils.cs" />
+    <Compile Include="Controllers\Axes\Phytron\MCCRequestBuilder.cs" />
+    <Compile Include="Controllers\Axes\PI\PIE709Controller.cs" />
+    <Compile Include="Controllers\Axes\PI\PIE709ControllerApiWrapper.cs" />
+    <Compile Include="Controllers\Axes\PI\PIE709ControllerUtils.cs" />
+    <Compile Include="Controllers\Axes\PiezoController.cs" />
+    <Compile Include="Controllers\Axes\PI\PiezoControllerApiWrapper.cs" />
+    <Compile Include="Controllers\Axes\PI\PI_GCS2.cs" />
+    <Compile Include="Controllers\DistanceSensor\DistanceSensorController.cs" />
+    <Compile Include="Controllers\DistanceSensor\DistanceSensorDummyController.cs" />
+    <Compile Include="Controllers\DistanceSensor\MicroEpsilonDistanceSensorController.cs" />
+    <Compile Include="Controllers\FFUs\Astrofan612FfuController.cs" />
+    <Compile Include="Controllers\FFUs\DummyFfuController.cs" />
+    <Compile Include="Controllers\FFUs\FfuController.cs" />
+    <Compile Include="Controllers\Ionizers\IonizerController.cs" />
+    <Compile Include="Controllers\Ionizers\KeyenceIonizerController.cs" />
+    <Compile Include="Controllers\Ionizers\KeyenceIonizerDummyController.cs" />
+    <Compile Include="Controllers\Lasers\LaserController.cs" />
+    <Compile Include="Controllers\Couplers\RACKNI\NICouplerDummyController.cs" />
+    <Compile Include="Controllers\Couplers\RACKNI\NICouplerController.cs" />
+    <Compile Include="Controllers\Lasers\Piano450LaserDummyController.cs" />
+    <Compile Include="Controllers\Lasers\Piano450LaserController.cs" />
+    <Compile Include="Controllers\Lasers\SMD12LaserDummyController.cs" />
+    <Compile Include="Controllers\Lasers\SMD12LaserController.cs" />
+    <Compile Include="Controllers\Lights\ACS\ACSLightController.cs" />
+    <Compile Include="Controllers\Lights\Arduino\DummyArduinoLightController.cs" />
+    <Compile Include="Controllers\Lights\Arduino\ArduinoLightController.cs" />
+    <Compile Include="Controllers\Lights\Dummy\DummyLightController.cs" />
+    <Compile Include="Controllers\Lights\Evosens\DummyEvosensLightController.cs" />
+    <Compile Include="Controllers\Lights\ENTTEC\ENTTECLightController.cs" />
+    <Compile Include="Controllers\Lights\ENTTEC\FTDI.cs" />
+    <Compile Include="Controllers\Lights\Evosens\EvosensLightController.cs" />
+    <Compile Include="Controllers\Lights\IPowerLightController.cs" />
+    <Compile Include="Controllers\Lights\LightController.cs" />
+    <Compile Include="Controllers\OpcGateway\OpcAttribute.cs" />
+    <Compile Include="Controllers\OpcGateway\OpcController.cs" />
+    <Compile Include="Controllers\Axes\Reliance\AxesSet.cs" />
+    <Compile Include="Controllers\Axes\Reliance\RCMController.cs" />
+    <Compile Include="Controllers\Axes\Reliance\RCMControllerUtils.cs" />
+    <Compile Include="Controllers\Axes\Reliance\RCMXYMove.cs" />
+    <Compile Include="Controllers\Axes\Reliance\RCMAxisMove.cs" />
+    <Compile Include="Controllers\Axes\Reliance\Simulation\Handler.cs" />
+    <Compile Include="Controllers\Axes\Reliance\Simulation\MotionParameters.cs" />
+    <Compile Include="Controllers\Axes\Reliance\Simulation\Motor.cs" />
+    <Compile Include="Controllers\Axes\Reliance\Simulation\RCMSimulator.cs" />
+    <Compile Include="Controllers\OpcGateway\OpcDummyController.cs" />
+    <Compile Include="Controllers\Plc\BeckhoffPlcDummyController.cs" />
+    <Compile Include="Controllers\Plc\BeckhoffPlcController.cs" />
+    <Compile Include="Controllers\Plc\PlcController.cs" />
+    <Compile Include="Controllers\Rfids\BisL405RfidController.cs" />
+    <Compile Include="Controllers\Rfids\DummyRfidController.cs" />
+    <Compile Include="Controllers\Rfids\RfidController.cs" />
+    <Compile Include="Controllers\SafetyException.cs" />
+    <Compile Include="Controllers\Screens\DensitronDM430GNScreenController.cs" />
+    <Compile Include="Controllers\Screens\DummyScreenController.cs" />
+    <Compile Include="Controllers\Screens\ScreenController.cs" />
+    <Compile Include="Controllers\Shutters\Sh10pilShutterDummyController.cs" />
+    <Compile Include="Controllers\Shutters\Sh10pilShutterController.cs" />
+    <Compile Include="Controllers\Shutters\ShutterController.cs" />
+    <Compile Include="Controllers\Spectrometer\avaspec.cs" />
+    <Compile Include="Controllers\Spectrometer\SpectrometerDummyController.cs" />
+    <Compile Include="Controllers\Spectrometer\SpectrometerAVSController.cs" />
+    <Compile Include="Dummy\DummyAxis.cs" />
+    <Compile Include="Dummy\DummyController.cs" />
+    <Compile Include="ControllerFactory.cs" />
+    <Compile Include="Dummy\DummyMotionController.cs" />
+    <Compile Include="FeatureInterfaces\IMotion.cs" />
+    <Compile Include="FeatureInterfaces\IPositionSynchronizedOutput.cs" />
+    <Compile Include="FeatureInterfaces\IOpcMotion.cs" />
+    <Compile Include="IControllerIO.cs" />
+    <Compile Include="Controllers\Motions\MotionControllerBase.cs" />
+    <Compile Include="Controllers\Motions\MotorController.cs" />
+    <Compile Include="Controllers\Couplers\Messages.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79f7e968-c5fd-4307-9127-c9c96691e505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53bd49c3-c5ce-4ead-8261-a95c2a003a5e}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.Shared.Hardware.Communication\UnitySC.PM.Shared.Hardware.Communication.csproj">
+      <Project>{b04c78de-f8db-4ccd-a074-24f88fbbea4a}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.Shared.Hardware.Core\UnitySC.PM.Shared.Hardware.Core.csproj">
+      <Project>{0b138ae8-3243-4d88-867f-3111dd8fb6ff}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04ad1c23-71c2-46c4-880e-bc5cc2541da4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Controllers\Axes\Phytron\README.md" />
+    <None Include="Controllers\Axes\PI\README.md" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Workstation.UaClient">
+      <Version>3.2.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AeroBasic64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Aerotech.Common.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Aerotech.Ensemble.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="avaspecx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Controllers\Reliance\README.md" />
+    <Content Include="EnsembleCore64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestAlgo.View.AutoExposureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:extensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.TestAlgo.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=vm:AutoExposureVM}"
+             d:DesignHeight="450"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <controls:ImageGroupBox ImageGeometry="{StaticResource CameraGeometry}" 
+                                ImageGeometryBrush="{StaticResource IconsColor}" 
+                                Header="{Binding Name}"
+                                d:Header="Camera Exposure">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                       Margin="5"
+                       VerticalAlignment="Center"
+                       Text="Filter" />
+                <ComboBox Grid.Column="1"
+                      Margin="10"
+                      ItemsSource="{Binding FilterWheelBench.Filters}"
+                      SelectedItem="{Binding FilterWheelBench.CurrentFilter}" />
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+        Margin="5"
+        VerticalAlignment="Center"
+        Text="Target brightness : " />
+                <controls:TextBoxUnit 
+                      Grid.Column="1"
+                      Margin="10"
+                      VerticalContentAlignment="Center"
+                      extensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                        extensions:TextBoxMaskExt.MaximumValue="1.0"                    
+                      Text="{Binding TargetBrightness, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
+                      Unit=""/>
+                <TextBlock Grid.Column="2"
+                Margin="5"
+                VerticalAlignment="Center"
+                Text="Tolerance : " />  
+                <controls:TextBoxUnit 
+                  Grid.Column="3"
+                  Margin="10"
+                  VerticalContentAlignment="Center"
+                  extensions:TextBoxMaskExt.Mask="PositiveInteger"
+                   extensions:TextBoxMaskExt.MaximumValue="100.0"         
+                  Text="{Binding DecimalToleranceBrightness, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}"
+                  Unit=""/>
+            </Grid>
+            <StackPanel Grid.Row="2" Background="{StaticResource PanelBackground}">
+                <controls:ImageButton Margin="6"
+                                      Command="{Binding CalibrateExposure}"
+                                      Content="Calibrate exposure time"
+                                      ImageGeometry="{StaticResource PlayGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}" />
+
+                <StackPanel Margin="0,5"
+                            Orientation="Horizontal"
+                            Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}">
+                    <TextBlock Margin="4,0"
+                               d:Text="Success"
+                               Text="{Binding Result.Status.State}" />
+                    <TextBlock Text="{Binding Result.Status.Message}" />
+                </StackPanel>
+
+                <TextBlock d:Text="Target brightness: 75%"
+                           Text="{Binding Path=TargetBrightness, StringFormat='Target brightness: {0:P0}'}"
+                           Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}" />
+
+                <TextBlock d:Text="Measured brightness: 72%"
+                           Text="{Binding Path=Result.Brightness, StringFormat='Measured brightness: {0:P0}'}"
+                           Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}" />
+
+                <TextBlock d:Text="Exposure time: 152 ms"
+                           Text="{Binding Path=Result.ExposureTime, StringFormat='Exposure time: {0:F2} ms'}"
+                           Visibility="{Binding Result, Converter={converters:NullToVisibilityConverter}}" />
+
+            </StackPanel>
+            <xctk:BusyIndicator Grid.RowSpan="2" BusyContent="{Binding BusyMessage}"
+                            DisplayAfter="0"
+                            IsBusy="{Binding IsBusy}">
+                <xctk:BusyIndicator.BusyContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="4">
+                            <TextBlock Margin="6"
+                                   HorizontalAlignment="Center"
+                                   Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.BusyMessage}" />
+                            <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Cancel}"
+                                Content="Cancel" />
+                        </StackPanel>
+                    </DataTemplate>
+                </xctk:BusyIndicator.BusyContentTemplate>
+            </xctk:BusyIndicator>
+        </Grid>
+    </controls:ImageGroupBox>
+
+</UserControl>

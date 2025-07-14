@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7176D0D7-108B-46ED-A6A9-C2F89F9A4685}</ProjectGuid>
+    <RootNamespace>CalculationDLL</RootNamespace>
+    <Keyword>MFCDLLProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)Macros.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+    <IncludePath>C:\Repo\PM\PSD\Service\Holo3-GlobalTopo\Include_x64;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectIncludePath);%(AdditionalIncludeDirectories);C:\Program Files\Matrox Imaging\MIL\Include;$(SolutionDir)Src\H3AppTools;$(SolutionDir)Src\includesOnly;$(SolutionDir)Src\H3IOHoloMAP;$(SolutionDir)Src\H3SensorCoveli_ALTATECH;$(SolutionDir)Src\H3DSLRCalibration_ALTATECH\H3DSLRCalibration;$(SolutionDir)Src\NanoCore;$(SolutionDir)FreeImage\Include</AdditionalIncludeDirectories>
+      <TreatSpecificWarningsAsErrors>4701;4706;4709</TreatSpecificWarningsAsErrors>
+      <DisableSpecificWarnings>4244;4267;4635</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>.\CalculationDLL.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(ProjectLibraryPath);%(AdditionalLibraryDirectories);C:\Program Files\Matrox Imaging\MIL\LIB</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Program Files\Matrox Imaging\MIL\LIB\Mil.lib;H3AppTools.lib;H3SensorCoveli_3.lib;H3IOHoloMAP.lib;H3ImageTools.lib;H3DSLRCalibration.lib;H3UnwrapPhase.lib;MIL.lib;Milim.lib;MilBlob.lib;NanoCore.lib</AdditionalDependencies>
+      <OptimizeReferences>false</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x040c</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_USRDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;NDEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectIncludePath);%(AdditionalIncludeDirectories);C:\Program Files\Matrox Imaging\MIL\Include;$(SolutionDir)Src\H3AppTools;$(SolutionDir)Src\includesOnly;$(SolutionDir)Src\H3IOHoloMAP;$(SolutionDir)Src\H3SensorCoveli_ALTATECH;$(SolutionDir)Src\H3DSLRCalibration_ALTATECH\H3DSLRCalibration;$(SolutionDir)Src\NanoCore;$(SolutionDir)FreeImage\Include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4244;4267;4635</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\CalculationDLL.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(ProjectLibraryPath);%(AdditionalLibraryDirectories);C:\Program Files\Matrox Imaging\MIL\LIB</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Program Files\Matrox Imaging\MIL\LIB\Mil.lib;H3AppTools.lib;H3SensorCoveli_3.lib;H3IOHoloMAP.lib;H3ImageTools.lib;H3DSLRCalibration.lib;H3UnwrapPhase.lib;MIL.lib;Milim.lib;MilBlob.lib;NanoCore.lib</AdditionalDependencies>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x040c</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="CalculationDLL.def" />
+    <None Include="res\CalculationDLL.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CalculationDLL.cpp" />
+    <ClCompile Include="CalculationDLLApp.cpp" />
+    <ClCompile Include="ErrorDefineFile.cpp" />
+    <ClCompile Include="FrGrGlobalTopo.cpp" />
+    <ClCompile Include="FrGrTreatement.cpp" />
+    <ClCompile Include="FrGrTreatementWrapper.cpp" />
+    <ClCompile Include="H3Calculation.cpp" />
+    <ClCompile Include="ImageInfoClass.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CalculationDLLApp.h" />
+    <ClInclude Include="CalculationDLL.h" />
+    <ClInclude Include="ErrorDefineFile.h" />
+    <ClInclude Include="FrGrGlobalTopo.h" />
+    <ClInclude Include="FrGrTreatement.h" />
+    <ClInclude Include="FrGrTreatementWrapper.h" />
+    <ClInclude Include="H3Calculation.h" />
+    <ClInclude Include="ImageInfoClass.h" />
+    <ClInclude Include="MessageDefineFile.h" />
+    <ClInclude Include="ParametersInfoClass.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CalculationDLL.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,162 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.CommonUI.View.Measure.AdjustCurvatureDynamicView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dmtCommon="clr-namespace:UnitySC.PM.DMT.CommonUI"
+             xmlns:zb="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:dmtEnum="clr-namespace:UnitySC.PM.DMT.Service.Interface.Measure.Outputs;assembly=UnitySC.PM.DMT.Service.Interface"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <sharedControls:ImageGroupBox Grid.Column="0" Header="Base acquisition"
+                                      ImageGeometry="{StaticResource GearGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}" Margin="3">
+            <StackPanel VerticalAlignment="Center">
+                <controls:ImageButton Style="{StaticResource HighlightedImageButton}"
+                                      ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="White"
+                                      Content="Acquire source images"
+                                      Command="{Binding AcquireBaseCurvatureImagesCommand}" />
+            </StackPanel>
+        </sharedControls:ImageGroupBox>
+
+        <!-- Settings -->
+        <sharedControls:ImageGroupBox Grid.Column="1" Header="Settings" ImageGeometry="{StaticResource GearGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}" Margin="3">
+            <StackPanel Orientation="Vertical">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition MinWidth="340" Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <RadioButton Grid.Row="0" Grid.Column="0" GroupName="Dynamic" Content="Curvature Dynamics"
+                                 VerticalAlignment="Top" Margin="0,7"
+                                 IsChecked="{Binding Dynamic, Mode=TwoWay, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static dmtCommon:DynamicsType.Curvature}}" 
+                                 Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)Curvature].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurvatureDynamic}"
+                             sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True"
+                             Width="120" HorizontalAlignment="Left" Margin="4,4" VerticalAlignment="Top" 
+                             Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)Curvature].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                    <controls:TextSlider Grid.Row="0" Grid.Column="2" Value="{Binding CurvatureSliderTickIndex}"
+                                         Minimum="0" Maximum="{Binding MaxSliderIndex}"
+                                         TickText="{Binding CurvatureSliderTickText}" TickFrequency="5"
+                                         TickPlacement="BottomRight" MinWidth="300" 
+                                         Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)Curvature].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+
+                    <RadioButton Grid.Row="1" Grid.Column="0" GroupName="Dynamic" Content="Low-angle dark field"
+                                 VerticalAlignment="Top" Margin="0,7"
+                                 IsChecked="{Binding Dynamic, Mode=TwoWay, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static dmtCommon:DynamicsType.Dark}}" 
+                                 Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)LowAngleDarkField].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DarkDynamic}"
+                             sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True"
+                             Width="120" HorizontalAlignment="Left" Margin="4,4" VerticalAlignment="Top" 
+                             Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)LowAngleDarkField].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                    <controls:TextSlider Grid.Row="1" Grid.Column="2" Value="{Binding DarkSliderTickIndex}" Minimum="0"
+                                         Maximum="{Binding MaxSliderIndex}"
+                                         TickText="{Binding DarkSliderTickText}" TickFrequency="5"
+                                         TickPlacement="BottomRight" MinWidth="300" 
+                                         Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)LowAngleDarkField].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+
+                    <RadioButton Grid.Row="2" Grid.Column="0" GroupName="Dynamic" Content="UnWrapped Dynamics"
+                                 VerticalAlignment="Top" Margin="0,7"
+                                 IsChecked="{Binding Dynamic, Mode=TwoWay, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static dmtCommon:DynamicsType.Dark}}" 
+                                 Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)UnWrappedPhase].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding UnWrappedDynamic}"
+                            sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True"
+                             Width="120" HorizontalAlignment="Left" Margin="4,4" VerticalAlignment="Top" 
+                             Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)UnWrappedPhase].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                    <controls:TextSlider Grid.Row="2" Grid.Column="2" Value="{Binding UnWrappedSliderTickIndex}" Minimum="0"
+                                        Maximum="{Binding MaxSliderIndex}"
+                                        TickText="{Binding UnWrappedSliderTickText}" TickFrequency="5"
+                                        TickPlacement="BottomRight" MinWidth="300" 
+                                         Visibility="{Binding Path=MeasureVM.Outputs[(dmtEnum:DeflectometryOutput)UnWrappedPhase].IsSelected, Converter={converters:BooleanToVisibilityConverter}}"/>
+                </Grid>
+            </StackPanel>
+
+        </sharedControls:ImageGroupBox>
+
+        <!-- Image Résultat -->
+        <sharedControls:ImageGroupBox Grid.Row="1" Grid.ColumnSpan="2" Header="Acquisition results"
+                                      ImageGeometry="{StaticResource ImageGeometry}"
+                                      ImageGeometryBrush="{StaticResource IconsColor}" Margin="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal">
+                    <sharedControls:ImageButton ImageGeometry="{StaticResource PlayGeometry}"
+                                                ImageGeometryBrush="Green" Content="Calculate"
+                                                Command="{Binding RecalculateCurvatureDynamicCommand}"
+                                                HorizontalAlignment="Left" Margin="2"
+                                                IsEnabled="{Binding IsBaseAcquisitionDone}" />
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Visibility>
+                            <MultiBinding Converter="{converters:BooleanAndToVisibilityConverter}">
+                                <Binding Path="IsBaseAcquisitionDone" />
+                                <Binding Path="Dynamic" Converter="{converters:EnumToBooleanConverter}"
+                                         ConverterParameter="{x:Static dmtCommon:DynamicsType.Curvature}" />
+                            </MultiBinding>
+                        </StackPanel.Visibility>
+                        <RadioButton GroupName="Direction" Content="CX" Margin="10,0" VerticalContentAlignment="Center"
+                                     IsChecked="{Binding Direction, Mode=TwoWay, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static Orientation.Horizontal}}" />
+                        <RadioButton GroupName="Direction" Content="CY" VerticalContentAlignment="Center"
+                                     IsChecked="{Binding Direction, Mode=TwoWay, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static Orientation.Vertical}}" />
+                    </StackPanel>
+                </StackPanel>
+                <zb:ZoomboxImageWithButtons Grid.Row="1" ImageSource="{Binding DisplayedImage}" />
+            </Grid>
+        </sharedControls:ImageGroupBox>
+        <xctk:BusyIndicator Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                            BusyContent="{Binding BusyContent}">
+            <xctk:BusyIndicator.IsBusy>
+                <MultiBinding Converter="{converters:BooleanOrConverter}">
+                    <Binding Path="RecalculateCurvatureDynamicCommand.IsRunning" />
+                    <Binding Path="AcquireBaseCurvatureImagesCommand.IsRunning" />
+                </MultiBinding>
+            </xctk:BusyIndicator.IsBusy>
+        </xctk:BusyIndicator>
+    </Grid>
+</UserControl>

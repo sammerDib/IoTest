@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Saint (EMBRACE) -->
+<!-- edited with XML Spy v4.0.1 U (http://www.xmlspy.com) by Romanovskaya (Mecasoft) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="AccessRights" type="AccessRightsType">
+    <xs:annotation>
+      <xs:documentation>Comment describing your root element</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AccessRightsType">
+    <xs:sequence>
+      <xs:element name="NavigationRights" type="NavigationRightsType">
+        <xs:unique name="NavigationNameUnique">
+          <xs:selector xpath="./*"/>
+          <xs:field xpath="Name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element name="ProcessProgramRights" type="ProcessProgramRightsType">
+        <xs:unique name="ProcessProgramGroupUnique">
+          <xs:selector xpath="./*"/>
+          <xs:field xpath="Name"/>
+        </xs:unique>
+      </xs:element>
+      <xs:element name="LogonDialogRights" type="RightType"/>
+      <xs:element name="Users" type="UsersType">
+        <xs:unique name="UserNameUnique">
+          <xs:selector xpath="./*"/>
+          <xs:field xpath="Name"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NavigationRightsType">
+    <xs:sequence>
+      <xs:element name="NavigationArea" type="NavigationAreaType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubNavigationRightsType">
+    <xs:sequence>
+      <xs:element name="SubNavigation" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="Level">
+              <xs:simpleType>
+                <xs:restriction base="xs:int">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                  <xs:enumeration value="2"/>
+                  <xs:enumeration value="3"/>
+                  <xs:enumeration value="4"/>
+                  <xs:enumeration value="5"/>
+                  <xs:enumeration value="6"/>
+                  <xs:enumeration value="7"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="InformationPanelRights" type="RightType" minOccurs="0">
+              <xs:unique name="InfoElementName">
+                <xs:selector xpath="./*"/>
+                <xs:field xpath="Name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="CommandPanelRights" type="RightType" minOccurs="0">
+              <xs:unique name="CommandBtnName">
+                <xs:selector xpath="./*"/>
+                <xs:field xpath="Name"/>
+              </xs:unique>
+            </xs:element>
+            <xs:element name="DialogBoxRights" type="RightType" minOccurs="0">
+              <xs:unique name="DialogElementName">
+                <xs:selector xpath="./*"/>
+                <xs:field xpath="Name"/>
+              </xs:unique>
+            </xs:element>
+			<xs:element name="ToolBoxRights" type="RightType" minOccurs="0">
+              <xs:unique name="ToolElementName">
+                <xs:selector xpath="./*"/>
+                <xs:field xpath="Name"/>
+              </xs:unique>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProcessProgramRightsType">
+    <xs:sequence>
+      <xs:element name="Group" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="Level">
+              <xs:simpleType>
+                <xs:restriction base="xs:int">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                  <xs:enumeration value="2"/>
+                  <xs:enumeration value="3"/>
+                  <xs:enumeration value="4"/>
+                  <xs:enumeration value="5"/>
+                  <xs:enumeration value="6"/>
+                  <xs:enumeration value="7"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UsersType">
+    <xs:sequence>
+      <xs:element name="User" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="Password" type="xs:string"/>
+            <xs:element name="Level">
+              <xs:simpleType>
+                <xs:restriction base="xs:int">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                  <xs:enumeration value="2"/>
+                  <xs:enumeration value="3"/>
+                  <xs:enumeration value="4"/>
+                  <xs:enumeration value="5"/>
+                  <xs:enumeration value="6"/>
+                  <xs:enumeration value="7"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RightType">
+    <xs:sequence>
+      <xs:element name="Right" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="Level">
+              <xs:simpleType>
+                <xs:restriction base="xs:int">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                  <xs:enumeration value="2"/>
+                  <xs:enumeration value="3"/>
+                  <xs:enumeration value="4"/>
+                  <xs:enumeration value="5"/>
+                  <xs:enumeration value="6"/>
+                  <xs:enumeration value="7"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NavigationAreaType">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string"/>
+      <xs:element name="Level">
+        <xs:simpleType>
+          <xs:restriction base="xs:int">
+            <xs:enumeration value="0"/>
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="2"/>
+            <xs:enumeration value="3"/>
+            <xs:enumeration value="4"/>
+            <xs:enumeration value="5"/>
+            <xs:enumeration value="6"/>
+            <xs:enumeration value="7"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="SubNavigationRights" type="SubNavigationRightsType" minOccurs="0" maxOccurs="1">
+        <xs:unique name="SubNavigationNameUnique">
+          <xs:selector xpath="./*"/>
+          <xs:field xpath="Name"/>
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

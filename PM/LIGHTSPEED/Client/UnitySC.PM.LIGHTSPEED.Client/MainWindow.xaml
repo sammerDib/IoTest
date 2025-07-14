@@ -1,0 +1,51 @@
+﻿<Window x:Class="UnitySC.PM.LIGHTSPEED.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"       
+        xmlns:local="clr-namespace:UnitySC.PM.LIGHTSPEED.Client"
+        xmlns:globalDeviceView="clr-namespace:UnitySC.PM.Shared.Hardware.ClientProxy.Global;assembly=UnitySC.PM.Shared.Hardware.ClientProxy"
+        xmlns:view="clr-namespace:UnitySC.PM.LIGHTSPEED.Client.CommonUI.View.Maintenance;assembly=UnitySC.PM.LIGHTSPEED.Client.CommonUI"       
+        Title="LS Maint Application" Height="1000" Width="1350">
+
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" >
+    <StackPanel>
+        <Grid Background="White">
+            <TabControl Name="MainTabControl" TabStripPlacement="Top" SelectedIndex="{Binding SelectedTab, Mode=TwoWay}" >
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="Padding" Value="5,5,5,5" />
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <ContentPresenter Content="{TemplateBinding Property=ContentControl.Content}">
+                                        <ContentPresenter.LayoutTransform>
+                                            <RotateTransform Angle="0" />
+                                        </ContentPresenter.LayoutTransform>
+                                    </ContentPresenter>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Global status" Name="Tab1">
+                    <globalDeviceView:GlobalDeviceView DataContext="{Binding GlobalDeviceVM}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </TabItem>
+                <TabItem Header="DoorSlit" Name="Tab2">
+                    <view:DoorSlitView DataContext="{Binding DoorSlitVM}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </TabItem>
+                <TabItem Header="Feedback loop" Name="Tab3">
+                    <view:FeedbackLoopView DataContext="{Binding FeedbackLoopVM}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </TabItem>
+                <TabItem Header="Calibration" Name="Tab4">
+                    <view:RotatorsKitCalibrationView DataContext="{Binding RotatorsKitCalibrationVM}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </TabItem>
+                <TabItem Header="Lise HF" Name="Tab5">
+                    <view:LiseHFView DataContext="{Binding LiseHFVM}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </StackPanel>
+    </ScrollViewer >
+</Window>

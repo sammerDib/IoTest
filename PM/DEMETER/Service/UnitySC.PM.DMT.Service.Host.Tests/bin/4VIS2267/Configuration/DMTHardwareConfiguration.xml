@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DMTHardwareConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ControllerConfigs>
+    <ControllerConfig xsi:type="BeckhoffPlcControllerConfig">
+      <Name>PLC Controller Beckhoff</Name>
+      <DeviceID>BeckhoffPlcController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <EthernetCom>
+        <IP>5.86.6.102.1</IP>
+        <Port>851</Port>
+      </EthernetCom>
+      <OpcCom>
+        <Hostname>plc-5140-labo</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager</RootNodeId>
+        <DeviceNodeID>Psd</DeviceNodeID>
+      </OpcCom>
+      <CanOverEthercatConfig>
+        <CoeSerialComSetting>
+          <IndexComPort1>8000</IndexComPort1>
+          <IndexComPort2>8010</IndexComPort2>
+          <EnableRtsCts>
+            <SubIndex>1</SubIndex>
+            <SizeByte>1</SizeByte>
+          </EnableRtsCts>
+          <EnableXonXoffTx>
+            <SubIndex>2</SubIndex>
+            <SizeByte>1</SizeByte>
+          </EnableXonXoffTx>
+          <EnableXonXoffRx>
+            <SubIndex>3</SubIndex>
+            <SizeByte>1</SizeByte>
+          </EnableXonXoffRx>
+          <BaudRate>
+            <SubIndex>11</SubIndex>
+            <SizeByte>1</SizeByte>
+          </BaudRate>
+          <DataFrame>
+            <SubIndex>15</SubIndex>
+            <SizeByte>1</SizeByte>
+          </DataFrame>
+        </CoeSerialComSetting>
+      </CanOverEthercatConfig>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="PSDChamberControllerConfig">
+      <Name>PSD chamber controller</Name>
+      <DeviceID>PsdChamberController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCom>
+        <Hostname>plc-5140-labo</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Psd</RootNodeId>
+        <DeviceNodeID>Chamber</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="PSDChuckControllerConfig">
+      <Name>PSD chuck controller</Name>
+      <DeviceID>PsdChuckController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCom>
+        <Hostname>plc-5140-labo</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Psd</RootNodeId>
+        <DeviceNodeID>Chuck</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+  </ControllerConfigs>
+
+  <MotionControllerConfigs>
+    <ControllerConfig xsi:type="IoMotionControllerConfig">
+      <Name>IO motion controller</Name>
+      <DeviceID>IoMotionController</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCom>
+        <Hostname>plc-5140-labo</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Psd</RootNodeId>
+        <DeviceNodeID>IoAxis</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+  </MotionControllerConfigs>
+
+  <PlcConfigs>
+    <PlcConfig xsi:type="BeckhoffPlcConfig">
+      <Name>PLC Beckhoff</Name>
+      <DeviceID>BeckhoffPlc</DeviceID>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>BeckhoffPlcController</ControllerID>
+    </PlcConfig>
+  </PlcConfigs>
+
+  <MotionAxesConfigs>
+    <AxesConfig xsi:type="PSDAxesConfig">
+      <Name>PSD Axes</Name>
+      <DeviceID>PSDAxes</DeviceID>
+      <IsEnabled>true</IsEnabled>
+	    <IsSimulated>false</IsSimulated>
+      <LogLevel>None</LogLevel>
+      <AxisConfigs>
+        <AxisConfig xsi:type="IoAxisConfig">
+          <Name>Linear axis</Name>
+          <AxisID>Linear</AxisID>
+          <ControllerID>IoMotionController</ControllerID>
+          <MovingDirection>Linear</MovingDirection>
+        </AxisConfig>
+      </AxisConfigs>
+    </AxesConfig>
+  </MotionAxesConfigs>
+
+  <ChamberConfigs>
+    <ChamberConfig xsi:type="DMTChamberConfig">
+      <Name>PSD chamber</Name>      
+      <DeviceID>PsdChamber</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>PsdChamberController</ControllerID>
+      <SlitDoorConfig>
+        <Available>false</Available>
+        <ClosingTimeout_ms>10000</ClosingTimeout_ms>
+        <OpeningTimeout_ms>10000</OpeningTimeout_ms>
+      </SlitDoorConfig>
+    </ChamberConfig>
+  </ChamberConfigs>
+
+  <OpticalMount Side="Front">
+    <MountShape>Cross</MountShape>
+    <CameraId>Camera-Up</CameraId>
+    <ScreenId>Densitron-Up</ScreenId>
+  </OpticalMount>
+
+  <DMTScreenConfigs>
+    <DMTScreenConfig>
+      <Name>Screen-Up</Name>
+      <DeviceID>Densitron-Up</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <DisplayID>2</DisplayID>
+      <DisplayPosition>Top</DisplayPosition>
+      <Resolution>1920x1080x32@60</Resolution>
+      <PixelPitchHorizontal>0.53</PixelPitchHorizontal>
+      <PixelPitchVertical>0.53</PixelPitchVertical>
+      <ScreenStabilizationTimeSec>0.15</ScreenStabilizationTimeSec>
+      <ScreenWhiteDisplayTimeSec>60</ScreenWhiteDisplayTimeSec>
+      <WavelengthPeaks>
+        <Wavelength Value="443" Unit="Nanometer"/>
+        <Wavelength Value="525" Unit="Nanometer"/>
+        <Wavelength Value="603" Unit="Nanometer"/>
+      </WavelengthPeaks>
+      <Polarisation>Vertical</Polarisation>
+      <CalibrationFile>Calibration-ScreenUp.xml</CalibrationFile>
+    </DMTScreenConfig>
+  </DMTScreenConfigs>
+
+  <CameraConfigs>
+    <VC151MXMatroxCameraConfig>
+      <Name>Cam VC151MX FS</Name>
+      <DeviceID>Camera-Up</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <SerialNumber>MC151BAZ003</SerialNumber>
+      <FOVs>
+        <FieldOfView Name="200mm">
+          <OffsetX>0</OffsetX>
+          <OffsetY>0</OffsetY>
+          <Width>14192</Width>
+          <Height>10640</Height>
+        </FieldOfView>
+        <FieldOfView Name="300mm">
+          <OffsetX>0</OffsetX>
+          <OffsetY>0</OffsetY>
+          <Width>14192</Width>
+          <Height>10640</Height>
+        </FieldOfView>
+      </FOVs>
+	  <AOI>
+        <X>0</X>
+        <Y>0</Y>
+        <Width>14192</Width>
+        <Height>10640</Height>
+	  </AOI>
+      <Gain>1</Gain>
+      <Depth>8</Depth>
+      <DefectivePixelCorrection>false</DefectivePixelCorrection>
+      <DynamicDefectivePixelCorrection>false</DynamicDefectivePixelCorrection>
+      <BlackLevel>0</BlackLevel>
+      <FanOperationMode>On</FanOperationMode>
+      <HotPixelCorrection>Off</HotPixelCorrection>
+      <FlatFieldCorrection>Off</FlatFieldCorrection>
+      <LogLevel>Debug</LogLevel>
+    </VC151MXMatroxCameraConfig>
+  </CameraConfigs>
+
+  <USPChuckConfigs>
+    <ChuckBaseConfig xsi:type="DMTChuckConfig">
+      <Name>PSD chuck</Name>
+      <DeviceID>PsdChuck</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>PsdChuckController</ControllerID>
+      <SubstrateSlotConfigs>
+        <SubstrateSlotConfig>
+          <Name>300mm</Name>
+          <Diameter Value="300" Unit="Millimeter"/>
+          <IsPresenceSensorAvailable>true</IsPresenceSensorAvailable>
+        </SubstrateSlotConfig>
+      </SubstrateSlotConfigs>
+      <IsVacuumchuck>true</IsVacuumchuck>
+      <IsOpenChuck>true</IsOpenChuck>
+    </ChuckBaseConfig>    
+  </USPChuckConfigs>
+</DMTHardwareConfiguration>

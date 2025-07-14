@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Controls.Camera.ZoombableImage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:UnitySC.PM.EME.Client.Controls.Camera"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="theView"
+             Loaded="Fit_OnViewLoaded" SizeChanged="UpdateMinScale_WindowSizeChanged" Foreground="#FFACACFD">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="mainGrid" DataContext="{Binding ElementName=theView}">
+        <xctk:Zoombox x:Name="theZoombox" Background="{StaticResource CameraBackground}"
+                      Height="{Binding ElementName=mainGrid, Path=ActualHeight}" Width="{Binding ElementName=mainGrid, Path=ActualWidth}" 
+                      VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                      Position="{Binding ElementName=theView, Path=ContentPosition, Mode=OneWayToSource}"
+                      Scale="{Binding Scale, Mode=TwoWay}"
+                      Loaded="TheZoombox_Loaded" 
+                      IsAnimated="False" IsUsingScrollBars="False"  ViewStackMode="Disabled"
+                      ZoomOn="View" KeepContentInBounds="True"
+                      RelativeZoomModifiers="Ctrl,Exact" DragModifiers="Shift,Exact"  
+                      ZoomToSelectionModifiers="Alt,Exact" ZoomModifiers="Alt,Ctrl,Exact">
+            <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}"
+                    SizeChanged="Fit_OnImageSizeChanged">
+                <Image x:Name="theImage" Source="{Binding ImageSource}"
+                       RenderOptions.BitmapScalingMode="NearestNeighbor"
+                       Width="{Binding ImageCropArea.Width}"
+                       Height="{Binding ImageCropArea.Height}"
+                       Canvas.Top="{Binding ImageCropArea.Y}"
+                       Canvas.Left="{Binding ImageCropArea.X}">
+                    <Image.ContextMenu>
+                        <ContextMenu IsEnabled="{Binding Path=ImageSource, Converter={StaticResource IsNotNullToBooleanConverter}}">
+                            <MenuItem Header="Open externally" Click="OpenExternally_Click" />
+                            <MenuItem Header="Save As" Click="SaveAs_Click" />
+                            <MenuItem Header="Copy" Click="CopyToClipboard_Click" />
+                        </ContextMenu>
+                    </Image.ContextMenu>
+                </Image>
+                <local:RoiSelector SelectedRect ="{Binding RoiRect,Mode=TwoWay}"
+                MinSelectorWidth="50" 
+                MinSelectorHeight="50" 
+                ImageWidth="{Binding CanvasWidth}" 
+                ImageHeight="{Binding CanvasHeight}" 
+                ContainerWidth="{Binding ElementName=theImage, Path=ActualWidth}" 
+                ContainerHeight="{Binding ElementName=theImage, Path=ActualHeight}"
+                Visibility="{Binding UseRoi, Converter={converters:BooleanToVisibilityConverter}}"/>
+            </Canvas>
+
+
+
+        </xctk:Zoombox>
+    </Grid>
+</UserControl>

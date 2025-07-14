@@ -1,0 +1,132 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Controls.Camera.RoiSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.EME.Client.Controls.Camera"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+              Width="Auto" 
+             Height="Auto">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Thumb Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.EME.Client.Controls;component/Camera/ThumbStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SelectionThumbStyle" TargetType="{x:Type Thumb}">
+                <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border BorderBrush="{StaticResource SelectorLineBrush}" Background="#00000000" 
+                                    BorderThickness="{Binding Path=RoiBorderThickness, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                                    d:BorderThickness="4"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid PreviewMouseDown="DesignerComponent_PreviewMouseDown">
+        <ContentPresenter
+                x:Name="ContentComponent"
+                Margin="0,0,0,0" />
+        <Thumb x:Name="SelectionThumb"
+                   Style="{DynamicResource SelectionThumbStyle}"                   
+                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   IsHitTestVisible="False" />
+        <Thumb x:Name="TopLeftThumb"
+                   Style="{DynamicResource RoundThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="-20,-20,0,0"
+                   Cursor="SizeNWSE">
+        </Thumb>
+        <Thumb x:Name="TopThumb"
+                   Style="{DynamicResource SquareThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="0,-20,0,0"
+                   Cursor="SizeNS">
+        </Thumb>
+        <Thumb x:Name="TopRightThumb"
+                   Style="{DynamicResource RoundThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Right" VerticalAlignment="Top"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="0,-20,-20,0"
+                   Cursor="SizeNESW">
+        </Thumb>
+        <Thumb x:Name="RightThumb"
+                   Style="{DynamicResource SquareThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Right" VerticalAlignment="Center"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="0,0,-20,0"
+                   Cursor="SizeWE">
+        </Thumb>
+        <Thumb x:Name="BottomRightThumb"
+                   Style="{DynamicResource RoundThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="0,0,-20,-20"
+                   Cursor="SizeNWSE">
+        </Thumb>
+        <Thumb x:Name="BottomThumb"
+                   Style="{DynamicResource SquareThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="0,0,0,-20"
+                   Cursor="SizeNS">
+        </Thumb>
+        <Thumb x:Name="BottomLeftThumb"
+                   Style="{DynamicResource RoundThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="-20,0,0,-20"
+                   Cursor="SizeNESW">
+        </Thumb>
+        <Thumb x:Name="LeftThumb"
+                   Style="{DynamicResource SquareThumbStyle}"
+                   DragDelta="Thumb_DragDelta"
+                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Width="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}" 
+                   Height="{Binding Path=ThumbSize, RelativeSource={RelativeSource AncestorType={x:Type local:RoiSelector}}}"
+                   d:Width="40"
+                   d:Height="40"
+                   Margin="-20,0,0,0"
+                   Cursor="SizeWE">
+        </Thumb>
+    </Grid>
+</UserControl>

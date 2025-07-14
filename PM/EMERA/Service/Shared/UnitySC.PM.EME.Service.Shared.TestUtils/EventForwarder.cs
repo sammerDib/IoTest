@@ -1,0 +1,60 @@
+﻿using System;
+
+using UnitySC.Shared.Logger;
+
+using UnitySCSharedAlgosOpenCVWrapper;
+
+namespace UnitySC.PM.EME.Service.Shared.TestUtils
+{
+    /// <summary>
+    /// Forwarder for Events coming form algorithm library
+    /// Forwards event from library's event queue to the EMERA logger service
+    /// </summary>
+    public class EventForwarder
+    {
+        private readonly ILogger _logger;
+        private readonly string _messagePrefix;
+
+        public EventForwarder(ILogger logger, string messagePrefix)
+        {
+            _logger = logger;
+            _messagePrefix = messagePrefix;
+        }
+
+        public void ForwardEvent(Object source, EventArgs args)
+        {
+            if (!(args is AlgoEventArgs aea)) return;
+
+            string message = _messagePrefix + aea.Message;
+            switch (aea.Severity)
+            {
+                case Severity.Verbose:
+                    _logger.Verbose(message);
+                    break;
+
+                case Severity.Debug:
+                    _logger.Debug(message);
+                    break;
+
+                case Severity.Info:
+                    _logger.Information(message);
+                    break;
+
+                case Severity.Warning:
+                    _logger.Warning(message);
+                    break;
+
+                case Severity.Error:
+                    _logger.Error(message);
+                    break;
+
+                case Severity.Fatal:
+                    _logger.Fatal(new ApplicationException(message), message);
+                    break;
+
+                default:
+                    throw new ApplicationException("Unknown Event severity");
+            }
+        }
+    };
+}

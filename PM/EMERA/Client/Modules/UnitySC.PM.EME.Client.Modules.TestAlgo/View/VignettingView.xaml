@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestAlgo.View.VignettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.TestAlgo.ViewModel"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:VignettingVM}"
+                          d:DesignHeight="400" d:DesignWidth="300" d:Background="White">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Style="{StaticResource FormGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <controls:ImageGroupBox ImageGeometry="{StaticResource CameraGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Header="{Binding Name}">
+            
+        </controls:ImageGroupBox>
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="{Binding BusyMessage}" DisplayAfter="0" />
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="* "/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Text="Filter : " 
+                Grid.Column="0"
+                VerticalAlignment="Center"  ></TextBlock>
+            <ComboBox ItemsSource="{Binding FilterWheelBench.Filters}"
+                      SelectedItem="{Binding FilterWheelBench.CurrentFilter}" 
+                      Grid.Column="1" 
+                      VerticalAlignment="Center" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="* "/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Scan range : " 
+        Grid.Column="0"
+        VerticalAlignment="Center"  ></TextBlock>
+            <ComboBox ItemsSource="{Binding ScanRanges}" SelectedItem="{Binding SelectedRange}" Grid.Column="1" VerticalAlignment="Center" />
+
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="* "/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Current filter wheel position : " 
+                    Grid.Column="0"
+                    VerticalAlignment="Center" />
+
+            <TextBlock Grid.Column="1" Text="{Binding FilterWheelBench.RotationPosition}" />
+            
+
+        </Grid>
+
+        <Grid Grid.Row="4">
+            
+            <StackPanel Orientation="Vertical">
+    <controls:ImageButton ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Start Vignetting" Command="{Binding StartVignetting}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" />
+    <!-- Result  Status-->
+    <StackPanel Orientation="Horizontal" Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,5">
+        <TextBlock Text="{Binding Result.Status.State}" Margin="4,0" />
+        <TextBlock Text="{Binding Result.Status.Message}" />
+    </StackPanel>
+    <StackPanel Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}">
+        <TextBlock Text="{Binding Path=Result.FilterWheelPosition, StringFormat='Filter Wheel Position: {0}'}" />
+    </StackPanel>
+</StackPanel>
+        </Grid>
+
+
+
+
+        </Grid>
+</UserControl>

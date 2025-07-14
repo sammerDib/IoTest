@@ -1,0 +1,460 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EmeHardwareConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <ControllerConfigs>
+    <ControllerConfig xsi:type="BeckhoffPlcControllerConfig">
+      <Name>PLC Controller Beckhoff</Name>
+      <DeviceID>BeckhoffPlcController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <EthernetCom>
+        <IP>5.86.6.102.1</IP>
+        <Port>851</Port>
+      </EthernetCom>
+      <OpcCom>
+        <Hostname>4SEE102-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager</RootNodeId>
+        <DeviceNodeID>PhotoLum</DeviceNodeID>
+      </OpcCom>
+      <CanOverEthercatConfig>
+        <CoeSerialComSetting>
+          <IndexComPort1>8000</IndexComPort1>
+          <IndexComPort2>8010</IndexComPort2>
+          <EnableRtsCts>
+            <SubIndex>1</SubIndex>
+            <SizeByte>1</SizeByte>
+          </EnableRtsCts>
+          <EnableXonXoffTx>
+            <SubIndex>2</SubIndex>
+            <SizeByte>1</SizeByte>
+          </EnableXonXoffTx>
+          <EnableXonXoffRx>
+            <SubIndex>3</SubIndex>
+            <SizeByte>1</SizeByte>
+          </EnableXonXoffRx>
+          <BaudRate>
+            <SubIndex>11</SubIndex>
+            <SizeByte>1</SizeByte>
+          </BaudRate>
+          <DataFrame>
+            <SubIndex>15</SubIndex>
+            <SizeByte>1</SizeByte>
+          </DataFrame>
+        </CoeSerialComSetting>
+      </CanOverEthercatConfig>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="EMEChamberControllerConfig">
+      <Name>PhotoLum chamber controller</Name>
+      <DeviceID>PhotoLumChamberController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCom>
+        <Hostname>4SEE102-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/PhotoLum</RootNodeId>
+        <DeviceNodeID>Chamber</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="EMEChuckControllerConfig">
+      <Name>EME chuck controller</Name>
+      <DeviceID>EMEChuckController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCom>
+        <Hostname>4SEE102-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/PhotoLum</RootNodeId>
+        <DeviceNodeID>Chuck</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="EvosensLightControllerConfig">
+      <Name>Evosens Light controller</Name>
+      <DeviceID>EvosensLightController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <SerialCom>
+        <Port>Com2</Port>
+        <BaudRate>115200</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <FlowControl>None</FlowControl>
+      </SerialCom>
+      <Ethercat>
+        <Address>1017</Address>
+      </Ethercat>
+      <OpcCom>
+        <Hostname>4SEE102-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/PhotoLum</RootNodeId>
+        <DeviceNodeID>EvosensLight</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="MicroEpsilonDistanceSensorControllerConfig">
+      <Name>Distance sensor controller</Name>
+      <DeviceID>MicroEpsilonDistanceSensorController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCom>
+        <Hostname>4SEE102-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/PhotoLum</RootNodeId>
+        <DeviceNodeID>MicroEpsilonDistanceSensor</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+  </ControllerConfigs>
+
+  <MotionControllerConfigs>
+    <ControllerConfig xsi:type="AerotechControllerConfig">
+      <Name>Aerotech Controller</Name>
+      <DeviceID>PhotoLum-Proto</DeviceID>
+      <ControllerID>PhotoLum-Proto</ControllerID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <UseMXHChannel>false</UseMXHChannel>
+      <RefreshDiagRate>100</RefreshDiagRate>
+      <FastBackSpeed>100</FastBackSpeed>
+      <ShiftSpeed>100</ShiftSpeed>
+      <MonitorProcessDoor>false</MonitorProcessDoor>
+      <AerotechAxisIDLinks>
+        <AerotechAxisIDLink>
+          <AerotechID>A1</AerotechID>
+          <AxisID>Y</AxisID>
+          <AerotechIndex>1</AerotechIndex>
+        </AerotechAxisIDLink>
+        <AerotechAxisIDLink>
+          <AerotechID>A0</AerotechID>
+          <AxisID>X</AxisID>
+          <AerotechIndex>0</AerotechIndex>
+        </AerotechAxisIDLink>
+        <AerotechAxisIDLink>
+          <AerotechID>A2</AerotechID>
+          <AxisID>Z</AxisID>
+          <AerotechIndex>2</AerotechIndex>
+        </AerotechAxisIDLink>
+      </AerotechAxisIDLinks>
+    </ControllerConfig>
+    <ControllerConfig xsi:type="OwisMotionControllerConfig">
+      <Name>Owis filter wheel</Name>
+      <DeviceID>OwisMotionController</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <SerialCom>
+        <Port>Com1</Port>
+        <BaudRate>9600</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <FlowControl>None</FlowControl>
+      </SerialCom>
+      <Ethercat>
+        <Address>1017</Address>
+      </Ethercat>
+      <OpcCom>
+        <Hostname>4SEE102-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/PhotoLum</RootNodeId>
+        <DeviceNodeID>Ps10Axis</DeviceNodeID>
+      </OpcCom>
+    </ControllerConfig>
+  </MotionControllerConfigs>
+
+  <PlcConfigs>
+    <PlcConfig xsi:type="BeckhoffPlcConfig">
+      <Name>PLC Beckhoff</Name>
+      <DeviceID>BeckhoffPlc</DeviceID>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>BeckhoffPlcController</ControllerID>
+    </PlcConfig>
+  </PlcConfigs>
+
+  <ChamberConfigs>
+    <ChamberConfig xsi:type="EMEChamberConfig">
+      <Name>PhotoLum chamber</Name>
+      <DeviceID>PhotoLumChamber</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>PhotoLumChamberController</ControllerID>
+      <Interlocks>
+        <InterlockPanels>
+          <Interlock>
+            <Name>InterlockPanel1</Name>
+            <Description>Top left panel</Description>
+            <InterlockID>0</InterlockID>
+          </Interlock>
+          <Interlock>
+            <Name>InterlockPanel2</Name>
+            <Description>Middle left panel</Description>
+            <InterlockID>1</InterlockID>
+          </Interlock>
+          <Interlock>
+            <Name>InterlockPanel3</Name>
+            <Description>Back panel bottom right</Description>
+            <InterlockID>2</InterlockID>
+          </Interlock>
+        </InterlockPanels>
+      </Interlocks>
+      <SlitDoorConfig>
+        <Available>true</Available>
+        <ClosingTimeout_ms>10000</ClosingTimeout_ms>
+        <OpeningTimeout_ms>10000</OpeningTimeout_ms>
+      </SlitDoorConfig>
+    </ChamberConfig>
+  </ChamberConfigs>
+
+  <USPChuckConfigs>
+    <ChuckBaseConfig xsi:type="EMEChuckConfig">
+      <Name>MultiSizeChuck200-150-100mm</Name>
+      <DeviceID>MultiSizeChuck200150100</DeviceID>
+      <ControllerID>EMEChuckController</ControllerID>
+      <IsEnabled>true</IsEnabled>
+      <SubstrateSlotConfigs>
+        <SubstSlotWithPositionConfig>
+          <Name>200mmPlate</Name>
+          <Diameter Unit="Millimeter" Value="200" />
+          <IsPresenceSensorAvailable>false</IsPresenceSensorAvailable>
+          <PositionSensor xsi:type="XYPosition">
+            <X>22.33</X>
+            <Y>-88.70</Y>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionSensor>
+          <PositionPark xsi:type="XYZPosition">
+            <X>180.00</X>
+            <Y>-200.00</Y>
+            <Z>-1.85</Z>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionPark>
+          <PositionManualLoad xsi:type="XYZPosition">
+            <X>-159.00</X>
+            <Y>-5.00</Y>
+            <Z>0.00</Z>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionManualLoad>
+        </SubstSlotWithPositionConfig>
+
+        <SubstSlotWithPositionConfig>
+          <Name>150mmPlate</Name>
+          <Diameter Unit="Millimeter" Value="150" />
+          <IsPresenceSensorAvailable>false</IsPresenceSensorAvailable>
+          <PositionSensor xsi:type="XYPosition">
+            <X>22.33</X>
+            <Y>105.4</Y>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionSensor>
+          <PositionPark xsi:type="XYZPosition">
+            <X>179.00</X>
+            <Y>-7.40</Y>
+            <Z>-1.85</Z>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionPark>
+          <PositionManualLoad xsi:type="XYZPosition">
+            <X>-159.00</X>
+            <Y>-5.00</Y>
+            <Z>0.00</Z>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionManualLoad>
+        </SubstSlotWithPositionConfig>
+
+        <SubstSlotWithPositionConfig>
+          <Name>100mmPlate</Name>
+          <Diameter Unit="Millimeter" Value="100" />
+          <IsPresenceSensorAvailable>false</IsPresenceSensorAvailable>
+          <PositionSensor xsi:type="XYPosition">
+            <X>-77.13</X>
+            <Y>25.5</Y>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionSensor>
+          <PositionPark xsi:type="XYZPosition">
+            <X>2.00</X>
+            <Y>-1.00</Y>
+            <Z>1.00</Z>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionPark>
+          <PositionManualLoad xsi:type="XYZPosition">
+            <X>-159.00</X>
+            <Y>-5.00</Y>
+            <Z>0.00</Z>
+            <Referential xsi:type="MotorReferential"/>
+          </PositionManualLoad>
+        </SubstSlotWithPositionConfig>
+      </SubstrateSlotConfigs>
+    </ChuckBaseConfig>
+  </USPChuckConfigs>
+
+  <MotionAxesConfigs>
+    <AxesConfig xsi:type="PhotoLumAxesConfig">
+      <Name>PhotoLum Axes</Name>
+      <DeviceID>PhotoLumAxes</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <AxisConfigs>
+        <AxisConfig xsi:type="AerotechAxisConfig">
+          <Name>X Linear axis</Name>
+          <AxisID>X</AxisID>
+          <ControllerID>PhotoLum-Proto</ControllerID>
+          <MovingDirection>X</MovingDirection>
+          <PositionMin Unit="Millimeter" Value="-160" />
+          <PositionMax Unit="Millimeter" Value="200" />
+          <SpeedSlow>5</SpeedSlow>
+          <SpeedNormal>25</SpeedNormal>
+          <SpeedFast>30</SpeedFast>
+          <SpeedMeasure>30</SpeedMeasure>
+          <UsedPSO>false</UsedPSO>
+        </AxisConfig>
+        <AxisConfig xsi:type="AerotechAxisConfig">
+          <Name>Y Linear axis</Name>
+          <AxisID>Y</AxisID>
+          <ControllerID>PhotoLum-Proto</ControllerID>
+          <MovingDirection>Y</MovingDirection>
+          <PositionMin Unit="Millimeter" Value="-202" />
+          <PositionMax Unit="Millimeter" Value="200" />
+          <SpeedSlow>5</SpeedSlow>
+          <SpeedNormal>25</SpeedNormal>
+          <SpeedFast>30</SpeedFast>
+          <SpeedMeasure>30</SpeedMeasure>
+          <UsedPSO>false</UsedPSO>
+        </AxisConfig>
+        <AxisConfig xsi:type="AerotechAxisConfig">
+          <Name>Z Linear axis</Name>
+          <AxisID>Z</AxisID>
+          <ControllerID>PhotoLum-Proto</ControllerID>
+          <MovingDirection>Z</MovingDirection>
+          <PositionMin Unit="Millimeter" Value="-2" />
+          <PositionMax Unit="Millimeter" Value="6.19" />
+          <SpeedSlow>5</SpeedSlow>
+          <SpeedNormal>10</SpeedNormal>
+          <SpeedFast>12</SpeedFast>
+          <SpeedMeasure>12</SpeedMeasure>
+          <SpeedMaxScan>20</SpeedMaxScan>
+          <UsedPSO>false</UsedPSO>
+        </AxisConfig>
+      </AxisConfigs>
+    </AxesConfig>
+  </MotionAxesConfigs>
+
+  <CameraConfigs>
+    <VC151MXMatroxCameraConfig>
+      <Name>Cam VC151MX</Name>
+      <DeviceID>1</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <DeadPixelsFile>FrontSide.dpml</DeadPixelsFile>
+      <CalibrationFile>Calibration-ScreenUp.xml</CalibrationFile>
+      <SerialNumber>MC151BCU007</SerialNumber>
+      <Depth>16</Depth>
+      <FOVs>
+        <FieldOfView Name="200mm">
+          <OffsetX>0</OffsetX>
+          <OffsetY>0</OffsetY>
+          <Width>14192</Width>
+          <Height>10640</Height>
+        </FieldOfView>
+        <FieldOfView Name="300mm">
+          <OffsetX>0</OffsetX>
+          <OffsetY>0</OffsetY>
+          <Width>14192</Width>
+          <Height>10640</Height>
+        </FieldOfView>
+      </FOVs>
+      <Gain>1</Gain>
+      <LogLevel>Debug</LogLevel>
+    </VC151MXMatroxCameraConfig>
+  </CameraConfigs>
+
+  <WheelConfigs>
+    <FilterWheelConfig>
+      <Name>Filter Wheel</Name>
+      <DeviceID>FilterWHeel</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>true</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>OwisMotionController</ControllerID>
+      <AxisConfig xsi:type="OwisAxisConfig">
+        <Name>Filter axis</Name>
+        <AxisID>Rotation</AxisID>
+        <ControllerID>OwisMotionController</ControllerID>
+        <MovingDirection>Rotation</MovingDirection>
+        <PositionMin Unit="Millimeter" Value="0" />
+        <PositionMax Unit="Millimeter" Value="360" />
+      </AxisConfig>
+      <FilterSlots>
+        <FilterSlot>
+          <Name>Empty</Name>
+          <Position>72.0</Position>
+        </FilterSlot>
+        <FilterSlot>
+          <Name>BP 470nm</Name>
+          <Position>216.0</Position>
+        </FilterSlot>
+        <FilterSlot>
+          <Name>Empty2</Name>
+          <Position>144.0</Position>
+        </FilterSlot>
+        <FilterSlot>
+          <Name>BP 550nm</Name>
+          <Position>288.0</Position>
+        </FilterSlot>
+        <FilterSlot>
+          <Name>LP 650nm</Name>
+          <Position>0.0</Position>
+        </FilterSlot>
+      </FilterSlots>
+    </FilterWheelConfig>
+  </WheelConfigs>
+
+  <Lights>
+    <Light xsi:type="EMELightConfig">
+      <DeviceID>1</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <Name>UV-C</Name>
+      <Description>UV-C</Description>
+      <IsMainLight>false</IsMainLight>
+      <ControllerID>EvosensLightController</ControllerID>
+      <Type>UltraViolet270nm</Type>
+    </Light>
+    <Light xsi:type="EMELightConfig">
+      <DeviceID>2</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <Name>UV-A</Name>
+      <Description>UV-A</Description>
+      <IsMainLight>false</IsMainLight>
+      <ControllerID>EvosensLightController</ControllerID>
+      <Type>UltraViolet365nm</Type>
+    </Light>
+    <Light xsi:type="EMELightConfig">
+      <DeviceID>3</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <Name>Visible-0</Name>
+      <Description>Visible source at 0 degree</Description>
+      <ControllerID>EvosensLightController</ControllerID>
+      <Type>DirectionalDarkField0Degree</Type>
+    </Light>
+    <Light xsi:type="EMELightConfig">
+      <DeviceID>4</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <Name>Visible-90</Name>
+      <Description>Visoble source at 90 degrees</Description>
+      <IsMainLight>true</IsMainLight>
+      <ControllerID>EvosensLightController</ControllerID>
+      <Type>DirectionalDarkField90Degree</Type>
+    </Light>
+  </Lights>
+
+  <DistanceSensorConfigs>
+    <DistanceSensorConfig xsi:type="MicroEpsilonDistanceSensorConfig">
+      <Name>MicroEpsilon distance sensor</Name>
+      <DeviceID>DistanceSensor</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <ControllerID>MicroEpsilonDistanceSensorController</ControllerID>
+    </DistanceSensorConfig>
+  </DistanceSensorConfigs>
+
+</EmeHardwareConfiguration>

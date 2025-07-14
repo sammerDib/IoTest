@@ -1,0 +1,406 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HlsHardwareConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PlcConfigs>
+    <CX5140BeckhoffPlcConfig>
+      <Name>4SEE39-PLC</Name>
+      <DeviceID>BeckhoffCX5140</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <Model>CX5140</Model>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager</RootNodeId>
+        <DeviceID>Lightspeed</DeviceID>
+      </OpcCommunication>
+    </CX5140BeckhoffPlcConfig>
+  </PlcConfigs>
+
+  <ChamberConfigs>
+    <BeckhoffChamberConfig>
+      <Name>LightspeedChamber</Name>
+      <DeviceID>BeckhoffChamber</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>Chamber</DeviceID>
+      </OpcCommunication>
+    </BeckhoffChamberConfig>
+    <WagoChamberConfig>
+      <Name>PsdChamber</Name>
+      <DeviceID>Wago750-352</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+    </WagoChamberConfig>
+  </ChamberConfigs>
+
+  <AttenuationFilterConfigs>
+    <WheelAttenuationFilterConfig>
+      <Name>Filter wheel</Name>
+      <DeviceID>ThorlabsFW212C</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>FW212CAttenuationFilter</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com1</Port>
+        <BaudRate>115200</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1008</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </WheelAttenuationFilterConfig>
+    <PiezoAttenuationFilterConfig>
+      <Name>Motorized optics rotator</Name>
+      <DeviceID>ThorlabsELL14K</DeviceID>
+      <!--<DeviceID>ThorlabsELL9</DeviceID>-->
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>ELL14KAttenuationFilter</DeviceID>
+        <!--<DeviceID>ELL9AttenuationFilter</DeviceID>-->
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com1</Port>
+        <BaudRate>9600</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1012</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </PiezoAttenuationFilterConfig>
+  </AttenuationFilterConfigs>
+
+  <PolarisationFilterConfigs>
+    <WheelPolarisationFilterConfig>
+      <Name>Filter wheel</Name>
+      <DeviceID>ThorlabsFW212C</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>CX-51CC2A</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>FW212CPolarisationFilter</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com2</Port>
+        <BaudRate>115200</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1007</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </WheelPolarisationFilterConfig>
+    <PiezoPolarisationFilterConfig>
+      <Name>Motorized optics rotator</Name>
+      <DeviceID>ThorlabsELL18</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>ELL14KPolarisationFilter</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com2</Port>
+        <BaudRate>9600</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1012</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </PiezoPolarisationFilterConfig>
+  </PolarisationFilterConfigs>
+
+  <LaserConfigs>
+    <SMD12LaserConfig>
+      <Name>Laser</Name>
+      <DeviceID>LaserQuantumSMD12</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>SMD12Laser</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com1</Port>
+        <BaudRate>9600</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1018</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </SMD12LaserConfig>
+    <Piano450LaserConfig>
+      <Name>Laser</Name>
+      <DeviceID>LeukosPiano450</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Nst</RootNodeId>
+        <DeviceID>Piano450Laser</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com2</Port>
+        <BaudRate>19200</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1011</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </Piano450LaserConfig>
+  </LaserConfigs>
+
+  <FiberSwitchConfigs>
+    <EOLFiberSwitchConfig>
+      <Name>Fiber switch</Name>
+      <DeviceID>LeoniEOL</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>EOLFiberSwitch</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com2</Port>
+        <BaudRate>57600</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1006</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </EOLFiberSwitchConfig>
+  </FiberSwitchConfigs>
+
+  <OpticalPowermeterConfigs>
+    <PM101OpticalPowermeterConfig>
+      <Name>Optical Powermeter HS</Name>
+      <DeviceID>HS</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <Wavelengths>
+        <Wavelength>350 nm</Wavelength>
+        <Wavelength>473 nm</Wavelength>
+        <Wavelength>633 nm</Wavelength>
+        <Wavelength>1064 nm</Wavelength>
+      </Wavelengths>
+      <Ranges>
+        <Range>1 µW</Range>
+        <Range>10 µW</Range>
+        <Range>100 µW</Range>
+        <Range>1 mW</Range>
+        <Range>10 mW</Range>
+        <Range>100 mW</Range>
+      </Ranges>
+      <BeamDiameters>
+        <BeamDiameter>0</BeamDiameter>
+        <BeamDiameter>1</BeamDiameter>
+        <BeamDiameter>2</BeamDiameter>
+        <BeamDiameter>3</BeamDiameter>
+      </BeamDiameters>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>PM101OpticalPowermeterHs</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com1</Port>
+        <BaudRate>115200</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1010</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </PM101OpticalPowermeterConfig>
+    <PM101OpticalPowermeterConfig>
+      <Name>Optical Powermeter HT</Name>
+      <DeviceID>HT</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <Wavelengths>
+        <Wavelength>350 nm</Wavelength>
+        <Wavelength>473 nm</Wavelength>
+        <Wavelength>633 nm</Wavelength>
+        <Wavelength>1064 nm</Wavelength>
+      </Wavelengths>
+      <Ranges>
+        <Range>1 µW</Range>
+        <Range>10 µW</Range>
+        <Range>100 µW</Range>
+        <Range>1 mW</Range>
+        <Range>10 mW</Range>
+        <Range>100 mW</Range>
+      </Ranges>
+      <BeamDiameters>
+        <BeamDiameter>0</BeamDiameter>
+        <BeamDiameter>1</BeamDiameter>
+        <BeamDiameter>2</BeamDiameter>
+        <BeamDiameter>3</BeamDiameter>
+      </BeamDiameters>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>PM101OpticalPowermeterHt</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com2</Port>
+        <BaudRate>115200</BaudRate>
+        <DataFrame>8N1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1010</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </PM101OpticalPowermeterConfig>
+  </OpticalPowermeterConfigs>
+  
+  <DistanceSensorConfigs>
+    <IFD2461DistanceSensorConfig>
+      <Name>Distance sensor</Name>
+      <DeviceID>MicroEpsilonIFD2461</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>IFD2461DistanceSensor</DeviceID>
+      </OpcCommunication>
+    </IFD2461DistanceSensorConfig>
+  </DistanceSensorConfigs>
+
+  <MppcConfigs>
+    <C13336MppcConfig>
+      <Name>Mppc wide</Name>
+      <DeviceID>WIDE</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>C13336MppcWide</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com1</Port>
+        <BaudRate>38400</BaudRate>
+        <DataFrame>8E1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1009</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </C13336MppcConfig>
+    <C13336MppcConfig>
+      <Name>Mppc narrow</Name>
+      <DeviceID>NARROW</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <DeviceID>C13336MppcNarrow</DeviceID>
+      </OpcCommunication>
+      <SerialCommunication>
+        <Port>Com2</Port>
+        <BaudRate>38400</BaudRate>
+        <DataFrame>8E1</DataFrame>
+        <!-- DataBits + Parity + StopBits -->
+        <FlowControl>None</FlowControl>
+        <CanOverEthercat>
+          <AdrEthercat>1009</AdrEthercat>
+        </CanOverEthercat>
+      </SerialCommunication>
+    </C13336MppcConfig>
+  </MppcConfigs>
+
+  <ShutterConfigs>
+    <ShutterConfig>
+      <Name>Shutter</Name>
+      <!--<DeviceID>UniblitzED12DSS</DeviceID>-->
+      <DeviceID>EopcSh10pil</DeviceID>
+      <IsEnabled>true</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Lightspeed</RootNodeId>
+        <!--<DeviceID>Ed12dssShutter</DeviceID>-->
+        <DeviceID>Sh10pilShutter</DeviceID>
+      </OpcCommunication>
+    </ShutterConfig>
+  </ShutterConfigs>
+
+  <FastAttenuationConfigs>
+    <Std900FastAttenuationConfig>
+      <Name>Servo motor Parallax</Name>
+      <DeviceID>ParallaxStd900-5</DeviceID>
+      <IsEnabled>false</IsEnabled>
+      <IsSimulated>false</IsSimulated>
+      <LogLevel>Debug</LogLevel>
+      <OpcCommunication>
+        <Hostname>4SEE39-PLC</Hostname>
+        <Port>48050</Port>
+        <RootNodeId>Objects/TcOpcUaServer/PLC1/MAIN/HardwareControl/HardwareManager/Nst</RootNodeId>
+        <DeviceID>Std900FastAttenuation</DeviceID>
+      </OpcCommunication>
+    </Std900FastAttenuationConfig>
+  </FastAttenuationConfigs>
+  
+</HlsHardwareConfiguration>

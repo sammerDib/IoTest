@@ -1,0 +1,172 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.TestHardware.View.TestLightView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.TestHardware.ViewModel"
+    xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+    xmlns:camera="clr-namespace:UnitySC.PM.EME.Client.Controls.Camera;assembly=UnitySC.PM.EME.Client.Controls"
+    xmlns:light="clr-namespace:UnitySC.PM.EME.Client.Proxy.Light;assembly=UnitySC.PM.EME.Client.Proxy"
+    xmlns:extensions="clr-namespace:UnitySC.PM.EME.Client.Controls.Extensions;assembly=UnitySC.PM.EME.Client.Controls"
+    xmlns:shared="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+    d:DataContext="{d:DesignInstance Type=vm:TestLightViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type camera:StandardCameraViewModel}">
+                <camera:StandardCameraView />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="10,10,5,0" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid Margin="0,0,10,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Grid.Row="0"
+                          Width="auto"
+                          Margin="0,0,0,10"
+                          FontSize="18"
+                          Header="Light Controls">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                   FontSize="16"
+                                   Margin="10"
+                                   Text="Light Selection:" />
+                        <ComboBox Grid.Row="0" Grid.Column="1"
+                                  ItemsSource="{Binding Lights}"
+                                  SelectedItem="{Binding SelectedLight}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontSize="16" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                   FontSize="16"
+                                   Margin="10"
+                                   Text="Light On/Off:" />
+                        <ToggleButton Grid.Row="1" Grid.Column="1"
+                                      HorizontalAlignment="Left"
+                                      Margin="6"
+                                      Style="{StaticResource ToggleAnimatedSwitchNew}"
+                                      IsChecked="{Binding SelectedLight.IsTurnedOn}"
+                                      Command="{Binding SelectedLight.Switch}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                   FontSize="16"
+                                   Margin="10"
+                                   Text="Light Power:" />
+                        <StackPanel Grid.Row="2" Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <Slider Margin="5"
+                                    Width="120"
+                                    Minimum="0" Maximum="100"
+                                    IsSnapToTickEnabled="True" TickFrequency="1"
+                                    Value="{Binding Path=SelectedLight.Power}"
+                                    IsEnabled="{Binding SelectedLight.IsTurnedOn}"
+                                    extensions:SliderExtension.DragCompletedCommand="{Binding SelectedLight.ChangePower}" />
+                            <controls:TextBoxUnit Unit="%"
+                                                  Text="{Binding SelectedLight.Power, UpdateSourceTrigger=PropertyChanged}"
+                                                  IsEnabled="{Binding SelectedLight.IsTurnedOn}"
+                                                  shared:TextBoxMaskExt.Mask="PositiveDecimal"
+                                                  shared:TextBoxMaskExt.MaximumValue="100"
+                                                  shared:TextBoxMaskExt.MinimumValue="0">
+                                <controls:TextBoxUnit.InputBindings>
+                                    <KeyBinding Command="{Binding SelectedLight.ChangePower}" Key="Return" />
+                                    <KeyBinding Command="{Binding SelectedLight.ChangePower}" Key="Enter" />
+                                </controls:TextBoxUnit.InputBindings>
+                            </controls:TextBoxUnit>
+
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Grid.Row="1"
+                          FontSize="18"
+                          Header="Light Information">
+                    <ListView ItemsSource="{Binding Lights}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type light:LightVM}">
+                                            <TextBlock Text="{Binding Path= Name}"
+                                                       FontSize="16" Foreground="Black" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Switch">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type light:LightVM}">
+                                            <TextBlock Text="{Binding Path= IsTurnedOn}"
+                                                       FontSize="16" Foreground="Black" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Power">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type light:LightVM}">
+                                            <TextBlock Text="{Binding Path= Power, StringFormat='{}{0}%'}"
+                                                       FontSize="16" Foreground="Black" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Temperature">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type light:LightVM}">
+                                            <TextBlock Text="{Binding Path= Temperature, StringFormat='{}{0}°C'}"
+                                                       FontSize="16" Foreground="Black" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Intensity">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate DataType="{x:Type light:LightVM}">
+                                            <TextBlock Text="{Binding Path= Intensity, StringFormat='{}{0:F2}A'}" FontSize="16" Foreground="Black" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
+        </ScrollViewer>
+
+        <GroupBox Grid.Column="1"
+                  FontSize="18"
+                  Header="Camera">
+            <ContentControl Content="{Binding CameraViewModel}" />
+        </GroupBox>
+    </Grid>
+    
+</UserControl>

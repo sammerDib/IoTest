@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="UnitySC.PM.EME.Client.Modules.Calibration.View.AxisOrthogonalityCalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:vm="clr-namespace:UnitySC.PM.EME.Client.Modules.Calibration.ViewModel"              
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vm:AxisOrthogonalityCalibrationVM}" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <sharedControls:ImageGroupBox ImageGeometry="{StaticResource WaferGeometry}" 
+                                ImageGeometryBrush="{StaticResource IconsColor}" 
+                                Header="{Binding Name}"
+                                d:Header="Axis orthogonality">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <sharedControls:ImageButton ImageGeometry="{StaticResource PlayGeometry}" 
+                                      ImageGeometryBrush="{StaticResource IconsColor}" 
+                                      Content="Start Axis Orthogonality" 
+                                      Command="{Binding StartAxisOrthogonality}" Margin="6"/>
+
+                <controls:ImageButton Grid.Row="1"
+                                      Width="100"
+                                      Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                      Command="{Binding SaveCalibration}" Content="Save"
+                                      ImageGeometry="{StaticResource SaveGeometry}"
+                                      ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                      MinWidth="120"/>
+
+                <!-- Result  Status-->
+                <StackPanel Orientation="Horizontal" Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}" 
+                            Margin="0,5">
+                    <TextBlock Text="{Binding Result.Status.State}" Margin="4,0" />
+                    <TextBlock Text="{Binding Result.Status.Message}" />
+                </StackPanel>
+                <StackPanel Visibility="{Binding Result, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock Text="{Binding Path=Result.XAngle, StringFormat='X Angle: {0}'}" />
+                    <TextBlock Text="{Binding Path=Result.YAngle, StringFormat='Y Angle: {0}'}" />
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Row="1" Background="{StaticResource HeaderLeftBackgroundBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.ColumnSpan="2" Text="{Binding ValidationErrorMessage}" Margin="5,5,10,0" Visibility="{Binding ValidationErrorMessage, Converter={converters:EmptyStringToVisibilityConverter}}" Foreground="DarkRed" HorizontalAlignment="Right"></TextBlock>
+                <sharedControls:ImageButton Grid.Row="2" Grid.Column="0" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource ButtonForegroundBrush}" Command="{Binding SkipCommand}" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="120">Skip</sharedControls:ImageButton>
+                <sharedControls:ImageButton Grid.Row="2" Grid.Column="1" Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" Margin="10" HorizontalAlignment="Right"  VerticalContentAlignment="Center" Command="{Binding ValidateChoice}" MinWidth="120">VALIDATE</sharedControls:ImageButton>
+            </Grid>
+
+            <xctk:BusyIndicator BusyContent="{Binding BusyMessage}"
+                DisplayAfter="0"
+                IsBusy="{Binding IsBusy}">
+                <xctk:BusyIndicator.BusyContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="4">
+                            <TextBlock Margin="6"
+                       HorizontalAlignment="Center"
+                       Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.BusyMessage}" />
+                            <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.CancelAxisOrthogonality}"
+                    Content="Cancel" />
+                        </StackPanel>
+                    </DataTemplate>
+                </xctk:BusyIndicator.BusyContentTemplate>
+            </xctk:BusyIndicator>
+        </Grid>
+    </sharedControls:ImageGroupBox>
+</UserControl>

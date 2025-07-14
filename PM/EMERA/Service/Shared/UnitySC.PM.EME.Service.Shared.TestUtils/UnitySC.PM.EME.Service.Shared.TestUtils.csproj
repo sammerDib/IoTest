@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{93A76A32-190A-4716-8B4E-64112C73ACE1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.EME.Service.Shared.TestUtils</RootNamespace>
+    <AssemblyName>UnitySC.PM.EME.Service.Shared.TestUtils</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USE_ANYCPU</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;USE_ANYCPU</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CameraTestUtils.cs" />
+    <Compile Include="Configuration\FakeConfigurationManager.cs" />
+    <Compile Include="DirTestUtils.cs" />
+    <Compile Include="EventForwarder.cs" />
+    <Compile Include="ITestChuck.cs" />
+    <Compile Include="ITestWithDistanceSensor.cs" />
+    <Compile Include="TestWithDistanceSensor.cs" />
+    <Compile Include="TestWithLights.cs" />
+    <Compile Include="TestWithFilterWheel.cs" />
+    <Compile Include="SimulatedData.cs" />
+    <Compile Include="TestWithCamera.cs" />
+    <Compile Include="TestWithChuck.cs" />
+    <Compile Include="TestWithMockedHardware.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestWithPhotoLumAxes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions">
+      <Version>6.12.0</Version>
+    </PackageReference>
+    <PackageReference Include="Moq">
+      <Version>4.20.70</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestAdapter">
+      <Version>3.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>3.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="SimpleInjector">
+      <Version>5.4.6</Version>
+    </PackageReference>
+    <PackageReference Include="UnitySC.Shared.Algos.OpenCVWrapper">
+      <Version>1.2.1-alpha01</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{CF1B4C31-0420-401F-9DD5-2BC4B5D091E8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79F7E968-C5FD-4307-9127-C9C96691E505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Implementation\UnitySC.PM.Shared.Flow.Implementation.csproj">
+      <Project>{80484A41-7523-430E-B56E-1433457DA5FB}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77F22706-7C58-4193-AE97-85347CBDE3A2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\Components\UnitySC.PM.Shared.Hardware.Controllers\UnitySC.PM.Shared.Hardware.Controllers.csproj">
+      <Project>{1F1426D1-838C-4E37-8598-8533BF310975}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Controllers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Axes\UnitySC.PM.Shared.Hardware.Axes.csproj">
+      <Project>{F5DF897E-39CA-4C8F-A324-7DC38F7FBE53}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Axes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Camera\UnitySC.PM.Shared.Hardware.Camera.csproj">
+      <Project>{046875E4-F367-4B10-955A-C33F6F7A249A}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Camera</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.DistanceSensor\UnitySC.PM.Shared.Hardware.DistanceSensor.csproj">
+      <Project>{3d86d41d-0a40-4a32-8005-216a4e3540c9}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.DistanceSensor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Wheel\UnitySC.PM.Shared.Hardware.Wheel.csproj">
+      <Project>{0B13860F-0A0C-40C3-B389-C5FA7BC59040}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Wheel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Common\UnitySC.PM.Shared.Hardware.Common.csproj">
+      <Project>{DDAD1006-F8E4-4904-9004-0810A47CA810}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Core\UnitySC.PM.Shared.Hardware.Core.csproj">
+      <Project>{0B138AE8-3243-4D88-867F-3111DD8FB6FF}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Implementation\UnitySC.PM.Shared.Hardware.Service.Implementation.csproj">
+      <Project>{E7D74FE4-F983-439F-BF5E-BB548B08A498}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Implementation\UnitySC.PM.Shared.Status.Service.Implementation.csproj">
+      <Project>{F6A1A9A8-40B1-4015-A228-6F548EDF8755}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53BD49C3-C5CE-4EAD-8261-A95C2A003A5E}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Hardware\UnitySC.PM.EME.Hardware\UnitySC.PM.EME.Hardware.csproj">
+      <Project>{EDD38F09-9DA4-4E8B-B388-FD13176EEC37}</Project>
+      <Name>UnitySC.PM.EME.Hardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\UnitySC.PM.EME.Service.Core.Calibration\UnitySC.PM.EME.Service.Core.Calibration.csproj">
+      <Project>{94336578-b961-47e9-a74d-d7adfef5b129}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Calibration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\UnitySC.PM.EME.Service.Core.Context\UnitySC.PM.EME.Service.Core.Context.csproj">
+      <Project>{E3C63C0D-1A89-496D-9E5A-8DF038988E75}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\UnitySC.PM.EME.Service.Core.Referentials\UnitySC.PM.EME.Service.Core.Referentials.csproj">
+      <Project>{C479E5B7-73B7-4A22-8790-74592E2F35CB}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Referentials</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\UnitySC.PM.EME.Service.Core.Shared\UnitySC.PM.EME.Service.Core.Shared.csproj">
+      <Project>{99e63fee-1a70-48df-bf4b-7fa9b549970e}</Project>
+      <Name>UnitySC.PM.EME.Service.Core.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.Service.Implementation\UnitySC.PM.EME.Service.Implementation.csproj">
+      <Project>{7D23C8BA-0743-4225-A265-1BE02B0F9B9E}</Project>
+      <Name>UnitySC.PM.EME.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.EME.Service.Interface\UnitySC.PM.EME.Service.Interface.csproj">
+      <Project>{010D57AA-CFB3-4BCC-857C-15DB015290B7}</Project>
+      <Name>UnitySC.PM.EME.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\_ServiceConfigurationAndCalibration\ALPHA\Calibration\CenterRef.png">
+      <Link>Calibration\CenterRef.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Calibration\WaferReferentialCalibrationData.xml" />
+    <Content Include="Configuration\FlowsConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\PMConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configuration\RecipeConfiguration.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration\log.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

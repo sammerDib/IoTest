@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.Hardware.ClientProxy.Screen.ScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Screen color" />
+        <xctk:ColorPicker Grid.Column="1" Width="100" HorizontalAlignment="Left"
+                          SelectedColor="{Binding ScreenColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBlock Grid.Row="1" Text="Load custom image" VerticalAlignment="Center" />
+        <Button Grid.Row="1" Grid.Column="1" Content="..." Command="{Binding LoadImageCommand}" HorizontalAlignment="Left" />
+
+        <TextBlock Grid.Row="2" Text="Live preview" />
+        <CheckBox x:Name="liveCheckBox" Grid.Row="2" Grid.Column="1"
+                  Command="{Binding LivePreviewCommand}" CommandParameter="{Binding ElementName=liveCheckBox, Path=IsChecked}" />
+
+        <Border Grid.Row="3" Grid.ColumnSpan="2" Width="512" Height="288" Background="{Binding ScreenBrush}" HorizontalAlignment="Center"
+                Visibility="{Binding ElementName=liveCheckBox, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Image Source="{Binding ScreenBitmapSource, FallbackValue={StaticResource Image}}" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+        </Border>
+    </Grid>
+</UserControl>

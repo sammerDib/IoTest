@@ -1,0 +1,276 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.CommonUI.View.ExposureSettings.ManualExposureSettingsFullScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+             xmlns:converter="clr-namespace:UnitySC.PM.DMT.Shared.UI.Converter;assembly=UnitySC.PM.DMT.Shared.UI"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:zb="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage;assembly=UnitySC.Shared.UI"
+             xmlns:lcub="http://schemas.lightningchart.com/chartingMVVM/"
+             xmlns:dt="clr-namespace:UnitySC.Shared.Data.Enum;assembly=UnitySC.Shared.Data"
+             xmlns:vm="clr-namespace:UnitySC.PM.DMT.Shared.UI.ViewModel;assembly=UnitySC.PM.DMT.Shared.UI"
+             xmlns:si="clr-namespace:UnitySC.PM.DMT.Service.Interface.AutoExposure;assembly=UnitySC.PM.DMT.Service.Interface"
+             Unloaded="View_Unloaded"
+             mc:Ignorable="d"
+             d:DesignHeight="1024" d:DesignWidth="1024" Background="White"
+             x:Name="theView">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <!--<lcub:BarSeriesValueCollection x:Key="DesignBars" />-->
+            <converter:RoiTypeConverter x:Key="RoiTypeConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../DataTemplate.xaml" />
+                <ResourceDictionary Source="ExposureSettingsResources.xaml" />
+                <ResourceDictionary Source="../../ResourcesDictionnary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Zoombox -->
+        <zb:ZoomboxImage x:Name="theZoomboxImage" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                         ImageWidth="{Binding ImageWidth}" ImageHeight="{Binding ImageHeight}"
+                         ZoomboxView="{Binding ZoomboxView, Mode=TwoWay}" AutoSize="False"
+                         ImageSource="{Binding CameraBitmapSource}" Scale="{Binding ZoomboxScale, Mode=OneWayToSource}"
+                         RoiX="{Binding ROI.ImageRoiX, Mode=TwoWay}" RoiY="{Binding ROI.ImageRoiY, Mode=TwoWay}"
+                         RoiWidth="{Binding ROI.ImageRoiWidth, Mode=TwoWay}" RoiHeight="{Binding ROI.ImageRoiHeight, Mode=TwoWay}"
+                         RoiVisibility="{Binding ElementName=roiShowButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                         RoiType="{Binding ROI.RoiType,Converter={StaticResource RoiTypeConverter}, Mode=TwoWay}" />
+
+        <!-- Bandeau -->
+        <StackPanel>
+            <sharedControls:ImageButton ToolTip="Exit full screen" IsCancel="True" BorderThickness="0" HorizontalAlignment="Left" Margin="2" ImageGeometry="{StaticResource FullscreenExitGeometry}" ImageGeometryBrush="{StaticResource IconsColor}">
+            </sharedControls:ImageButton>
+            <Expander x:Name="theExpander" IsExpanded="True" Margin="0,0,5,0">
+                <StackPanel Margin="0,0,1,0">
+                    <StackPanel Orientation="Horizontal" Background="Yellow" Visibility="{Binding HasToolCalibration, Mode=OneTime, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                        <Image Source="{StaticResource Warning}" Margin="2" />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="Image not calibrated :" VerticalAlignment="Center" Margin="10,0,0,0" />
+                            <TextBlock Text="Perspective calibration is missing," VerticalAlignment="Center" Margin="10,0,0,0" />
+                            <TextBlock Text="whole wafer ROI not allowed" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Screen Display -->
+                    <sharedControls:ImageGroupBox Header="Screen Display" ImageGeometry="{StaticResource ScreenGeometry}" ImageGeometryBrush="{StaticResource IconsColor}"  Margin="2" Visibility="{Binding CanChangeScreenDisplay, Converter={converters:BooleanToVisibilityConverter}}">
+                        <Grid>
+                            <!-- Screen -->
+                            <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <ContentControl Content="{StaticResource ScreenImageSelectionComboBox}" HorizontalAlignment="Left" Width="150" />
+                                <!-- Slope precision -->
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Slope Sensitivity Label -->
+                                    <TextBlock Text="Slope sensitivity"  Grid.Column="0"  VerticalAlignment="Top" Visibility="{Binding CanChangeSlopePrecision, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <!-- Period (pixels): Label -->
+                                    <TextBlock Text="Period (pixels):" Grid.Column="1"  VerticalAlignment="Top"  Margin="0,0,10,0"  FontWeight="Normal"    Visibility="{Binding CanChangeSlopePrecision, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <TextBlock Text="{Binding Measure.Period}" Grid.Column="2" VerticalAlignment="Top" Visibility="{Binding CanChangeSlopePrecision, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" MinWidth="50" />
+                                </Grid>
+                                <controls:TextSlider Value="{Binding SlopePrecision}" Minimum="0" Maximum="{Binding MaxSlopePrecision, Mode=OneWay}"
+                                              TickFrequency="1" TickPlacement="BottomRight" VerticalAlignment="Center"
+                                               Grid.Row="2" Margin="5" Visibility="{Binding CanChangeSlopePrecision, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </Grid>
+                            <ContentControl Grid.Row="1" Grid.Column="1" Content="{StaticResource ColorSelectionComboBox}" HorizontalAlignment="Left" Width="150"
+                                    Visibility="{Binding AvailableColors, FallbackValue=Collapsed, Converter={StaticResource NullToVisibilityConverter}}" />
+                        </Grid>
+                    </sharedControls:ImageGroupBox>
+
+                    <!-- ROI -->
+                    <sharedControls:ImageGroupBox Header="ROI definition" ImageGeometry="{StaticResource ROIGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="2,6,2,2" Grid.Row="2">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="radioWholeWafer" Content="Whole Wafer" GroupName="Type"
+                                     IsChecked="{Binding ROI.RoiType, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static dt:RoiType.WholeWafer}}"
+                                     IsEnabled="{Binding HasToolCalibration, Mode=OneTime}" />
+                                <RadioButton x:Name="radioROI" Content="Rectangle" GroupName="Type"
+                                     IsChecked="{Binding ROI.RoiType, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static dt:RoiType.Rectangular}}"
+                                     IsEnabled="{Binding HasToolCalibration, Mode=OneTime}" />
+                                <CheckBox x:Name="roiShowButton" Content="Show ROI" VerticalAlignment="Center" IsChecked="True" Margin="5,0,0,0" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical" Margin="0,4,0,0">
+                                <Grid  Visibility="{Binding ROI.RoiType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static dt:RoiType.WholeWafer}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="Edge exclusion" VerticalAlignment="Center" />
+                                    <sharedControls:DoubleUpDown Grid.Column="1" Minimum="0" Height="20" Step="100" Maximum="{Binding ROI.WaferRadius}" Margin="10,5,0,5" Value="{Binding ROI.EdgeExclusion, Mode=TwoWay}" MinWidth="100" Unit="µm" Style="{StaticResource DoubleUpDownDMTStyle}" />
+                                </Grid>
+                                <!-- ROI Rectangle -->
+                                <ContentControl Content="{StaticResource RoiTextboxGrid}"
+                                    Visibility="{Binding ROI.RoiType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static dt:RoiType.Rectangular}}" />
+                            </StackPanel>
+                            <Button Content="Set current view to ROI" ToolTip="Define ROI as currently visible area"
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            Command="zb:ZoomboxImage.SetRoiFromView" CommandTarget="{Binding ElementName=theZoomboxImage}"
+                            Visibility="{Binding ROI.RoiType, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static dt:RoiType.Rectangular}}" />
+                            <Button Content="Apply ROI to All Measures" VerticalAlignment="Center" Margin="0 4" Command="{Binding ApplyRoiSettingsToAllMeasuresCommand}" Visibility="{Binding ElementName=roiShowButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                        </StackPanel>
+                    </sharedControls:ImageGroupBox>
+
+                    <!-- Exposure -->
+                    <sharedControls:ImageGroupBox Header="Exposure Time" ImageGeometry="{StaticResource LapTimerGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="2,6,2,2" Grid.Row="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- ExposureTimeMs -->
+                            <StackPanel Grid.Column="1"  Orientation="Vertical">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="{Binding Measure.IsTargetSaturationEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <TextBlock Text="Illumination target" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="3" />
+                                        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5,0,0,20">
+                                            <Slider Width="145" TickFrequency="1" TickPlacement="BottomRight" AutoToolTipPlacement="TopLeft" Value="{Binding IlluminationTarget}"
+                                                    Maximum="255" Minimum="0" />
+                                            <Canvas HorizontalAlignment="Center" VerticalAlignment="Top" Width="145">
+                                                <TextBlock Text="0" Canvas.Left="0" FontSize="12" />
+                                                <TextBlock Text="255" Canvas.Right="0" FontSize="12" />
+                                            </Canvas>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1" Orientation="Vertical" Visibility="{Binding Measure.AutoExposureTimeTrigger, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static si:AutoExposureTimeTrigger.Never}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Exposure time" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3" />
+                                            <sharedControls:DoubleUpDown Step="1" MinWidth="170" Margin="3"
+                                               Value="{Binding ExposureTimeMs, StringFormat={}{0:F1}, Mode=TwoWay}"
+                                               Minimum="{Binding MinExposureTimeMs, Mode=OneWay}" Maximum="{Binding MaxExposureTimeMs,Mode=OneWay}" Style="{StaticResource DoubleUpDownDMTStyle}" Unit="ms">
+                                                <sharedControls:DoubleUpDown.InputBindings>
+                                                    <KeyBinding Command="{Binding ApplyExposureTimeCommand}" Key="Return" />
+                                                </sharedControls:DoubleUpDown.InputBindings>
+                                            </sharedControls:DoubleUpDown>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Grid Grid.Row="3" Width="20" Height="20" Margin="5,0,10,0" HorizontalAlignment="Right">
+                                                <Image Source="{StaticResource WarningWithCircle}" ToolTip="Exposure time has been modified, you need to apply the new value"
+                                                    Visibility="{Binding ExposureTimeStatus, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExposureTimeStatus.Modified}}" />
+                                                <Image Source="{StaticResource RunningWithAnimation}" ToolTip="Camera is acquiring an image using the new exposure time"
+                                                    Style="{StaticResource ImageSpinnerVisible}"
+                                                    Visibility="{Binding ExposureTimeStatus, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExposureTimeStatus.InProgress}}" />
+                                                <Image Source="{StaticResource ValidWithCircle}" ToolTip="The image displayed has been acquired with the current exposure time"
+                                                    Visibility="{Binding ExposureTimeStatus, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter={x:Static vm:ExposureTimeStatus.Valid}}" />
+                                            </Grid>
+                                            <controls:ImageButton Image="{StaticResource Valid}" Content="Apply" Command="{Binding ApplyExposureTimeCommand}" MinWidth="120" Margin="3" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+
+                                <sharedControls:ImageButton ImageGeometry="{StaticResource LapTimerGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Compute exposure" Margin="0,4,0,0" Command="{Binding AutoSetExposureTimeCommand}" />
+                            </StackPanel>
+                        </Grid>
+                    </sharedControls:ImageGroupBox>
+
+                    <!-- Histogram -->
+                    <sharedControls:ImageGroupBox Header="Histogram" ImageGeometry="{StaticResource GraphGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="2,6,2,2">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                <CheckBox Content="Histogram" IsChecked="{Binding IsShowingHistogram}" Margin="0,0,20,0" />
+                                <CheckBox Content="Profile" IsChecked="{Binding IsShowingProfile}" />
+                            </StackPanel>
+
+                            <lcub:LightningChart x:Name="chart" ChartName="Histogram" Height="200">
+                                <lcub:LightningChart.ChartBackground>
+
+                                    <lcub:Fill Color="{StaticResource LittleDarkGreyColor}" GradientFill="Solid" />
+                                </lcub:LightningChart.ChartBackground>
+                                <lcub:LightningChart.Title>
+                                    <lcub:ChartTitle Text="Histogram" Visible="False" />
+                                </lcub:LightningChart.Title>
+                                <lcub:LightningChart.ViewXY>
+
+                                    <lcub:ViewXY>
+                                        <lcub:ViewXY.GraphBackground>
+                                            <lcub:Fill Color="{StaticResource LittleDarkGreyColor}" GradientFill="Solid" />
+                                        </lcub:ViewXY.GraphBackground>
+                                        <!--<lcub:ViewXY.LegendBox>
+                                            <lcub:LegendBoxXY Visible="False" />
+                                        </lcub:ViewXY.LegendBox>-->
+                                        <lcub:ViewXY.YAxes>
+                                            <lcub:AxisY Minimum="0" Maximum="{Binding HistogramMaxY}" ValueType="Number" LabelsVisible="False">
+                                                <lcub:AxisY.Title>
+                                                    <lcub:AxisYTitle Visible="False" />
+                                                </lcub:AxisY.Title>
+                                            </lcub:AxisY>
+                                        </lcub:ViewXY.YAxes>
+                                        <lcub:ViewXY.XAxes>
+                                            <lcub:AxisX Minimum="{Binding HistogramMinX}" Maximum="{Binding HistogramMaxX}" ValueType="Number" LabelsVisible="False">
+                                                <lcub:AxisX.Title>
+                                                    <lcub:AxisXTitle Visible="False" />
+                                                </lcub:AxisX.Title>
+                                            </lcub:AxisX>
+                                        </lcub:ViewXY.XAxes>
+                                        <lcub:ViewXY.BarViewOptions>
+                                            <lcub:BarViewOptions Grouping="ByLocation" />
+                                        </lcub:ViewXY.BarViewOptions>
+                                        <lcub:ViewXY.BarSeries>
+                                            <lcub:BarSeries Values="{Binding HistogramBars}" BarThickness="2">
+                                                <lcub:BarSeries.Fill>
+                                                    <lcub:Fill Color="Black" GradientFill="Solid" />
+                                                </lcub:BarSeries.Fill>
+                                            </lcub:BarSeries>
+                                        </lcub:ViewXY.BarSeries>
+                                        <lcub:ViewXY.PointLineSeries>
+                                            <lcub:PointLineSeries Points="{Binding ProfilePoints}">
+                                                <lcub:PointLineSeries.LineStyle>
+                                                    <lcub:LineStyle Color="Black" Width="2" />
+                                                </lcub:PointLineSeries.LineStyle>
+                                                <lcub:PointLineSeries.Title>
+                                                    <lcub:SeriesTitle Text="Nb Pixels" />
+                                                </lcub:PointLineSeries.Title>
+                                            </lcub:PointLineSeries>
+                                        </lcub:ViewXY.PointLineSeries>
+                                    </lcub:ViewXY>
+                                </lcub:LightningChart.ViewXY>
+                            </lcub:LightningChart>
+
+                            <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Margin="0,10,0,0">
+                                <TextBlock Text="{Binding StatInfo}" FontWeight="Normal" />
+                            </Border>
+                        </StackPanel>
+                    </sharedControls:ImageGroupBox>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </Grid>
+</UserControl>
