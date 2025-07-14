@@ -1,0 +1,426 @@
+﻿<UserControl x:Class="UnitySC.PM.AGS.Modules.TestHardware.View.StageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:model="clr-namespace:UnitySC.Shared.UI.Graph.Model;assembly=UnitySC.Shared.UI"
+             d:DataContext="{d:DesignInstance Type=model:ConnectorViewModel}"
+             mc:Ignorable="d"
+            d:DesignHeight="1024" d:DesignWidth="800"
+             TextElement.FontSize="14"
+             x:Name="UserControlStage">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0"  Margin=" 40 0 0 0 ">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+
+                <Border  HorizontalAlignment="Left"  Width="48" Height="40" Margin="0,2,0,3">
+                    <Image x:Name="Connexon" Margin="0,10,21,0">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                        <Setter Property="Source" Value="{StaticResource ConnectionKo}" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                        <Setter Property="Source" Value="{StaticResource ConnectionOk}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="125" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center"
+                           FontSize="22"
+                           HorizontalAlignment="Center"
+                           Margin="10">Moving</TextBlock>
+
+                <Image     Grid.Column="1"
+                           Width="30"
+                           Height="30"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center">
+                    <Image.Source>
+                        <BitmapImage   UriSource="../Resource/Image/repeat.png" />
+                    </Image.Source>
+
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0" CenterX="15" CenterY="15" />
+                    </Image.RenderTransform>
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <Trigger Property="IsVisible" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard x:Name="startRotate">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                                                 From="0"
+                                                                 To="360"
+                                                                 Duration="0:0:1"
+                                                                 RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <StopStoryboard BeginStoryboardName="startRotate" />
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="125" />
+                    <ColumnDefinition Width="180" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center"
+                           FontSize="22"
+                           HorizontalAlignment="Center"
+                           Margin="10">Diagnostic</TextBlock>
+
+                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" Height="20" Width="100" Background="{StaticResource WarningBrush}" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <controls:ImageGroupBox  Image="{StaticResource  Screen}"  Header="Stage Scenario" x:Name="testgroup"    Margin="10,10,0,10" ToolTip=" Accessible only if Calibrated ">
+
+                <Grid x:Name="gridtest"  HorizontalAlignment="left">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="txtLoaded" FontSize="18"
+                           Grid.Row="0"
+                           Grid.Column="0" VerticalAlignment="Center"
+                           HorizontalAlignment="Center" Margin="10">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Loaded" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=togglisloaded, Path=IsChecked}" Value="false" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Text" Value="Unloaded" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <ToggleButton x:Name="togglisloaded"
+                          Command="{Binding ChangeLoadStatusCmd}"
+                          IsChecked="{Binding IsWaferLloaded ,Mode=TwoWay}"
+                          Grid.Row="0"
+                          Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          ToolTip="Manage air bearing"
+                          Style="{StaticResource ToggleAnimatedSwitchNew}"
+                          VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="0" Grid.Column="2"
+                           VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,0,0,0">Number of cycles</TextBlock>
+
+                    <controls:IntegerUpDown x:Name="integerUpDownCycleLoad"   Grid.Row="0" Grid.Column="3"  Width="150"  Maximum="100" Minimum="0"  Margin="20,20,20,20" HorizontalAlignment="Center"  VerticalAlignment="Center" ImageGeometryDown="{StaticResource CaretBottomGeometry}" ImageGeometryUp="{StaticResource CaretTopGeometry}" HorizontalContentAlignment="Right" Value="{Binding CycleLoad}">
+                        <controls:IntegerUpDown.InputBindings>
+                            <KeyBinding Command="{Binding XMove}" Key="Enter" CommandParameter="{Binding ElementName=TextXPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                        </controls:IntegerUpDown.InputBindings>
+                    </controls:IntegerUpDown>
+
+                    <controls:ImageButton x:Name="btncycleLoad"   Image="{StaticResource Play}" IsEnabled="False" Grid.Row="0" Grid.Column="4" Height="50" HorizontalAlignment="Center" ToolTip="start Loaded Cycle"  Margin="30,0,0,0" />
+                    <TextBlock x:Name="txtclam" FontSize="18"
+                           Grid.Row="1"
+                           Grid.Column="0" VerticalAlignment="Center"
+                           HorizontalAlignment="Center" Margin="10">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Clamped" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=toggClamped, Path=IsChecked}" Value="false" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Text" Value="Unclamped" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <ToggleButton x:Name="toggClamped"
+                              Command="{Binding ChangeClampStatusCmd}"
+                              ToolTip="Manage Wafer (check if wafer is Clamped)"
+                              IsChecked="{Binding IsWaferClamped , Mode=TwoWay}"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              Style="{StaticResource ToggleAnimatedSwitchNew}"
+                              VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="2"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"  Margin="20,0,0,0">Number of cycles</TextBlock>
+
+                    <controls:IntegerUpDown   Grid.Row="1" Grid.Column="3" x:Name="integerUpDownCycleClamp" Width="150" Maximum="100" Minimum="0"  Margin="20,20,20,20" HorizontalAlignment="Center" VerticalAlignment="Center" ImageGeometryDown="{StaticResource CaretBottomGeometry}" ImageGeometryUp="{StaticResource CaretTopGeometry}" HorizontalContentAlignment="Right" Value="{Binding CycleLoad}">
+                        <controls:IntegerUpDown.InputBindings>
+                            <KeyBinding Command="{Binding clamp}" Key="Enter" CommandParameter="{Binding ElementName=TextXPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                        </controls:IntegerUpDown.InputBindings>
+                    </controls:IntegerUpDown>
+
+                    <controls:ImageButton x:Name="btnCycleClamp" Image="{StaticResource Play}"  IsEnabled="{Binding  AxesSupervisor.AxesVM.Status.IsMoving}" ToolTip="start Clamped Cycle" Grid.Row="1" Grid.Column="4" Height="50" HorizontalAlignment="Center" Margin="30,0,0,0" />
+
+                    <TextBlock x:Name="txtVacuum" FontSize="18"
+                           Grid.Row="2"
+                           Grid.Column="0" VerticalAlignment="Center"
+                           HorizontalAlignment="Center" Margin="10">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Vacuum On" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=tooglvacuum, Path=IsChecked}" Value="false" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Text" Value="Vacuum Off" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <ToggleButton x:Name="tooglvacuum"
+                            Command="{Binding ChangeVacuumStatusCmd}"
+                            IsChecked="{Binding IsVacuumOn , Mode=TwoWay}"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            ToolTip="Manage vacuum (check if vacumm is on or off)"
+                            Style="{StaticResource ToggleAnimatedSwitchNew}"
+                            VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="2"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"  Margin="20,0,0,0">Number of cycles</TextBlock>
+
+                    <controls:IntegerUpDown   Grid.Row="2" Grid.Column="3" x:Name="integerUpDownCycleCacuum" Width="150" Maximum="100" Minimum="0" Margin="20,20,20,20" HorizontalAlignment="Center" VerticalAlignment="Center" ImageGeometryDown="{StaticResource CaretBottomGeometry}" ImageGeometryUp="{StaticResource CaretTopGeometry}" HorizontalContentAlignment="Right" Value="{Binding CycleLoad}">
+                        <controls:IntegerUpDown.InputBindings>
+                            <KeyBinding Command="{Binding XMove}" Key="Enter" CommandParameter="{Binding ElementName=TextXPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                        </controls:IntegerUpDown.InputBindings>
+                    </controls:IntegerUpDown>
+
+                    <controls:ImageButton x:Name="btnCycle" Image="{StaticResource Play}" ToolTip="Start Vacuum cycle" Grid.Row="2" Grid.Column="4" Height="50" HorizontalAlignment="Right" Margin="0,10" />
+                    <TextBlock x:Name="txtWaferlift" FontSize="18"
+                           Grid.Row="3"
+                           Grid.Column="0" VerticalAlignment="Center"
+                           HorizontalAlignment="Center" Margin="10">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="lift Down" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=toogleWaferlift, Path=IsChecked}" Value="false" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Text" Value="lift Up" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <ToggleButton  x:Name="toogleWaferlift"
+                            Command="{Binding ChangeLiftPinStatusCmd}"
+                            IsChecked="{Binding IsLiftPinUp , Mode=TwoWay}"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            ToolTip="Manage wafer lift pin (check if wafer lift pin is Up or Down)"
+                            Style="{StaticResource ToggleAnimatedSwitchNew}"
+                            VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Row="3" Grid.Column="2"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"  Margin="20,0,0,0">Number of cycles</TextBlock>
+
+                    <controls:IntegerUpDown   Grid.Row="3" Grid.Column="3" x:Name="integerUpDownWaferLift" Width="150" Maximum="100" Minimum="0" Margin="20,20,20,20" HorizontalAlignment="Center" VerticalAlignment="Center" ImageGeometryDown="{StaticResource CaretBottomGeometry}" ImageGeometryUp="{StaticResource CaretTopGeometry}" HorizontalContentAlignment="Right" Value="{Binding CycleLoad}">
+                        <controls:IntegerUpDown.InputBindings>
+                            <KeyBinding Command="{Binding XMove}" Key="Enter" CommandParameter="{Binding ElementName=TextXPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                        </controls:IntegerUpDown.InputBindings>
+                    </controls:IntegerUpDown>
+
+                    <controls:ImageButton Image="{StaticResource Play}" ToolTip="start wafer Lift Cycle" Grid.Row="3" Grid.Column="4" Height="50" HorizontalAlignment="Center" Margin="30,0,0,0" />
+                </Grid>
+            </controls:ImageGroupBox>
+        </Grid>
+        <Grid Grid.Row="2"   Margin="0,5,0,-5">
+            <controls:ImageGroupBox  Image="{StaticResource NotFullScreen}" Header="Movement"  FontSize="20"  Margin="10,10,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Margin="10,10,0,10" Grid.Column=" 0">
+                        <Grid.RowDefinitions>
+
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid  Grid.Row="1" Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" FontSize="20" Height="20">X :</TextBlock>
+                            <controls:IntegerUpDown   Grid.Row="0" Grid.Column="1" x:Name="integerUpDownPosition" Width="140" Maximum="100" Minimum="0" Unit="mm" ImageGeometryDown="{StaticResource MinusGeometry}" ImageGeometryUp="{StaticResource PlusGeometry}" HorizontalContentAlignment="Right" Value="{Binding XPosition}">
+                                <controls:IntegerUpDown.InputBindings>
+                                    <KeyBinding Command="{Binding XMove}" Key="Enter" CommandParameter="{Binding ElementName=TextXPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                                </controls:IntegerUpDown.InputBindings>
+                            </controls:IntegerUpDown>
+
+                            <StackPanel  Grid.Column="2"  Grid.Row="0"  Orientation="Vertical"  HorizontalAlignment="Center" Margin="40,0 ,0 ,0">
+                                <TextBlock Margin="0  0 0 0 " Text="Velocity[µm/s]" />
+
+                                <Slider x:Name="PositionTargetZTop"
+                                    TickFrequency="1"
+                                    Orientation="Horizontal"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    HorizontalAlignment="Left"
+                                    Value="5" Width="150" />
+                            </StackPanel>
+                            <TextBox x:Name="PositionXTextbox"
+                                 Grid.Row="0"
+                                 Grid.Column="3"
+
+                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMax}"
+                                 sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMin}"
+                                 MaxLength="10"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding PositionTarget.X}" Margin="10,0,0,0"  Width="68" />
+
+                            <ComboBox   Width=" 110"
+                              SelectedItem="{Binding SelectedXAxisSpeed}"
+                              ItemsSource="{Binding SpeedXAxisValues}"
+                              Grid.Column="4"
+                              Grid.Row="0"
+                              Margin="15 , 0,0,0" ></ComboBox>
+
+                            <TextBlock  Grid.Column="0" Grid.Row="1" FontSize="15" Height="20">Theta :</TextBlock>
+                            <controls:IntegerUpDown   Grid.Row="1" Grid.Column="1" x:Name="integerUpDownSpeed" Width="140" Maximum="100" Minimum="0" Unit="°" ImageGeometryDown="{StaticResource MinusGeometry}" ImageGeometryUp="{StaticResource PlusGeometry}" HorizontalContentAlignment="Right" Value="{Binding TextTetaPosition}">
+                                <controls:IntegerUpDown.InputBindings>
+                                    <KeyBinding Command="{Binding TMove}" Key="Enter" CommandParameter="{Binding ElementName=TextTetaPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                                </controls:IntegerUpDown.InputBindings>
+                            </controls:IntegerUpDown>
+
+                            <StackPanel Grid.Row="1"  Grid.Column="2"  Orientation="Vertical" HorizontalAlignment="Center"  Margin="40,0 ,0 ,0">
+                                <TextBlock Margin=" 0 ,0,0,0" Text="Velocity[°/s]" />
+
+                                <Slider x:Name="PositionTargetTheta"
+                                    TickFrequency="1"
+                                    Orientation="Horizontal"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    HorizontalAlignment="Left"
+                                    Value="5" Width="150" />
+                            </StackPanel>
+                            <TextBox x:Name="PositionThetaTextbox"
+                                 Grid.Row="1"
+                                 Grid.Column="3"
+                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMax}"
+                                 sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMin}"
+                                 MaxLength="10"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding PositionTarget.X}"  Width="68"  Margin="10,0,0,0" />
+
+                            <ComboBox  Width=" 110"
+                              SelectedItem="{Binding SelectedTAxisSpeed}"
+                              ItemsSource="{Binding SpeedTAxisValues}"
+                              Grid.Column="74"
+                              Grid.Row="1"
+                              Margin="15 , 0,0,0" ></ComboBox>
+                        </Grid>
+                    </Grid>
+
+                    <Border  Grid.Column="1" BorderThickness="20">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <controls:ImageButton Grid.Row="0"  Image="{StaticResource Home}" Command="{Binding GotoHomePositionCmd}" Content="Home" FontSize="16"   Margin="10,10,63,10" Padding="7"  IsEnabled="True" />
+                            <controls:ImageButton Grid.Row="1"  Image="{StaticResource Error}" Content="Ack fault" FontSize="16"  Margin="10,12,63,7"  Padding="7" />
+                            <controls:ImageButton Grid.Row="2"  Image="{StaticResource Stop}" Content="Abort Move" FontSize="16"   Margin="10,11,63,6" Padding="7" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </controls:ImageGroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

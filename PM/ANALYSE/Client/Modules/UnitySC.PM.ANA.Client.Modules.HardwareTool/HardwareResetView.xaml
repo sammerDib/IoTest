@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.HardwareReset.HardwareResetView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.HardwareReset"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             d:DataContext="{d:DesignInstance Type=local:HardwareResetVM}"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource LeftPaneBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="10 0">
+            <CheckBox Content="PROCESS" IsChecked="{Binding IsProcessChecked}" />
+            <Image Source="{Binding StatusProcess}" Style="{StaticResource Icon}" Margin="5 0" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="10 0">
+            <CheckBox Content="AIRBEARING" IsChecked="{Binding IsAirbearingChecked}" />
+            <Image Source="{Binding StatusAirbearing}" Style="{StaticResource Icon}" Margin="5 0" />
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10 0 0 0">
+                <TextBlock>
+                    <Run Text="Airbearing Sensor 0 Value: " />
+                    <Run Text="{Binding AirbearingSensor0Value, StringFormat='{}{0:F3}'}" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Airbearing Sensor 1 Value: " />
+                    <Run Text="{Binding AirbearingSensor1Value, StringFormat='{}{0:F3}'}" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Airbearing Pressure Value: " />
+                    <Run Text="{Binding AirbearingPressureValue, StringFormat='{}{0:F3}'}" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Margin="10 0">
+            <CheckBox Content="Z top focus" IsChecked="{Binding IsZTopFocusChecked}" />
+            <Image Source="{Binding StatusZTop}" Style="{StaticResource Icon}" Margin="5 0" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0" Margin="10 0">
+            <CheckBox Content="Z bottom focus" IsChecked="{Binding IsZBottomFocusChecked}" />
+            <Image Source="{Binding StatusZBottom}" Style="{StaticResource Icon}" Margin="5 0" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Margin="10 0">
+            <CheckBox Content="WAFER STAGE" IsChecked="{Binding IsWaferStageChecked}" />
+            <Image Source="{Binding StatusWaferStage}" Style="{StaticResource Icon}" Margin="5 0" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0" Margin="10 0">
+            <Label Content="INITIALIZE SELECTED DEVICE" FontWeight="Bold" Background="Transparent"
+                   Style="{StaticResource TitleLevel1}" />
+            <Button Content="Initialize" Command="{Binding InitializeAllCommand}" Width="100"
+                    Margin="10,0,0,0" />
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="6" Grid.Column="0" Margin="10 0">
+            <Label Content="CHAMBER LIGHT" Style="{StaticResource TitleLevel2}" />
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Button Content="Light On" Command="{Binding SwitchLightCommand}" CommandParameter="On"
+                        BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="0,0,1,0"
+                        Padding="0,0,1,0" HorizontalAlignment="Left" Width="66" />
+                <Button Content="Light Off" Command="{Binding SwitchLightCommand}" CommandParameter="Off"
+                        BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="0,0,1,0"
+                        Padding="0,0,1,0" HorizontalAlignment="Left" Width="66" Margin="10,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+        <RichTextBox x:Name="ConsoleOutput" Grid.Row="0" Grid.Column="1" Grid.RowSpan="6" IsReadOnly="True"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                     VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"
+                     Margin="10">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="{Binding ConsoleOutput}" />
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </Grid>
+</UserControl>

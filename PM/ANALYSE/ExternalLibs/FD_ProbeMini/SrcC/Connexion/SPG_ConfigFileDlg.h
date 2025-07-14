@@ -1,0 +1,9 @@
+
+#define CFG_DIALOG_CHECKMINMAX 1
+#define CFG_DIALOG_APPLY 2
+#define CFG_DIALOG_HASNAMEPARAM 4
+
+#define CFG_scxDlgFlag CFG_DIALOG_CHECKMINMAX|CFG_DIALOG_APPLY|CFG_DIALOG_HASNAMEPARAM
+
+int SPG_CONV CFG_CreateDialog(SPG_CONFIGFILE& CFG, int Flag=CFG_DIALOG_CHECKMINMAX|CFG_DIALOG_APPLY);
+int SPG_CONV CFG_CreateChooseDialog(char* Text, char** ChoixBtn, char** ChoixDescr, int MaxChoix);

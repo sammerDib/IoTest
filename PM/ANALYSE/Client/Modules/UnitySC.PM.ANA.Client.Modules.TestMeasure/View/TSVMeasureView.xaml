@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestMeasure.View.TSVMeasureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestMeasure"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="0">
+            <headers:HeaderRight Content="Measure TSV" />
+            <Grid Margin="10">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Depth" VerticalAlignment="Center" />
+                    <controls:TextBoxUnit Grid.Column="1" Unit="{Binding DepthTarget.UnitSymbol}" Text="{Binding DepthTarget.Value, StringFormat='{}{0:F2}'}" />
+                    <TextBlock Text="Tolerance" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <controls:TextBoxUnit Grid.Column="3" Unit="{Binding DepthTolerance.UnitSymbol}" Text="{Binding DepthTolerance.Value, StringFormat='{}{0:F2}'}" />
+                </Grid>
+                <!--Ellipse-->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Width" VerticalAlignment="Center" />
+                    <controls:TextBoxUnit Grid.Column="1" Unit="{Binding WidthTarget.UnitSymbol}" Text="{Binding WidthTarget.Value, StringFormat='{}{0:F2}'}" Margin="0,10" />
+                    <TextBlock Text="Tolerance" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <controls:TextBoxUnit Grid.Column="3" Unit="{Binding WidthTolerance.UnitSymbol}" Text="{Binding WidthTolerance.Value, StringFormat='{}{0:F2}'}" />
+                    <TextBlock Grid.Row="1" Text="Height" VerticalAlignment="Center" />
+                    <controls:TextBoxUnit Grid.Row="1" Grid.Column="1" Unit="{Binding LengthTarget.UnitSymbol}" Text="{Binding LengthTarget.Value, StringFormat='{}{0:F2}'}" />
+                    <TextBlock Grid.Row="1" Text="Tolerance" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    <controls:TextBoxUnit Grid.Row="1" Grid.Column="3" Unit="{Binding LengthTolerance.UnitSymbol}" Text="{Binding LengthTolerance.Value, StringFormat='{}{0:F2}'}" />
+                </Grid>
+            </Grid>
+            <controls:ImageButton Grid.Column="1" Image="{StaticResource Play}" Content="Start" Margin="4" HorizontalAlignment="Left" Command="{Binding StartTSVCommand}" />
+        </StackPanel>
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="TSV in progress.." DisplayAfter="0" />
+    </Grid>
+</UserControl>

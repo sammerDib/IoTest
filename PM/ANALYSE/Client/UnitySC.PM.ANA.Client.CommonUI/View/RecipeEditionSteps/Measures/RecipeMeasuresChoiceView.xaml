@@ -1,0 +1,221 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.RecipeMeasuresChoiceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="1024">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="MeasureChoiceTemplate" DataType="{x:Type vm:MeasureChoiceVM}">
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10,10,10,10" Width="180" Height="250" Margin="5,0,5,5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding Icon}" Margin="10" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Unspecified" />
+                        <TextBlock Grid.Row="1" Text="{Binding Name}" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" Margin="5" />
+                        <TextBlock Grid.Row="2" Text="{Binding Description}" TextWrapping="Wrap" FontSize="11" HorizontalAlignment="Center" TextAlignment="Center" Margin="5" Foreground="#404040" />
+                        <Button Grid.Row="3" HorizontalAlignment="Center" Margin="5" Width="100" Command="{Binding Path=DataContext.ChooseMeasure, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}"  CommandParameter="{Binding Type}">Add</Button>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+            <DataTemplate x:Key="ChosenMeasureTemplate" DataType="{x:Type vm:ChosenMeasureVM}">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"></CheckBox>
+
+                    <controls:TextBoxWithPen Grid.Column="1" Text="{Binding Name,Mode=TwoWay}" FontWeight="Bold"  Margin="5,0" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5,0">Activate</TextBlock>
+                    <ToggleButton Grid.Column="3" Style="{StaticResource ToggleAnimatedSwitchNew}" IsChecked="{Binding IsActive}" />
+                    <sharedControls:ImageButton Margin="10,0,0,0" Grid.Column="4" Width="20" Height="20"  Style="{StaticResource ImageButtonWithoutBorder}" Padding="0" ImageGeometry="{StaticResource TrashGeometry}" ImageGeometryBrush="{StaticResource IconsErrorColor}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=DataContext.DeleteChosenMeasure}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=DataContext}" Visibility="{Binding IsMain, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                    <Grid Grid.Row="1" Grid.ColumnSpan="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Type:" Margin="25,0,0,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Type}" Margin="5,0,0,0" />
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+
+            <ColumnDefinition Width="{StaticResource RightPaneWidth}" />
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Margin="5,20,5,20">Select the measures you want to execute. Click the Add button to add them to your selection</TextBlock>
+            <ScrollViewer Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Visibility="{Binding ThicknessMeasureChoices.Count, Converter={converters:IntToVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Style="{StaticResource TitleLevel2}">THICKNESS MEASURES</Label>
+                        <Separator Grid.Row="1"></Separator>
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding ThicknessMeasureChoices}" ItemTemplate="{StaticResource MeasureChoiceTemplate}" Margin="5">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                    <Grid Grid.Row="1" Visibility="{Binding DistanceRoughnessMeasureChoices.Count, Converter={converters:IntToVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Style="{StaticResource TitleLevel2}" Margin="0,10,0,0">DISTANCE AND ROUGHNESS MEASURES</Label>
+                        <Separator Grid.Row="1"></Separator>
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding DistanceRoughnessMeasureChoices}" ItemTemplate="{StaticResource MeasureChoiceTemplate}" Margin="5">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                    <Grid Grid.Row="2" Visibility="{Binding WaferShapeMeasureChoices.Count, Converter={converters:IntToVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Style="{StaticResource TitleLevel2}" Margin="0,10,0,0">WAFER SHAPE</Label>
+                        <Separator Grid.Row="1"></Separator>
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding WaferShapeMeasureChoices}" ItemTemplate="{StaticResource MeasureChoiceTemplate}" Margin="5">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel IsItemsHost="True" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+        <Border Grid.Column="1" Background="{StaticResource RightPaneBackgroundBrush}" BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="1,0,0,0" Padding="0,0,1,0">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <headers:HeaderRight Content="YOUR MEASURES SELECTION" />
+                <TextBlock Grid.Row="1" TextAlignment="Center" TextWrapping="Wrap" Margin="10" Text="Add the measures you need by clicking the 'Add' button on the measure thumbnails">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ChosenMeasures.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <Grid Margin="10" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ChosenMeasures.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Content="Select All" Margin="7,0,0,0" IsChecked="{Binding AreAllMeasuresSelected}" />
+                        <TextBlock HorizontalAlignment="Right" Grid.Column="1">
+                        <Hyperlink Command="{Binding DeleteSelectedMeasures}">Delete Selected</Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                    <ListBox Grid.Row="1" Style="{StaticResource ListBoxWithoutSelection}"
+                         ItemsSource="{Binding ChosenMeasures}"
+                         ItemTemplate="{StaticResource ChosenMeasureTemplate}" Margin="0,10,0,0"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         SelectionMode="Multiple" Background="Transparent">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ListBoxItemWithoutSelectionStyle}">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
+                <Grid Grid.Row="2" Background="{StaticResource HeaderLeftBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.ColumnSpan="3" Text="{Binding ValidationErrorMessage}" Margin="5,5,10,0" Visibility="{Binding ValidationErrorMessage, Converter={converters:EmptyStringToVisibilityConverter}}" Foreground="DarkRed" HorizontalAlignment="Right"></TextBlock>
+                    <TextBlock Grid.Row="1"  VerticalAlignment="Center" Margin="10,0,10,0" Visibility="{Binding CanCancelMeasuresChoice, Converter={converters:BooleanToVisibilityConverter}}">
+                        <Hyperlink Command="{Binding CancelMeasuresChoice}">Cancel</Hyperlink>
+                    </TextBlock>
+                    <sharedControls:ImageButton Grid.Row="1"  Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" VerticalContentAlignment="Center" Margin="0,10,10,10" HorizontalAlignment="Right" Command="{Binding ValidateMeasuresChoice}" Grid.Column="2" MinWidth="120">
+                        <TextBlock Visibility="{Binding RequiresValidation, Converter={converters:BooleanToVisibilityConverter}}">VALIDATE</TextBlock>
+                    </sharedControls:ImageButton>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

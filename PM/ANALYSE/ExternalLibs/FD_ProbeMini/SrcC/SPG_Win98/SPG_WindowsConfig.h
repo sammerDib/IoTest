@@ -1,0 +1,120 @@
+
+#ifndef _INC_WINDOWS
+
+#define WIN32_LEAN_AND_MEAN
+
+#define NOANIMATE
+#define NO_BASEINTERFACE_FUNCS
+#define NOBITMAP
+#define NODATETIMEPICK
+#define NODDEMLSPY
+#define NODRAGLIST
+#define NOEXCHEXTGUIDS
+#define NOEXCHFORMGUIDS
+#define NOFLATSBAPIS
+//#define NOFONTSIG //UTILE
+//#define NOGDI //UTILE
+#define NOHEADER
+#define NOHOTKEY
+#define NOIDLEENGINE
+#define NOIMAGEAPIS
+#define NOIPADDRESS
+#define NOJPEGDIB
+//#define NOKEYSTATES //UTILE
+#define NOLISTVIEW
+//#define NOMB //UTILE
+#define NOMENUHELP
+#define NOMMIDS
+#define NOMONTHCAL
+//#define NOMSG //UTILE
+#define NONATIVEFONTCTL
+#define NONEWWAVE
+#define NONEWIC
+//#define NONLS
+#define NOPAGESCROLLER
+#define NOPROGRESS
+//#define NORASTEROPS //UTILE
+#define NOREBAR
+//#define NOSHOWWINDOW //UTILE
+#define NOSTATUSBAR
+//#define NOSYSCOMMANDS //UTILE
+//#define NOSYSPARAMSINFO //UTILE
+//#define NOSYSMETRICS //UTILE
+#define NOTABCONTROL
+#define NOTOOLBAR
+#define NOTOOLTIPS
+#define NOTRACKBAR
+#define NOTRACKMOUSEEVENT
+#define NOTREEVIEW
+#define NOUPDOWN
+//#define NOUSER //UTILE
+#define NOUSEREXCONTROLS
+//#define NOVIRTUALKEYCODES //UTILE
+//#define NOWINABLE //UTILE
+//#define NOWINMESSAGES //UTILE
+//#define NOWINSTYLES //UTILE
+
+#define NOPENAPPS   // not available in WIN32
+#define NOPENALC
+#define NOPENAPIFUN
+#define NOPENBEDIT
+#define NOPENHEDIT
+#define NOPENIEDIT
+#define NOPENCTL
+#define NOPENBMP
+#define NOPENCURS
+#define NOPENDATA
+#define NOPENDICT   // not available in WIN32
+#define NOPENDRIVER
+#define NOPENHRC
+#define NOPENIEDIT
+#define NOPENINKPUT
+#define NOPENMISC
+#define NOPENMSGS
+#define NOPENRC1    // not available in WIN32
+#define NOPENTARGET
+#define NOPENVIRTEVENT
+#define NO_INTSHCUT_GUIDS
+#define NO_SHDOCVW_GUIDS
+#define NO_SHLWAPI_STRFCNS
+#define NO_SHLWAPI_PATH
+#define NO_SHLWAPI_REG
+#define NO_SHLWAPI_STREAM
+#define NO_SHLWAPI_GDI
+#define NOSHLWAPI
+//#define NOAVIFMT
+//#define NOAVIFILE
+//#define NOAVICAP
+//#define NOCLIPBOARD
+#define NOCRYPT
+//#define NOCTLMGR //DialogBox
+#define NOCOLOR
+#define NOCOMPMAN
+#define NODEFERWINDOWPOS
+#define NODESKTOP
+//#define NODRAWDIB
+#define NODRAWTEXT
+#define NOEXTAPI
+#define NOGDICAPMASKS
+#define NOICONS
+#define NOMENUS
+#define NOMDI
+#define NOMINMAX
+#define NOMMREG
+#define NONCMESSAGES
+#define NOHELP
+#define NOIME
+#define NOMCX
+#define NOMETAFILE
+#define NOMCIWND
+#define NOMSACM
+#define NOSCROLL
+#define NOSECURITY
+#define NOSERVICE
+#define NORESOURCE
+#define NOTEXTMETRIC
+#define NOWH
+//efine NOWINOFFSETS
+#define NOWINDOWSTATION
+
+#endif

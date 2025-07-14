@@ -1,0 +1,88 @@
+﻿<UserControl
+	x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.View.ExportPointsView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+	xmlns:viewModel="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"        
+    xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	d:DataContext="{d:DesignInstance viewModel:ExportPointsVM}"
+	d:DesignHeight="450"
+	d:DesignWidth="400"
+	mc:Ignorable="d">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.ResultUI.Common;component/Resources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<Grid>
+		<Border
+			Background="{StaticResource WindowBackground}"
+			CornerRadius="3">
+			<Border.Effect>
+				<DropShadowEffect
+					BlurRadius="5"
+					Direction="-90"
+					Opacity="0.3"
+					RenderingBias="Performance"
+					ShadowDepth="1"
+					Color="Black" />
+			</Border.Effect>
+		</Border>
+		<StackPanel
+			Margin="10"
+			HorizontalAlignment="Stretch"
+			IsEnabled="{Binding IsExporting, Converter={StaticResource InvertedBooleanConverter}}"
+			Orientation="Vertical">
+			<Label>Target Destination Path</Label>
+			<Grid HorizontalAlignment="Stretch">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<TextBox
+					Grid.Row="0"
+					Grid.Column="0"
+					MinWidth="300"
+					HorizontalAlignment="Stretch"
+					Text="{Binding TargetPath, Mode=TwoWay}" />
+				<sharedControls:ImageButton
+					Grid.Row="0"
+					Grid.Column="1"
+					Margin="4,0,0,0"
+					HorizontalAlignment="Stretch"
+					Command="{Binding OpenTargetFolderCommand}"
+					ImageGeometry="{StaticResource FolderGeometry}"
+					ImageGeometryBrush="{StaticResource IconsColor}" />
+			</Grid>
+			<Label Margin="0,8,0,0">Target Name</Label>
+            <TextBox
+				MinWidth="150"
+				Margin="0,4"
+				HorizontalAlignment="Stretch"
+				Text="{Binding TargetName, Mode=TwoWay}" />
+            <sharedControls:ImageButton
+				Margin="0,8,0,0"
+				HorizontalAlignment="Right"
+				VerticalContentAlignment="Center"
+				Command="{Binding SaveExportCommand}"
+				ImageGeometry="{StaticResource SaveGeometry}"
+				Style="{StaticResource HighlightedImageButton}"
+				ToolTip="Launch selected contents exportation">
+				Save Export
+			</sharedControls:ImageButton>
+		</StackPanel>
+		<xctk:BusyIndicator
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			d:IsHidden="true"
+			BusyContent="Exporting... "
+			IsBusy="{Binding IsExporting}" />
+	</Grid>
+
+</UserControl>

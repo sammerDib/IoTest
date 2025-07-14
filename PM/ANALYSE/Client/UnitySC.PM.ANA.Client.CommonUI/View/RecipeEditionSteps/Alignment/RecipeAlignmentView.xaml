@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.RecipeAlignmentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:localVM="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"
+             xmlns:stagemovecontrol="clr-namespace:UnitySC.PM.ANA.Client.Controls.StageMoveControl;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:proxyRecipe="clr-namespace:UnitySC.PM.ANA.Client.Proxy.Recipe;assembly=UnitySC.PM.ANA.Client.Proxy"
+             xmlns:camera="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:view="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="1600" Loaded="UserControl_Loaded" x:Name="RecipeAlignmentUc"
+             d:DataContext="{d:DesignInstance {x:Type localVM:RecipeAlignmentVM},IsDesignTimeCreatable=True}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+                <!-- Style WizardNavigationControl -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/WizardNavigationControl/WizardNavigationControl.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="PointTemplate" DataType="{x:Type localVM:CameraDisplayPoint}">
+                <Grid>
+                    <Line X1="-10" Y1="0" X2="10" Y2="0" Stroke="Red" StrokeThickness="2" IsHitTestVisible="False" SnapsToDevicePixels="True"></Line>
+                    <Line X1="0" Y1="-10" X2="0" Y2="10" Stroke="Red" StrokeThickness="2" IsHitTestVisible="False" SnapsToDevicePixels="True"></Line>
+                    <view:PointBubbleShape Stroke="Green" StrokeThickness="0" Fill="Green" Margin="-20,15,-10,-10" TargetPoint="20,0" ArrowHeight="15" ArrowWidth="10"></view:PointBubbleShape>
+                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-15,30,0,0"  Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" Foreground="White" VerticalAlignment="Center"></TextBlock>
+                        <Image Margin="10,0,0,0" Source="{StaticResource Bell}" Width="20" />
+                    </StackPanel>
+                </Grid>
+                <!--
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="Fill" Value="DarkRed" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="Border" Property="Fill" Value="IndianRed" />
+                    <Setter TargetName="Border" Property="Stroke" Value="DarkKhaki" />
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter TargetName="FocusCue" Property="Visibility" Value="Visible"></Setter>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="Content" Property="TextBlock.Foreground" Value="Gray"></Setter>
+                    <Setter TargetName="Border" Property="Fill" Value="MistyRose"></Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>-->
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{StaticResource LeftPaneWidth}" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="{StaticResource RightPaneWidth}" />
+        </Grid.ColumnDefinitions>
+
+        <Border Background="{StaticResource LeftPaneBackgroundBrush}" BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="0,0,1,0" Padding="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <headers:HeaderLeft Content="CONTROLS" />
+                <stagemovecontrol:StageMoveControl Grid.Row="1"
+                WaferDimentionalCharac="{markupextensions:ChuckSupervisorBinding
+                ChuckVM.SelectedWaferCategory.DimentionalCharacteristic}"
+                IsAutofocusAvailable="False"
+                DisplayClampStatus="True"
+                DefaultSpecificPosition="{Binding DataContext.DefaultSpecificPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                AvailablePositions="{Binding DataContext.AvailablePositions, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" IsEnabled="{Binding IsAutomaticAlignmentInProgress, Converter={converters:InvertedBooleanConverter}}">
+            <camera:CameraDisplay x:Name="CameraDisplay"  Points="{Binding ElementName=RecipeAlignmentUc, Path=DataContext.TestPoints}" RoiSize="500,300"  PointTemplate="{StaticResource PointTemplate}" Camera="{markupextensions:CamerasSupervisorBinding Camera}" IsRoiSelectorVisible="False" IsHorizontalLineSelectorVisible="False" />
+        </Grid>
+        <Border Grid.Column="2" Background="{StaticResource RightPaneBackgroundBrush}" BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="1,0,0,0" Padding="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <local:RecipeAlignmentStepsView></local:RecipeAlignmentStepsView>
+                <Grid Grid.Row="1" Background="{StaticResource HeaderLeftBackgroundBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Margin="10,0,10,0" Visibility="{Binding CanCancelAutoAlignment, Converter={converters:BooleanToVisibilityConverter}}">
+                        <Hyperlink Command="{Binding CancelAutoAlignment}">Cancel</Hyperlink>
+                    </TextBlock>
+                    <sharedControls:ImageButton Style="{StaticResource HighlightedImageButton}" ImageGeometryRight="{StaticResource RightArrowGeometry}" ImageGeometryRightBrush="{StaticResource HighlightButtonForegroundBrush}" VerticalContentAlignment="Center" Margin="0,10,10,10" HorizontalAlignment="Right" Command="{Binding ValidateAutoAlignment}" Grid.Column="2" MinWidth="120">VALIDATE</sharedControls:ImageButton>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

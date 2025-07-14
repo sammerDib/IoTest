@@ -1,0 +1,104 @@
+;------------------------------------------------
+;Configuration file
+;------------------------------------------------
+;------------------------------------------------
+;General
+;------------------------------------------------
+DeviceType	=	LISE_ED	;Type of device: LISE_ED, CHROM, CHROM_DOUBLE
+SerialNumber	=	LED-7DC-004	;Serial number of device
+ProbeRange	=	6000.00	;Range of the probe (µm)
+MinimumGain	=	0	;Minimum gain value
+MaximumGain	=	5.50000	;Maximum gain value
+GainStep	=	0.100000	;Gain step
+AutoGainStep	=	0.100000
+Frequency	=	55	;Measuring frequency (Hz)
+DefaultGain	=	1.00000	;Default gain value
+AverageParam	=	16	;Number of points used to average the measures
+DebugInLog	=	0	;0: no debug information in log file,  1: add all debug information in log file
+WindowWidth	=	960	;Width of parameter setting window
+WindowHeight	=	600	;Height of parameter setting window
+SingleWayMode	=	0	;0: use both scanning ways, 1: use single scanning way
+;------------------------------------------------
+;Calibration
+;------------------------------------------------
+CalibWavelength	=	11.633	;Calibrated wavelength of reference laser minus 1530nm (nm)
+SaturThreshold	=	6.90000	;Threshold used to detect peak saturation (V)
+;------------------------------------------------
+;Emulation
+;------------------------------------------------
+LISEEDConnected	=	1	;0: for LISE ED emulation, 1: if LISE ED connected
+SatPeaksEmul	=	2	;Number of saturated peaks in emulated signal
+EmulWithFile	=	0	;0: default emulated signal, 1: read emulated signal from a file
+EmulFileName	=	Signal_Emule.txt	;File that contains the emulated signal
+EmulNoise	=	0.100000	;Maximum voltage noise in emulated signal (V)
+;------------------------------------------------
+;NI board
+;------------------------------------------------
+NIDeviceMode	=	manual	;auto: find device automatically, manual: configure name of acquisition board in NIDevice parameter
+NIDevice	=	Dev1/	;Name of NI acquisition board
+SwitchPowAndT	=	port0/line0	;NIDAQmx line used to switch between coupled power and internal temperature
+EnableDelayLine	=	port0/line1	;NIDAQmx line used to enable delay line EnableLr
+SwitchZero	=	port0/line2	;NIDAQmx line: switch 0
+SwitchOne	=	port0/line3	;NIDAQmx line: switch 1
+AlarmDelayLine	=	port0/line4	;NIDAQmx line: delay line alarm
+AlarmSourceLine	=	port0/line5	;NIDAQmx line: source alarm
+TriggerLine	=	PFI1	;NIDAQmx line: trigger
+SampleClockLine	=	PFI9	;NIDAQmx line: sample clock timing. Set to OnboardClock if this line is not connected
+AnalogChannel1	=	ai0	;NIDAQmx line: analog measure channel 1
+AnalogChannel2	=	ai2	;NIDAQmx line: analog measure channel 2
+AnalogInCouPow	=	ai1	;NIDAQmx line: coupled power analog input
+AnalogOutS1	=	ao0	;NIDAQmx line: source 1
+AnalogOutS2	=	ao1	;NIDAQmx line: source 2
+FreqNoCkLine	=	1.70000E6	;Acquisition frequency if sample clock line is set to OnboardClock
+TimeoutAcq	=	4.00000	;Acquisition timeout in s
+VoltMinAcq	=	-10.0000	;Minimum input voltage for data acquisition (V)
+VoltMaxAcq	=	10.0000	;Maximum input voltage for data acquisition (V)
+NbChannels	=	1	;1: simple detection, 2: double detection
+MaxLengthPeriod	=	100000	;Maximum number of samples in a period
+DispNIError	=	1	;0: display NI errors in message box, 1: display NI errors in log file
+;------------------------------------------------
+;Signal processing
+;------------------------------------------------
+BufferLength	=	2000000	;Length of raw signal ring buffer
+ResultLength	=	100000	;Length of result ring buffer
+MinLengthPulse	=	15.0000	;Minimum length of synchronisation pulses (µm)
+MinWidthPeak	=	50	;Minimum number of samples to fit a peak
+MaxWidthPeak	=	100	;Maximum number of samples to fit a peak
+HighLevelPulse	=	9.80000	;Level of positive synchronization pulse (V)
+LowLevelPulse	=	-9.80000	;Level of negative synchronization pulse (V)
+TolerancePulse	=	0.500000	;Tolerance for pulse detection (V)
+BaseLine	=	-5.00000	;Signal base line value (V)
+RawSmoothing	=	1	;Number of points used to smooth the raw signal
+FitLength	=	63	;Number of points used to fit the peaks
+PkSearchStep	=	9	;Peak search step used to increase speed
+TypErrorFit	=	0.500000	;Typical error of the fit
+ComparisonTol	=	60.0000	;in µm tolerance between peak from go and back
+UpdateAirGapDef	=	1	;0: no use, 1: use update airgap definition after first matching success
+AutoAirGap	=	1	;0: no use, 1: use update airgap auto(use the two first peak detected above Qthreshold to define air gap). Update airgap def is more important than auto airgap. if the both are define, software use update airgape",1);
+;------------------------------------------------
+;Optical reference
+;------------------------------------------------
+UseOptRef	=	1	;0: no optical reference used in computation, 1:use otical reference in computation
+OptRefPos	=	500.000	;Position of optical reference peak (µm)
+OptRefTol	=	200.000	;Tolerance on the position of the optical reference peak (µm)
+TheoOptRef	=	0	;0: default, use physical optical reference peak, 1: use theoretical reference peak
+;------------------------------------------------
+;File save
+;------------------------------------------------
+SavePeaks	=	0	;0: no peaks file save, 1: automatic peaks file save
+SaveThickness	=	0	;0: no thickness file save, 1: automatic thickness file save
+SavePeakMeasure	=	0	;0: no peak file save, 1: automatic peak measured file save
+SavePeaksAverage	=	0	;0: no peak average file save, 1: automatic peaks average file save
+PeaksFile	=	peaks.txt	;Path and name of peaks file
+ThicknessFile	=	thickness.txt	;Path and name of thickness file
+PeakAverageFile	=	C:\Program Files (x86)\UnitySC\FPMS V3.4.5.12\Log\PeakMoyennePb1.txt	;name of peak average file
+Decimation	=	1	;Decimation index in peaks and thickness files
+MinIntensity	=	2.00000	;Intensity threshold to save peaks in file, only for calibration mode
+MinQuality	=	1.00000	;Quality threshold to save peaks in file, only for calibration mode
+PeaksForCal	=	0	;0: default peaks file, 1: special peaks file for calibration
+ThFileMode	=	0	;0: display thickness for both ways in thickness file, 1: average between both ways in thickness file
+;------------------------------------------------
+;End of configuration file
+;------------------------------------------------
+MeasurementWaitTime	=	400	;Time for waiting start of thread measurement and first measurement in millisecond
+EnableMsgBox	=	0

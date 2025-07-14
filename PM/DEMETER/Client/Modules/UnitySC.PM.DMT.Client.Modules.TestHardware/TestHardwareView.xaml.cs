@@ -1,0 +1,15 @@
+﻿using System.Windows.Controls;
+
+namespace UnitySC.PM.DMT.Client.Modules.TestHardware
+{
+    /// <summary>
+    /// Interaction logic for TestHardwareView.xaml
+    /// </summary>
+    public partial class TestHardwareView : UserControl
+    {
+        public TestHardwareView()
+        {
+            InitializeComponent();
+        }
+    }
+}

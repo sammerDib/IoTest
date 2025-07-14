@@ -1,0 +1,234 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4AE892B5-D139-413B-AEEF-838D69510B4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UnitySC.PM.DMT.Client.Modules.TestHardware</RootNamespace>
+    <AssemblyName>UnitySC.PM.DMT.Client.Modules.TestHardware</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DMTConverter\BooleanOrToWhiteBlackBrushConverter.cs" />
+    <Compile Include="DMTConverter\DoubleToStringPositionConverter.cs" />
+    <Compile Include="DMTConverter\GrayscaleToColorConverter.cs" />
+    <Compile Include="DMTConverter\GrayscaleToForegroundConverter.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHardwareView.xaml.cs">
+      <DependentUpon>TestHardwareView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestHardwareViewModel.cs" />
+    <Compile Include="ViewModel\CameraScreenSettingVM.cs" />
+    <Compile Include="ViewModel\CameraScreenVideoStreamVM.cs" />
+    <Compile Include="ViewModel\TestCameraScreenVM.cs" />
+    <Compile Include="ViewModel\OverviewChamberVM.cs" />
+    <Compile Include="ViewModel\ScreenQualification\LuminanceChange.cs" />
+    <Compile Include="ViewModel\ScreenQualification\LuminancePointsViewModel.cs" />
+    <Compile Include="ViewModel\ScreenQualification\LuminancePointViewModel.cs" />
+    <Compile Include="ViewModel\ScreenQualification\LuminanceScreensViewModel.cs" />
+    <Compile Include="ViewModel\StageViewModel.cs" />
+    <Compile Include="ViewModel\TestCameraVM.cs" />
+    <Compile Include="ViewModel\TestScreenVM.cs" />
+    <Compile Include="View\TestCameraScreenView.xaml.cs">
+      <DependentUpon>TestCameraScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OverviewChamberView.xaml.cs">
+      <DependentUpon>OverviewChamberView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScreenQualification\DummyDMTScreen.xaml.cs">
+      <DependentUpon>DummyDMTScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScreenQualification\LuminancePointsView.xaml.cs">
+      <DependentUpon>LuminancePointsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScreenQualification\LuminanceScreensView.xaml.cs">
+      <DependentUpon>LuminanceScreensView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ScreenQualification\StepNavigationView.xaml.cs">
+      <DependentUpon>StepNavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\StageView.xaml.cs">
+      <DependentUpon>StageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TestCameraView.xaml.cs" />
+    <Compile Include="View\TestScreenView.xaml.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\GlobalStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Style\ImageDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestHardwareView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TestCameraScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\OverviewChamberView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ScreenQualification\DummyDMTScreen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ScreenQualification\LuminancePointsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ScreenQualification\LuminanceScreensView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ScreenQualification\StepNavigationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\StageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TestCameraView.xaml" />
+    <Page Include="View\TestScreenView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33FCE426-267B-4820-9836-4A382A0B75DB}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{EEE94F55-381C-4FCE-A35C-3AEAE3EC7C63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53bd49c3-c5ce-4ead-8261-a95c2a003a5e}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97c741a4-6213-470b-9eb1-f19f61df281c}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\DMT.Shared\UnitySC.PM.DMT.Shared\UnitySC.PM.DMT.Shared.csproj">
+      <Project>{5434dfc3-c889-43c8-b016-c1a1ddf7ecdc}</Project>
+      <Name>UnitySC.PM.DMT.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Service\UnitySC.PM.DMT.Service.Interface\UnitySC.PM.DMT.Service.Interface.csproj">
+      <Project>{8651902c-8d52-49c3-8ed0-a94e3fbd8a2d}</Project>
+      <Name>UnitySC.PM.DMT.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.DMT.CommonUI\UnitySC.PM.DMT.CommonUI.csproj">
+      <Project>{089bac84-091b-4606-845d-82a79aad238b}</Project>
+      <Name>UnitySC.PM.DMT.CommonUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.DMT.Shared.UI\UnitySC.PM.DMT.Shared.UI.csproj">
+      <Project>{AACDFCAD-B1CD-4DD4-BDA8-59AE5DF2D072}</Project>
+      <Name>UnitySC.PM.DMT.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.DMT.Client.Proxy\UnitySC.PM.DMT.Client.Proxy.csproj">
+      <Project>{37ef7337-f7f8-430d-b150-b91181379504}</Project>
+      <Name>UnitySC.PM.DMT.Client.Proxy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

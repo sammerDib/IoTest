@@ -1,0 +1,161 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings.NanoTopoSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:recipe="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:measures="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures"
+             xmlns:vms="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="1024" d:DesignWidth="400">
+    <UserControl.Resources>
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,10" Visibility="Collapsed">CHARACTERISTICS</Label>
+            <StackPanel Grid.Row="1" IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}" Visibility="Collapsed">
+
+                <!--ROUGHTNESS-->
+                <DockPanel Margin="0,0,0,0">
+                    <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">SURFACE ROUGHNESS</Label>
+                    <ToggleButton x:Name="ToggleRoughness" Style="{StaticResource ToggleAnimatedSwitchNew}" IsChecked="{Binding IsCharacteristicRoughness}" DockPanel.Dock="Right"  HorizontalAlignment="Right" Margin="0,0,5,0" />
+                </DockPanel>
+                <StackPanel Orientation="Vertical" IsEnabled="{Binding IsChecked, ElementName=ToggleRoughness}">
+                    <Grid Grid.Row="5" Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Roughness" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding RoughnessTarget, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+                    </Grid>
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Tolerance" Style="{StaticResource LabelForm}" />
+                        <controls:LengthToleranceInput Grid.Column="1" ToleranceValue="{Binding RoughnessTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" Target="{Binding RoughnessTarget}" EditBoxWidth="100" UnitWidth="60" IsNanoMeterAvailable="True"></controls:LengthToleranceInput>
+                    </Grid>
+                </StackPanel>
+                <Separator Margin="0,5"></Separator>
+                <!--STEP HEIGHT-->
+                <DockPanel Margin="0,0,0,0">
+                    <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">STEP HEIGHT</Label>
+                    <ToggleButton  x:Name="ToggleStepHeight" Style="{StaticResource ToggleAnimatedSwitchNew}" IsChecked="{Binding IsCharacteristicStepHeight}"  DockPanel.Dock="Right"  HorizontalAlignment="Right" Margin="0,0,5,0" />
+                </DockPanel>
+                <StackPanel Orientation="Vertical" IsEnabled="{Binding IsChecked, ElementName=ToggleStepHeight}">
+                    <Grid Grid.Row="5" Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Step Height" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding StepHeightTarget, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+                    </Grid>
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Tolerance" Style="{StaticResource LabelForm}" />
+                        <controls:LengthToleranceInput Grid.Column="1" ToleranceValue="{Binding StepHeightTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" Target="{Binding StepHeightTarget}" EditBoxWidth="100" UnitWidth="60" IsNanoMeterAvailable="True"></controls:LengthToleranceInput>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,15,0,0">HARDWARE</Label>
+            <StackPanel IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+                <Label Style="{StaticResource TitleLevel2}" Margin="0,10,0,0">OBJECTIVE</Label>
+                <Grid Grid.Row="5" Margin="0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Type" Style="{StaticResource LabelForm}" />
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Objectives}" SelectedItem="{Binding SelectedObjective}" DisplayMemberPath="Name" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" />
+                </Grid>
+            </StackPanel>
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,0">MEASURE SETTINGS</Label>
+            <!--RED LIGHT-->
+            <StackPanel Margin="0,10,0,0" IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}" Visibility="Collapsed">
+
+                <DockPanel Margin="0,0,0,0">
+                    <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">LIGHT</Label>
+                </DockPanel>
+
+                <Grid Grid.Row="1" Grid.ColumnSpan="3"  Background="Transparent"  Margin="0,5,5,5">
+                    <Grid.ColumnDefinitions>
+
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Red" Style="{StaticResource LabelForm}"></Label>
+                    <TextBlock Grid.Column="1" Text="{Binding Path=RedLightIntensity , StringFormat='{}{0} %'}" VerticalAlignment="Center"></TextBlock>
+                    <Button Grid.Column="2" IsEnabled="False">Auto</Button>
+                </Grid>
+            </StackPanel>
+            <Separator Margin="0,5" Visibility="Collapsed"></Separator>
+            <!--RESOLUTION-->
+            <StackPanel IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+                <Label Style="{StaticResource TitleLevel2}" Margin="0,0,0,0">AVERAGING</Label>
+                <Grid Grid.Row="5" Margin="0,5,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Type" Style="{StaticResource LabelForm}" />
+                    <ComboBox Grid.Column="1" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Resolutions}" SelectedItem="{Binding Resolution}">
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+            <Separator Margin="0,5"></Separator>
+            <!--Algorithm-->
+            <StackPanel IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+                <Label Style="{StaticResource TitleLevel2}" Margin="0,0,0,0">METHOD</Label>
+
+                <Grid Grid.Row="5" Margin="0,5,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Name" Style="{StaticResource LabelForm}" />
+                    <ComboBox Grid.Column="1" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Algos}" SelectedItem="{Binding AlgoName}">
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+            <Separator Margin="0,5" Visibility="Collapsed"></Separator>
+            <DockPanel IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}" Visibility="Collapsed">
+                <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">SHAPE REMOVAL</Label>
+                <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" DockPanel.Dock="Right" HorizontalAlignment="Right" IsChecked="{Binding IsShapeRemoval}" IsEnabled="{Binding IsCharacteristicRoughness, Converter={converters:InvertedBooleanConverter}}" Margin="0,0,5,0" />
+            </DockPanel>
+            <Separator Margin="0,5"></Separator>
+            <DockPanel IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+                <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">ROI</Label>
+                <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" DockPanel.Dock="Right"  HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding UseROI}"  Margin="0,0,5,0" />
+            </DockPanel>
+            <Separator Margin="0,5"></Separator>
+
+            <!--AUTOFOCUS CAMERA-->
+            <recipe:AutoFocusSettingsView AutoFocusSettings="{Binding AutoFocusSettings}" AvailableAutoFocusTypes="{x:Static vms:AvailableAutoFocus.Camera}" />
+            
+            <Separator Margin="0,5"></Separator>
+            
+            <!-- Post processing-->
+            <Grid Visibility="{Binding PostProcessingIsAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <measures:PostProcessingView DataContext="{Binding PostProcessingSettings}"/>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

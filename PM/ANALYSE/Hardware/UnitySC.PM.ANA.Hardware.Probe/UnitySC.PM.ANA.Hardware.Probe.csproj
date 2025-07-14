@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B6F3589E-A2F7-4B41-935A-6A1F41A63FA7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.ANA.Hardware.Probe</RootNamespace>
+    <AssemblyName>UnitySC.PM.ANA.Hardware.Probe</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>MSB3246</NoWarn>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LiseHF\ProbeLiseHF.cs" />
+    <Compile Include="LiseHF\ProbeLiseHFDevices.cs" />
+    <Compile Include="LiseHF\ProbeLiseHFDummy.cs" />
+    <Compile Include="LiseHF\ProbeLiseHFFDCProvider.cs" />
+    <Compile Include="Lise\LiseMeasurement.cs" />
+    <Compile Include="Lise\LiseSignalAcquisition.cs" />
+    <Compile Include="Lise\LiseSignalReport.cs" />
+    <Compile Include="Lise\Wrapper\ProbeLiseDllProxy.cs" />
+    <Compile Include="Lise\Wrapper\ProbeLiseDllProxyDummy.cs" />
+    <Compile Include="ProbeBase.cs" />
+    <Compile Include="Lise\ProbeDualLise.cs" />
+    <Compile Include="Lise\ProbeDualLiseDummy.cs" />
+    <Compile Include="Lise\Wrapper\ProbeLiseError.cs" />
+    <Compile Include="Lise\Wrapper\ProbeLiseParameters.cs" />
+    <Compile Include="Lise\Wrapper\IProbeLiseWrapper.cs" />
+    <Compile Include="Lise\Wrapper\ProbeLiseWrapper.cs" />
+    <Compile Include="Lise\ProbeLiseDummy.cs" />
+    <Compile Include="Lise\ProbeLise.cs" />
+    <Compile Include="Lise\Wrapper\ProbeLiseNativeMethods.cs" />
+    <Compile Include="ProbeFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Lise\Wrapper\Singleton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Helper\UnitySC.Shared.Format.Helper.csproj">
+      <Project>{35911960-2ea5-4505-ab61-c98d8b5345f7}</Project>
+      <Name>UnitySC.Shared.Format.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.FDC\UnitySC.Shared.FDC.csproj">
+      <Project>{3F3CC7E4-7DE0-40B8-8C4F-096B5F1E0CDA}</Project>
+      <Name>UnitySC.Shared.FDC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5e8633ab-c625-49ef-a0a1-632c630e97c8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Algos\LiseHF\UnitySC.PM.Shared.Algos.LiseHFWrapper\UnitySC.PM.Shared.Algos.LiseHFWrapper.vcxproj">
+      <Project>{ceb3f72e-124d-42d6-9903-10c7278b6d9e}</Project>
+      <Name>UnitySC.PM.Shared.Algos.LiseHFWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77F22706-7C58-4193-AE97-85347CBDE3A2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Axes\UnitySC.PM.Shared.Hardware.Axes.csproj">
+      <Project>{f5df897e-39ca-4c8f-a324-7dc38f7fbe53}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Axes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Laser\UnitySC.PM.Shared.Hardware.Laser.csproj">
+      <Project>{B8F464FB-3E5D-4823-80A7-FA6DDB9991A3}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Laser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Shutter\UnitySC.PM.Shared.Hardware.Shutter.csproj">
+      <Project>{e0eb594b-4de9-4f70-ace0-f51beaf42a53}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Shutter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Spectrometer\UnitySC.PM.Shared.Hardware.Spectrometer.csproj">
+      <Project>{eeb1ad97-a4ea-4532-b718-bded7fcf9af0}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Spectrometer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Core\UnitySC.PM.Shared.Hardware.Core.csproj">
+      <Project>{0B138AE8-3243-4D88-867F-3111DD8FB6FF}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53BD49C3-C5CE-4EAD-8261-A95C2A003A5E}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\Core\UnitySC.PM.ANA.Service.Core.Shared\UnitySC.PM.ANA.Service.Core.Shared.csproj">
+      <Project>{5c94507d-8104-4a5d-a3bb-8d659b26df92}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.PM.ANA.Service.Interface\UnitySC.PM.ANA.Service.Interface.csproj">
+      <Project>{8ba51279-7837-4c4c-8558-c6953194e3b5}</Project>
+      <Name>UnitySC.PM.ANA.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Hardware.Shared.Algos\UnitySC.PM.ANA.Hardware.Shared.Algos.csproj">
+      <Project>{A8A9F4D4-8260-4400-B290-DBED2CF9EE01}</Project>
+      <Name>UnitySC.PM.ANA.Hardware.Shared.Algos</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Params\DoubleLISEED.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Libs\FD_ProbeMini.dll">
+      <Link>FD_ProbeMini.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.ProbeAlignment.View.Lise.LiseSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:viewModel="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel"
+             xmlns:lise="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel.Lise"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance lise:LiseSettingsVM}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel.Resources>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+            </Style>
+        </StackPanel.Resources>
+        <headers:HeaderRight Content="{Binding ProbeRef}" ContentStringFormat="LiseSettings - {0}" />
+        <GroupBox Header="LightSource" Margin="10,5">
+            <UniformGrid Rows="1" HorizontalAlignment="Center" Margin="0">
+                <TextBox Text="Status: " />
+                <Label Content="{Binding LaserVM.InterlockStatus}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Slider" Margin="10,5">
+            <UniformGrid Rows="1" Margin="0">
+                <TextBox Text="Position: " />
+                <Label Content="{Binding MotionAxesVM.LinearPosition}" />
+                <TextBox Text="Move Position: " />
+                <ComboBox
+                    ItemsSource="{Binding MotionAxesVM.ConfigurationAxisLinear.NameLenses}"
+                    SelectedValue="{Binding SliderSelectedPosition}"
+                    IsEnabled="{Binding IsSliderMoving, Converter={converters:InvertedBooleanConverter}}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Shutter" Margin="10,5">
+            <UniformGrid Rows="1" Margin="0">
+                <TextBox Text="Status: " />
+                <Label Content="{Binding ShutterVM.ShutterIrisPosition}" />
+                <UniformGrid Rows="1">
+                    <Button Content="Open" Command="{Binding ShutterVM.OpenShutterCommand}" />
+                    <Button Content="Close" Command="{Binding ShutterVM.CloseShutterCommand}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B6570844-DA64-461B-AC43-46B5AFB07CB2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.ANA.Client.Proxy</RootNamespace>
+    <AssemblyName>UnitySC.PM.ANA.Client.Proxy</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algo\AlgosSupervisor.cs" />
+    <Compile Include="Alignment\ProbeAlignmentSupervisor.cs" />
+    <Compile Include="Axes\PiezoVM.cs" />
+    <Compile Include="Calibration\CalibrationSupervisor.cs" />
+    <Compile Include="Camera\CamerasSupervisor.cs" />
+    <Compile Include="Camera\CameraVM.cs" />
+    <Compile Include="Camera\CameraInputParametersVM.cs" />
+    <Compile Include="Camera\ImageGrabbedMessage.cs" />
+    <Compile Include="Chuck\ChuckSupervisor.cs" />
+    <Compile Include="Chuck\ChuckVM.cs" />
+    <Compile Include="Chuck\ChuckStatus.cs" />
+    <Compile Include="Compatibility\CompatibilitySupervisor.cs" />
+    <Compile Include="Configuration\ClientConfigurationWaferLess.cs" />
+    <Compile Include="Context\ContextSupervisor.cs" />
+    <Compile Include="Exceptions\NullObjectiveCalibrationException.cs" />
+    <Compile Include="Helpers\LayersHelper.cs" />
+    <Compile Include="Helpers\ServiceAddressHelper.cs" />
+    <Compile Include="KeyboardMouseHook\IKeyboardMouseHook.cs" />
+    <Compile Include="KeyboardMouseHook\KeyboardMouseHook.cs" />
+    <Compile Include="KeyboardMouseHook\KeyMouseCapture.cs" />
+    <Compile Include="Light\LightsSupervisor.cs" />
+    <Compile Include="Light\LightVM.cs" />
+    <Compile Include="Measure\MeasureSupervisor.cs" />
+    <Compile Include="Probe\IProbesFactory.cs" />
+    <Compile Include="Mapper.cs" />
+    <Compile Include="Probe\LiseHF\ProbeInputParametersLiseHFVM.cs" />
+    <Compile Include="Probe\LiseHF\ProbeLiseHFVM.cs" />
+    <Compile Include="Probe\Models\MeasureConfiguration.cs" />
+    <Compile Include="Probe\Models\ExportResultDoubleLise .cs" />
+    <Compile Include="Probe\Models\ExportResultSimpleLise.cs" />
+    <Compile Include="Probe\Models\ExportConfiguration.cs" />
+    <Compile Include="Probe\Lise\ProbeConfigurationLiseDoubleVM.cs" />
+    <Compile Include="Probe\Lise\ProbeInputParametersLiseDoubleVM.cs" />
+    <Compile Include="Probe\Lise\ProbeLiseDoubleVM.cs" />
+    <Compile Include="Probe\Lise\ProbeLiseBaseVM.cs" />
+    <Compile Include="Probe\Models\SampleLayer.cs" />
+    <Compile Include="Probe\Lise\ProbeConfigurationLiseVM.cs" />
+    <Compile Include="Probe\Lise\ProbeResultsLiseVM.cs" />
+    <Compile Include="Probe\Lise\ProbeInputParametersLiseVM.cs" />
+    <Compile Include="Probe\Lise\ProbeLiseVM.cs" />
+    <Compile Include="Probe\ProbesViewModelFactory.cs" />
+    <Compile Include="Probe\ProbeBaseVM.cs" />
+    <Compile Include="Probe\ProbesSupervisor.cs" />
+    <Compile Include="Probe\Models\Sample.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recipe\ANARecipeVM.cs" />
+    <Compile Include="Recipe\ANARecipeSupervisor.cs" />
+    <Compile Include="Recipe\IRecipeManager.cs" />
+    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Axes\AxesSupervisor.cs" />
+    <Compile Include="Axes\Models\Increment.cs" />
+    <Compile Include="Axes\Models\Position.cs" />
+    <Compile Include="Axes\Models\PositionExtension.cs" />
+    <Compile Include="Axes\Models\Scenario.cs" />
+    <Compile Include="Axes\Models\ScenarioItem.cs" />
+    <Compile Include="Axes\Models\StateScenario.cs" />
+    <Compile Include="Axes\Models\Status.cs" />
+    <Compile Include="Axes\AxesVM.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5C0A-4F7E-A355-8D03680B3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.PM.Service.Interface\UnitySC.Shared.Dataflow.PM.Service.Interface.csproj">
+      <Project>{2f5f6fb2-6dfc-4fac-891e-3ba88f3b7a33}</Project>
+      <Name>UnitySC.Shared.Dataflow.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Shared\UnitySC.Shared.Dataflow.Shared.csproj">
+      <Project>{097a017c-ab63-42bd-987b-6bc537ee36f2}</Project>
+      <Name>UnitySC.Shared.Dataflow.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Helper\UnitySC.Shared.Format.Helper.csproj">
+      <Project>{35911960-2ea5-4505-ab61-c98d8b5345f7}</Project>
+      <Name>UnitySC.Shared.Format.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Metro\UnitySC.Shared.Format.Metro.csproj">
+      <Project>{79893de6-6fe7-4dc0-b5c0-d451f8628a98}</Project>
+      <Name>UnitySC.Shared.Format.Metro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj">
+      <Project>{468db3cc-73cb-46b8-94f2-5829d24af3aa}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{47755544-9444-4bd8-a03c-5158801a733c}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Interface\UnitySC.Shared.TC.Shared.Operations.Interface.csproj">
+      <Project>{b5fb9569-4bcf-435a-8c3d-1a051c47f24d}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{ABA2C6A4-BCB4-478A-BE76-CB62AB4941E9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77f22706-7c58-4193-ae97-85347cbde3a2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Components\UnitySC.PM.Shared.Hardware.Controllers\UnitySC.PM.Shared.Hardware.Controllers.csproj">
+      <Project>{1F1426D1-838C-4E37-8598-8533BF310975}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Controllers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Camera\UnitySC.PM.Shared.Hardware.Camera.csproj">
+      <Project>{046875E4-F367-4B10-955A-C33F6F7A249A}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Camera</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{EEE94F55-381C-4FCE-A35C-3AEAE3EC7C63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53BD49C3-C5CE-4EAD-8261-A95C2A003A5E}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97C741A4-6213-470B-9EB1-F19F61DF281C}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hardware\UnitySC.PM.ANA.Hardware.ObjectiveSelector\UnitySC.PM.ANA.Hardware.ObjectiveSelector.csproj">
+      <Project>{7DB75CFF-8571-4399-9A80-983E73DD1E99}</Project>
+      <Name>UnitySC.PM.ANA.Hardware.ObjectiveSelector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.PM.ANA.Service.Interface\UnitySC.PM.ANA.Service.Interface.csproj">
+      <Project>{8ba51279-7837-4c4c-8558-c6953194e3b5}</Project>
+      <Name>UnitySC.PM.ANA.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\UnitySC.PM.ANA.Shared\UnitySC.PM.ANA.Shared.csproj">
+      <Project>{adbb3d1f-7345-49e4-a0d7-f949acab870c}</Project>
+      <Name>UnitySC.PM.ANA.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="LightningChart">
+      <Version>12.0.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FDCs\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{63FD698B-9474-4DF2-B798-1C0F07BC56F3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.DMT.Modules.Settings</RootNamespace>
+    <AssemblyName>UnitySC.PM.DMT.Modules.Settings</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Matrox.MatroxImagingLibrary">
+      <HintPath>..\..\..\..\..\Shared\ExternalLibraries\MIL\MILXpp6\Matrox.MatroxImagingLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\CamCalibAcquisitionVM.cs" />
+    <Compile Include="ViewModel\AlignmentVM.cs" />
+    <Compile Include="ViewModel\CameraFocusVM.cs" />
+    <Compile Include="ViewModel\HighAngleDarkFieldImageSettingData.cs" />
+    <Compile Include="ViewModel\DeadPixelsVM.cs" />
+    <Compile Include="ViewModel\FlatFieldVM.cs" />
+    <Compile Include="ViewModel\FocusDataVM.cs" />
+    <Compile Include="ViewModel\GlobalTopoVM.cs" />
+    <Compile Include="ViewModel\HighAngleDarkFieldMaskVM.cs" />
+    <Compile Include="ViewModel\ISettingVM.cs" />
+    <Compile Include="ViewModel\ParametersVM .cs" />
+    <Compile Include="ViewModel\CurvatureDynamicsVM.cs" />
+    <Compile Include="ViewModel\ExposureVM.cs" />
+    <Compile Include="ViewModel\PerspectiveVM.cs" />
+    <Compile Include="ViewModel\SystemUniformityVM.cs" />
+    <Compile Include="ViewModel\SelectableDeadPixel.cs" />
+    <Compile Include="ViewModel\SettingsVM.cs" />
+    <Compile Include="ViewModel\SettingVM.cs" />
+    <Compile Include="ViewModel\SettingWithVideoStreamVM.cs" />
+    <Compile Include="View\AlignmentView.xaml.cs">
+      <DependentUpon>AlignmentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CameraFocusView.xaml.cs">
+      <DependentUpon>CameraFocusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DeadPixelControl.cs" />
+    <Compile Include="View\DeadPixelsDisplayControl.cs" />
+    <Compile Include="View\DeadPixelsView.xaml.cs">
+      <DependentUpon>DeadPixelsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Designer\Designer.xaml.cs">
+      <DependentUpon>Designer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Designer\DesignerComponent.xaml.cs">
+      <DependentUpon>DesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Designer\DrawingItem.cs" />
+    <Compile Include="View\Designer\EllipseDesignerComponent.xaml.cs">
+      <DependentUpon>EllipseDesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Designer\EllipseDrawingItem.cs" />
+    <Compile Include="View\Designer\INotify.cs" />
+    <Compile Include="View\Designer\MultiVisibilityConverter.cs" />
+    <Compile Include="View\Designer\PathDesignerComponent.xaml.cs">
+      <DependentUpon>PathDesignerComponent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Designer\PolygonDrawingItem.cs" />
+    <Compile Include="View\Designer\VisibilityConverter.cs" />
+    <Compile Include="View\FlatFieldView.xaml.cs">
+      <DependentUpon>FlatFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FocusOverlay.xaml.cs">
+      <DependentUpon>FocusOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\GlobalTopoView.xaml.cs">
+      <DependentUpon>GlobalTopoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\HighAngleDarkFieldMaskView.xaml.cs">
+      <DependentUpon>HighAngleDarkFieldMaskView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ParametersView.xaml.cs">
+      <DependentUpon>ParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CurvatureDynamicsView.xaml.cs">
+      <DependentUpon>CurvatureDynamicsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ExposureView.xaml.cs">
+      <DependentUpon>ExposureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PerspectiveView.xaml.cs">
+      <DependentUpon>PerspectiveView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SystemUniformityView.xaml.cs">
+      <DependentUpon>SystemUniformityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsMenu.cs" />
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CalibrationWafer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="View\AlignmentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CameraFocusView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\DataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\DeadPixelsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Designer\Designer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Designer\DesignerComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Designer\EllipseDesignerComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Designer\PathDesignerComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\FlatFieldView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\FocusOverlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\GlobalTopoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\HighAngleDarkFieldMaskView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ParametersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\CurvatureDynamicsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ExposureView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PerspectiveView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SystemUniformityView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2f55b3a5-f966-4650-9edb-eda8f4b4f3e2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.LibMIL\UnitySC.Shared.LibMIL.csproj">
+      <Project>{33fce426-267b-4820-9836-4a382a0b75db}</Project>
+      <Name>UnitySC.Shared.LibMIL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{fc8ed3a2-ff0a-48b1-a35d-bf6af5c3ddc7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{eee94f55-381c-4fce-a35c-3aeae3ec7c63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643CADEC-1417-4982-9B67-8DBD78DA7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97c741a4-6213-470b-9eb1-f19f61df281c}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05da-458d-ad73-cc233de1b0b5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\DMT.Shared\UnitySC.PM.DMT.Shared\UnitySC.PM.DMT.Shared.csproj">
+      <Project>{5434dfc3-c889-43c8-b016-c1a1ddf7ecdc}</Project>
+      <Name>UnitySC.PM.DMT.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Service\UnitySC.PM.DMT.Service.Interface\UnitySC.PM.DMT.Service.Interface.csproj">
+      <Project>{8651902c-8d52-49c3-8ed0-a94e3fbd8a2d}</Project>
+      <Name>UnitySC.PM.DMT.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Tools\UnitySC.PM.DMT.Tools.TopoCalib\UnitySC.PM.DMT.Tools.TopoCalib.csproj">
+      <Project>{8d83c33d-4f3b-4745-bc7b-9710209eaf06}</Project>
+      <Name>UnitySC.PM.DMT.Tools.TopoCalib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.DMT.CommonUI\UnitySC.PM.DMT.CommonUI.csproj">
+      <Project>{089bac84-091b-4606-845d-82a79aad238b}</Project>
+      <Name>UnitySC.PM.DMT.CommonUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UnitySC.PM.DMT.Shared.UI\UnitySC.PM.DMT.Shared.UI.csproj">
+      <Project>{aacdfcad-b1cd-4dd4-bda8-59ae5df2d072}</Project>
+      <Name>UnitySC.PM.DMT.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.DMT.Client.Modules.TestHardware\UnitySC.PM.DMT.Client.Modules.TestHardware.csproj">
+      <Project>{4AE892B5-D139-413B-AEEF-838D69510B4B}</Project>
+      <Name>UnitySC.PM.DMT.Client.Modules.TestHardware</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

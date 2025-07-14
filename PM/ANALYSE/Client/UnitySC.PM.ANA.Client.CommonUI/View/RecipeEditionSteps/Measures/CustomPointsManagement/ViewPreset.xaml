@@ -1,0 +1,43 @@
+﻿<Window x:Class=" UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.CustomPointsManagement.ViewPreset"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+        xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+        xmlns:ANAControls="clr-namespace:UnitySC.PM.ANA.Client.Controls;assembly=UnitySC.PM.ANA.Client.Controls"
+        md:DialogServiceViews.IsRegistered="True"
+        mc:Ignorable="d"
+        Title="Preset view"
+        Height="640"
+        Width="640"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight">
+   
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ANAControls:WaferMapRunControl Margin="0,5" Width="500" Height="500"
+                                                  WaferDimentionalCharac="{Binding DimentionalCharacteristic}"
+                                                  MeasurePoints="{Binding PresetPoints}"
+                                                  RenderOptions.EdgeMode="Unspecified" />
+        <Grid Grid.Row="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+ 
+            <Button  Content="OK"
+             Width="140"
+             Margin="20,0,0,0"
+             HorizontalAlignment="Right"
+             Command="{Binding OkCommand}"
+             IsDefault="True"
+             Grid.Column="1" /> 
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,270 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.RecipeAlignmentStepsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:edgesdetection="clr-namespace:UnitySC.PM.ANA.Client.Controls.EdgesDetection;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+
+             mc:Ignorable="d"
+             d:DesignHeight="1200" d:DesignWidth="400">
+    <!--[ViewModel=RecipeAlignmentVM.cs]-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="AutoManuToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+                <Setter  Property="Cursor" Value="Hand" />
+                <Setter  Property="Height" Value="16" />
+                <Setter  Property="Width" Value="16" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border BorderThickness="0">
+                                <Image Opacity="{TemplateBinding Opacity}">
+                                    <Image.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource ButtonForegroundBrush}" />
+                                            <Setter Property="sharedExtensions:ImageExt.SourceGeometry" Value="{StaticResource AutoGeometry}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=IsChecked, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}}" Value="true">
+                                                    <Setter Property="sharedExtensions:ImageExt.SourceGeometry" Value="{StaticResource ManualGeometry}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.4" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <headers:HeaderRight Content="PREPARATION" />
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Margin="10" Visibility="{Binding IsAutomaticAlignmentInProgress,Converter={converters:BooleanToVisibilityConverter},FallbackValue=Collapsed}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock  VerticalAlignment="Center"  Visibility="{Binding GlobalAlignmentState,Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" >Please wait while the software is aligning the Wafer</TextBlock>
+                <Button  Grid.Column="1" Padding="10,0" Command="{Binding StopAutoAlignment}" MinWidth="100" >Stop</Button>
+            </Grid>
+            <Grid Margin="10" Visibility="{Binding IsAutomaticAlignmentInProgress,Converter={converters:InvertedBooleanToVisibilityConverter},FallbackValue=Collapsed}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Text="Please submit the manual parameters" Visibility="{Binding IsManualEditInProgress,Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
+                <Button Grid.Column="1" Padding="10,0" Command="{Binding StartAutoAlignment}" MinWidth="100">Restart</Button>
+            </Grid>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical">
+                    <Separator />
+                    <!-- Focus -->
+                    <!-- Focus Header -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <ToggleButton Grid.Column="0" Margin="5,0,0,0"  Style="{DynamicResource AutoManuToggleButtonStyle}" IsChecked="{Binding FocusStep.IsInAutomaticMode, Converter={converters:InvertedBooleanConverter}}" />
+                        <Label Grid.Column="1" Style="{StaticResource TitleLevel2}">FOCUS</Label>
+                        <ToggleButton Grid.Column="2" Width="16" Style="{StaticResource ToggleButtonChromelessStyle}" IsChecked="{Binding FocusStep.AreParametersUsed}" Visibility="{Binding FocusStep.IsInAutomaticMode,Converter={converters:BooleanToVisibilityConverter}}" Cursor="Hand">
+                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource GearGeometry}">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource ButtonForegroundBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FocusStep.AreParametersUsed}" Value="true">
+                                                <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource ToggleButtonCheckedImageBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </ToggleButton>
+                        <sharedControls:StepStateImage Grid.Column="3" Height="16" Width="16" Margin="10,5" StepState="{Binding FocusStep.StepState, Mode=OneWay}" ToolTip="{Binding FocusStep.ErrorMessage}" />
+                    </Grid>
+
+                    <!-- Focus Content-->
+                    <StackPanel Orientation="Vertical" Margin="10">
+                        <!-- Focus Parameters-->
+                        <StackPanel Orientation="Vertical" Margin="5,5,0,5" Visibility="{Binding FocusStep.AreParametersUsed, Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Margin="0,5"  Text="Gain" VerticalAlignment="Center" />
+                                <sharedControls:DoubleUpDown Grid.Column="1" Margin="0,5" Width="100"  MaxLength="3" Step="0.1"  Maximum="{Binding FocusStep.MaxGain}" Minimum="{Binding FocusStep.MinGain}" HorizontalContentAlignment="Center"  ImageGeometryDown="{StaticResource MinusGeometry}" ImageGeometryUp="{StaticResource PlusGeometry}" Value="{Binding FocusStep.GainParameter, StringFormat='{}{0:F1}', Mode=TwoWay}" />
+                                <TextBlock Margin="0,5" Grid.Row="1"  Text="Z Min" VerticalAlignment="Center" />
+                                <sharedControls:TextBoxUnit Grid.Column="1" Grid.Row="1" Margin="0,5" Width="100" Text="{Binding FocusStep.ZMinParameter, StringFormat='{}{0:F3}'}" Unit="mm" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding FocusStep.MaxZTop}" MaxLength="6" HorizontalContentAlignment="Center" />
+                                <TextBlock Margin="20,5,0,5" Grid.Column="2" Grid.Row="1"  Text="Z Max" VerticalAlignment="Center" />
+                                <sharedControls:TextBoxUnit Grid.Column="3" Grid.Row="1" Margin="0,5" HorizontalAlignment="Right" Width="100" Text="{Binding FocusStep.ZMaxParameter, StringFormat='{}{0:F3}'}" Unit="mm" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding FocusStep.MaxZTop}" MaxLength="6" HorizontalContentAlignment="Center" />
+                            </Grid>
+                            <Button HorizontalAlignment="Right" Command="{Binding FocusStep.SubmitParameters}" MinWidth="100" Margin="0,5">Submit</Button>
+                        </StackPanel>
+                        <controls:ProbeLiseGraph Margin="5,0,0,0" ProbeLise="{Binding FocusStep.ProbeLise}" Gain="{Binding FocusStep.GainParameter}" IsAcquiring="{Binding FocusStep.IsAcquiringProbeSignal, Mode=OneWay}" Height="150" 
+                                                 DisplayAnnotations="False" DisplayDiscarderPeaks="False" DisplaySaturationLine="False" DisplaySelectedPeaks="True"
+                                                 DisplayGainSelector="False" BackgroundColor="LightGray" />
+                        <!--Manual-->
+                        <Grid Visibility="{Binding FocusStep.IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock TextWrapping="Wrap" Margin="5" Visibility="{Binding FocusStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}">Please, set your focus by moving the Z axis position on the left panel</TextBlock>
+                            <Button Grid.Column="1" Margin="5,5,0,5" Visibility="{Binding FocusStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding FocusStep.Submit}" MinWidth="100">Submit</Button>
+                            <Button Grid.Column="1" Margin="5,5,0,5" Visibility="{Binding FocusStep.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding FocusStep.Edit}" MinWidth="100">Edit</Button>
+                        </Grid>
+
+                        <!--Score-->
+                        <Grid Margin="5" Visibility="{Binding FocusStep.IsInAutomaticMode, Converter={converters:BooleanToVisibilityConverter}}">
+                            <TextBlock Visibility="Hidden"></TextBlock>
+                            <TextBlock  Visibility="{Binding FocusStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.Done}}"><Run Text="Score: " /><Run Text="{Binding FocusStep.Score}" /><Run Text=" %" /></TextBlock>
+                        </Grid>
+                    </StackPanel>
+                    <Separator />
+                    <!-- Light -->
+                    <!-- Light Header -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <ToggleButton Grid.Column="0" Margin="5,0,0,0"  Style="{DynamicResource AutoManuToggleButtonStyle}" IsChecked="{Binding LightStep.IsInAutomaticMode, Converter={converters:InvertedBooleanConverter}}" />
+
+                        <Label Grid.Column="1" Style="{StaticResource TitleLevel2}">LIGHT</Label>
+                        <sharedControls:StepStateImage Grid.Column="2" Height="16" Margin="10,5" StepState="{Binding LightStep.StepState}" ToolTip="{Binding LightStep.ErrorMessage}" />
+                    </Grid>
+                    <!-- Light Content-->
+                    <StackPanel Orientation="Vertical" Margin="10">
+                        <!--Manual-->
+                        <Grid Visibility="{Binding LightStep.IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock TextWrapping="Wrap" Margin="5" Visibility="{Binding LightStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}">Please, set your light with the plus and minus buttons on the left panel</TextBlock>
+                            <Button Grid.Column="1" Margin="5,5,0,5" Visibility="{Binding LightStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding LightStep.Submit}" MinWidth="100">Submit</Button>
+                            <Button Grid.Column="1" Margin="5,5,0,5" Visibility="{Binding LightStep.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding LightStep.Edit}" MinWidth="100">Edit</Button>
+                        </Grid>
+
+                        <!--Score-->
+                        <Grid Margin="5" Visibility="{Binding LightStep.IsInAutomaticMode, Converter={converters:BooleanToVisibilityConverter}}">
+                            <TextBlock Visibility="Hidden"></TextBlock>
+                            <TextBlock Visibility="{Binding LightStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.Done}}"><Run Text="Score: " /><Run Text="{Binding LightStep.Score}" /><Run Text=" %"></Run></TextBlock>
+                        </Grid>
+                    </StackPanel>
+
+                    <Separator />
+
+                    <!-- Edge -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <ToggleButton Grid.Column="0" Margin="5,0,0,0"  Style="{DynamicResource AutoManuToggleButtonStyle}" IsChecked="{Binding EdgesStep.IsInAutomaticMode, Converter={converters:InvertedBooleanConverter}}" />
+
+                        <Label Grid.Column="1" Style="{StaticResource TitleLevel2}">EDGES</Label>
+
+                        <sharedControls:StepStateImage Grid.Column="2" Height="16" Margin="10,5" StepState="{Binding EdgesStep.StepState}" ToolTip="{Binding EdgesStep.ErrorMessage}" />
+                    </Grid>
+                    <!-- Edge Content-->
+                    <StackPanel Orientation="Vertical" Margin=" 20,5,5,5">
+                        <edgesdetection:EdgesDetectionControl DataContext="{Binding EdgesStep}"></edgesdetection:EdgesDetectionControl>
+                        <!--Manual-->
+                        <Grid Visibility="{Binding IsAutomaticAlignmentInProgress,Converter={converters:InvertedBooleanToVisibilityConverter},FallbackValue=Collapsed}">
+                            <Grid Visibility="{Binding EdgesStep.IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock VerticalAlignment="Center" TextWrapping="Wrap" Margin="5" Visibility="{Binding EdgesStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}">Please, acquire the images for the edges</TextBlock>
+                                <Button Grid.Column="1" Margin="5,5,0,5" Visibility="{Binding EdgesStep.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding EdgesStep.Submit}" MinWidth="100">Submit</Button>
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+                    <Separator />
+                    <!-- Alignment Marks -->
+                    <!-- Alignment Marks Header -->
+                    <Grid Visibility="{Binding AlignmentMarksStep.AlignmentMarksSettings, Converter={StaticResource NullToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="1" Style="{StaticResource TitleLevel2}">ALIGNMENT MARKS</Label>
+                        <sharedControls:StepStateImage Grid.Column="2" Height="16" Margin="10,5" StepState="{Binding AlignmentMarksStep.StepState}" ToolTip="{Binding AlignmentMarksStep.ErrorMessage}"/>
+                    </Grid>
+
+                    <Grid Visibility="{Binding AlignmentMarksStep.DisplayAlignmentMarksResult,Converter={converters:BooleanToVisibilityConverter},FallbackValue=Collapsed}" Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Shift X:" Margin="0,5"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Margin="0,5" Text="{Binding AlignmentMarksStep.ResultShiftX,StringFormat={}{0:F3}, Mode=OneWay}"></TextBlock>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Shift Y:" Margin="0,5"/>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Margin="0,5" Text="{Binding AlignmentMarksStep.ResultShiftY,StringFormat={}{0:F3}, Mode=OneWay}"></TextBlock>
+                        <TextBlock Grid.Row="1" Text="Rotation angle:" Margin="0,5"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,5" Text="{Binding AlignmentMarksStep.ResultRotationAngle,StringFormat={}{0:F3}, Mode=OneWay}"></TextBlock>
+                        <TextBlock Grid.Row="2" Text="Score:" Margin="0,5"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,5" Text="{Binding AlignmentMarksStep.Score, StringFormat='{}{0:F0} %'}" ></TextBlock>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+            <Separator Grid.Row="2" />
+        </Grid>
+    </Grid>
+</UserControl>

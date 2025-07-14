@@ -1,0 +1,141 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls"
+                    xmlns:navigationcontrols="clr-namespace:UnitySC.PM.ANA.Client.Controls.NavigationControls"
+                    xmlns:controlsHeaders="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers"
+                    
+          
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageDictionary.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageGeometries.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+    <!--#region Layout -->
+    <GridLength x:Key="LeftPaneWidth">300</GridLength>
+    <GridLength x:Key="RightPaneWidth">400</GridLength>
+    <!--TopPanel-->
+    <LinearGradientBrush x:Key="TopNavigationBackgroundBrush" StartPoint="0.5,0.01" EndPoint="0.5,1">
+        <GradientStop Color="{StaticResource WhiteColor}" Offset="0" />
+        <GradientStop Color="{StaticResource VeryLightGreyColor}" Offset="0.033" />
+        <GradientStop Color="{StaticResource LightGreyColor}" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="TopNavigationBorderBrush" Color="{StaticResource VeryDarkGreyColor}"></SolidColorBrush>
+    
+    <!--RightPanel-->
+    <SolidColorBrush x:Key="RightPaneBackgroundBrush" Color="{StaticResource ExtremelyLightGreyColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="RightPaneBorderBrush" Color="{StaticResource VeryDarkGreyColor}"></SolidColorBrush>
+
+
+
+
+    <!--#region Wizard -->
+
+    <SolidColorBrush x:Key="WizardSelectionUnderlineBrush" Color="{StaticResource SelectionColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="WizardSelectionTextBrush" Color="{StaticResource SelectionColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="WizardMeasureBorderBrush" Color="{StaticResource DarkGreyColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="WizardMeasurePressedBorderBrush" Color="{StaticResource DarkGreyColor}"></SolidColorBrush>
+    <SolidColorBrush x:Key="WizardMeasureHoverBorderBrush" Color="{StaticResource DarkGreyColor}"></SolidColorBrush>
+
+    <LinearGradientBrush x:Key="WizardMeasureBackgroundBrush" StartPoint="0.5,0.01" EndPoint="0.5,1">
+        <GradientStop Color="{StaticResource WhiteColor}" Offset="0" />
+        <GradientStop Color="{StaticResource LittleLightGreyColor }" Offset="0.033" />
+        <GradientStop Color="{StaticResource LittleDarkGreyColor}" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WizardMeasurePressedBrush" StartPoint="0.5,0.01" EndPoint="0.5,1">
+        <GradientStop Color="{StaticResource WhiteColor}" Offset="0" />
+        <GradientStop Color="{StaticResource LittleDarkGreyColor}" Offset="0.033" />
+        <GradientStop Color="{StaticResource LittleLightGreyColor}" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="WizardMeasureHoverBrush" StartPoint="0.5,0.01" EndPoint="0.5,1">
+        <GradientStop Color="{StaticResource WhiteColor}" Offset="0" />
+        <GradientStop Color="{StaticResource LightGreyColor}" Offset="0.033" />
+        <GradientStop Color="{StaticResource LittleLightGreyColor}" Offset="1" />
+    </LinearGradientBrush>
+    <!--#endregion-->
+
+    <!--#region Headers -->
+
+    <SolidColorBrush x:Key="HeaderLeftBackgroundBrush" Color="{StaticResource LightGreyColor}" />
+    <SolidColorBrush x:Key="HeaderLeftForegroundBrush" Color="{StaticResource ExtremelyDarkGreyColor}" />
+    <SolidColorBrush x:Key="HeaderLeftBorderBrush" Color="{StaticResource LittleLightGreyColor}" />
+
+    <Style x:Key="HeaderLabelStyle" TargetType="{x:Type Label}">
+        <Setter Property="Foreground" Value="{StaticResource HeaderLeftForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource HeaderLeftBackgroundBrush}" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="{StaticResource HeaderLeftBorderBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontFamily" Value="Arial" />
+        <Setter Property="Height" Value="30" />
+    </Style>
+
+    <Style TargetType="{x:Type controlsHeaders:HeaderLeft}" BasedOn="{StaticResource HeaderLabelStyle}">
+    </Style>
+
+    <Style TargetType="{x:Type controlsHeaders:HeaderRight}" BasedOn="{StaticResource HeaderLabelStyle}">
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Wafer and Dies display -->
+
+    <SolidColorBrush x:Key="WaferBrush" Color="DarkGray" />
+    <SolidColorBrush x:Key="CurrentPosBrush" Color="Orange" />
+    <SolidColorBrush x:Key="MeasurePointsBrush" Color="DarkRed" />
+    <SolidColorBrush x:Key="DieBrush" Color="Gray" />
+    <SolidColorBrush x:Key="EdgeExclusionBrush" Color="Pink" />
+    <SolidColorBrush x:Key="StreetBrush" Color="DarkGray" />
+    <SolidColorBrush x:Key="DieHoverBrush" Color="#FFFF88BB" />
+    <SolidColorBrush x:Key="WaferMapTextBrush" Color="Black" />
+
+
+
+    <Style TargetType="{x:Type controls:WaferMapRunControl}">
+        <Setter Property="WaferBrush" Value="{StaticResource WaferBrush}" />
+        <Setter Property="DiesBrush" Value="{StaticResource DieBrush}" />
+        <Setter Property="EdgeExclusionBrush" Value="{StaticResource EdgeExclusionBrush}" />
+        <Setter Property="MeasurePointsBrush" Value="{StaticResource MeasurePointsBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type controls:WaferMapControl}">
+        <Setter Property="WaferBrush" Value="{StaticResource WaferBrush}" />
+        <Setter Property="DiesBrush" Value="{StaticResource DieBrush}" />
+        <Setter Property="EdgeExclusionBrush" Value="{StaticResource EdgeExclusionBrush}" />
+        <Setter Property="DieHoverBrush" Value="{StaticResource DieHoverBrush}" />
+        <Setter Property="TextBrush" Value="{StaticResource WaferMapTextBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type controls:WaferMapDisplayControl}">
+        <Setter Property="WaferBrush" Value="{StaticResource WaferBrush}" />
+        <Setter Property="DiesBrush" Value="{StaticResource DieBrush}" />
+        <Setter Property="EdgeExclusionBrush" Value="{StaticResource EdgeExclusionBrush}" />
+        <Setter Property="TextBrush" Value="{StaticResource WaferMapTextBrush}" />
+    </Style>
+
+    <Style TargetType="{x:Type navigationcontrols:WaferNavigationControl}">
+        <Setter Property="WaferBrush" Value="{StaticResource WaferBrush}" />
+        <Setter Property="CurrentPosBrush" Value="{StaticResource CurrentPosBrush}" />
+        <Setter Property="PointsBrush" Value="{StaticResource MeasurePointsBrush}" />
+        <Setter Property="EdgeExclusionBrush" Value="{StaticResource EdgeExclusionBrush}" />
+    </Style>
+    <Style TargetType="{x:Type navigationcontrols:DieNavigationControl}">
+        <Setter Property="DieBrush" Value="{StaticResource DieBrush}" />
+        <Setter Property="StreetBrush" Value="{StaticResource StreetBrush}" />
+        <Setter Property="CurrentPosBrush" Value="{StaticResource CurrentPosBrush}" />
+        <Setter Property="PointsBrush" Value="{StaticResource MeasurePointsBrush}" />
+        
+
+    </Style>
+    <!--#endregion-->
+
+
+
+</ResourceDictionary>

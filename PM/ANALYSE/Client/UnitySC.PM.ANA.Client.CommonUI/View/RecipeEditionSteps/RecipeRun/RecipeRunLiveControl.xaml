@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Run.RecipeRunLiveControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"
+             xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:recipeExecutionInterface="clr-namespace:UnitySC.PM.ANA.Service.Interface.Recipe.Execution;assembly=UnitySC.PM.ANA.Service.Interface"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TextBlock Visibility="{Binding IsOneRecipeAlreadyStarted, Converter={converters:InvertedBooleanToVisibilityConverter}}" HorizontalAlignment="Center" Margin="0,50,0,0" FontSize="14">No recipe executed or in progress</TextBlock>
+
+        <Grid Visibility="{Binding IsOneRecipeAlreadyStarted, Converter={converters:BooleanToVisibilityConverter}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MaxHeight="{Binding ActualHeight, ElementName=RecipeExecutionSettings}" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Margin="0,5,0,0">
+            <TextBlock>Analyse Recipe</TextBlock>
+            <TextBlock Text="{Binding EditedRecipe.Name}" FontWeight="Bold" Margin="10,5,0,0" > </TextBlock>
+                <StackPanel Orientation="Vertical" Visibility="{Binding DataflowRecipeName, Converter={converters:EmptyStringToVisibilityConverter}}" Margin="0,5,0,0">
+                <TextBlock>Dataflow Recipe</TextBlock>
+                <TextBlock Text="{Binding DataflowRecipeName}" FontWeight="Bold" Margin="10,5,0,0"></TextBlock>
+            </StackPanel>
+                <StackPanel Orientation="Vertical" Visibility="{Binding JobId, Converter={converters:EmptyStringToVisibilityConverter}}" Margin="0,5,0,0">
+                <TextBlock>Job Id</TextBlock>
+                <TextBlock Text="{Binding JobId}" FontWeight="Bold" Margin="10,5,0,0"></TextBlock>
+            </StackPanel>
+            </StackPanel>
+        <controls:WaferMapRunControl x:Name="WaferMapRunDisplay" Grid.Row="1"
+                                                         WaferDimentionalCharac="{Binding EditedRecipe.Step.Product.WaferCategory.DimentionalCharacteristic}"
+                                                         EdgeExclusionThickness="{Binding EditedRecipe.WaferMap.EdgeExclusion}"
+                                                         WaferMap="{Binding EditedRecipe.WaferMap.WaferMapData}"
+                                                         MeasurePoints="{Binding MeasurePoints}"
+                                                         CurrentPoint="{Binding CurrentPoint}"
+                                                         SelectedPoint="{Binding CurrentSelectedPoint}"
+                                                         RenderOptions.EdgeMode="Unspecified" Margin="10" Width="270"  Height="270" />
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2">
+            <StackPanel Orientation="Vertical" x:Name="RecipeExecutionSettings">
+                <Label  Content="RECIPE EXECUTION" Style="{StaticResource TitleLevel1}" Margin="0,10,0,0"></Label>
+                    <Label Content="Preparation" Style="{StaticResource TitleLevel2}"  Margin="0,10,0,0" />
+                    <StackPanel Orientation="Vertical">
+                        <Grid Visibility="{Binding EditedRecipe.Execution.Alignment.RunAutoFocus, Converter={converters:BooleanToVisibilityConverter} }">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <sharedControls:StepStateImage Height="16" Margin="10,5" StepState="{Binding RecipeRunSettings.AutoFocusState.StepState}" />
+                            <TextBlock Text="Global autofocus" Grid.Column="1" VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Grid.Row="1" Visibility="{Binding EditedRecipe.Execution.Alignment.RunBwa, Converter={converters:BooleanToVisibilityConverter} }">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <sharedControls:StepStateImage Height="16" Margin="10,5" StepState="{Binding RecipeRunSettings.EdgeAlignmentState.StepState}" />
+                            <TextBlock Text="Edge alignment" Grid.Column="1" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Row="2"  Visibility="{Binding EditedRecipe.Execution.Alignment.RunMarkAlignment, Converter={converters:BooleanToVisibilityConverter} }">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <sharedControls:StepStateImage  Height="16" Margin="10,5" StepState="{Binding  RecipeRunSettings.MarkAlignmentState.StepState}" />
+                            <TextBlock Text="Wafer alignment" Grid.Column="1" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+        <!--<StackPanel Orientation="Vertical" IsEnabled="True">
+                <Label Content="Measurement Strategy" Style="{StaticResource TitleLevel2}"  Margin="0,10,0,0" />
+                <ComboBox Margin="10" SelectedValue="{Binding RecipeRunSettings.CurrentMeasurementStrategy}"  SelectedValuePath="Enum" DisplayMemberPath="Translation"  ItemsSource="{sharedExtensions:EnumValuesExtension EnumType=recipeExecutionInterface:MeasurementStrategy, ResourceAssemblyName='UnitySC.PM.ANA.Client.CommonUI'}" IsEnabled="{Binding IsRecipeRunning, Converter={converters:InvertedBooleanConverter} }">
+                </ComboBox>
+                </StackPanel>-->
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Orientation="Vertical" Grid.Row="3">
+                <Label Content="Execution" Style="{StaticResource TitleLevel2}"  Margin="0,10,0,0" />
+                <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Visibility="{Binding IsRecipeRunning, Converter={converters:BooleanToVisibilityConverter}}">
+                        <Image x:Name="InProgressImage" Source="/UnitySC.Shared.UI;component/Controls/Status/ProgressGradient.png" Visibility="{Binding IsRecipeReallyPaused, Converter={converters:InvertedBooleanToVisibilityConverter}}" Style="{StaticResource ImageSpinnerVisible}" Height="22"  Width="20" Margin="5,0,0,0" />
+                        <Image x:Name="PauseImage" sharedExtensions:ImageExt.SourceGeometry="{StaticResource PauseGeometry}" sharedExtensions:ImageExt.GeometryBrush="Black"   Visibility="{Binding IsRecipeReallyPaused, Converter={converters:BooleanToVisibilityConverter}}"  Height="22"   Width="20" Margin="5,0,0,0" />
+                </Grid>
+
+                <ProgressBar Grid.Column="1" Height="20" Margin="10" Value="{Binding RecipeExecutionProgress}" Visibility="{Binding DisplayProgress, Converter={converters:BooleanToVisibilityConverter} }" ></ProgressBar>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Visibility="{Binding IsRecipeRunning, Converter={converters:BooleanToVisibilityConverter} }">
+                <Label Content="Estimated remaining time: "  Margin="5,0,0,0" />
+                <Label Content="{Binding RemainingExecutionTime,Converter={converters:TimeSpanToStringConverter}}"  Margin="5,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+    </Grid>
+</UserControl>

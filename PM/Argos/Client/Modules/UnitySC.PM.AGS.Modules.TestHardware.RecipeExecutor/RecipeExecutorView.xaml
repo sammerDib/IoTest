@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="UnitySC.PM.AGS.Modules.TestHardware.RecipeExecutor.RecipeExecutorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.AGS.Modules.TestHardware.RecipeExecutor"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:model="clr-namespace:UnitySC.Shared.UI.Graph.Model;assembly=UnitySC.Shared.UI" 
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI" 
+             d:DataContext="{d:DesignInstance Type=model:ConnectorViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="1024" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+        <controls:ImageGroupBox  Image="{StaticResource Microscope}"  Header="Sensors" x:Name="testgroup"    Margin="10,10,0,10" ToolTip=" Accessible only if Calibrated " >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <controls:ImageGroupBox Grid.Row="0" controls:ImageGroupBox.ImageGeometry="{StaticResource ChamberGeometry}" controls:ImageGroupBox.ImageGeometryBrush="{StaticResource HighLightBrush}" Grid.Column="0"  Header="TOP SURFACE" BorderThickness="1" BorderBrush="Black">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <CheckBox   Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Content="Sensor Enabled" />
+
+                        <DockPanel Grid.Row="1" Margin="20">
+                             <controls:TextBoxUnit Unit="%" Text="100" DockPanel.Dock="Right"  Width="48" Margin=" 10 0 0 0"/>
+                             <controls:TextBoxUnit Unit="%" Text="0" DockPanel.Dock="Left"  Width="48" Margin=" 0 0 10 0"/>
+                            <TextBlock DockPanel.Dock="Top" Text="Luminosity level (%)" HorizontalAlignment="Left"/>
+                            <Slider  Name="slValue"  
+                                     TickFrequency="1"
+                                     TickPlacement="BottomRight"
+                                     IsSnapToTickEnabled="true"
+                                     Orientation="Horizontal"
+                                     Minimum="0"
+                                     Maximum="100"
+                                     Margin="0 10 0 20"
+                                     Width="200"/>
+                        </DockPanel>
+                  
+                    </Grid>
+                </controls:ImageGroupBox>
+
+                <Border Grid.Row="0" Grid.Column="1" BorderThickness="1" BorderBrush="Black" >
+                    <controls:ImageGroupBox Header="TOP BEVEL" BorderThickness="1" BorderBrush="Black"/>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="2" BorderThickness="1" BorderBrush="Black" >
+                    <controls:ImageGroupBox Header="APEX" controls:ImageGroupBox.ImageGeometry="{StaticResource ChamberGeometry}"  controls:ImageGroupBox.ImageGeometryBrush="{StaticResource HighLightBrush}"/>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" BorderBrush="Black" >
+                    <controls:ImageGroupBox Header="BOTTOM BEVEL"/>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black" >
+                    <controls:ImageGroupBox Header="BOTTOM SURFACE"/>
+                </Border>
+            </Grid>
+
+        </controls:ImageGroupBox>
+    </Grid>
+</UserControl>

@@ -1,0 +1,42 @@
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+
+#ifdef INC_SPG_Files_INC
+#error SPG_Files.agh included twice
+#endif
+
+#define INC_SPG_Files_INC
+
+char* SPG_CONV SPG_StrFind(char* Complete, char* Item);
+char* SPG_CONV SPG_StrFindAtEnd(char* Complete, char* Item);
+char* SPG_CONV SPG_StrFindCharAtEnd_unsafe(char* Complete, char Item);
+char* SPG_CONV SPG_StrLineHeadFind(char* Complete, char* Item);
+int SPG_CONV SPG_IsAbsolutePath(const char * Path);
+int SPG_CONV SPG_IsRootPath(char* Path);
+void SPG_CONV SPG_OptimizePath(char * AnyPath, int bWarnAbs=-1);
+void SPG_CONV SPG_MakeCleanFileName(char *DstName, const char* Name);
+#ifdef SPG_DEBUGCONFIG
+void SPG_CONV SPG_ConcatPath_dbg(char *FullName,const char *WorkDir,const char *Name, const char* Msg);
+#define SPG_ConcatPath(FullName,WorkDir,Name) SPG_ConcatPath_dbg(FullName,WorkDir,Name,"SPG_ConcatPath(" #FullName "," #WorkDir "," #Name ")" ) 
+#else
+void SPG_CONV SPG_ConcatPath(char *FullName, const char *WorkDir, const char *Name);
+#endif
+void SPG_CONV SPG_PathOnly(char * PathAndFilename);
+char* SPG_CONV SPG_NameOnly(char * PathAndFilename);
+char* SPG_CONV SPG_ExtensOnly(char *FullName);
+int SPG_CONV SPG_GetExtens(char *FullName);
+int SPG_CONV SPG_SetExtens(char *FullName,const char *Extens);
+BYTE* SPG_CONV SPG_LoadFileAlloc(const char* FileName, int& FileLen, int WarningLevel=1, int numTermZ=1);
+int SPG_CONV SPG_LoadFileMatchSize(char* FileName, BYTE* Data, int DataLen, int WarningLevel=1);
+int SPG_CONV SPG_LoadFileUpTo(char* FileName, BYTE* Data, int& DataLen, int WarningLevel=1);
+int SPG_CONV SPG_SaveFile(char* FileName, BYTE* Data, int DataLen, int WarningLevel=1);
+int SPG_CONV SPG_CopyFile(char* DstFileName, char* SrcFileName, int WarningLevel=1);
+int SPG_CONV SPG_DuplicateFile(char* DstPath, char* SrcFileName, int WarningLevel=1);
+int SPG_CONV SPG_GetFileSize(char* f, int& Size);
+#ifdef FDE
+int SPG_CONV SPG_GetLoadName(int Type, char* ResultFile, int LenResultFile);
+int SPG_CONV SPG_GetSaveName(int Type, char* ResultFile, int LenResultFile);
+#endif
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+

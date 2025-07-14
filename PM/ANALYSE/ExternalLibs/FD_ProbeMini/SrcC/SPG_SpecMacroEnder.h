@@ -1,0 +1,1 @@
+//#undef SPG_SpecType

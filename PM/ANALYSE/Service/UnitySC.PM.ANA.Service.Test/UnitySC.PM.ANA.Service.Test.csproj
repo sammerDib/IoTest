@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D4E76122-888C-45DE-BDFA-82267A41F0E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.ANA.Service.Test</RootNamespace>
+    <AssemblyName>UnitySC.PM.ANA.Service.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlgoServiceStub.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CameraServiceExTestClient.cs" />
+    <Compile Include="CameraServiceTest.cs" />
+    <Compile Include="RecipeTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions">
+      <Version>6.12.0</Version>
+    </PackageReference>
+    <PackageReference Include="Moq">
+      <Version>4.20.70</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestAdapter">
+      <Version>3.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="MSTest.TestFramework">
+      <Version>3.4.3</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Dataflow\UnitySC.Shared.Dataflow.Proxy\UnitySC.Shared.Dataflow.Proxy.csproj">
+      <Project>{C1EBE8D6-7253-4A2E-85C1-E05D0190984F}</Project>
+      <Name>UnitySC.Shared.Dataflow.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Implementation\UnitySC.Shared.TC.PM.Operations.Implementation.csproj">
+      <Project>{5B0FC3A1-6D00-4681-BBDA-76C81FBB1C3A}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Operations.Interface\UnitySC.Shared.TC.PM.Operations.Interface.csproj">
+      <Project>{468DB3CC-73CB-46B8-94F2-5829D24AF3AA}</Project>
+      <Name>UnitySC.Shared.TC.PM.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Implementation\UnitySC.Shared.TC.PM.Service.Implementation.csproj">
+      <Project>{AA51C330-3024-4106-ABD9-19F194DB9218}</Project>
+      <Name>UnitySC.Shared.TC.PM.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\PM\UnitySC.Shared.TC.PM.Service.Interface\UnitySC.Shared.TC.PM.Service.Interface.csproj">
+      <Project>{D4E1FE6A-B948-4F37-942D-F2C03B598510}</Project>
+      <Name>UnitySC.Shared.TC.PM.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\Service\UnitySC.Shared.TC.Shared.Service.Interface\UnitySC.Shared.TC.Shared.Service.Interface.csproj">
+      <Project>{33001885-19D0-466E-88A9-5024983E8397}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Data\UnitySC.Shared.TC.Shared.Data.csproj">
+      <Project>{5256D984-4871-4D6A-9CAF-CE8F45A51A70}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Implementation\UnitySC.Shared.TC.Shared.Operations.Implementation.csproj">
+      <Project>{A4277C28-D526-4801-A4BF-A21106FC07A0}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\TC\Shared\UnitySC.Shared.TC.Shared.Operations.Interface\UnitySC.Shared.TC.Shared.Operations.Interface.csproj">
+      <Project>{B5FB9569-4BCF-435A-8C3D-1A051C47F24D}</Project>
+      <Name>UnitySC.Shared.TC.Shared.Operations.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Configuration\UnitySC.Shared.Configuration.csproj">
+      <Project>{79F7E968-C5FD-4307-9127-C9C96691E505}</Project>
+      <Name>UnitySC.Shared.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.FDC\UnitySC.Shared.FDC.csproj">
+      <Project>{3F3CC7E4-7DE0-40B8-8C4F-096B5F1E0CDA}</Project>
+      <Name>UnitySC.Shared.FDC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Proxy\UnitySC.Shared.Proxy.csproj">
+      <Project>{90BDBE2A-B307-4FE9-95AB-09A0673C2345}</Project>
+      <Name>UnitySC.Shared.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Camera\UnitySC.PM.Shared.Hardware.Camera.csproj">
+      <Project>{046875e4-f367-4b10-955a-c33f6f7a249a}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Camera</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Common\UnitySC.PM.Shared.Hardware.Common.csproj">
+      <Project>{DDAD1006-F8E4-4904-9004-0810A47CA810}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Core\UnitySC.PM.Shared.Hardware.Core.csproj">
+      <Project>{0b138ae8-3243-4d88-867f-3111dd8fb6ff}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Implementation\UnitySC.PM.Shared.Hardware.Service.Implementation.csproj">
+      <Project>{E7D74FE4-F983-439F-BF5E-BB548B08A498}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Implementation\UnitySC.PM.Shared.Status.Service.Implementation.csproj">
+      <Project>{F6A1A9A8-40B1-4015-A228-6F548EDF8755}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Status\UnitySC.PM.Shared.Status.Service.Interface\UnitySC.PM.Shared.Status.Service.Interface.csproj">
+      <Project>{53BD49C3-C5CE-4EAD-8261-A95C2A003A5E}</Project>
+      <Name>UnitySC.PM.Shared.Status.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Implementation\UnitySC.PM.Shared.Flow.Implementation.csproj">
+      <Project>{80484a41-7523-430e-b56e-1433457da5fb}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Implementation\UnitySC.PM.Shared.UserManager.Service.Implementation.csproj">
+      <Project>{72d98d6f-3dc3-4148-a141-b2ad4c17c9db}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UserManager\UnitySC.PM.Shared.UserManager.Service.Interface\UnitySC.PM.Shared.UserManager.Service.Interface.csproj">
+      <Project>{606809FE-7DFF-4ED0-82A9-EEB525A97BD8}</Project>
+      <Name>UnitySC.PM.Shared.UserManager.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hardware\UnitySC.PM.ANA.Hardware.Manager\UnitySC.PM.ANA.Hardware.csproj">
+      <Project>{2E313026-864F-4EF5-B330-9CADE368E72A}</Project>
+      <Name>UnitySC.PM.ANA.Hardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77f22706-7c58-4193-ae97-85347cbde3a2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TC\UnitySC.PM.ANA.TC\UnitySC.PM.ANA.TC.csproj">
+      <Project>{5024AE72-C29C-44C8-B8B8-9E2AB24DC189}</Project>
+      <Name>UnitySC.PM.ANA.TC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.ANA.Service.Core.BareWaferAlignment\UnitySC.PM.ANA.Service.Core.BareWaferAlignment.csproj">
+      <Project>{7F8D4B35-5764-4DE7-9135-05E0A7B35C12}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.BareWaferAlignment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.ANA.Service.Core.Calibration\UnitySC.PM.ANA.Service.Core.Calibration.csproj">
+      <Project>{E18882E5-6B1F-4BE7-8D59-A83B06255CF8}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Calibration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.ANA.Service.Core.Compatibility\UnitySC.PM.ANA.Service.Core.Compatibility.csproj">
+      <Project>{1DEBAF5E-79EF-4F09-A91A-725785E79208}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Compatibility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.ANA.Service.Core.Recipe\UnitySC.PM.ANA.Service.Core.Recipe.csproj">
+      <Project>{1F4A1AF3-52E0-4E4C-B2DC-DDBE142C0F2A}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Recipe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.ANA.Service.Core.Referentials\UnitySC.PM.ANA.Service.Core.Referentials.csproj">
+      <Project>{abc5125e-540a-4181-af4d-0a7f0bd7b42a}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Referentials</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\UnitySC.PM.ANA.Service.Core.Shared\UnitySC.PM.ANA.Service.Core.Shared.csproj">
+      <Project>{5C94507D-8104-4A5D-A3BB-8D659B26DF92}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Measure\UnitySC.PM.ANA.Service.Measure.Configuration\UnitySC.PM.ANA.Service.Measure.Configuration.csproj">
+      <Project>{E3470D70-5C50-4220-8427-8791E968B6E0}</Project>
+      <Name>UnitySC.PM.ANA.Service.Measure.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\UnitySC.PM.ANA.Service.Shared.TestUtils\UnitySC.PM.ANA.Service.Shared.TestUtils.csproj">
+      <Project>{2C29031D-16B2-462A-B383-68C2F7534795}</Project>
+      <Name>UnitySC.PM.ANA.Service.Shared.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\UnitySC.PM.ANA.Service.Shared\UnitySC.PM.ANA.Service.Shared.csproj">
+      <Project>{272f5055-3306-4657-91d6-06f841cf5830}</Project>
+      <Name>UnitySC.PM.ANA.Service.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Service.Implementation\UnitySC.PM.ANA.Service.Implementation.csproj">
+      <Project>{527BFE75-C6B5-40AB-B5D7-C7FF4F36AF18}</Project>
+      <Name>UnitySC.PM.ANA.Service.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Service.Interface.TestUtils\UnitySC.PM.ANA.Service.Interface.TestUtils.csproj">
+      <Project>{CAB0A95C-3A6B-4017-BC38-7CCD46CFAD59}</Project>
+      <Name>UnitySC.PM.ANA.Service.Interface.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Service.Interface\UnitySC.PM.ANA.Service.Interface.csproj">
+      <Project>{8BA51279-7837-4C4C-8558-C6953194E3B5}</Project>
+      <Name>UnitySC.PM.ANA.Service.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestExternalFile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

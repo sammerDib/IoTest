@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.CustomPointsManagement.WarpCustomPointsManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.CustomPointsManagement"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="SimpleTemplate">
+        <StackPanel>
+            <TextBlock Text="{Binding}" />
+        </StackPanel>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ExtendedTemplate">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <sharedControls:ImageButton  ImageGeometry="{StaticResource EyeOpenGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" ToolTip="View preset" Command="{Binding DataContext.ViewPresetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" Style="{StaticResource ImageButtonWithoutBorder}" Height="20"></sharedControls:ImageButton>
+                <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" Margin="5,0,0,0"></TextBlock>
+                <sharedControls:ImageButton Grid.Column="2" ImageGeometry="{StaticResource TrashGeometry}" ImageGeometryBrush="{StaticResource ImageErrorColor}" ToolTip="Remove" Command="{Binding DataContext.DeletePointsPresetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" Style="{StaticResource ImageButtonWithoutBorder}" Height="20"></sharedControls:ImageButton>
+            </Grid>
+        </ControlTemplate>
+        <DataTemplate x:Key="PresetTemplate">
+            <Grid MinWidth="250">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <sharedControls:ImageButton  ImageGeometry="{StaticResource EyeOpenGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" ToolTip="Remove" Command="{Binding DataContext.ViewPresetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" Style="{StaticResource ImageButtonWithoutBorder}" Height="20"></sharedControls:ImageButton>
+                <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" Margin="10,0,10,0"></TextBlock>
+                <sharedControls:ImageButton Grid.Column="2" ImageGeometry="{StaticResource TrashGeometry}" ImageGeometryBrush="{StaticResource ImageErrorColor}" ToolTip="Remove" Command="{Binding DataContext.DeletePointsPresetCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" Style="{StaticResource ImageButtonWithoutBorder}" Height="20"></sharedControls:ImageButton>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PresetsTemplate">
+            <Control x:Name="theControl" Focusable="False" Template="{StaticResource ExtendedTemplate}" />
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBoxItem}}, Path=IsSelected}" Value="{x:Null}">
+                    <Setter TargetName="theControl" Property="Template" Value="{StaticResource SimpleTemplate}" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid Margin="5,0,5,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock>Presets</TextBlock>
+        <Grid Grid.Row="1" Margin="0,5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="ButtonSelectPreset"
+                    Content="{Binding SelectedPreset}"
+                    Command="{Binding LoadSelectedPresetCommand}"
+                    ToolTip="Load the selected preset" Style="{StaticResource LeftButton}" />
+                <ToggleButton x:Name="DisplayPresetsList" Cursor="Hand"
+                Grid.Column="1"
+                Padding="0"
+                Width="20"
+                IsHitTestVisible="{Binding ElementName=PopupPresets, Path=IsOpen, Converter={converters:InvertedBooleanConverter}}"
+                Style="{StaticResource RightToggleButton}">
+                    <Grid x:Name="Images">
+                        <Image Source="{DynamicResource SimpleDown}" Height="15" Width="15" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}, Path=IsChecked, Converter= {converters:InvertedBooleanToVisibilityConverter}}" />
+                        <Image Source="{DynamicResource SimpleUp}" Height="15" Width="15" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}, Path=IsChecked, Converter= {converters:BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </ToggleButton>
+
+                <Popup x:Name="PopupPresets"
+                    IsOpen="{Binding IsChecked, ElementName=DisplayPresetsList}"
+                    StaysOpen="False"
+                    PlacementTarget="{Binding ElementName=DisplayPresetsList}"
+                    Placement="Left"
+                    HorizontalOffset="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}"
+                    VerticalOffset="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualHeight}">
+                    <Border Background="White" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1">
+                        <ListBox x:Name="PresetsList"  Style="{StaticResource ListBoxForComboBox}"
+                           ItemsSource="{Binding Presets}"
+                           SelectedItem="{Binding SelectedPreset}"
+                           PreviewMouseUp="PresetsList_PreviewMouseUp"
+                           ItemTemplate="{StaticResource PresetTemplate}"></ListBox>
+                    </Border>
+                </Popup>
+            </Grid>
+
+
+            <sharedControls:ImageButton Grid.Column="1" ImageGeometry="{StaticResource SaveGeometry}" ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                      Command="{Binding SavePointsPresetCommand}" Margin="4" Width="30" ToolTip="Save preset"></sharedControls:ImageButton>
+            <sharedControls:ImageButton Grid.Column="2" ImageGeometry="{StaticResource SaveAsGeometry}" ToolTip="Save new preset" ImageGeometryBrush="{StaticResource HighLightBrush}"
+                           Command="{Binding SaveAsPointsPresetCommand}" Margin="0" Width="30"></sharedControls:ImageButton>
+        </Grid>
+        
+    </Grid>
+</UserControl>

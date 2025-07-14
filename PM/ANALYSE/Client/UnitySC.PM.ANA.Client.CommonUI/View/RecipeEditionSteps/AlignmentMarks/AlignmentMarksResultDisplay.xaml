@@ -1,0 +1,71 @@
+﻿<Window x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.AlignmentMarksResultDisplay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:flowInterface="clr-namespace:UnitySC.PM.Shared.Flow.Interface;assembly=UnitySC.PM.Shared.Flow.Interface"
+        xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+        mc:Ignorable="d"
+        d:DesignHeight="450" d:DesignWidth="800" WindowStyle="ToolWindow" Title="Alignment Marks Test Result" SizeToContent="WidthAndHeight" ResizeMode="NoResize" MinWidth="300" MinHeight="100" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
+
+        <Grid Margin="10" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical">
+                <!-- FAILED-->
+                <Grid Margin="10,5" Visibility="{Binding AlignmentMarksResult.Status.State,Converter={converters:EnumToVisibilityConverter}, FallbackValue=Collapsed, ConverterParameter={x:Static flowInterface:FlowState.Error}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="The marks alignment failed" Margin="0,5" />
+                    <TextBlock Grid.Row="1"  Margin="0,10" Text="{Binding AlignmentMarksResult.Status.Message}" Foreground="Red" />
+                </Grid>
+                <!-- SUCCEEDED-->
+                <Grid Margin="10,5" Visibility="{Binding AlignmentMarksResult.Status.State,Converter={converters:InvertedEnumToVisibilityConverter}, FallbackValue=Visible, ConverterParameter={x:Static flowInterface:FlowState.Error}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Score :" Margin="0,5" />
+                    <TextBlock Grid.Row="1" Grid.Column="1" Margin="0,5" Text="{Binding AlignmentMarksResult.Confidence, StringFormat='{}{0:F2}'}" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,5" Text="Shift X :" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" Margin="0,5" Text="{Binding AlignmentMarksResult.ShiftX, StringFormat='{}{0:F3}'}" />
+                    <TextBlock Grid.Row="2" Grid.Column="2" Margin="0,5" Text="Shift Y :" />
+                    <TextBlock Grid.Row="2" Grid.Column="3" Margin="0,5" Text="{Binding AlignmentMarksResult.ShiftY, StringFormat='{}{0:F3}'}" />
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Rotation Angle :" Margin="0,5" />
+                    <TextBlock Grid.Row="3" Grid.Column="1" Margin="0,5" Grid.ColumnSpan="4" Text="{Binding AlignmentMarksResult.RotationAngle, StringFormat='{}{0:F3}'}" />
+                </Grid>
+            </StackPanel>
+            <Grid Grid.Row="2" Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" IsCancel ="True" Style="{StaticResource HighlightedButton}">Ok</Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

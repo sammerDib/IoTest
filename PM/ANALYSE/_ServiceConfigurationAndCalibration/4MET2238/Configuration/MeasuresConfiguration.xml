@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MeasuresConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="1.0.0">
+  <Measures>
+    <MeasureConfigurationBase xsi:type="MeasureNanoTopoConfiguration">
+      <Acquisitions>
+        <AcquisitionConfiguration>
+          <Resolution>Low</Resolution>
+          <ImagesPerStep>1</ImagesPerStep>
+        </AcquisitionConfiguration>
+        <AcquisitionConfiguration>
+          <Resolution>Medium</Resolution>
+          <ImagesPerStep>5</ImagesPerStep>
+        </AcquisitionConfiguration>
+        <AcquisitionConfiguration>
+          <Resolution>High</Resolution>
+          <ImagesPerStep>20</ImagesPerStep>
+        </AcquisitionConfiguration>
+      </Acquisitions>
+      <Algos>
+        <AlgoConfiguration>
+          <Name>Standard</Name>
+          <PhaseCalculation>Hariharan</PhaseCalculation>
+          <PhaseUnwrapping>Goldstein</PhaseUnwrapping>
+          <FactorBetweenWavelengthAndStepSize>0.125</FactorBetweenWavelengthAndStepSize>
+          <StepCount>7</StepCount>
+        </AlgoConfiguration>
+        <AlgoConfiguration>
+          <Name>Guided by quality</Name>
+          <PhaseCalculation>Hariharan</PhaseCalculation>
+          <PhaseUnwrapping>QualityGuidedByPseudoCorrelation</PhaseUnwrapping>
+          <FactorBetweenWavelengthAndStepSize>0.125</FactorBetweenWavelengthAndStepSize>
+          <StepCount>7</StepCount>
+        </AlgoConfiguration>      
+      </Algos>
+      <MaxCompatibleLightWavelength Value="750" Unit="Nanometer" />
+      <MinCompatibleLightWavelength Value="620" Unit="Nanometer" />
+    </MeasureConfigurationBase>
+    <MeasureConfigurationBase xsi:type="MeasureXYCalibrationConfiguration">
+      <PreAlignmentNbDiesPerBranch>2</PreAlignmentNbDiesPerBranch>
+      <PreAlignmentDiesPeriodicityFromCenter>2</PreAlignmentDiesPeriodicityFromCenter>
+    </MeasureConfigurationBase>
+    <MeasureConfigurationBase xsi:type="MeasureBowConfiguration">
+      <MaxReferencePlaneAngle Value="0.5" Unit="Degree" />
+      <DefaultReferencePlanePointsDistanceFromWaferEdge Value="6.35" Unit="Millimeter" />
+      <DefaultReferencePlanePointsAngularPositions>
+        <Angle Value="90" Unit="Degree" />
+        <Angle Value="210" Unit="Degree" />
+        <Angle Value="330" Unit="Degree" />
+      </DefaultReferencePlanePointsAngularPositions>
+      <MaxReferencePlanePointsEdgeDeviationFromRegularPolygon Value="10" Unit="Micrometer"/>
+      <ReferencePlanePointsRotationWhenDefaultUnreachable Value="1" Unit="Degree"/>
+      <ReleaseWaferTimeoutMilliseconds>1200</ReleaseWaferTimeoutMilliseconds>
+    </MeasureConfigurationBase>
+	<MeasureConfigurationBase xsi:type="MeasureTSVConfiguration">
+      <CorrectionTypeForDepth>Linear</CorrectionTypeForDepth>
+      <CorrectionTypeForCDWidth>Offset</CorrectionTypeForCDWidth>
+      <CorrectionTypeForCDLength>Offset</CorrectionTypeForCDLength>
+      <DColTSVDepthDefaultLabel>TSV Depth</DColTSVDepthDefaultLabel>
+      <DColTSVCDWidthDefaultLabel>TSV CD Width</DColTSVCDWidthDefaultLabel>
+      <DColTSVCDLengthDefaultLabel>TSV CD Height</DColTSVCDLengthDefaultLabel>
+      <CanChangeDColLabels>true</CanChangeDColLabels>
+    </MeasureConfigurationBase>
+    <MeasureConfigurationBase xsi:type="MeasureTopoConfiguration">
+      <VSIStepSize Value="40" Unit="Nanometer"/>
+      <VSIMarginConstant Value="5" Unit="Micrometer"/>
+      <CorrectionType>Linear</CorrectionType>
+    </MeasureConfigurationBase>
+  </Measures>
+  <AuthorizedMeasures>
+    <MeasureType>NanoTopo</MeasureType>
+    <MeasureType>Thickness</MeasureType>
+    <MeasureType>TSV</MeasureType>
+    <MeasureType>XYCalibration</MeasureType>
+    <MeasureType>Bow</MeasureType>
+    <MeasureType>Topography</MeasureType>
+  </AuthorizedMeasures>
+  <LocalBackupOfAllResults>true</LocalBackupOfAllResults>
+  <MinuteBetweenTwoDualLiseCalibration>10</MinuteBetweenTwoDualLiseCalibration>
+</MeasuresConfiguration>

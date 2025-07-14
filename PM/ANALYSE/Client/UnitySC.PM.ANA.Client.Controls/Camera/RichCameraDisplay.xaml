@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Controls.Camera.RichCameraDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"    
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:camera="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera"
+             xmlns:behavior="clr-namespace:UnitySC.Shared.UI.Behaviors;assembly=UnitySC.Shared.UI"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Name="RichCameraDisplayUC"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <sys:String x:Key="FormatDecimalThreePlaces">{0:F3}</sys:String>
+            <sys:String x:Key="FormatDecimalTwoPlaces">{0:F2}</sys:String>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0" Background="{StaticResource PanelTitleBackground}">
+          
+            <WrapPanel Orientation="Horizontal" Grid.Column="0">
+                <ComboBox  
+                            ItemsSource="{markupextensions:CamerasSupervisorBinding Cameras}"
+                            SelectedValue="{markupextensions:CamerasSupervisorBinding Camera}"
+                            Margin="5,2,0,2"
+                            DisplayMemberPath="Name"
+                            Visibility="{Binding IsCameraSelectionVisible, ElementName=RichCameraDisplayUC, Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />
+                <ComboBox
+                            Grid.Row="1"
+                            Margin="5,2,0,2"
+                            ItemsSource="{markupextensions:CamerasSupervisorBinding Objectives}"
+                            SelectedItem="{markupextensions:CamerasSupervisorBinding Objective}"
+                            DisplayMemberPath="Name" />
+                <controls:ImageButton Content="Start" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}"  Margin="5,2,0,2"
+                    IsEnabled="{markupextensions:CamerasSupervisorBinding Camera.IsReady}"
+                    Command="{markupextensions:CamerasSupervisorBinding Camera.StartStreamingCommand}"
+                    Visibility="{Binding IsStartButtonVisible, ElementName=RichCameraDisplayUC, Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}"></controls:ImageButton>
+                <controls:ImageButton Content="Stop" ImageGeometry="{StaticResource StopGeometry}" ImageGeometryBrush="{StaticResource IconsErrorColor}" Margin="5,2,0,2"
+                    IsEnabled="{markupextensions:CamerasSupervisorBinding Camera.IsGrabbing}"
+                    Command="{markupextensions:CamerasSupervisorBinding Camera.StopStreamingCommand}" VerticalContentAlignment="Center"
+                    Visibility="{Binding IsStartButtonVisible, ElementName=RichCameraDisplayUC, Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}" ></controls:ImageButton>
+                <controls:ImageButton  Content="Snapshot" ImageGeometry="{StaticResource AcquireImageGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="5,2,0,2"
+                    Command="{markupextensions:CamerasSupervisorBinding Camera.SingleShotCommand}"></controls:ImageButton>
+                <TextBlock Margin="10,0"
+                        VerticalAlignment="Center"
+                        Visibility="{markupextensions:CamerasSupervisorBinding Camera.IsGrabbing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Text="{markupextensions:CamerasSupervisorBinding Camera.FrameRate, StringFormat='Framerate = {0} FPS'}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5,2,0,2"
+        Visibility="{Binding IsAutoNormaliseSelectorVisible, ElementName=RichCameraDisplayUC, Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <ToggleButton IsChecked="{markupextensions:CamerasSupervisorBinding Camera.IsNormalised}" Style="{StaticResource ToggleAnimatedSwitchNew}" VerticalAlignment="Center" />
+                    <TextBlock Text="Auto Normalise" Style="{StaticResource MainMenuTitle2}" VerticalAlignment="Center"  Margin="4,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="13,2,3,2">
+                    <ToggleButton IsChecked="{markupextensions:CamerasSupervisorBinding WebcamEnabled}" Style="{StaticResource ToggleAnimatedSwitchNew}" VerticalAlignment="Center" />
+                    <TextBlock Text="Webcam" Style="{StaticResource MainMenuTitle2}" VerticalAlignment="Center"  Margin="4,0,0,0" />
+                </StackPanel>
+            </WrapPanel>
+    
+        </Grid>
+        <Grid Grid.Row="1" Background="{StaticResource CameraBackground}" Margin="0,4,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <camera:CameraDisplay Camera="{markupextensions:CamerasSupervisorBinding Camera}" 
+                                  IsRoiSelectorVisible="{Binding ElementName=RichCameraDisplayUC, Path=IsRoiSelectorVisible}"
+                                  IsCenteredROI="{Binding ElementName=RichCameraDisplayUC, Path=IsCenteredROI}"
+                                  MoveIsEnabled="{Binding ElementName=RichCameraDisplayUC, Path=MoveIsEnabled}"                                   
+                                  RoiRect="{Binding RoiRect, Mode=TwoWay}"
+                                  UsePixelUnit="{Binding ElementName=RichCameraDisplayUC, Path=UsePixelUnit}" MinHeight="30" />
+            <Grid Grid.Row="1" Visibility="{markupextensions:CamerasSupervisorBinding  WebcamEnabled, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Height="500">
+                <controls:ImageGroupBox Header="Webcam" Image="{StaticResource Webcam}" Background="{StaticResource CameraBackground}">
+                    <WebBrowser HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="webHelpBrowser" behavior:WebBrowserBehaviors.BindableSource="{markupextensions:CamerasSupervisorBinding  WebcamUrl}" />
+                </controls:ImageGroupBox>
+                <controls:ImageButton Style="{StaticResource TransparentImageButton}" Image="{StaticResource Redo}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3" Click="Refresh" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

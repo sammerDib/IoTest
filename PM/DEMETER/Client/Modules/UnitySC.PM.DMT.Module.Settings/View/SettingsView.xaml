@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.Modules.Settings.View.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+              xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:sharedEnum="clr-namespace:UnitySC.Shared.Data.Enum;assembly=UnitySC.Shared.Data"
+             mc:Ignorable="d"
+             d:DesignHeight="1024" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+            <!--<vmSettings:SettingsVM x:Key="SettingsViewModel" />-->
+            <Style TargetType="TabItem">
+                <Setter Property="IsEnabled" Value="{Binding IsEnabled, Mode=OneWay}" />
+            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DataTemplate.xaml" />
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="White" x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="5">
+            <controls:ImageToggleButton Width="120" ImageGeometry="{StaticResource ArrowSquareUpGeometry}" ImageGeometryUncheckedBrush="#FF777777" ForegroundUncheckedBrush="#FF777777" IsChecked="{Binding CurrentVisibleSide, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static sharedEnum:Side.Front}}" IsHitTestVisible="{Binding IsChecked, Converter={converters:InvertedBooleanConverter}, RelativeSource={RelativeSource Self} }" Cursor="Hand" >Front Side</controls:ImageToggleButton>
+            <controls:ImageToggleButton Width="120"  ImageGeometry="{StaticResource ArrowSquareDownGeometry}" Margin="5,0,0,0" ImageGeometryUncheckedBrush="#FF777777" ForegroundUncheckedBrush="#FF777777"  IsChecked="{Binding CurrentVisibleSide, Converter={converters:EnumToBooleanConverter}, ConverterParameter={x:Static sharedEnum:Side.Back}}"  IsHitTestVisible="{Binding IsChecked, Converter={converters:InvertedBooleanConverter}, RelativeSource={RelativeSource Self} }" Cursor="Hand"  >Back Side</controls:ImageToggleButton>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <controls:ImageButton Width="225" Margin="0,0,5,0" ImageGeometry="{StaticResource ArrowLeftGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Move to measurement position" Command="{Binding MoveToMeasurementPositionCommand}" />
+            <controls:ImageButton Width="225" ImageGeometryRightBrush="{StaticResource IconsColor}" ImageGeometryRight="{StaticResource ArrowRightGeometry}" Content="Move to loading position" Command="{Binding MoveToLoadingPositionCommand}" />
+        </StackPanel>
+        <!-- Tab -->
+        <Grid Margin="5" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.Column="1" Style="{StaticResource TabControlLeftStyle}" ItemsSource="{Binding SettingsFront}" HorizontalContentAlignment="Left"  SelectedItem="{Binding SelectedSettingFront}" Visibility="{Binding CurrentVisibleSide, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedEnum:Side.Front}}">
+                <TabControl.ItemTemplate>
+                    <!-- this is the header template-->
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,8">
+                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ArrowSquareUpGeometry}" sharedExtensions:ImageExt.GeometryBrush="{Binding ElementName=TabHeaderText,Path=Foreground}"  VerticalAlignment="Center" ToolTip="Front Side" Height="20"  Margin="5,0,5,0" Visibility="{Binding WaferSide, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedEnum:Side.Front}}" />
+                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ArrowSquareDownGeometry}" sharedExtensions:ImageExt.GeometryBrush="{Binding ElementName=TabHeaderText,Path=Foreground}"  VerticalAlignment="Center" ToolTip="Back Side" Height="20"  Margin="5,0,5,0" Visibility="{Binding WaferSide, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedEnum:Side.Back}}" />
+                            <TextBlock Text="{Binding Header}" VerticalAlignment="Center" Margin="4,0" x:Name="TabHeaderText" Width="160" />
+                        </StackPanel>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabItem}, AncestorLevel=1}, Path=IsSelected}" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" TargetName="TabHeaderText" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <ContentControl Content="{Binding .}" IsEnabled="{Binding IsEnabled}" Margin="5" />
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+            <TabControl Grid.Column="1" Style="{StaticResource TabControlLeftStyle}" ItemsSource="{Binding SettingsBack}" HorizontalContentAlignment="Left"  SelectedItem="{Binding SelectedSettingBack}" Visibility="{Binding CurrentVisibleSide, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedEnum:Side.Back}}">
+                <TabControl.ItemTemplate>
+                    <!-- this is the header template-->
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,8">
+                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ArrowSquareUpGeometry}" sharedExtensions:ImageExt.GeometryBrush="{Binding ElementName=TabHeaderText,Path=Foreground}"  VerticalAlignment="Center" ToolTip="Front Side" Height="20"  Margin="5,0,5,0" Visibility="{Binding WaferSide, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedEnum:Side.Front}}" />
+                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ArrowSquareDownGeometry}" sharedExtensions:ImageExt.GeometryBrush="{Binding ElementName=TabHeaderText,Path=Foreground}"  VerticalAlignment="Center" ToolTip="Back Side" Height="20"  Margin="5,0,5,0" Visibility="{Binding WaferSide, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedEnum:Side.Back}}" />
+                            <TextBlock Text="{Binding Header}" VerticalAlignment="Center" Margin="4,0" x:Name="TabHeaderText" Width="120" />
+                        </StackPanel>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabItem}, AncestorLevel=1}, Path=IsSelected}" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" TargetName="TabHeaderText" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <ContentControl Content="{Binding .}" IsEnabled="{Binding IsEnabled}" Margin="5" />
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </Grid>
+    </Grid>
+
+    <!--</Grid>-->
+</UserControl>

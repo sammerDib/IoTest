@@ -1,0 +1,334 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+
+    <SolidColorBrush x:Key="ImageValidColor">DarkCyan</SolidColorBrush>
+    <!--<SolidColorBrush x:Key="ImageMainColor">#FF2A2F66</SolidColorBrush>-->
+    <SolidColorBrush x:Key="ImageMainColor">#106EBE</SolidColorBrush>
+    <SolidColorBrush x:Key="ImageErrorColor">Red</SolidColorBrush>
+    <SolidColorBrush x:Key="DisabledColor">Gray</SolidColorBrush>
+    <SolidColorBrush x:Key="ImageLightTextColor">White</SolidColorBrush>
+    <SolidColorBrush x:Key="ImageWarningColor">#FFF1C40F</SolidColorBrush>
+
+    <DataTemplate x:Key="NotValidStep">
+        <Canvas x:Name="svg20" Width="582" Height="240">
+            <Canvas x:Name="g48">
+                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="path50" Fill="{StaticResource DisabledColor}" Canvas.Left="3.432">
+                    <Path.Data>
+                        <PathGeometry Figures="M 63.753378 175.74665 C 99.791803 139.70384 119 119.80027 119 118.5 119 117.19973 99.791803 97.296161 63.753378 61.253348 L 8.5067569 6 H 235.5067 462.50664 l 56.24669 56.253304 56.2467 56.253306 L 518.74672 174.7533 462.49342 231 H 235.50009 8.5067569 Z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+    <DataTemplate x:Key="ValidStep">
+        <Canvas  Width="582" Height="240">
+            <Canvas>
+                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="path50" Fill="{StaticResource ImageValidColor}" Canvas.Left="3.432">
+                    <Path.Data>
+                        <PathGeometry Figures="M 63.753378 175.74665 C 99.791803 139.70384 119 119.80027 119 118.5 119 117.19973 99.791803 97.296161 63.753378 61.253348 L 8.5067569 6 H 235.5067 462.50664 l 56.24669 56.253304 56.2467 56.253306 L 518.74672 174.7533 462.49342 231 H 235.50009 8.5067569 Z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MonoPoint">
+        <Ellipse Width="30" Height="30" Stroke="Black" StrokeThickness="2" Fill="White" Margin="2"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MultiPoint">
+        <WrapPanel Width="48" Orientation="Horizontal" Margin="2">
+            <Ellipse Width="22" Height="22" Stroke="Black" StrokeThickness="2" Fill="White"  Margin="1"/>
+            <Ellipse Width="22" Height="22" Stroke="Black" StrokeThickness="2" Fill="White" Margin="1"/>
+            <Ellipse Width="22" Height="22" Stroke="Black" StrokeThickness="2" Fill="White" Margin="1"/>
+            <Ellipse Width="22" Height="22" Stroke="Black" StrokeThickness="2" Fill="White" Margin="1"/>
+        </WrapPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Test">
+        <WrapPanel Width="48" Orientation="Horizontal" Margin="2">
+            <Ellipse Width="22" Height="22" Stroke="{StaticResource ImageMainColor}" StrokeThickness="2" Fill="White"  Margin="1"/>
+            <Ellipse Width="22" Height="22" Stroke="{StaticResource ImageMainColor}" StrokeThickness="2" Fill="LightGray" Margin="1"/>
+            <Ellipse Width="22" Height="22" Stroke="{StaticResource ImageMainColor}" StrokeThickness="2" Fill="Gray" Margin="1"/>
+            <Ellipse Width="22" Height="22" Stroke="{StaticResource ImageMainColor}" StrokeThickness="2" Fill="Black" Margin="1"/>
+        </WrapPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Warning">
+        <Canvas Width="32" Height="32">
+            <Path Name="Triangle29" Fill="{StaticResource ImageWarningColor}" StrokeThickness="1">
+                <Path.Data>
+                    <PathGeometry Figures="M14.4242327 6.14839275 C15.2942987 4.74072976 16.707028 4.74408442 17.5750205 6.14839275 L28.3601099 23.59738 C29.5216388 25.4765951 28.6755462 27 26.4714068 27 L5.5278464 27 C3.32321557 27 2.47386317 25.4826642 3.63914331 23.59738 Z M16 20 C16.5522847 20 17 19.5469637 17 19.0029699 L17 12.9970301 C17 12.4463856 16.5561352 12 16 12 C15.4477153 12 15 12.4530363 15 12.9970301 L15 19.0029699 C15 19.5536144 15.4438648 20 16 20 Z M16 24 C16.5522848 24 17 23.5522848 17 23 C17 22.4477152 16.5522848 22 16 22 C15.4477152 22 15 22.4477152 15 23 C15 23.5522848 15.4477152 24 16 24 Z M16 24" FillRule="EvenOdd"/>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Error">
+        <Canvas HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="15">
+            <Ellipse Height="15" Width="15" Fill="{StaticResource ImageErrorColor}">
+
+            </Ellipse>
+            <Path Data="M2.8125,7.1875 L12.4375,7.1875" Height="2" Canvas.Left="1.812" Stretch="Fill" Stroke="{StaticResource ImageLightTextColor}" StrokeThickness="2" Canvas.Top="6.5" Width="11.626" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-45"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+            <Path Data="M2.8125,7.1875 L12.4375,7.1875" Height="2" Canvas.Left="1.812" Stretch="Fill" Stroke="{StaticResource ImageLightTextColor}"  StrokeThickness="2" Canvas.Top="6.5" Width="11.626" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="45"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Valid">
+        <Canvas Height="15" Width="15" HorizontalAlignment="Right" VerticalAlignment="Top" ToolTip="Valid">
+            <Rectangle Fill="{StaticResource ImageValidColor}" Height="3" Canvas.Left="4" Canvas.Top="7" Width="10" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-45"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Rectangle Fill="{StaticResource ImageValidColor}" Height="3" Canvas.Left="2" Canvas.Top="8" Width="6" RenderTransformOrigin="0.5,0.5">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="45"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Calibration">
+        <Ellipse Width="30" Height="30" Stroke="{StaticResource ImageMainColor}" StrokeThickness="3" Fill="Black" Margin="2"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Play">
+        <Canvas Name="Layer_1" Width="512" Height="512">
+            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3954" Fill="{StaticResource ImageValidColor}">
+                <Path.Data>
+                    <PathGeometry Figures="M405.2 232.9L126.8 67.2c-3.4-2-6.9-3.2-10.9-3.2c-10.9 0-19.8 9-19.8 20H96v344h0.1c0 11 8.9 20 19.8 20  c4.1 0 7.5-1.4 11.2-3.4l278.1-165.5c6.6-5.5 10.8-13.8 10.8-23.1C416 246.7 411.8 238.5 405.2 232.9z" FillRule="NonZero"/>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Next">
+        <Canvas Width="32" Height="32" RenderTransformOrigin="0.5,0.5">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <Canvas Name="layer1">
+                <Path Name="path16" Fill="{StaticResource ImageMainColor}" RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                    <Path.Data>
+                        <PathGeometry Figures="M 16 1 A 15 15 0 1 0 31 16 15 15 0 0 0 16 1 Z m 0 26 A 11 11 0 1 1 27 16 11 11 0 0 1 16 27 Z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+                <Path Name="path18" Fill="{StaticResource ImageMainColor}" Canvas.Top="-1">
+                    <Path.Data>
+                        <PathGeometry Figures="M 19.59 15.55 19.01 16.13 18 18 v -8 a 2 2 0 0 0 -4 0 v 8 L 13 16.22 12.35 15.57 A 2.0011122 2.0011122 0 0 0 9.52 18.4 l 5 5 a 2 2 0 0 0 2.83 0 l 5 -5 a 2.0011122 2.0011122 0 0 0 -2.83 -2.83 z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Previous">
+        <Canvas Name="svg8" Width="32" Height="32" RenderTransformOrigin="0.5,0.5">
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Canvas.RenderTransform>
+            <Canvas Name="layer1">
+                <Path Name="path16" Fill="{StaticResource ImageMainColor}" RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                    <Path.Data>
+                        <PathGeometry Figures="M 16 1 A 15 15 0 1 0 31 16 15 15 0 0 0 16 1 Z m 0 26 A 11 11 0 1 1 27 16 11 11 0 0 1 16 27 Z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+                <Path Name="path18" Fill="{StaticResource ImageMainColor}" Canvas.Top="-0.75">
+                    <Path.Data>
+                        <PathGeometry Figures="M 19.59 15.55 19.01 16.13 18 18 v -8 a 2 2 0 0 0 -4 0 v 8 L 13 16.22 12.35 15.57 A 2.0011122 2.0011122 0 0 0 9.52 18.4 l 5 5 a 2 2 0 0 0 2.83 0 l 5 -5 a 2.0011122 2.0011122 0 0 0 -2.83 -2.83 z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Trash">
+        <Canvas  Width="500" Height="500">
+            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path10" Fill="{StaticResource ImageErrorColor}">
+                <Path.Data>
+                    <PathGeometry Figures="M418.081 122.802h-59.057V68.29  c0-20.077-16.262-36.34-36.341-36.34H177.316c-20.078 0-36.342 16.264-36.342 36.34v54.513H81.918  c-12.536 0-22.713 10.177-22.713 22.715c0 12.536 10.177 22.713 22.713 22.713h13.629v263.48c0 20.078 16.262 36.34 36.341 36.34  h236.224c20.078 0 36.341-16.262 36.341-36.34v-263.48h13.629c12.535 0 22.715-10.177 22.715-22.713  C440.796 132.979 430.616 122.802 418.081 122.802z M313.598 122.802H186.4V97.367c0-11.083 8.909-19.991 19.991-19.991h87.216  c11.084 0 19.99 8.909 19.99 19.991V122.802z M186.4 186.401v218.051c0 9.992-8.181 18.172-18.17 18.172s-18.17-8.18-18.17-18.172  V186.401c0-9.989 8.18-18.17 18.17-18.17S186.4 176.412 186.4 186.401z M268.172 186.401v218.051  c0 9.992-8.181 18.172-18.172 18.172c-9.99 0-18.17-8.18-18.17-18.172V186.401c0-9.989 8.181-18.17 18.17-18.17  C259.991 168.231 268.172 176.412 268.172 186.401z M349.938 186.401v218.051c0 9.992-8.181 18.172-18.169 18.172  c-9.99 0-18.172-8.18-18.172-18.172V186.401c0-9.989 8.182-18.17 18.172-18.17C341.758 168.231 349.938 176.412 349.938 186.401z" FillRule="EvenOdd"/>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Delete">
+        <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Delete" Width="40" Height="40" Clip="F1 M 0,0L 40,0L 40,40L 0,40L 0,0">
+            <Canvas x:Name="Layer_1" Width="40" Height="40" Canvas.Left="0" Canvas.Top="0">
+                <Path x:Name="Path" Width="32.2406" Height="32.2406" Canvas.Left="3.87968" Canvas.Top="3.8797" Stretch="Fill" StrokeThickness="4" StrokeLineJoin="Round" Stroke="{StaticResource ImageErrorColor}" Fill="{StaticResource ImageErrorColor}" Data="F1 M 6.41665,30.9906L 30.9906,6.41667C 31.7065,5.70071 32.8673,5.7007 33.5833,6.41667L 33.5833,6.41667C 34.2993,7.13263 34.2993,8.29343 33.5833,9.00939L 9.00937,33.5833C 8.29341,34.2993 7.13261,34.2993 6.41665,33.5833L 6.41665,33.5833C 5.70069,32.8674 5.70069,31.7066 6.41665,30.9906 Z "/>
+                <Path x:Name="Path_0" Width="32.2406" Height="32.2406" Canvas.Left="3.87969" Canvas.Top="3.8797" Stretch="Fill" StrokeThickness="4" StrokeLineJoin="Round" Stroke="{StaticResource ImageErrorColor}" Fill="{StaticResource ImageErrorColor}" Data="F1 M 9.00939,6.41667L 33.5833,30.9906C 34.2993,31.7066 34.2993,32.8674 33.5833,33.5833L 33.5833,33.5833C 32.8674,34.2993 31.7066,34.2993 30.9906,33.5833L 6.41666,9.00939C 5.7007,8.29343 5.7007,7.13263 6.41666,6.41667L 6.41666,6.41667C 7.13263,5.70071 8.29343,5.70071 9.00939,6.41667 Z "/>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="NewFile">
+        <Canvas Width="128" Height="128">
+            <Canvas Name="g34">
+                <Polygon xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Points="73,4 19,4 19,124 109,124 109,40  " Name="polygon32" FillRule="NonZero" Fill="{StaticResource ImageMainColor}" Height="137.976" Width="121.285" RenderTransformOrigin="0.5,0.5" Canvas.Top="-0.665"/>
+            </Canvas>
+            <Canvas Name="g38">
+                <Polygon xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Points="73,40 109,40 73,4  " Name="polygon36" FillRule="NonZero" Fill="{StaticResource ImageMainColor}"/>
+            </Canvas>
+            <Canvas Name="g42">
+                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path40" Fill="#FF1E1E1E">
+                    <Path.Data>
+                        <PathGeometry Figures="M109 125.2H19c-0.7 0-1.2-0.6-1.2-1.2V4c0-0.7 0.6-1.2 1.2-1.2h50c6.2 0 11.2 5 11.2 11.2v18.8H99   c6.2 0 11.2 5 11.2 11.2v80C110.2 124.7 109.7 125.2 109 125.2z M20.2 122.8h87.5V44c0-4.8-3.9-8.8-8.8-8.8H79   c-0.7 0-1.2-0.6-1.2-1.2V14c0-4.8-3.9-8.8-8.8-8.8H20.2V122.8z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+            <Canvas Name="g48">
+                <Canvas Name="g46">
+                    <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path44" Fill="{StaticResource ImageLightTextColor}">
+                        <Path.Data>
+                            <PathGeometry Figures="M76 6.9c1.8 1.8 3 4.3 3 7.1v20h20c2.7 0 5.2 1.1 7 2.9h0L76 6.9L76 6.9z" FillRule="NonZero"/>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Canvas>
+            <Canvas Name="g54">
+                <Canvas Name="g52">
+                    <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path50" Fill="#FF1E1E1E">
+                        <Path.Data>
+                            <PathGeometry Figures="M106 38.1L106 38.1c-0.3 0-0.7-0.1-0.9-0.4c-1.7-1.6-3.8-2.5-6.2-2.5H79c-0.7 0-1.2-0.6-1.2-1.2V14    c0-2.4-0.9-4.6-2.6-6.2c-0.2-0.2-0.4-0.6-0.4-0.9c0-0.5 0.3-1 0.8-1.2c0.5-0.2 1-0.1 1.4 0.3l30 30c0.4 0.4 0.5 0.9 0.3 1.4    C107 37.8 106.5 38.1 106 38.1z M80.2 32.8H99c0.4 0 0.8 0 1.2 0.1l-20-20c0 0.4 0.1 0.8 0.1 1.2V32.8z" FillRule="NonZero"/>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Canvas>
+            <Canvas Name="g64">
+                <Canvas Name="g58">
+                    <Rectangle xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="42.5" Canvas.Top="70" Width="43" Height="8" Name="rect56" Fill="{StaticResource ImageLightTextColor}"/>
+                </Canvas>
+                <Canvas Name="g62">
+                    <Rectangle xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="60" Canvas.Top="52.5" Width="8" Height="43" Name="rect60" Fill="{StaticResource ImageLightTextColor}"/>
+                </Canvas>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="OpenFile">
+        <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Document" Width="33.5889" Height="32.0859" Clip="F1 M 0,0L 33.5889,0L 33.5889,32.0859L 0,32.0859L 0,0">
+            <Canvas x:Name="Open" Width="800.207" Height="800.141" Canvas.Left="0" Canvas.Top="0">
+                <Path x:Name="Path" Width="30.0617" Height="26.1336" Canvas.Left="0" Canvas.Top="5.79187" Stretch="Fill" Fill="#FFB2841E" Data="F1 M 0,31.1238L 0,9.55957C 0,9.39923 0,9.23889 0.160329,9.15875L 2.40494,6.11249C 2.56527,5.95215 2.72559,5.79187 2.96609,5.79187L 10.5016,5.79187C 10.7421,5.79187 10.9825,5.95215 11.1429,6.11249L 13.147,8.83807L 29.2601,8.83807C 29.741,8.83807 30.0617,9.15875 30.0617,9.55957L 30.0617,31.1238C 30.0617,31.6048 29.741,31.9255 29.2601,31.9255L 0.801645,31.9255C 0.400823,31.9255 0,31.6048 0,31.1238 Z "/>
+                <Path x:Name="Path_0" Width="28.5386" Height="24.5303" Canvas.Left="0.721481" Canvas.Top="6.59351" Stretch="Fill" Fill="#FFF7E455" Data="M 0.721481,9.55957L 0.801645,31.1238L 29.2601,31.1238L 29.2601,9.55957L 12.7462,9.55957L 10.5016,6.59351L 2.96609,6.59351L 0.721481,9.55957 Z "/>
+                <Path x:Name="Path_1" Width="8.65777" Height="0.721436" Canvas.Left="2.40494" Canvas.Top="6.59351" Stretch="Fill" Fill="#FFFFFDEA" Data="F1 M 2.40494,7.31494L 2.96609,6.59351L 10.5016,6.59351L 11.0627,7.31494L 2.40494,7.31494 Z "/>
+                <Path x:Name="Path_2" Width="33.4768" Height="19.48" Canvas.Left="0.148052" Canvas.Top="12.6058" Stretch="Fill" Fill="#FFB2841E" Data="F1 M 0.160329,31.204L 3.6074,13.167C 3.68757,12.8463 4.00823,12.6058 4.40905,12.6058L 32.8675,12.6058C 33.3484,12.6058 33.7493,13.0067 33.5889,13.4876L 30.1419,31.5247C 30.0617,31.8453 29.741,32.0858 29.4204,32.0858L 0.88181,32.0858C 0.400823,32.0858 0.0801644,31.685 0.160329,31.204 Z "/>
+                <Path x:Name="Path_3" Width="31.9857" Height="18.037" Canvas.Left="0.88181" Canvas.Top="13.3273" Stretch="Fill" Fill="#FFF7E455" Data="M 4.40905,13.3273L 0.88181,31.3643L 29.4204,31.3643L 32.8675,13.3273L 4.40905,13.3273 Z "/>
+                <Path x:Name="Path_4" Width="28.6187" Height="0.801697" Canvas.Left="1.04214" Canvas.Top="29.8412" Stretch="Fill" Fill="#FFD9A025" Data="F1 M 1.20247,29.8412L 1.04214,30.6429L 29.5006,30.6429L 29.6609,29.8412L 1.20247,29.8412 Z "/>
+                <Path x:Name="Path_5" Width="28.6989" Height="0.721436" Canvas.Left="0.88181" Canvas.Top="30.6429" Stretch="Fill" Fill="#FFFFFDEA" Data="F1 M 1.04214,30.6429L 0.88181,31.3643L 29.4204,31.3643L 29.5807,30.6429L 1.04214,30.6429 Z "/>
+                <Path x:Name="Path_6" Width="28.6187" Height="0.721497" Canvas.Left="1.3628" Canvas.Top="28.3983" Stretch="Fill" Fill="#FFD9A025" Data="F1 M 1.52313,28.3983L 1.3628,29.1198L 29.9014,29.1198L 29.9815,28.3983L 1.52313,28.3983 Z "/>
+                <Path x:Name="Path_7" Width="28.6187" Height="0.721436" Canvas.Left="1.20247" Canvas.Top="29.1198" Stretch="Fill" Fill="#FFFFFDEA" Data="F1 M 1.28263,29.1198L 1.20247,29.8412L 29.6609,29.8412L 29.8212,29.1198L 1.28263,29.1198 Z "/>
+                <Path x:Name="Path_8" Width="4.24872" Height="18.037" Canvas.Left="0.88181" Canvas.Top="13.3273" Stretch="Fill" Fill="#FFFFFDEA" Data="F1 M 4.40905,13.3273L 0.88181,31.3643L 1.60329,31.3643L 5.13053,13.3273L 4.40905,13.3273 Z "/>
+                <Path x:Name="Path_9" Width="28.6989" Height="0.721436" Canvas.Left="4.16856" Canvas.Top="13.3273" Stretch="Fill" Fill="#FFFFFDEA" Data="F1 M 4.32889,13.3273L 4.16856,14.0488L 32.7071,14.0488L 32.8675,13.3273L 4.32889,13.3273 Z "/>
+                <Path x:Name="Path_10" Width="28.6989" Height="0.801636" Canvas.Left="1.44296" Canvas.Top="27.5966" Stretch="Fill" Fill="#FFFFFDEA" Data="F1 M 1.60329,27.5966L 1.44296,28.3983L 29.9815,28.3983L 30.1419,27.5966L 1.60329,27.5966 Z "/>
+                <Path x:Name="Path_11" Width="28.6187" Height="0.721497" Canvas.Left="1.60329" Canvas.Top="26.8751" Stretch="Fill" Fill="#FFD9A025" Data="F1 M 1.76362,26.8751L 1.60329,27.5966L 30.1419,27.5966L 30.222,26.8751L 1.76362,26.8751 Z "/>
+                <Path x:Name="Path_12" Width="20.7192" Height="11.134" Canvas.Left="10.8656" Canvas.Top="-0.0512628" Stretch="Fill" Fill="{StaticResource ImageMainColor}" Data="F1 M 20.6023,9.80005L 23.4882,6.99432L 23.1676,6.67365C 22.7667,6.19269 22.2857,5.71167 21.6444,5.39105C 19.1593,3.78772 16.0329,3.94806 13.7883,5.63153L 12.8263,6.35297L 12.185,7.2348C 11.6239,7.9563 10.5016,7.15466 10.9825,6.35297L 11.4635,5.47119L 11.4635,5.47119C 14.8304,0.180298 21.8048,-1.34277 27.0956,2.02411L 27.8973,2.58527L 30.222,0.180298C 30.703,-0.300659 31.5848,0.0200195 31.5848,0.661316L 31.5848,10.3612C 31.5848,10.762 31.184,11.0827 30.7832,11.0827L 21.0833,11.0827C 20.442,11.0827 20.1213,10.2811 20.6023,9.80005 Z "/>
+                <Path x:Name="Path_13" Width="19.1593" Height="9.69989" Canvas.Left="11.6239" Canvas.Top="0.661316" Stretch="Fill" Fill="{StaticResource ImageMainColor}" Data="M 11.6239,6.75385L 12.1048,5.87201C 15.2313,0.981995 21.7246,-0.460999 26.6948,2.66541C 26.9353,2.82574 27.2559,3.06622 27.5766,3.22656L 27.8973,3.62738L 30.7832,0.661316L 30.7832,10.3612L 21.0833,10.3612L 24.4502,7.07446L 24.2097,6.75385C 23.6485,5.95215 22.9271,5.23071 22.1254,4.74969C 18.9188,2.74561 14.8304,3.30676 12.2652,5.87201L 11.6239,6.75385 Z "/>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="Save">
+        <Canvas Name="svg14" Width="48" Height="48">
+            <Path Name="path12" Fill="{StaticResource ImageMainColor}" Height="48" Stretch="Fill" Width="48">
+                <Path.Data>
+                    <PathGeometry Figures="M34 6h-24c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4v-24l-8-8zm-10 32c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm6-20h-20v-8h20v8z" FillRule="NonZero"/>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SaveAs">
+        <Canvas Name="svg14" Width="48" Height="48">
+            <Path Name="path12" Fill="{StaticResource ImageMainColor}" Height="36.5" Stretch="Fill" Width="36.5" Canvas.Top="11.5">
+                <Path.Data>
+                    <PathGeometry Figures="M34 6h-24c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4v-24l-8-8zm-10 32c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm6-20h-20v-8h20v8z" FillRule="NonZero"/>
+                </Path.Data>
+            </Path>
+            <Path x:Name="Path_13" Width="28.773" Height="13.022" Canvas.Left="18.502" Canvas.Top="1.263" Stretch="Fill" Fill="{StaticResource ImageMainColor}" Data="M 11.6239,6.75385L 12.1048,5.87201C 15.2313,0.981995 21.7246,-0.460999 26.6948,2.66541C 26.9353,2.82574 27.2559,3.06622 27.5766,3.22656L 27.8973,3.62738L 30.7832,0.661316L 30.7832,10.3612L 21.0833,10.3612L 24.4502,7.07446L 24.2097,6.75385C 23.6485,5.95215 22.9271,5.23071 22.1254,4.74969C 18.9188,2.74561 14.8304,3.30676 12.2652,5.87201L 11.6239,6.75385 Z " RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="0.278"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+        </Canvas>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="Refresh">
+        <Canvas Width="32" Height="32">
+            <Canvas Name="g23">
+                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path19" Fill="{StaticResource ImageValidColor}">
+                    <Path.Data>
+                        <PathGeometry Figures="M25.444 4.291c0 0-1.325 1.293-2.243 2.201C18.514 3.068 11.909 3.456 7.676 7.689   c-2.47 2.47-3.623 5.747-3.484 8.983h4C8.051 14.46 8.81 12.205 10.5 10.514c2.663-2.663 6.735-3.043 9.812-1.162   c-1.042 1.032-2.245 2.238-2.245 2.238c-0.841 1.009 0.104 1.592 0.584 1.577l5.624-0.001c0.297 0 0.539 0.001 0.539 0.001   s0.245 0 0.543 0h1.092c0.298 0 0.54-0.243 0.54-0.541V4.895C27.023 4.188 26.247 3.502 25.444 4.291z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+                <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path21" Fill="{StaticResource ImageValidColor}">
+                    <Path.Data>
+                        <PathGeometry Figures="M6.555 27.709c0 0 1.326-1.293 2.243-2.201c4.688 3.424 11.292 3.036 15.526-1.197   c2.47-2.471 3.622-5.747 3.484-8.983h-4.001c0.142 2.211-0.617 4.467-2.308 6.159c-2.663 2.662-6.735 3.043-9.812 1.161   c1.042-1.032 2.245-2.238 2.245-2.238c0.841-1.01-0.104-1.592-0.584-1.577l-5.624 0.002c-0.297 0-0.54-0.002-0.54-0.002   s-0.245 0-0.543 0H5.551c-0.298 0-0.54 0.242-0.541 0.541v7.732C4.977 27.812 5.753 28.498 6.555 27.709z" FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Canvas>
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,308 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.RecipeRun.RecipeRunMeasureResultsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:reciperunview="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.RecipeRun"
+             xmlns:reciperun="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps.RecipeRun"
+             xmlns:camera="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:metro="clr-namespace:UnitySC.Shared.Format.Metro;assembly=UnitySC.Shared.Format.Metro"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:Helpers="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.Helpers" 
+             xmlns:converters1="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters;assembly=UnitySC.Shared.ResultUI.Metro" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:behaviors="clr-namespace:UnitySC.Shared.UI.Behaviors;assembly=UnitySC.Shared.UI"
+             xmlns:configuration="clr-namespace:UnitySC.PM.Shared.Configuration;assembly=UnitySC.PM.Shared"
+             d:DataContext="{d:DesignInstance Type=reciperun:RecipeRunDashboardVM}"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+                <!-- Style WizardNavigationControl -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/WizardNavigationControl/WizardNavigationControl.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <camera:CameraDisplay x:Name="CameraDisplay" IsVideoDisplayed="{configuration:ClientConfigurationBinding IsWaferLessMode, Converter={converters:InvertedBooleanConverter}}" Camera="{markupextensions:CamerasSupervisorBinding Camera}" IsRoiSelectorVisible="False" IsHorizontalLineSelectorVisible="False" IsMeasureToolAvailable="False" MoveIsEnabled="False" IsZoomOnCenterAvailable="{Binding IsLiveViewMode, Converter={converters:InvertedBooleanConverter}}"/>
+            <Border Grid.Column="1"  Margin="30">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" BorderThickness="1.5" BorderBrush="Gray" Width="50" Height="40" Margin="1">
+                        <Viewbox Margin="5">
+                            <sharedControls:ToleranceDisplayer
+							    Tolerance="Good">
+                                <Control.ToolTip>
+                                    <TextBlock Text="All Measures are in tolerance scope" />
+                                </Control.ToolTip>
+                            </sharedControls:ToleranceDisplayer>
+                        </Viewbox>
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="1" BorderThickness="1.5" BorderBrush="gray" Width="160" Height="40" Margin="1">
+                        <TextBlock Text="Success" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="2" BorderThickness="1.5" BorderBrush="gray" Width="90" Height="40" Margin="1">
+                        <TextBlock Text="{Binding SuccessMeasuredPointsCount}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="3" BorderThickness="1.5" BorderBrush="Gray" Width="65" Height="40" Margin="1">
+                        <sharedControls:LabelUnit BorderBrush="Transparent" Unit="%"  HorizontalAlignment="Right">
+                            <sharedControls:LabelUnit.Content>
+                                <TextBlock Text="{Binding SucceedMeasuredPointsPercent}" FontSize="20" />
+                            </sharedControls:LabelUnit.Content>
+                        </sharedControls:LabelUnit>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="0" BorderThickness="1.5" BorderBrush="Gray" Width="50" Height="40" Margin="1">
+                        <Viewbox Margin="5">
+                            <sharedControls:ToleranceDisplayer
+							    Tolerance="Bad">
+                                <Control.ToolTip>
+                                    <TextBlock Text="All measure are outside tolerance" />
+                                </Control.ToolTip>
+                            </sharedControls:ToleranceDisplayer>
+                        </Viewbox>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" BorderThickness="1.5" BorderBrush="Gray" Width="160" Height="40" Margin="1">
+                        <TextBlock Text="Error" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="2" BorderThickness="1.5" BorderBrush="Gray"  Width="90" Height="40" Margin="1">
+                        <TextBlock Text="{Binding ErrorMeaseuredPointsCount}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="3" BorderThickness="1.5" BorderBrush="Gray" Width="65" Height="40" Margin="1">
+                        <sharedControls:LabelUnit  BorderBrush="Transparent" Unit="%"   HorizontalAlignment="Right">
+                            <sharedControls:LabelUnit.Content>
+                                <TextBlock Text="{Binding ErrorMeasuredPointsPercent}" FontSize="20" />
+                            </sharedControls:LabelUnit.Content>
+                        </sharedControls:LabelUnit>
+                    </Border>
+                    <Border Grid.Row="2" Grid.Column="0" BorderThickness="2" BorderBrush="Gray" Width="50" Height="40" Margin="1">
+                        <Viewbox Margin="5">
+                            <sharedControls:ToleranceDisplayer
+							    Tolerance="NotMeasured">
+                                <Control.ToolTip>
+                                    <TextBlock Text="At least one measure has not be done, for HW issue reason or Sensor out of range issue or bad quality." />
+                                </Control.ToolTip>
+                            </sharedControls:ToleranceDisplayer>
+                        </Viewbox>
+                    </Border>
+                    <Border Grid.Row="2" Grid.Column="1" BorderThickness="1.5" BorderBrush="gray" Width="160" Height="40" Margin="1">
+                        <TextBlock FontSize="20" Text="Not measured" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="2" Grid.Column="2" BorderThickness="1.5" BorderBrush="Gray" Width="90" Height="40" Margin="1">
+                        <TextBlock Text="{Binding NotMeasuredPointsCount}" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Grid.Row="2" Grid.Column="3" BorderThickness="1.5" BorderBrush="Gray" Width="65" Height="40" Margin="1">
+                        <sharedControls:LabelUnit BorderBrush="Transparent" Unit="%"  HorizontalAlignment="Right">
+                            <sharedControls:LabelUnit.Content>
+                                <TextBlock Text="{Binding NotMeasuredPointPercent}" FontSize="20" />
+                            </sharedControls:LabelUnit.Content>
+                        </sharedControls:LabelUnit>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <DataGrid x:Name="MeasurePointResultsDataGrid" ItemsSource="{Binding MeasurePointsResults}" 
+                   AutoGenerateColumns="False"
+                   SelectionMode="Single"
+                   SelectedItem="{Binding SelectedPoint }" 
+                   CurrentItem="{Binding CurrentPoint}"  
+                   Margin="5,5" Grid.Row="1" CanUserResizeColumns="False" CanUserReorderColumns="False"  CanUserDeleteRows="False" CanUserResizeRows="False" CanUserSortColumns="false"
+                   GridLinesVisibility="Horizontal" 
+                   Helpers:ScrolDataGridBehavior.Autoscroll="{Binding IsDisplayingLastResult}" 
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"  
+                   ScrollViewer.ScrollChanged="MeasurePointResultVM_ScrollChanged"
+                   Helpers:DataGridBehavior.DisplayRowNumber="True"     >
+            <DataGrid.RowBackground>
+                <SolidColorBrush Color="Transparent" />
+            </DataGrid.RowBackground>
+            <DataGrid.Resources>
+                <sharedControls:BindingProxy x:Key="proxyEditedRecipe" Data="{Binding EditedRecipe }" />
+            </DataGrid.Resources>
+
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <!-- Update from comments.
+                 Remove the focus indication for the selected cell -->
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn  Header="State" IsReadOnly="True" Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Margin="2">
+                                <Grid.Resources>
+                                    <Style TargetType="StackPanel">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSubMeasurePoint}" Value="true">
+                                                <Setter Property="Margin">
+                                                    <Setter.Value>
+                                                        <Thickness Left="10"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Resources>
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding IsInProgress, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                                    <Viewbox Width="22">
+                                        <sharedControls:ToleranceDisplayer
+                    		    	        x:Name="ToleranceDisplayer"
+			                                HorizontalAlignment="Center"
+                                            Tolerance="{Binding Result.State, Converter={ converters1:MeasureStateToToleranceDisplayerConverter}}"/>
+                                    </Viewbox>
+                                    <Image
+                                         Width="20"
+                                         Height="20"
+                                         Margin="3,0"
+                                         Visibility="{Binding Result.Message, Mode=OneWay, Converter={converters:EmptyStringToVisibilityConverter}}"
+                                         ToolTip="{Binding Result.Message, Mode=OneWay}"
+                                         sharedExtensions:ImageExt.GeometryBrush="{StaticResource HighLightBrush}"
+                                         sharedExtensions:ImageExt.SourceGeometry="{StaticResource InformationGeometry}"
+                                         Style="{StaticResource Icon}"
+                                     />
+                                </StackPanel>
+                                <Image x:Name="InProgressImage" Height="22" Source="/UnitySC.Shared.UI;component/Controls/Status/ProgressGradient.png" Visibility="{Binding IsInProgress, Converter={converters:BooleanToVisibilityConverter}}" Style="{StaticResource ImageSpinnerVisible}" HorizontalAlignment="Left"/>
+                            </Grid>
+        
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn  Header="Site" Width="auto" IsReadOnly="True" Binding="{Binding PointIndex}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn   Header="Repeat" Width="auto"  IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="RepeatIndex" />
+                                        <Binding Path="NbRepeat" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn  Header="Die Index" Visibility="{Binding DataContext.HideDieIndex, Source={x:Reference CameraDisplay}, Converter={converters:InvertedBooleanToVisibilityConverter}}"   Width="auto"  IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}[{0},{1}]">
+                                        <Binding Path="DieIndex.Column " />
+                                        <Binding Path=" DieIndex.Row" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn  Header="X(mm)" Width="auto"  IsReadOnly="True" Binding="{Binding Position.X , StringFormat='{}{0:F3}'}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn  Header="Y(mm)" Width="auto"  IsReadOnly="True" Binding="{Binding Position.Y,StringFormat='{}{0:F3}'}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Measure"  Width="100" IsReadOnly="True" Binding="{Binding Path=MeasureName}" >
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="Width" Value="auto"/>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                    
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="Width" Value="auto"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn  Header="Quality" Width="auto"  IsReadOnly="True" Binding="{Binding Path=Result.QualityScore, StringFormat='{}{0:F2}', Converter={converters:ScaleToPercentConverter Round=False}}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTemplateColumn  Header="Values" Width="auto" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <reciperunview:ResultValuesDisplay DataContext="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <sharedControls:ImageButton  HorizontalAlignment="Left" Margin="5" ImageGeometry="{StaticResource Export2Geometry}" Command="{Binding ExportMeasuredPointsResults}" Width="32" Height="32" />
+            <sharedControls:ImageButton  HorizontalAlignment="Right" Margin="5" ImageGeometry="{StaticResource ArrowCircleDownGeometry}" Content="{Binding NumberOfNotSeenResults}" Command="{Binding GoToLastMeasuredResult}" Width="auto" Height="32" />
+
+        </Grid>
+    </Grid>
+</UserControl>

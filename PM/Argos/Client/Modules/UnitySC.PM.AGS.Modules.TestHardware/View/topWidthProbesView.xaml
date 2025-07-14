@@ -1,0 +1,245 @@
+﻿<UserControl x:Class="UnitySC.PM.AGS.Modules.TestHardware.View.topWidthProbesView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:model="clr-namespace:UnitySC.Shared.UI.Graph.Model;assembly=UnitySC.Shared.UI" d:DataContext="{d:DesignInstance Type=model:ConnectorViewModel}"
+             mc:Ignorable="d"
+            d:DesignHeight="1024" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="white">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="40,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <Border  HorizontalAlignment="Left"  Width="48" Height="40" Margin="0,2,0,3">
+                    <Image x:Name="Connexon" Margin="0,10,21,0">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                                        <Setter Property="Source" Value="{StaticResource ConnectionKo}" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                        <Setter Property="Source" Value="{StaticResource ConnectionOk}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="125" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center"
+                           FontSize="22"
+                           HorizontalAlignment="Center"
+                           Margin="10">Moving</TextBlock>
+
+                <Image     Grid.Column="1"
+                           Width="30"
+                           Height="30"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center">
+                    <Image.Source>
+                        <BitmapImage  UriSource="../Resource/Image/repeat.png" />
+                    </Image.Source>
+
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0" CenterX="15" CenterY="15" />
+                    </Image.RenderTransform>
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <Trigger Property="IsVisible" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard x:Name="startRotate">
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                                                 From="0"
+                                                                 To="360"
+                                                                 Duration="0:0:1"
+                                                                 RepeatBehavior="Forever" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <StopStoryboard BeginStoryboardName="startRotate" />
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="125" />
+                    <ColumnDefinition Width="180" />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center"
+                           FontSize="22"
+                           HorizontalAlignment="Center"
+                           Margin="10">Diagnostic</TextBlock>
+
+                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" Height="20" Width="100" Background="{StaticResource WarningBrush}" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1"   Margin="0,5,0,-5">
+
+            <controls:ImageGroupBox  Image="{StaticResource NotFullScreen}" Header="Movement"  FontSize="20"  Margin="10,10,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Margin="10,10,0,10" Grid.Column=" 0">
+                        <Grid.RowDefinitions>
+
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--<GroupBox Grid.Row="1"  Header="X Theta " FontSize="20"
+                          Margin="10">-->
+                        <Grid  Grid.Row="1" Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock  Margin="0 0 10 0" Grid.Column="0" Grid.Row="0" FontSize="20" Height="20">X :</TextBlock>
+                            <!--<controls:ImageButton Width="30" HorizontalAlignment="Right" ToolTip="X move"    ImageGeometry="{StaticResource MinusGeometry}" Command="{Binding moveXminus}" Grid.Column="1"  Grid.Row="0" IsEnabled="True" Height="30" VerticalAlignment="Center" Margin="20,0,0,0"  ></controls:ImageButton>-->
+                            <controls:IntegerUpDown   Grid.Row="0" Grid.Column="1" x:Name="integerUpDownPosition" Width="140" Maximum="100" Minimum="0" Unit="mm" ImageGeometryDown="{StaticResource MinusGeometry}" ImageGeometryUp="{StaticResource PlusGeometry}" HorizontalContentAlignment="Right" Value="{Binding XPosition}">
+                                <controls:IntegerUpDown.InputBindings>
+                                    <KeyBinding Command="{Binding XMove}" Key="Enter" CommandParameter="{Binding ElementName=TextXPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                                </controls:IntegerUpDown.InputBindings>
+                            </controls:IntegerUpDown>
+
+                            <StackPanel  Grid.Column="2"  Grid.Row="0"  Orientation="Vertical"  HorizontalAlignment="Center" Margin="40,0 ,0 ,0">
+                                <TextBlock Margin="0  0 0 0 " Text="Velocity[µm/s]" />
+
+                                <Slider x:Name="PositionTargetZTop"
+                                    TickFrequency="1"
+                                    Orientation="Horizontal"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    HorizontalAlignment="Left"
+                                    Value="5" Width="150" />
+                            </StackPanel>
+                            <TextBox x:Name="PositionXTextbox"
+                                 Grid.Row="0"
+                                 Grid.Column="3"
+
+                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMax}"
+                                 sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMin}"
+                                 MaxLength="10"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding PositionTarget.X}" Margin="10,0,0,0"  Width="68" />
+
+                            <ComboBox   Width=" 110"
+                              SelectedItem="{Binding SelectedXAxisSpeed}"
+                              ItemsSource="{Binding SpeedXAxisValues}"
+                              Grid.Column="4"
+                              Grid.Row="0"
+                              Margin="15 , 0,0,0" ></ComboBox>
+
+                            <TextBlock Margin="0 0 10 0"  Grid.Column="0" Grid.Row="1" FontSize="15" Height="20">Z :</TextBlock>
+                            <controls:IntegerUpDown   Grid.Row="1" Grid.Column="1" x:Name="integerUpDownSpeed" Width="140" Maximum="100" Minimum="0" Unit="°" ImageGeometryDown="{StaticResource MinusGeometry}" ImageGeometryUp="{StaticResource PlusGeometry}" HorizontalContentAlignment="Right" Value="{Binding TextTetaPosition}">
+                                <controls:IntegerUpDown.InputBindings>
+                                    <KeyBinding Command="{Binding ZMove}" Key="Enter" CommandParameter="{Binding ElementName=TextTetaPosition, Path=Text, Converter={converters:StringToDoubleConverter}}" />
+                                </controls:IntegerUpDown.InputBindings>
+                            </controls:IntegerUpDown>
+
+                            <StackPanel Grid.Row="1"  Grid.Column="2"  Orientation="Vertical" HorizontalAlignment="Center"  Margin="40,0 ,0 ,0">
+                                <TextBlock Margin=" 0 ,0,0,0" Text="Velocity[µm/s]" />
+
+                                <Slider x:Name="PositionTargetTheta"
+                                    TickFrequency="1"
+                                    Orientation="Horizontal"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    HorizontalAlignment="Left"
+                                    Value="5" Width="150" />
+                            </StackPanel>
+                            <TextBox x:Name="PositionThetaTextbox"
+                                 Grid.Row="1"
+                                 Grid.Column="3"
+                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMax}"
+                                 sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMin}"
+                                 MaxLength="10"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding PositionTarget.X}"  Width="68"  Margin="10,0,0,0" />
+
+                            <ComboBox  Width=" 110"
+                              SelectedItem="{Binding SelectedTAxisSpeed}"
+                              ItemsSource="{Binding SpeedTAxisValues}"
+                              Grid.Column="74"
+                              Grid.Row="1"
+                              Margin="15 , 0,0,0"></ComboBox>
+                        </Grid>
+                    </Grid>
+
+                    <Border  Grid.Column="1" BorderThickness="20">
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <controls:ImageButton Grid.Row="0"  Image="{StaticResource Home}" Command="{Binding GotoHomePositionCmd}" Content="Home" FontSize="16"   Margin="10,10,63,10" Padding="7"  IsEnabled="True" />
+                            <controls:ImageButton Grid.Row="1"  Image="{StaticResource Error}" Content="Ack fault" FontSize="16"  Margin="10,12,63,7"  Padding="7" />
+                            <controls:ImageButton Grid.Row="2"  Image="{StaticResource Stop}" Content="Abort Move" FontSize="16"   Margin="10,11,63,6" Padding="7" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </controls:ImageGroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,94 @@
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+
+#ifdef INC_CutManager_INC
+#error CutManager.agh included twice
+#endif
+
+#define INC_CutManager_INC
+
+int SPG_CONV Cut_Create(Cut& C, int Len, float XScale=1, char* UnitX=0,char* UnitY=0);
+int SPG_CONV Cut_Duplicate(Cut& C, Cut& Origin);
+#ifdef SPG_General_USEFFT
+int SPG_CONV CutX_Create(CutX& C, int Len, float XScale=1, char* UnitX=0,char* UnitY=0);
+int SPG_CONV CutX_Duplicate(CutX& CSrc, CutX& NewCut);
+int SPG_CONV CutX_Init(CutX& C, int Len, SPG_COMPLEX * D, BYTE * Msk, BYTE * Decor, int Mode);
+#endif
+int SPG_CONV Cut_Init(Cut& C, int Len, float * D, BYTE * Msk, BYTE * Decor, int Mode);
+int SPG_CONV Cut_Copy(Cut& CDest, Cut& CSrc, int CopyExt=(Cut_CopyMsk|Cut_CopyDecor));
+int SPG_CONV Cut_CreateForFFT(Cut& C, CutX& CFFT, int FFT_FLAG);
+void SPG_CONV Cut_SetScale(Cut& C, float XScale, char*UnitX,char*UnitY);
+void SPG_CONV Cut_Close(Cut& C);
+#ifdef SPG_General_USEFFT
+void SPG_CONV CutX_SetScale(CutX& C, float XScale, char*UnitX,char*UnitY);
+void SPG_CONV CutX_Close(CutX& C);
+#endif
+float SPG_CONV Cut_FindIntersection(Cut& C, float Seuil, int Sens, int XStart=0);
+int SPG_CONV Cut_FindCentralIntersection(Cut& C, float Seuil, int Sens, float& X0, float& SX);
+void SPG_CONV Cut_Merge2(Cut& CRes,Cut& C1,Cut& C2);
+void SPG_CONV Cut_Merge3(Cut& CRes,Cut& C1,Cut& C2,Cut& C3);
+int SPG_CONV Cut_ExtractL(Cut& CRes, Cut& C, int First, int Len, int Mode);
+int SPG_CONV Cut_Extract(Cut& CRes, Cut& C, int First, int Last, int Mode);
+int SPG_CONV CutX_ExtractL(CutX& CRes, CutX& C, int First, int Len, int Mode);
+int SPG_CONV CutX_Extract(CutX& CRes, CutX& C, int First, int Last, int Mode);
+int SPG_CONV Cut_PlaceForFFT(Cut& C, CutX& CX, int ClearX);
+#ifdef SPG_General_USEFFT
+int SPG_CONV CutX_FFT(CutX& CX);
+void SPG_CONV CutX_TranslateToCenter_FFT_AlternateSign(CutX& CX);
+void SPG_CONV CutX_AutoFiltre(CutX& CFFT,float Strength, float CoeffMult);
+void SPG_CONV CutX_ExtrapoleToFFT(Cut& C, CutX& CFFT, int NIter, float fMin,float fMax, int NoReplaceLastIter);
+void SPG_CONV CutX_Conjugue(CutX& CFFT);
+void SPG_CONV CutX_ToAnalytique(CutX& CFFT);
+void SPG_CONV CutX_BandPassFilter(CutX& CFFT, float fMin, float fMax);
+int SPG_CONV CutX_GetModule(CutX& CX, Cut& C);
+int SPG_CONV CutX_GetRe(CutX& CX, Cut& C);
+int SPG_CONV CutX_GetIm(CutX& CX, Cut& C);
+int SPG_CONV CutX_GetArg(CutX& CX, Cut& C);
+int SPG_CONV CutX_GetArg_0_2pi(CutX& CX, Cut& C);
+int SPG_CONV CutX_GetArg_0_1(CutX& CX, Cut& C);
+int SPG_CONV CutX_MulR(CutX& CX, float Coeff);
+int SPG_CONV CutX_MulCut(CutX& CX, Cut C);
+int SPG_CONV CutX_MulCutX(CutX& CX, CutX& CXoper);
+int SPG_CONV CutX_MulComplementCutX(CutX& CX, CutX& CXoper);
+float SPG_CONV CutX_GetNorme(CutX& CX);
+void SPG_CONV CutX_SubAt(CutX& CX, CutX& Correction, float Coeff, int AtPos);
+void SPG_CONV CutX_SubXAt(CutX& CX, CutX& Correction, SPG_COMPLEX CoeffX, float Coeff, int AtPos);
+int SPG_CONV CutX_FindMax(CutX& C);
+void SPG_CONV CutX_FindMaximumCorrel(CutX& S1,CutX& S2,SPG_COMPLEX& Correl,int& SubPos,float fMin,float fMax);
+#endif
+float SPG_CONV Cut_GetAverage(Cut& C);
+void SPG_CONV Cut_Add(Cut& C, Cut& CToAdd, float CoeffMult);
+void SPG_CONV Cut_Substract(Cut& C, Cut& CToSubstract);
+void SPG_CONV Cut_Divise(Cut& C, Cut& CDiviseur);
+void SPG_CONV Cut_Normalize(Cut& C, Cut& CDiviseur);
+void SPG_CONV Cut_SubR(Cut& C,float Bias);
+void SPG_CONV Cut_Unwrap_0_1(Cut& C);
+void SPG_CONV Cut_Unwrap_0_1_FromCenter(Cut& C);
+int SPG_CONV Cut_FindMax(Cut& C, float& Max);
+int SPG_CONV Cut_FindMin(Cut& C, float& Min);
+float SPG_CONV Cut_GetMax(Cut& C);
+void SPG_CONV Cut_FindMinMax(Cut& C, float& Min, float& Max);
+void SPG_CONV SPG_RoundHiDec(float& fMax, float fPartMax, int LogPart);
+void SPG_CONV SPG_RoundLowDec(float& fMin, float fPartMin, int LogPart);
+void SPG_CONV SPG_Scaler(float& fMin, float& fMax);
+void SPG_CONV Cut_Draw_General(Cut& C, G_Ecran& E, DWORD Couleur, C_Lib& CL, int ClearScreen, float fMin, float fMax, int DrawScale=1, int DrawLabels=1);
+void SPG_CONV Cut_Draw_GeneralY(Cut& C, G_Ecran& E, DWORD Couleur, C_Lib& CL, int ClearScreen, float fMin, float fMax);
+void SPG_CONV Cut_Draw(Cut& C, G_Ecran& E, DWORD Couleur, C_Lib& CL);
+void SPG_CONV Cut_DrawY(Cut& C, G_Ecran& E, DWORD Couleur, C_Lib& CL);
+void SPG_CONV Cut_DrawScaled(Cut& C, G_Ecran& E, DWORD Couleur, C_Lib& CL, float fMin, float fMax);
+void SPG_CONV Cut_DrawList(Cut** CList, G_Ecran& E, DWORD* CouleurList, C_Lib& CL,int NList, int MultiScale=0, float fMin=0, float fMax=0);
+void SPG_CONV Cut_Draw2(Cut& C1, Cut& C2, G_Ecran& E, DWORD Couleur1, DWORD Couleur2, C_Lib& CL);
+void SPG_CONV Cut_Draw2MultiScale(Cut& C1, Cut& C2, G_Ecran& E, DWORD Couleur1, DWORD Couleur2, C_Lib& CL,float fMin=0,float fMax=0);
+void SPG_CONV Cut_Draw3(Cut& C1, Cut& C2, Cut& C3, G_Ecran& E, DWORD Couleur1, DWORD Couleur2, DWORD Couleur3, C_Lib& CL);
+void SPG_CONV Cut_Draw3Scaled(Cut& C1, Cut& C2, Cut& C3, G_Ecran& E, DWORD Couleur1, DWORD Couleur2, DWORD Couleur3, C_Lib& CL, float fMin, float fMax);
+void SPG_CONV Cut_Draw4(Cut& C1, Cut& C2, Cut& C3, Cut& C4, G_Ecran& E, DWORD Couleur1, DWORD Couleur2, DWORD Couleur3, DWORD Couleur4, C_Lib& CL);
+#ifdef SPG_General_USEFFT
+void SPG_CONV CutX_Draw(CutX& C, G_Ecran& E, DWORD Couleur, C_Lib& CL);
+#endif
+int SPG_CONV Cut_FindTwoMax(Cut& C, int& PosOfMax1, int& PosOfMax2,int Exclusion);
+int SPG_CONV Cut_ScaledFindTwoMaxAt(Cut& C,int& PosOfMax1, int& PosOfMax2, float& Z0,float& Z1,float ZDiffMin,float ZDiffMax);
+void SPG_CONV Cut_MixAt(Cut& C, int Pos, Cut& Cadd, float Amplitude);
+void SPG_CONV Cut_Convolve(Cut& C, Cut& Filtre);
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+

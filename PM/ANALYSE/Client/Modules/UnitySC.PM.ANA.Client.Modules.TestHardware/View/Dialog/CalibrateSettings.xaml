@@ -1,0 +1,74 @@
+﻿<Window x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.Dialog.CalibrateSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+        xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.Controls"
+        md:DialogServiceViews.IsRegistered="True"
+        mc:Ignorable="d"
+        Title="Calibration Settings"
+        Height="290"
+        Width="500"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.TestHardware;component/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="65"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Reference"
+                       Margin="20 0"
+                       VerticalAlignment="Center"
+                       FontSize="18"
+                       Style="{StaticResource MaterialDesignBody2TextBlock}" />
+            <ComboBox Grid.Row="1" Margin="20 0 20 20" ItemsSource="{Binding References}" DisplayMemberPath="ReferenceName" SelectedItem="{Binding CalibrateParams.ProbeCalibrationReference}" FontSize="16"></ComboBox>
+        </Grid>
+        <Grid Grid.Row="1"
+              VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"></RowDefinition>
+                <RowDefinition Height="65"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Number of measures"
+                       Margin="20 0"
+                       VerticalAlignment="Center"
+                       FontSize="18"
+                       Style="{StaticResource MaterialDesignBody2TextBlock}" />
+         
+            <controls:NumericUpDown Grid.Row="1" Margin="20,0,20,20" Width="150"  HorizontalAlignment="Left" Value="{Binding CalibrateParams.NbRepeatCalib, Mode=TwoWay}" StepValue="1" Minimum="0" Maximum="20"></controls:NumericUpDown>
+
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Margin="20 0"
+                    Content="Cancel"
+                    Width="150"
+                    HorizontalAlignment="Center"
+                    IsCancel="True" />
+            <Button  Content="Start Calibration"
+                     Width="150"
+                     Margin="20 0"
+                     HorizontalAlignment="Center"
+                     Command="{Binding StartCalibrate}"
+                     IsDefault="True"
+                     Grid.Column="1"/>
+        </Grid>
+    </Grid>
+</Window>

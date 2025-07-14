@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.Calibration.View.XYCalibrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cameraView="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:stagemovecontrol="clr-namespace:UnitySC.PM.ANA.Client.Controls.StageMoveControl;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:view="clr-namespace:UnitySC.PM.ANA.Client.Modules.Calibration.View"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="1450" d:DesignWidth="1200">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+                <!-- Datatemplate Style -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.Calibration;component/DataTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid  Background="{StaticResource PanelBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" MinWidth="400" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Controls-->
+        <Border Background="{StaticResource LeftPaneBackgroundBrush}" BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="0,0,1,0" Padding="0,0,1,0">
+            <Grid Width="320">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <headers:HeaderLeft Content="CONTROLS" />
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <!-- Stage-->
+                    <StackPanel>
+                        <stagemovecontrol:StageMoveControl Margin="2"
+                        WaferDimentionalCharac="{markupextensions:ChuckSupervisorBinding
+                        ChuckVM.SelectedWaferCategory.DimentionalCharacteristic}"
+                        IsAutofocusAvailable="True"
+                        DisplayClampStatus ="True"
+                        CanControlClamp ="True"
+                        DefaultSpecificPosition="{Binding DataContext.DefaultSpecificPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                        AvailablePositions="{Binding DataContext.AvailablePositions, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <Label Content="WAFER CATEGORY" VerticalAlignment="Center"  Margin="0,0,10,0" />
+
+                            <!-- Wafer categories -->
+                            <ComboBox HorizontalAlignment="Center" MaxWidth="200" ItemsSource="{markupextensions:ChuckSupervisorBinding  ChuckVM.WaferCategories}" SelectedItem="{markupextensions:ChuckSupervisorBinding  ChuckVM.SelectedWaferCategory, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition Height="5"></RowDefinition>
+                <RowDefinition Height="*" MinHeight="40" />
+            </Grid.RowDefinitions>
+            <!-- Camera-->
+            <cameraView:RichCameraDisplay  UsePixelUnit="False" MoveIsEnabled="True" IsRoiSelectorVisible="False" IsAutoNormaliseSelectorVisible="True" />
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+            <!-- Lise-->
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <controls:ProbeLiseGraph  Grid.Row="1" Margin="0,0,0,0" ProbeLise="{markupextensions:ProbesSupervisorBinding CurrentProbeLise}"
+                                              Gain="{markupextensions:ProbesSupervisorBinding CurrentProbeLise.InputParametersLise.Gain, FallbackValue=0}"
+                                              GainUp="{markupextensions:ProbesSupervisorBinding CurrentProbeLise.InputParametersLiseDouble.ProbeUpParams.Gain, FallbackValue=0}"
+                                              GainDown="{markupextensions:ProbesSupervisorBinding CurrentProbeLise.InputParametersLiseDouble.ProbeUpParams.Gain, FallbackValue=0}"
+                                              IsAcquiring="{Binding IsProbeLiseAcquiring}" BackgroundColor="LightGray"
+                                              EnableMouseInteraction="True"
+                                              DisplayAxes="True" DisplayAnnotations="True" DisplaySelectedPeaks="True" DisplayDiscarderPeaks="True"
+                                              IsEnabled="{Binding DataContext.InProgress,  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={converters:InvertedBooleanConverter}}" />
+            </Grid>
+        </Grid>
+
+        <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
+
+        <!-- Calibration settings -->
+        <Grid Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <view:XYCalibrationSettingsView></view:XYCalibrationSettingsView>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <sharedControls:ImageButton Grid.Column="0"  ImageGeometry="{StaticResource UndoGeometry}" ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                      Command="{Binding CancelCommand}" Margin="4" Width="100">Cancel</sharedControls:ImageButton>
+
+                <sharedControls:ImageButton  Grid.Column="2" ImageGeometry="{StaticResource SaveGeometry}" ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                      Command="{Binding SaveCommand}" Margin="4" Width="100">Save</sharedControls:ImageButton>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

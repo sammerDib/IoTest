@@ -1,0 +1,860 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{26D43C8D-5979-4CD3-B856-600D540F97FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitySC.PM.ANA.Client.CommonUI</RootNamespace>
+    <AssemblyName>UnitySC.PM.ANA.Client.CommonUI</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- other property settings -->
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AxmountainsLib">
+      <HintPath>..\..\ExternalProcessing\Mountains\Server\UnitySC.PM.ANA.EP.Mountains.Server.ActiveXHost\AxmountainsLib.dll</HintPath>
+    </Reference>
+    <Reference Include="mountainsLib">
+      <HintPath>..\..\ExternalLibs\mountainsLib.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttachedProperties\OneWayToSource.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Converters\MathInvertConverter.cs" />
+    <Compile Include="Helpers\DataGridBehavior.cs" />
+    <Compile Include="Helpers\ResourceHelper.cs" />
+    <Compile Include="Helpers\ScrolDataGridBehavior.cs" />
+    <Compile Include="Interface\ITabManager.cs" />
+    <Compile Include="PmInit.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="ViewModel\Help\HelpImageDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\AlignmentMarks\AlignmentMarksResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\AlignmentMarksStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\AutoFocusSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\CameraDisplayPoint.cs" />
+    <Compile Include="ViewModel\Navigation\AnaPageNavigationVM.cs" />
+    <Compile Include="ViewModel\Navigation\AnaNavigationVM.cs" />
+    <Compile Include="ViewModel\Navigation\NavigationManager.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\AlignmentMarks\AlignmentMarkSiteStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\AlignmentMarks\AlignmentMarkStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\AlignmentEdgesStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\AlignmentFocusStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\AlignmentLightStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\AlignmentStepBaseVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\EdgeDetectionVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\DiesSelection\DieIndexWithSelectionVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\CustomPointsManagement\CustomPointsManagementVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\CustomPointsManagement\ViewPresetViewModel.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\CustomPointsManagement\InputPresetNameViewModel.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\CustomPointsManagement\EdgeTrimCustomPointsManagementVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\CustomPointsManagement\WarpCustomPointsManagementVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ExportPointsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasurePointVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasureChoiceVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\TrenchSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\ResultCorrectionAnyUnitSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\ResultCorrectionSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\EdgeTrimSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\TopographySettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessLayersEditorViewModel.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessLayerToMeasureViewModel.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\MeasureSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\NanoTopoSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\BowSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\TSVSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasurePointsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MeasuresSettings\WarpSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MountainsDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\MountainsImportDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\PointsCsvFiles.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\PointsPresetsManager.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\PostProcessingOutputVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\PostProcessingSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ProbeSelector\ProbeSelectorVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ProbeSelector\SelectableDualLiseVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ProbeSelector\SelectableLiseHFVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ProbeSelector\SelectableLiseVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ProbeSelector\SelectableProbeVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\TrenchResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\NanoTopoResultDisplayVM.cs" />
+	<Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\ResultDisplayWithRepetaVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\ThicknessResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\BowResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\EdgeTrimResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\TopographyResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\TSVResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ResultsDisplay\WarpResultDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\MeasurePointResultVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\RecipeRunDashboardVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\RecipeRunMeasureResultVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\RecipeRunSaveAsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\RecipeRunSettingsVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\ANARecipeRunLiveVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\RecipeRunVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeRun\SettingVM.cs" />
+    <Compile Include="View\Help\HelpImageDisplay.xaml.cs">
+      <DependentUpon>HelpImageDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\AlignmentMarks\AlignmentMarksResultDisplay.xaml.cs">
+      <DependentUpon>AlignmentMarksResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Alignment\NotchImageView.xaml.cs">
+      <DependentUpon>NotchImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\AutoFocusSettingsView.xaml.cs">
+      <DependentUpon>AutoFocusSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\DiesSelection\DieSorter.cs" />
+    <Compile Include="View\RecipeEditionSteps\DiesSelection\RecipeDiesSelectionStepsView.xaml.cs">
+      <DependentUpon>RecipeDiesSelectionStepsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\RecipeEditionSteps\DiesSelection\RecipeDiesSelectionVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\RecipeMeasuresChoiceVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\RecipeMeasureVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\AlignmentMarks\RecipeAlignmentMarksVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\RecipeWizardStepBaseVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\StepBaseVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\WaferMap\CornerStepVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\WaferMap\LengthVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\WaferMap\PatternRecParametersVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\WaferMap\WaferMapDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\PatternRecDisplayVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\WaferMap\RecipeWaferMapVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionVM.cs" />
+    <Compile Include="ViewModel\RecipeEditionSteps\Alignment\RecipeAlignmentVM.cs" />
+    <Compile Include="ViewModel\RecipeSummaryVM.cs" />
+    <Compile Include="ViewModel\VMSharedBase.cs" />
+    <Compile Include="View\PointBubbleShape.cs" />
+    <Compile Include="View\RecipeEditionSteps\AlignmentMarks\AlignmentMarkView.xaml.cs">
+      <DependentUpon>AlignmentMarkView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\AlignmentMarks\RecipeAlignmentMarksStepsView.xaml.cs">
+      <DependentUpon>RecipeAlignmentMarksStepsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Alignment\RecipeAlignmentStepsView.xaml.cs">
+      <DependentUpon>RecipeAlignmentStepsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Alignment\RecipeAlignmentView.xaml.cs">
+      <DependentUpon>RecipeAlignmentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Alignment\EdgeImageView.xaml.cs">
+      <DependentUpon>EdgeImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\AlignmentMarks\RecipeAlignmentMarksView.xaml.cs">
+      <DependentUpon>RecipeAlignmentMarksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\RecipeEditionSteps\Measures\ChosenMeasureVM.cs" />
+    <Compile Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\ViewPreset.xaml.cs">
+      <DependentUpon>ViewPreset.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\InputPresetName.xaml.cs">
+      <DependentUpon>InputPresetName.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\ViewPresetDialog.cs" />
+    <Compile Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\InputPresetNameDialog.cs" />
+    <Compile Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\EdgeTrimCustomPointsManagementView.xaml.cs">
+      <DependentUpon>EdgeTrimCustomPointsManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\WarpCustomPointsManagementView.xaml.cs">
+      <DependentUpon>WarpCustomPointsManagementView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ExportPointsView.xaml.cs">
+      <DependentUpon>ExportPointsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\TrenchSettingsView.xaml.cs">
+      <DependentUpon>TrenchSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\EdgeTrimSettingsView.xaml.cs">
+      <DependentUpon>EdgeTrimSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\TopographySettingsView.xaml.cs">
+      <DependentUpon>TopographySettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\NanoTopoSettingsView.xaml.cs">
+      <DependentUpon>NanoTopoSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessLayersEditorView.xaml.cs">
+      <DependentUpon>ThicknessLayersEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\BowSettingsView.xaml.cs">
+      <DependentUpon>BowSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\TSVSettingsView.xaml.cs">
+      <DependentUpon>TSVSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessSettingsView.xaml.cs">
+      <DependentUpon>ThicknessSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasurePointsView.xaml.cs">
+      <DependentUpon>MeasurePointsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MeasuresSettings\WarpSettingsView.xaml.cs">
+      <DependentUpon>WarpSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MountainsImportDisplay.xaml.cs">
+      <DependentUpon>MountainsImportDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MountainsWinFormsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MountainsWinFormsControl.Designer.cs">
+      <DependentUpon>MountainsWinFormsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MountainsDisplay.xaml.cs">
+      <DependentUpon>MountainsDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\MountainsWPFControl.xaml.cs">
+      <DependentUpon>MountainsWPFControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\PostProcessingView.xaml.cs">
+      <DependentUpon>PostProcessingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ProbeSelector\DualLiseSettingsView.xaml.cs">
+      <DependentUpon>DualLiseSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ProbeSelector\LiseHFSettingsView.xaml.cs">
+      <DependentUpon>LiseHFSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ProbeSelector\LiseSettingsView.xaml.cs">
+      <DependentUpon>LiseSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ProbeSelector\ProbeSelector.xaml.cs">
+      <DependentUpon>ProbeSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\RecipeMeasuresChoiceView.xaml.cs">
+      <DependentUpon>RecipeMeasuresChoiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\RecipeMeasureView.xaml.cs">
+      <DependentUpon>RecipeMeasureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\TrenchResultDisplay.xaml.cs">
+      <DependentUpon>TrenchResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\NanoTopoResultDisplay.xaml.cs">
+      <DependentUpon>NanoTopoResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\ThicknessResultDisplay.xaml.cs">
+      <DependentUpon>ThicknessResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\BowResultDisplay.xaml.cs">
+      <DependentUpon>BowResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\TopographyResultDisplay.xaml.cs">
+      <DependentUpon>TopographyResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\EdgeTrimResultDisplay.xaml.cs">
+      <DependentUpon>EdgeTrimResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\TSVResultDisplay.xaml.cs">
+      <DependentUpon>TSVResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\DiesSelection\RecipeDiesSelection.xaml.cs">
+      <DependentUpon>RecipeDiesSelection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\Measures\ResultsDisplay\WarpResultDisplay.xaml.cs">
+      <DependentUpon>WarpResultDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunLiveControl.xaml.cs">
+      <DependentUpon>RecipeRunLiveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\ResultValuesDisplay.xaml.cs">
+      <DependentUpon>ResultValuesDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunMeasureResultsControl.xaml.cs">
+      <DependentUpon>RecipeRunMeasureResultsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunDashboardView.xaml.cs">
+      <DependentUpon>RecipeRunDashboardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunMeasuresResultView.xaml.cs">
+      <DependentUpon>RecipeRunMeasuresResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunControl.xaml.cs">
+      <DependentUpon>RecipeRunControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunSaveAsView.xaml.cs">
+      <DependentUpon>RecipeRunSaveAsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\RecipeRun\RecipeRunView.xaml.cs">
+      <DependentUpon>RecipeRunView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\WaferMap\WaferMapDisplay.xaml.cs">
+      <DependentUpon>WaferMapDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\PatternRecDisplay.xaml.cs">
+      <DependentUpon>PatternRecDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\WaferMap\PatternRecParametersView.xaml.cs">
+      <DependentUpon>PatternRecParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\WaferMap\RecipeWaferMapStepsView.xaml.cs">
+      <DependentUpon>RecipeWaferMapStepsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionSteps\WaferMap\RecipeWaferMapView.xaml.cs">
+      <DependentUpon>RecipeWaferMapView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeEditionView.xaml.cs">
+      <DependentUpon>RecipeEditionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ANARecipeRunLiveUC.xaml.cs">
+      <DependentUpon>ANARecipeRunLiveUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\RecipeSummary.xaml.cs">
+      <DependentUpon>RecipeSummary.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Presets\21_lOw.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Presets\22_Hi.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Presets\23_Medium.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Styles\AnaImageDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Help\HelpImageDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\AlignmentMarks\AlignmentMarksResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Alignment\NotchImageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\AutoFocusSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\DiesSelection\RecipeDiesSelectionStepsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\AlignmentMarks\AlignmentMarkView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\AlignmentMarks\RecipeAlignmentMarksStepsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Alignment\RecipeAlignmentStepsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Alignment\RecipeAlignmentView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Alignment\EdgeImageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\AlignmentMarks\RecipeAlignmentMarksView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\CustomPointsManagementDataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\ViewPreset.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\InputPresetName.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\EdgeTrimCustomPointsManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\CustomPointsManagement\WarpCustomPointsManagementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ExportPointsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\TrenchSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\EdgeTrimSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\TopographySettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\NanoTopoSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessLayersEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\BowSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\TSVSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\ThicknessSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasurePointsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MeasuresSettings\WarpSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MountainsDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MountainsImportDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\MountainsWPFControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\PostProcessingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ProbeSelector\DualLiseSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ProbeSelector\LiseHFSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ProbeSelector\LiseSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ProbeSelector\ProbeSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\RecipeMeasuresChoiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\RecipeMeasureView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\TrenchResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\NanoTopoResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\ThicknessResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\BowResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\TopographyResultDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\EdgeTrimResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\TSVResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\DiesSelection\RecipeDiesSelection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\Measures\ResultsDisplay\WarpResultDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunLiveControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\ResultValuesDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunMeasureResultsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunDashboardView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunMeasuresResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunSaveAsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\RecipeRun\RecipeRunView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\WaferMap\WaferMapDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\PatternRecDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\WaferMap\PatternRecParametersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\WaferMap\RecipeWaferMapStepsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionSteps\WaferMap\RecipeWaferMapView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeEditionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DataTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ANARecipeRunLiveUC.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\RecipeSummary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DataAccess\Service\UnitySC.DataAccess.Service.Interface\UnitySC.DataAccess.Service.Interface.csproj">
+      <Project>{01624866-5C0A-4F7E-A355-8D03680B3466}</Project>
+      <Name>UnitySC.DataAccess.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\DataAccess\UnitySC.DataAccess.Dto\UnitySC.DataAccess.Dto.csproj">
+      <Project>{D1D97C03-4864-48C6-8F97-C666629BFB4C}</Project>
+      <Name>UnitySC.DataAccess.Dto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Display.Metro\UnitySC.Shared.Display.Metro.csproj">
+      <Project>{BD4440F5-8D16-4609-88C0-F643F583921B}</Project>
+      <Name>UnitySC.Shared.Display.Metro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Base\UnitySC.Shared.Format.Base.csproj">
+      <Project>{9C64DC4B-5DFB-4E28-8C2E-C5907B6D729F}</Project>
+      <Name>UnitySC.Shared.Format.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Helper\UnitySC.Shared.Format.Helper.csproj">
+      <Project>{35911960-2ea5-4505-ab61-c98d8b5345f7}</Project>
+      <Name>UnitySC.Shared.Format.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Format\UnitySC.Shared.Format.Metro\UnitySC.Shared.Format.Metro.csproj">
+      <Project>{79893DE6-6FE7-4DC0-B5C0-D451F8628A98}</Project>
+      <Name>UnitySC.Shared.Format.Metro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\Image\UnitySC.Shared.Image\UnitySC.Shared.Image.csproj">
+      <Project>{cf1b4c31-0420-401f-9dd5-2bc4b5d091e8}</Project>
+      <Name>UnitySC.Shared.Image</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\ResultUI\UnitySC.Shared.ResultUI.Common\UnitySC.Shared.ResultUI.Common.csproj">
+      <Project>{6C556F34-16DF-41DF-BADF-4FA14E52E1A2}</Project>
+      <Name>UnitySC.Shared.ResultUI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\ResultUI\UnitySC.Shared.ResultUI.Metro\UnitySC.Shared.ResultUI.Metro.csproj">
+      <Project>{12df032c-7c49-4161-b698-1533c4eaef7c}</Project>
+      <Name>UnitySC.Shared.ResultUI.Metro</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\Devices\UnitySC.PM.Shared.Hardware.Camera\UnitySC.PM.Shared.Hardware.Camera.csproj">
+      <Project>{046875E4-F367-4B10-955A-C33F6F7A249A}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Camera</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{EEE94F55-381C-4FCE-A35C-3AEAE3EC7C63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Referentials\UnitySC.PM.Shared.Referentials.Interface\UnitySC.PM.Shared.Referentials.Interface.csproj">
+      <Project>{643cadec-1417-4982-9b67-8dbd78da7342}</Project>
+      <Name>UnitySC.PM.Shared.Referentials.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97C741A4-6213-470B-9EB1-F19F61DF281C}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\Server\UnitySC.PM.ANA.EP.Mountains.Server.ActiveXHost\UnitySC.PM.ANA.EP.Mountains.Server.ActiveXHost.csproj">
+      <Project>{D2013888-D754-462A-A706-9C8B967636E5}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Server.ActiveXHost</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\Server\UnitySC.PM.ANA.EP.Mountains.Server.Implementation\UnitySC.PM.ANA.EP.Mountains.Server.Implementation.csproj">
+      <Project>{91A8B252-EC89-4252-AFFF-AD4DAE327C3A}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Server.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\UnitySC.PM.ANA.EP.Mountains.Interface\UnitySC.PM.ANA.EP.Mountains.Interface.csproj">
+      <Project>{CD02DC89-3683-4FCC-AC1C-D66CB5257931}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\UnitySC.PM.ANA.EP.Mountains.Proxy\UnitySC.PM.ANA.EP.Mountains.Proxy.csproj">
+      <Project>{F038A491-8C0C-461D-9B0B-8109800B5136}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\UnitySC.PM.ANA.EP.Shared\UnitySC.PM.ANA.EP.Shared.csproj">
+      <Project>{25F235BB-FD0F-4744-B85B-BC68D579F853}</Project>
+      <Name>UnitySC.PM.ANA.EP.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\Core\UnitySC.PM.ANA.Service.Core.Context\UnitySC.PM.ANA.Service.Core.Context.csproj">
+      <Project>{59DBF645-5345-4240-8063-5D00FB58DD45}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\Core\UnitySC.PM.ANA.Service.Core.Referentials\UnitySC.PM.ANA.Service.Core.Referentials.csproj">
+      <Project>{ABC5125E-540A-4181-AF4D-0A7F0BD7B42A}</Project>
+      <Name>UnitySC.PM.ANA.Service.Core.Referentials</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Service\UnitySC.PM.ANA.Service.Interface\UnitySC.PM.ANA.Service.Interface.csproj">
+      <Project>{8ba51279-7837-4c4c-8558-c6953194e3b5}</Project>
+      <Name>UnitySC.PM.ANA.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Flow\UnitySC.PM.Shared.Flow.Interface\UnitySC.PM.Shared.Flow.Interface.csproj">
+      <Project>{77f22706-7c58-4193-ae97-85347cbde3a2}</Project>
+      <Name>UnitySC.PM.Shared.Flow.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\UnitySC.PM.ANA.Shared\UnitySC.PM.ANA.Shared.csproj">
+      <Project>{ADBB3D1F-7345-49E4-A0D7-F949ACAB870C}</Project>
+      <Name>UnitySC.PM.ANA.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Client.Proxy\UnitySC.PM.ANA.Client.Proxy.csproj">
+      <Project>{b6570844-da64-461b-ac43-46b5afb07cb2}</Project>
+      <Name>UnitySC.PM.ANA.Client.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Client.Controls\UnitySC.PM.ANA.Client.Controls.csproj">
+      <Project>{2523c6d1-0358-4622-a8bc-1cc758482eb2}</Project>
+      <Name>UnitySC.PM.ANA.Client.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Client.Shared\UnitySC.PM.ANA.Client.Shared.csproj">
+      <Project>{bfc619e6-9794-4f46-bd30-6ab1a8c88037}</Project>
+      <Name>UnitySC.PM.ANA.Client.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="LightningChart">
+      <Version>12.0.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.122</Version>
+    </PackageReference>
+    <PackageReference Include="WriteableBitmapEx">
+      <Version>1.6.8</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\RecipeEditionSteps\Measures\MountainsWinFormsControl.resx">
+      <DependentUpon>MountainsWinFormsControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Styles\MeasureIcons\Measure1dProfile.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureTopography.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureBow.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureCriticalDimension.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureDieWarpage.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureEbr.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureNanoTopo.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureOverlay.png" />
+    <Resource Include="Styles\MeasureIcons\MeasurePeriodic.png" />
+    <Resource Include="Styles\MeasureIcons\MeasurePillar.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureStep.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureThickness.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureTrench.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureEdgeTrim.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureTsv.png" />
+    <Resource Include="Styles\MeasureIcons\MeasureWarp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Styles\Help Images\EdgeScanHelp.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

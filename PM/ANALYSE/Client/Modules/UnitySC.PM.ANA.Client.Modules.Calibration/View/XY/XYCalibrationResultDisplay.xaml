@@ -1,0 +1,183 @@
+﻿<Window x:Class="UnitySC.PM.ANA.Client.Modules.Calibration.View.XYCalibrationResultDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.Calibration.View"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:userControls="clr-namespace:UnitySC.Shared.ResultUI.Common.UserControls;assembly=UnitySC.Shared.ResultUI.Common"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters ="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             WindowStyle="ToolWindow" Title="XY Calibration result"
+             mc:Ignorable="d" 
+             Width="1000"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding ToggleAdvancedCommand}" Gesture="CTRL+SHIFT+D" />
+    </Window.InputBindings>
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <!-- Calibration result -->
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Row="0"  Grid.ColumnSpan="4"  Visibility="{Binding IsTestCalibration,Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <StackPanel Orientation="Horizontal" Margin="2" Visibility="{Binding IsValid,Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource CheckGeometry}" sharedExtensions:ImageExt.GeometryBrush="{StaticResource GreenBrush}" Style="{StaticResource Icon}"/>
+                    <TextBlock Margin="2,0" VerticalAlignment="Center" Text="Valid - Stage is in specification"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2" Visibility="{Binding IsValid, Converter={StaticResource InvertedBooleanToVisibilityConverter},FallbackValue=Collapsed}">
+                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ErrorGeometry}" sharedExtensions:ImageExt.GeometryBrush="Red" Style="{StaticResource Icon}"/>
+                    <TextBlock Margin="2,0" VerticalAlignment="Center" Text="Error - Stage is out of specification"/>
+                </StackPanel>
+            </StackPanel>
+            <!-- Wafer Alignement -->
+            <Label  Style="{StaticResource TitleLevel2}" Grid.Row="1" Grid.ColumnSpan="2">Wafer Alignement</Label>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" DataContext="{Binding CalibrationData}" Grid.ColumnSpan="2" Margin="2">
+                <TextBlock Margin="5"><Run Text="Shift X: "></Run><Run Text="{Binding ShiftX.Value,StringFormat={}{0:F3}, Mode=OneWay}" /><Run>&#160;</Run><Run Text="{Binding ShiftX.UnitSymbol, Mode=OneWay}"></Run></TextBlock>
+                <TextBlock Margin="5"><Run Text="Shift Y: "></Run><Run Text="{Binding ShiftY.Value,StringFormat={}{0:F3}, Mode=OneWay}" /><Run>&#160;</Run><Run Text="{Binding ShiftY.UnitSymbol, Mode=OneWay}"></Run></TextBlock>
+                <TextBlock Margin="5"><Run Text="Angle: "></Run><Run Text="{Binding ShiftAngle.Value,StringFormat={}{0:F3}, Mode=OneWay}" /><Run>&#160;</Run><Run Text="{Binding ShiftAngle.UnitSymbol, Mode=OneWay}"></Run></TextBlock>
+            </StackPanel>
+
+            <!-- Display point -->
+            <Label  Style="{StaticResource TitleLevel2}" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Visibility="{Binding DisplaySelectedPoint, Converter={converters:BooleanToVisibilityConverter}}">Display Point</Label>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0">
+                <Grid Margin="0" Visibility="{Binding DisplaySelectedPoint, Converter={converters:BooleanToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="0"  Text="X: "/>
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Text="{Binding DisplayPoint.X, Mode=OneWay,StringFormat='{}{0:F3} mm'}"/>
+                    <TextBlock Margin="15,0,0,0" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Text="Y: "/>
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="3" Text="{Binding DisplayPoint.Y, Mode=OneWay,StringFormat='{}{0:F3} mm'}"/>
+                    <TextBlock Margin="15,0,0,0" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="4" Text="Angle: "/>
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="5"  FontWeight="Bold" Text="{Binding DisplayPoint.AngleXY, Mode=OneWay,StringFormat='{}{0:F3} °'}"/>
+
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="0"  Text="Shift X: "/>
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1" Text="{Binding DisplayPoint.ShiftX, Mode=OneWay,StringFormat='{}{0:F3} µm'}"/>
+                    <TextBlock Margin="15,0,0,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2" Text="Shift Y: "/>
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="3" Text="{Binding DisplayPoint.ShiftY, Mode=OneWay,StringFormat='{}{0:F3} µm'}"/>
+                    <TextBlock Margin="15,0,0,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="4" Text="Shift Distance: "/>
+                    <TextBlock Margin="0,0,0,0" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="5" FontWeight="Bold" Text="{Binding DisplayPoint.ShiftXY, Mode=OneWay,StringFormat='{}{0:F3} µm'}"/>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Grid.Row="3" Grid.ColumnSpan="2">
+                <TextBlock Margin="5"><Run Text="Nb of unmeasured points: "></Run><Run Text="{Binding CalibrationData.UncomputableCorrections.Count, Mode=OneWay}" /></TextBlock>
+            </StackPanel>
+
+            <Border BorderBrush="OrangeRed" BorderThickness="2" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Visibility="{Binding DisplayAdvancedControls, Converter={converters:BooleanToVisibilityConverter}}">
+                <StackPanel  Orientation="Horizontal" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Visibility="{Binding DisplayAdvancedControls, Converter={converters:BooleanToVisibilityConverter}}">
+                    <CheckBox Content="V on Measure" IsChecked="{Binding XYVectorHeatMapVM.DisplayAllMeasureAsVector}" Margin="3"/>
+                    <ComboBox MinWidth="50" ItemsSource="{Binding XYVectorHeatMapVM.CorrectionTypes}" SelectedItem="{Binding XYVectorHeatMapVM.SelectedCorrectionType}" Margin="3"/>
+                    <controls:DoubleUpDown Unit="µm" Maximum="100000" Value ="{Binding AdvancedSpecMax}" HorizontalContentAlignment="Center" Minimum="0" Width="150" Margin="2" ImageGeometryDown="{StaticResource MinusGeometry}" ImageGeometryUp="{StaticResource PlusGeometry}"/>
+                    <Button Content="To Max" Style="{StaticResource NormalButton}" Command="{Binding AdvMaxCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="3"/>
+                    <Button Content="To Mean" Style="{StaticResource NormalButton}" Command="{Binding AdvMeanCommand}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="3"/>
+                    <controls:ImageButton ImageGeometry="{StaticResource RefreshGeometry}" ImageGeometryBrush="Red" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding RefreshDisplayCommand}" ToolTip="Refresh view" Margin="3"/>
+                </StackPanel>
+            </Border>
+
+            <!-- XY Vector -->
+            <Label  Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource TitleLevel2}"  HorizontalAlignment="Center" Content="{Binding DisplayLabel}"></Label>
+            <Grid  x:Name="GridWX" Grid.Row="5" Grid.ColumnSpan="4">
+                <ContentControl>
+                    <ContentPresenter  Content="{Binding XYVectorHeatMapVM.Chart}" Height="Auto" Width="Auto" />
+                </ContentControl>
+                <xctk:BusyIndicator IsBusy="{Binding XYVectorHeatMapVM.IsBusy}"/>
+            </Grid>
+
+            <!--Expander-->
+            <Expander
+			Grid.Row="6"
+			Grid.ColumnSpan="5"
+			Margin="5"
+			ExpandDirection="Up"
+			Header="Stat">
+                <!--  Stats  -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <userControls:StatsContainerView                        			     				      				        
+				        Digits="5"				       
+				        Header="Stats Shift Distance XY"
+                        Padding="10"
+				        StatsContainer="{Binding StatsWaferXY}"
+                        Width="{Binding ActualWidth, ElementName=GridWX}" MaxWidth="400"/>
+                </StackPanel>
+
+            </Expander>
+            <!-- Bad points-->
+            <Grid Grid.Column="4" Grid.RowSpan="6" Visibility="{Binding IsTestCalibration, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <headers:HeaderRight Content="Points out of specification"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding BadPoints}" SelectedItem="{Binding SelectedBadPointsItem}" VerticalAlignment="Top" MinHeight="10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ErrorGeometry}" sharedExtensions:ImageExt.GeometryBrush="Red" Style="{StaticResource Icon}" Grid.RowSpan="2"/>
+                                <StackPanel Orientation="Horizontal" Margin="5,2" Grid.Column="1" >
+                                    <TextBlock Text="X:" Margin="5,0" VerticalAlignment="Center" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding X, Mode=OneWay,StringFormat='{}{0:F3} mm'}" VerticalAlignment="Center" />
+                                    <TextBlock Margin="20,0,0,0" Text="Y :" VerticalAlignment="Center" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding Y, Mode=OneWay,StringFormat='{}{0:F3} mm'}" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5,1" Grid.Column="1" Grid.Row="1" >
+                                    <TextBlock Text="Shift :" Margin="5,0" VerticalAlignment="Center" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding ShiftXY, Mode=OneWay,StringFormat='{}{0:F3} µm'}" VerticalAlignment="Center" />
+                                    <TextBlock Margin="20,0,0,0" Text="Angle :" VerticalAlignment="Center" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding AngleXY, Mode=OneWay,StringFormat='{}{0:F2} °'}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" IsCancel ="True" Style="{StaticResource HighlightedButton}">Close</Button>
+        </Grid>
+    </Grid>
+</Window>

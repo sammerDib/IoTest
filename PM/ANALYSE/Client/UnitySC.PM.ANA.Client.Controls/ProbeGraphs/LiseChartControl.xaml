@@ -1,0 +1,208 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Controls.LiseChartControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Controls"
+             xmlns:lcub="http://schemas.lightningchart.com/chartingMVVM/"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <lcub:LightningChart x:Name="RawAcquisitionChartUp" ChartName="Point Line Series Chart"  ColorTheme="LightGray" IsHitTestVisible="{Binding Path=EnableMouseInteraction }">
+            <lcub:LightningChart.ChartBackground>
+                <lcub:Fill Color="LightGray" GradientFill="Solid" />
+            </lcub:LightningChart.ChartBackground>
+            <lcub:LightningChart.ChartRenderOptions>
+                <lcub:RenderOptionsCommon DeviceType="SoftwareOnlyD11" />
+            </lcub:LightningChart.ChartRenderOptions>
+
+            <lcub:LightningChart.Title>
+                <lcub:ChartTitle Text="Probe Lise Acquisition" Visible="False" />
+            </lcub:LightningChart.Title>
+            <lcub:LightningChart.ViewXY>
+                <lcub:ViewXY>
+                    <lcub:ViewXY.ZoomPanOptions>
+                        <lcub:ZoomPanOptions ViewFitYMarginPixels="25"/>
+                    </lcub:ViewXY.ZoomPanOptions>
+                    <lcub:ViewXY.Border>
+                        <lcub:ThinBorderXY Color="{Binding Path=BackgroundColor}"></lcub:ThinBorderXY>
+                    </lcub:ViewXY.Border>
+                    <lcub:ViewXY.GraphBackground>
+                        <lcub:Fill Color="{Binding Path=BackgroundColor}" GradientColor="{Binding Path=BackgroundColor}" />
+                    </lcub:ViewXY.GraphBackground>
+
+                    <lcub:ViewXY.Annotations>
+                        <lcub:AnnotationXY
+                            Style="Rectangle"
+                            Text="{Binding ElementName=LiseChartCursor, Path=ValueAtXAxis, Mode=OneWay,StringFormat={}{0:F0}}"
+                            AllowTargetMove="False"
+                            LocationCoordinateSystem="RelativeCoordinatesToTarget"
+                            AllowUserInteraction="False"
+                            AllowDragging="False"
+                            AllowResize="False"
+                            AutoSizePadding="5"
+                            Visible="False"
+                            BorderVisible="False"
+                            >
+                            <lcub:AnnotationXY.Shadow>
+                                <lcub:Shadow Visible="False"/>
+                            </lcub:AnnotationXY.Shadow>
+                            <lcub:AnnotationXY.Fill>
+                                <lcub:Fill Color="#80EEEEEE" GradientFill="Solid"/>
+                            </lcub:AnnotationXY.Fill>
+                            <lcub:AnnotationXY.LocationRelativeOffset>
+                                <lcub:PointDoubleXY Y="-15" X="0" />
+                            </lcub:AnnotationXY.LocationRelativeOffset>
+                            <lcub:AnnotationXY.TargetAxisValues>
+                                <lcub:PointDoubleXY X="{Binding ElementName=LiseChartCursor, Path=ValueAtXAxis, Mode=OneWay}" />
+                            </lcub:AnnotationXY.TargetAxisValues>
+                        </lcub:AnnotationXY>
+
+                        <lcub:AnnotationXY
+                            Style="Rectangle"
+                            Text="{Binding ElementName=LiseChartCursor2, Path=ValueAtXAxis, Mode=OneWay,StringFormat={}{0:F1}}"
+                            AllowTargetMove="False"
+                            LocationCoordinateSystem="RelativeCoordinatesToTarget"
+                            AllowUserInteraction="False"
+                            AllowDragging="False"
+                            AllowResize="False"
+                            AutoSizePadding="5"
+                            Visible="False"
+                            BorderVisible="False"
+                            >
+                            <lcub:AnnotationXY.Shadow>
+                                <lcub:Shadow Visible="False"/>
+                            </lcub:AnnotationXY.Shadow>
+                            <lcub:AnnotationXY.Fill>
+                                <lcub:Fill Color="#80EEEEEE" GradientFill="Solid"/>
+                            </lcub:AnnotationXY.Fill>
+                            <lcub:AnnotationXY.LocationRelativeOffset>
+                                <lcub:PointDoubleXY Y="25" X="0" />
+                            </lcub:AnnotationXY.LocationRelativeOffset>
+                            <lcub:AnnotationXY.TargetAxisValues>
+                                <lcub:PointDoubleXY X="{Binding ElementName=LiseChartCursor2, Path=ValueAtXAxis, Mode=OneWay}"/>
+                            </lcub:AnnotationXY.TargetAxisValues>
+                        </lcub:AnnotationXY>
+
+                        <lcub:AnnotationXY
+                              Style="Rectangle"
+                              Text="dx : dy"
+                              AllowTargetMove="False"
+                              LocationCoordinateSystem="ScreenCoordinates"
+                              AllowUserInteraction="False"
+                              AllowDragging="False"
+                              AllowResize="False"
+                              AutoSizePadding="5"
+                              Visible="False"
+                              BorderVisible="False"
+                              Highlight="None"> 
+                            <lcub:AnnotationXY.Shadow>
+                                <lcub:Shadow Visible="False"/>
+                            </lcub:AnnotationXY.Shadow>
+                            <lcub:AnnotationXY.Anchor>
+                                <lcub:PointDoubleXY X="0" Y="0"/>
+                            </lcub:AnnotationXY.Anchor>
+                            <lcub:AnnotationXY.Fill>
+                                <lcub:Fill Color="#60EEEEEE" GradientFill="Solid"/>
+                            </lcub:AnnotationXY.Fill>
+                            <lcub:AnnotationXY.LocationScreenCoords>
+                                <lcub:PointDoubleXY Y="1" X="45" />
+                            </lcub:AnnotationXY.LocationScreenCoords>
+                        </lcub:AnnotationXY>
+                    </lcub:ViewXY.Annotations>
+
+                    <lcub:ViewXY.LineSeriesCursors>
+                        <lcub:LineSeriesCursor x:Name="LiseChartCursor"  Visible="{Binding Path=DisplayAnnotations}"  Highlight="Simple" IndicateTrackingYRange="True" SnapToPoints="False" ValueAtXAxis="{Binding CursorPosition, RelativeSource={RelativeSource AncestorType=UserControl} , Mode=TwoWay}">
+                            <lcub:LineSeriesCursor.LineStyle>
+                                <lcub:LineStyle Color="#96FF0000" Width="2"/>
+                            </lcub:LineSeriesCursor.LineStyle>
+                            <lcub:LineSeriesCursor.TrackPoint>
+                                <lcub:PointShapeStyle Color1="DarkRed" Color2="Gold" Width="16" Height="16" BodyThickness="3" Angle="45" GradientFill="Edge" Shape="Cross"/>
+                            </lcub:LineSeriesCursor.TrackPoint>
+                        </lcub:LineSeriesCursor>
+                        <lcub:LineSeriesCursor x:Name="LiseChartCursor2"  Visible="{Binding Path=DisplayAnnotations}" Highlight="Simple" IndicateTrackingYRange="True" SnapToPoints="False" ValueAtXAxis="{Binding CursorPosition2, RelativeSource={RelativeSource AncestorType=UserControl} , Mode=TwoWay}">
+                            <lcub:LineSeriesCursor.LineStyle>
+                                <lcub:LineStyle Color="#96FD00FF" Width="2"/>
+                            </lcub:LineSeriesCursor.LineStyle>
+                            <lcub:LineSeriesCursor.TrackPoint>
+                                <lcub:PointShapeStyle Color1="Orange" Color2="Purple" Width="16" Height="16" BodyThickness="3" Angle="45" GradientFill="Edge" Shape="Cross"/>
+                            </lcub:LineSeriesCursor.TrackPoint>
+                        </lcub:LineSeriesCursor>
+                    </lcub:ViewXY.LineSeriesCursors>
+                    <lcub:ViewXY.YAxes>
+                        <lcub:AxisY Minimum="-10" Maximum="15" AutoFormatLabels="True" ValueType="Number"  LabelsNumberFormat="0" Visible="{Binding Path=DisplayAxes }" AxisColor="Black" LabelsColor="Black">
+                            <lcub:AxisY.Title>
+                                <lcub:AxisYTitle Text="V" Highlight="None" Color="Black" Angle="0" HorizontalAlign="Right" VerticalAlign="Top"/>
+                            </lcub:AxisY.Title>
+                            <lcub:AxisY.MajorDivTickStyle>
+                                <lcub:AxisTickStyle Color="Black"/>
+                            </lcub:AxisY.MajorDivTickStyle>
+                            <lcub:AxisY.MinorDivTickStyle>
+                                <lcub:AxisTickStyle Color="Black"/>
+                            </lcub:AxisY.MinorDivTickStyle>
+                        </lcub:AxisY>
+                    </lcub:ViewXY.YAxes>
+                    <lcub:ViewXY.XAxes>
+                        <lcub:AxisX Minimum="0" Maximum="6500" AutoFormatLabels="True" ValueType="Number" LabelsNumberFormat="0.00" Visible="{Binding Path=DisplayAxes }"  GridStripColor="Black"  AxisColor="Black" LabelsColor="Black">
+                            <lcub:AxisX.Title>
+                                <lcub:AxisXTitle Text="Microns" Highlight="None" Color="Black"/>
+                            </lcub:AxisX.Title>
+                            <lcub:AxisX.MajorDivTickStyle>
+                                <lcub:AxisTickStyle Color="Black"/>
+                            </lcub:AxisX.MajorDivTickStyle>
+                            <lcub:AxisX.MinorDivTickStyle>
+                                <lcub:AxisTickStyle Color="Black"/>
+                            </lcub:AxisX.MinorDivTickStyle>
+                        </lcub:AxisX>
+                    </lcub:ViewXY.XAxes>
+                    <lcub:ViewXY.LegendBoxes>
+                        <lcub:LegendBoxXY Position="RightCenter"
+                                          Layout="Vertical" Visible="False" />
+                    </lcub:ViewXY.LegendBoxes>
+                    <lcub:ViewXY.PointLineSeries>
+                        <lcub:PointLineSeries Points="{Binding Path=ProbeLise.RawAcquisitionPoints}" PointsVisible="False" CursorTrackEnabled="True" AllowUserInteraction="True" Highlight="None" >
+                            <lcub:PointLineSeries.Title>
+                                <lcub:SeriesTitle Text="Raw Values" Color="Black" />
+                            </lcub:PointLineSeries.Title>
+                            <lcub:PointLineSeries.LineStyle>
+                                <lcub:LineStyle Color="Black" Width="1" AntiAliasing="Normal" />
+                            </lcub:PointLineSeries.LineStyle>
+                        </lcub:PointLineSeries>
+                        <lcub:PointLineSeries
+                            PointsVisible="{Binding Path=DisplaySelectedPeaks}"
+                            LineVisible="False"
+                            CursorTrackEnabled="False"
+                            IndividualPointColoring = "Color1"
+                            Points="{Binding Path=ProbeLise.SelectedPeaksPoints}" AllowUserInteraction="False">
+                            <lcub:PointLineSeries.Title>
+                                <lcub:SeriesTitle Text="Selected Peaks" Color="Black" />
+                            </lcub:PointLineSeries.Title>
+                            <lcub:PointLineSeries.PointStyle>
+                                <lcub:PointShapeStyle Color1="#FF00FF00" Color2="#FF00FF00" Height="20" BorderColor="#4CFFFFFF" BodyThickness="1" Shape="Cross" Width="20" GradientFill="Solid" />
+                            </lcub:PointLineSeries.PointStyle>
+                            <lcub:PointLineSeries.LineStyle>
+                                <lcub:LineStyle Color="White" Width="2" AntiAliasing="Normal" />
+                            </lcub:PointLineSeries.LineStyle>
+                        </lcub:PointLineSeries>
+                        <lcub:PointLineSeries
+                            PointsVisible="{Binding Path=DisplayDiscarderPeaks}"
+                            LineVisible="False"
+                            CursorTrackEnabled="False"
+                            IndividualPointColoring = "Color1"
+                            Points="{Binding Path=ProbeLise.DiscarderPeaksPoints}" AllowUserInteraction="False">
+                            <lcub:PointLineSeries.Title>
+                                <lcub:SeriesTitle Text="Discarded Peaks" Color="Black" />
+                            </lcub:PointLineSeries.Title>
+                            <lcub:PointLineSeries.PointStyle>
+                                <lcub:PointShapeStyle Color1="#FFFF0000" Color2="#FF00FF00" Height="20" BorderColor="#4CFFFFFF" BodyThickness="1" Shape="Cross" Width="20" GradientFill="Solid" />
+                            </lcub:PointLineSeries.PointStyle>
+                            <lcub:PointLineSeries.LineStyle>
+                                <lcub:LineStyle Color="White" Width="2" AntiAliasing="Normal" />
+                            </lcub:PointLineSeries.LineStyle>
+                        </lcub:PointLineSeries>
+                    </lcub:ViewXY.PointLineSeries>
+                </lcub:ViewXY>
+            </lcub:LightningChart.ViewXY>
+        </lcub:LightningChart>
+    </Grid>
+</UserControl>

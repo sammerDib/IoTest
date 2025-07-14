@@ -1,0 +1,25 @@
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+
+#ifdef INC_SPG_Network_INC
+#error SPG_Network.agh included twice
+#endif
+
+#define INC_SPG_Network_INC
+
+int SPG_CONV SPG_InitUDP(SPG_NETWORK& SN,int Port=0,int ReusePort=0);
+int SPG_CONV SPG_Resolve(SPG_NET_ADDR& SNA,char *server_name);
+void SPG_CONV SPG_CloseUDP(SPG_NETWORK& SN);
+int SPG_CONV SPG_SendUDP(SPG_NETWORK& SN,SPG_NET_ADDR& SNA,void * Data, int LenData);
+int SPG_CONV SPG_ReadUDP(SPG_NETWORK& SN,SPG_NET_ADDR& SNA,void * Data, int LenData);
+
+#if(defined(DebugNetwork)&&defined(SPG_General_USEConsole))
+int SPG_CONV SPG_SetHookUDP(SPG_NETWORK& SN,SPG_Console* CIn,SPG_Console* COut);
+int SPG_CONV SPG_CloseHookUDP(SPG_NETWORK& SN);
+#else
+#define SPG_StartHookUDP(SN,C)
+#define SPG_CloseHookUDP(SN)
+#endif
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+

@@ -1,0 +1,349 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.CamerasView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:extensions="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.Controls"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.TestHardware;component/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <sys:String x:Key="FormatDecimalThreePlaces">{0:F3}</sys:String>
+            <sys:String x:Key="FormatDecimalTwoPlaces">{0:F2}</sys:String>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="10,10,5,0"
+          Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Margin="0,0,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Grid.Row="0"
+                      FontSize="18"
+                      Header="Sélection">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="5">Device</TextBlock>
+                        <ComboBox Grid.Column="1"
+                              Grid.Row="0"
+                              Margin="5"
+                              ItemsSource="{Binding CamerasSupervisor.Cameras}"
+                              SelectedValue="{Binding CamerasSupervisor.Camera}"
+                              DisplayMemberPath="Name"/>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5">Lens</TextBlock>
+                        <ComboBox Grid.Column="1"
+                              Grid.Row="1"
+                              Margin="5"
+                              ItemsSource="{Binding CamerasSupervisor.Objectives}"
+                              SelectedItem="{Binding CamerasSupervisor.Objective}"
+                              DisplayMemberPath="Name"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Grid.Row="1"
+                      FontSize="18"
+                      Margin="0,10,0,0"
+                      Header="Configuration">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="0"
+                               Grid.Row="0"
+                               Margin="5">Gain</TextBlock>
+                        <TextBox Grid.Column="1"
+                             Grid.Row="0"
+                             FontSize="18"
+                             Margin="5"
+                             MaxLength="10"
+                             Text="{Binding CamerasSupervisor.Camera.InputParameters.Gain, UpdateSourceTrigger=PropertyChanged, StringFormat={StaticResource FormatDecimalTwoPlaces}}"
+                             sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding CamerasSupervisor.Camera.CameraInfo.MaxGain}"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding CamerasSupervisor.Camera.CameraInfo.MinGain}"/>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5">Exposure Time (ms)</TextBlock>
+                        <TextBox Grid.Column="1"
+                             Grid.Row="1"
+                             FontSize="18"
+                             Margin="5"
+                             MaxLength="10"
+                             Text="{Binding CamerasSupervisor.Camera.InputParameters.ExposureTimeMs, UpdateSourceTrigger=PropertyChanged, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                             sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding CamerasSupervisor.Camera.CameraInfo.MaxExposureTime}"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding CamerasSupervisor.Camera.CameraInfo.MinExposureTime}"/>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="5">Frame Rate (FPS)</TextBlock>
+                        <TextBox Grid.Column="1"
+                             Grid.Row="2"
+                             FontSize="18"
+                             Margin="5"
+                             MaxLength="10"
+                             Text="{Binding CamerasSupervisor.Camera.InputParameters.FrameRate, UpdateSourceTrigger=PropertyChanged, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                             sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding CamerasSupervisor.Camera.CameraInfo.MinFrameRate}"/>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               Margin="5">Color Mode</TextBlock>
+                        <ComboBox Grid.Column="1"
+                              Grid.Row="3"
+                              Margin="5"
+                              ItemsSource="{Binding CamerasSupervisor.Camera.CameraInfo.ColorModes}"
+                              SelectedValue="{Binding CamerasSupervisor.Camera.InputParameters.ColorMode}" />
+                        <Button Grid.Row="4"
+                            Grid.Column="1"
+                            Width="160"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding CamerasSupervisor.Camera.InputParametersChange}"
+                            Command="{Binding CamerasSupervisor.Camera.SetSettings}">Apply</Button>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Grid.Row="2"
+                      FontSize="18"
+                      Margin="0,10,0,10"
+                      Header="Light">
+                    <Grid>
+                        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{markupextensions:LightsSupervisorBinding Path=Lights}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="150" />
+                                            <ColumnDefinition Width="55" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               FontSize="18"
+                                               Margin="5"
+                                               Text="{Binding Path=Name}" />
+                                        <Slider Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Margin="5"
+                                            Minimum="0"
+                                            Maximum="100"
+                                            Value="{Binding Path=Intensity, StringFormat={StaticResource FormatDecimalTwoPlaces}}"
+                                            extensions:SliderExtension.DragCompletedCommand="{Binding IntensityChangedCommand}" />
+                                        <TextBox Grid.Column="2"
+                                             Margin="5"
+                                             Text="{Binding Path=Intensity, StringFormat={StaticResource FormatDecimalTwoPlaces}, UpdateSourceTrigger=PropertyChanged}">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Command="{Binding IntensityChangedCommand}" Key="Return" />
+                                                <KeyBinding Command="{Binding IntensityChangedCommand}" Key="Enter" />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                        <TextBlock Grid.Column="3" Margin="5" Text="%" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Grid.Row="3"
+                      FontSize="18"
+                      Header="Information">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <!--<RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />-->
+                        </Grid.RowDefinitions>
+
+                        <!--<TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="5">Model</TextBlock>                    
+                    <TextBlock VerticalAlignment="Center"
+                               Grid.Column="1"
+                               FontSize="18"
+                               Grid.Row="0"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.Model}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5">Serial Number</TextBlock>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="1"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.SerialNumber}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="5">Version</TextBlock>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="2"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.Version}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               Margin="5">Width</TextBlock>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="3"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.Width}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="4"
+                               Grid.Column="0"
+                               Margin="5">Height</TextBlock>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="4"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.Height}" /> -->
+
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="5">Gain Range</TextBlock>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="0"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.GainRange}" />
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5">Exposure Time Range (ms)</TextBlock>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="1"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.ExposureTimeRange}" />
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="5">Frame Rate Range (FPS)</TextBlock>
+                        <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Column="1"
+                               Grid.Row="2"
+                               Margin="5"
+                               Text="{Binding CamerasSupervisor.Camera.CameraInfo.FrameRateRange}" />
+                    </Grid>
+                </GroupBox>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="10,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"
+                        Margin="0,3"
+                        IsEnabled="{Binding CamerasSupervisor.Camera.IsReady}"
+                        Command="{Binding CamerasSupervisor.Camera.StartStreamingCommand}">Start</Button>
+                    <Button Grid.Column="1"
+                        Margin="10,0"
+                        IsEnabled="{Binding CamerasSupervisor.Camera.IsGrabbing}"
+                        Command="{Binding CamerasSupervisor.Camera.StopStreamingCommand}">Stop</Button>
+                    <Button Grid.Column="2"
+                        Command="{Binding CamerasSupervisor.Camera.SingleShotCommand}">Single Shot</Button>
+                    <Button Grid.Column="2"
+                        Command="{Binding ShowDetailsCommand}">Camera Details</Button>
+                    <TextBlock Grid.Column="3"
+                           Margin="10,0"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding CamerasSupervisor.Camera.IsGrabbing, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           Text="{Binding CamerasSupervisor.Camera.FrameRate, StringFormat='Framerate = {0} FPS'}" />
+                </Grid>
+                <controls:ImageGroupBox Grid.Row="1" Margin="0,10" Header="Camera" Image="{StaticResource Camera}" Background="{StaticResource CameraBackground}" Grid.RowSpan="2">
+                    <Border HorizontalAlignment="Center" Background="{StaticResource CameraBackground}">
+                        <Image x:Name="CameraImage" Source="{Binding CamerasSupervisor.Camera.CameraBitmapSource}" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    </Border>
+                </controls:ImageGroupBox>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

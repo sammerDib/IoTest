@@ -1,0 +1,113 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:UnitySC.PM.DMT.Modules.Settings.View.Designer"
+    mc:Ignorable="d"
+	x:Class="UnitySC.PM.DMT.Modules.Settings.View.Designer.PathDesignerComponent"
+	x:Name="UserControl"
+	d:DesignWidth="138" d:DesignHeight="119.5" Width="Auto" Height="Auto">
+    <UserControl.Resources>
+        <local:VisibilityConverter x:Key="visibilityConverter" />
+        <local:MultiVisibilityConverter x:Key="multiVisibilityConverter" />
+        <Style x:Key="SelectionThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border BorderBrush="#FF385D8A" Background="#00000000" BorderThickness="2,2,2,2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RoundThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border BorderThickness="1,1,1,1" CornerRadius="4,4,4,4" BorderBrush="#FF7D8289">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFF6FFFF" Offset="0"/>
+                                    <GradientStop Color="#FFCAEAED" Offset="0.45"/>
+                                    <GradientStop Color="#FFCAEAED" Offset="0.5"/>
+                                    <GradientStop Color="#FFCAEAED" Offset="0.55"/>
+                                    <GradientStop Color="#FFF6FFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SquareThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border BorderThickness="1,1,1,1" BorderBrush="#FF7D8289">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFF6FFFF" Offset="0"/>
+                                    <GradientStop Color="#FFCAEAED" Offset="0.45"/>
+                                    <GradientStop Color="#FFCAEAED" Offset="0.5"/>
+                                    <GradientStop Color="#FFCAEAED" Offset="0.55"/>
+                                    <GradientStop Color="#FFF6FFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid PreviewMouseDown="DesignerComponent_PreviewMouseDown" Visibility="{Binding Path=PolygonDrawingItem.IsVisible, Converter={StaticResource visibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}">
+        <ContentPresenter
+                x:Name="ContentComponent" 
+                Margin="0,0,0,0" 
+                />
+        <Canvas x:Name="ThumbsCanvas">
+            <Thumb x:Name="PointThumb0"
+                   Style="{DynamicResource SquareThumbStyle}" 
+                   DragDelta="PathThumb_DragDelta0" 
+                   DragCompleted="ThumbDragCompleted"
+                   Cursor="SizeAll"
+                   Visibility="{Binding Path=IsSelected, Converter={StaticResource visibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                   Width="20" Height="20" 
+                  />
+            <Thumb x:Name="PointThumb1"
+                   Style="{DynamicResource SquareThumbStyle}" 
+                   DragDelta="PathThumb_DragDelta1" 
+                   DragCompleted="ThumbDragCompleted"
+                   Cursor="SizeAll"
+                   Visibility="{Binding Path=IsSelected, Converter={StaticResource visibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                   Width="20" Height="20" 
+                     />
+            <Thumb x:Name="PointThumb2"
+                   Style="{DynamicResource SquareThumbStyle}" 
+                   DragDelta="PathThumb_DragDelta2" 
+                   DragCompleted="ThumbDragCompleted"
+                   Cursor="SizeAll"
+                   Visibility="{Binding Path=IsSelected, Converter={StaticResource visibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                   Width="20" Height="20" 
+                   />
+            <Thumb x:Name="PointThumb3"
+                   Style="{DynamicResource SquareThumbStyle}" 
+                   DragDelta="PathThumb_DragDelta3" 
+                   DragCompleted="ThumbDragCompleted"
+                   Cursor="SizeAll"
+                   Visibility="{Binding Path=IsSelected, Converter={StaticResource visibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                   Width="20" Height="20" 
+                    />
+        </Canvas>
+        <!--<Thumb x:Name="SelectionThumb"
+                   Style="{DynamicResource SelectionThumbStyle}" 
+                   DragDelta="SelectionThumb_DragDelta" 
+                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   Cursor="SizeAll"
+                   Visibility="{Binding Path=IsSelected, Converter={StaticResource visibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                   />-->
+
+    </Grid>
+</UserControl>

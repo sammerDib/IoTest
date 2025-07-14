@@ -1,0 +1,199 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings.TrenchSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:recipe="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:measures="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures"
+             xmlns:vms="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:measuressettings="clr-namespace:UnitySC.PM.ANA.Service.Interface.Recipe.Measure.MeasureSettings;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:serviceInterfaceMeasure="clr-namespace:UnitySC.PM.ANA.Service.Interface.Recipe.Measure;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:measuresProbe="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.ProbeSelector"
+             mc:Ignorable="d"
+             d:DesignHeight="1024" d:DesignWidth="400">
+    <UserControl.Resources>
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,10">CHARACTERISTICS</Label>
+            <StackPanel Grid.Row="1">
+                <StackPanel.IsEnabled>
+                    <MultiBinding Converter="{converters:BooleanAndConverter}">
+                        <Binding Path="AutoFocusSettings.IsEditing" Converter="{converters:InvertedBooleanConverter}" />
+                        <Binding Path="ProbeSelector.IsEditing" Converter="{converters:InvertedBooleanConverter}" />
+                    </MultiBinding>
+                </StackPanel.IsEnabled>
+
+                <!--HEIGHT-->
+                <Label Style="{StaticResource TitleLevel2}">DEPTH</Label>
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28"></ColumnDefinition>
+                        <ColumnDefinition Width="72"/>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="Depth" Style="{StaticResource LabelForm}" Grid.ColumnSpan="2" />
+                    <controls:TextBoxUnit Grid.Column="2" LengthValue="{Binding DepthTarget, StringFormat='{}{0:F2}'}"  sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                    <Grid Grid.Column="3" Visibility="{Binding DepthCorrection.CorrectionType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static serviceInterfaceMeasure:ResultCorrectionType.Offset}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label  Content="Offset" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Column="1" Width="100" LengthValue="{Binding DepthCorrection.Offset, StringFormat='{}{0:F3}'}"  sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" HorizontalAlignment="Left" />
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding DepthCorrection.CorrectionType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static serviceInterfaceMeasure:ResultCorrectionType.Linear}}" Grid.ColumnSpan="4">
+                        <Label Content="Correction" Style="{StaticResource LabelForm}" Width="100" />
+                        <TextBox Grid.Column="1" Width="100" Text="{Binding DepthCorrection.Coef, StringFormat='{}{0:F4}'}" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True"></TextBox>
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5,0">X +</TextBlock>
+                        <controls:TextBoxUnit Grid.Column="1" Width="100" LengthValue="{Binding DepthCorrection.Offset, StringFormat='{}{0:F3}'}"  sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </Grid>
+                <Grid Margin="0,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Tolerance" Style="{StaticResource LabelForm}" />
+                    <controls:LengthToleranceInput Grid.Column="1" ToleranceValue="{Binding DepthTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" Target="{Binding DepthTarget}" EditBoxWidth="100" UnitWidth="60" IsMicroMeterAvailable="True"></controls:LengthToleranceInput>
+                </Grid>
+                <!--WIDTH-->
+                <DockPanel IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}" Margin="0,5,0,0">
+                    <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">WIDTH</Label>
+                    <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" DockPanel.Dock="Right"  HorizontalAlignment="Right" IsChecked="{Binding IsWidthMeasured}"  Margin="0,0,5,0" />
+                </DockPanel>
+                <StackPanel Orientation="Vertical" Margin="0,5,0,0" Visibility="{Binding IsWidthMeasured, Converter={converters:BooleanToVisibilityConverter}}">
+                    <Grid Margin="0,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Label Content="Width" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding WidthTarget, StringFormat='{}{0:F2}'}"  sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                        <Grid Grid.Column="2" Visibility="{Binding WidthCorrection.CorrectionType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static serviceInterfaceMeasure:ResultCorrectionType.Offset}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label  Content="Offset" Style="{StaticResource LabelForm}" />
+                            <controls:TextBoxUnit Grid.Column="1" Width="100" LengthValue="{Binding WidthCorrection.Offset, StringFormat='{}{0:F3}'}"  sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" HorizontalAlignment="Left" />
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,10,0,0" Visibility="{Binding WidthCorrection.CorrectionType, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static serviceInterfaceMeasure:ResultCorrectionType.Linear}}" Grid.ColumnSpan="3">
+                            <Label Content="Correction" Style="{StaticResource LabelForm}" Width="100" />
+                            <TextBox Grid.Column="1" Width="100" Text="{Binding WidthCorrection.Coef, StringFormat='{}{0:F4}'}" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True"></TextBox>
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5,0">X +</TextBlock>
+                            <controls:TextBoxUnit Grid.Column="1" Width="100" LengthValue="{Binding WidthCorrection.Offset, StringFormat='{}{0:F3}'}"  sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Tolerance" Style="{StaticResource LabelForm}" />
+                        <controls:LengthToleranceInput Grid.Column="1" ToleranceValue="{Binding WidthTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" Target="{Binding WidthTarget}" EditBoxWidth="100" UnitWidth="60" IsMicroMeterAvailable="True"></controls:LengthToleranceInput>
+                    </Grid>
+                </StackPanel>
+                <Separator Margin="0,10,0,10"></Separator>
+                <Button HorizontalAlignment="Right" MinWidth="100" Margin="5,0,5,0" Command="{Binding SubmitCharacteristics}">Submit</Button>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+            </StackPanel>
+
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,15,0,0">HARDWARE</Label>
+
+            <StackPanel IsEnabled="{Binding CharacteristicsChanged, Converter={converters:InvertedBooleanConverter}}">
+                <measuresProbe:ProbeSelector DataContext="{Binding ProbeSelector}"></measuresProbe:ProbeSelector>
+                <Grid Grid.Row="2" Grid.Column="1" Margin="0,0,10,10">
+                    <Button Visibility="{Binding IsEditingHardware, Converter={converters:InvertedBooleanToVisibilityConverter}}" Command="{Binding StartEditHardware}" MinWidth="100" HorizontalAlignment="Right">Edit</Button>
+                    <Button Visibility="{Binding IsEditingHardware, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding SubmitHardware}" MinWidth="100" HorizontalAlignment="Right">Submit</Button>
+                </Grid>
+            </StackPanel>
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,0">MEASURE SETTINGS</Label>
+            <!--MEASURE SETTINGS-->
+ 
+
+
+            <StackPanel IsEnabled="{Binding IsEditingHardware, Converter={converters:InvertedBooleanConverter}}">
+                <!--MEASURE SETTINGS-->
+                <Label Style="{StaticResource TitleLevel2}">SCAN</Label>
+                <Grid Margin="0,5,0,0" IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+  
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="85"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="85"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Size" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding ScanSize, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+                    <Label Content="Angle" Grid.Column="2" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxAngleUnit Grid.Column="3"  AngleValue="{Binding ScanAngle, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+
+                </Grid>
+
+  
+                <Label Style="{StaticResource TitleLevel2}" Margin="0,5,0,0">STEP SIZE</Label>
+                <Grid Margin="0,0,0,0" IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="85"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="110"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Step size" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="1" Margin="0,5" LengthValue="{Binding StepSize, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+                    <Label Content="Number of steps" Grid.Column="2" Style="{StaticResource LabelForm}" />
+                    <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{converters:DivideLengthConverter}" StringFormat="{}{0:F0}">
+                                <Binding Path="ScanSize"/>
+                                <Binding Path="StepSize"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+                <Label Style="{StaticResource TitleLevel2}">EXCLUSIONS</Label>
+                <Grid Margin="0,0,0,0" IsEnabled="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="85"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="85"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Top edge" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="1" Margin="0,5" LengthValue="{Binding TopEdgeExclusionSize, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+                    <Label Content="Bottom edge" Grid.Column="2" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="3" Margin="0,5" LengthValue="{Binding BottomEdgeExclusionSize, StringFormat='{}{0:F2}'}" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Width="100" />
+
+                </Grid>
+
+
+                <Separator Margin="0,5"></Separator>
+
+                <!--AUTOFOCUS-->
+                <recipe:AutoFocusSettingsView AutoFocusSettings="{Binding AutoFocusSettings}" AvailableAutoFocusTypes="{x:Static vms:AvailableAutoFocus.CameraAndLise}" />
+                <Separator Margin="0,5"></Separator>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

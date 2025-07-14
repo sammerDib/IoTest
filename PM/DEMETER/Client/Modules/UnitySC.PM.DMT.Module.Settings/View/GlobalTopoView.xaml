@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.Modules.Settings.View.GlobalTopoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:exposuresettings="clr-namespace:UnitySC.PM.DMT.CommonUI.View.ExposureSettings;assembly=UnitySC.PM.DMT.CommonUI"
+             xmlns:zb="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="1200">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <TextBlock FontSize="16">Place a calibration wafer in the tool</TextBlock>
+
+                <sharedControls:ImageGroupBox Header="Screen Control" ImageGeometry="{StaticResource ScreenSolidGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="0,10,0,0">
+                    <StackPanel Orientation="Vertical" Margin="5,0">
+                        <TextBlock Margin="0,0,0,5">Control screen color to assist machine handling</TextBlock>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <sharedControls:ImageButton Grid.Row="1" Content="Display white" Command="{Binding DisplayWhite}" Margin="0,10" />
+                            <sharedControls:ImageButton Grid.Row="2" Content="Display black" Command="{Binding DisplayBlack}" Margin="0,10" />
+                        </Grid>
+                    </StackPanel>
+                </sharedControls:ImageGroupBox>
+                <exposuresettings:ExposureSettingsWithAuto DataContext="{Binding ExposureSettings}" DisplayApplyButton="False"></exposuresettings:ExposureSettingsWithAuto>
+
+                <sharedControls:ImageGroupBox Header="Camera Calibration" ImageGeometry="{StaticResource CameraGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="0,10,0,0" MaxHeight="400">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding CamCalibAcquisitions}" HorizontalContentAlignment="Stretch" BorderThickness="0" Margin="5,0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="50" />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox IsChecked="{Binding IsAcquired}" Command="{Binding DataContext.RemoveCamCalibImage, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" VerticalAlignment="Center" IsEnabled="{Binding Path=IsAcquired}"></CheckBox>
+                                            <TextBlock Grid.Column="1" Margin="5,0"  Text="{Binding Name}" VerticalAlignment="Center" />
+                                            <sharedControls:ImageButton Grid.Column="2" Command="{Binding  DataContext.AcquireCamCalibImage, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}" Width="50" ImageGeometry="{StaticResource AcquireImageGeometry}" Padding="0" ImageGeometryBrush="{StaticResource IconsColor}" HorizontalContentAlignment="Center" Margin="0,2" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <sharedControls:ImageButton Grid.Row="2" Content="Save Calibration Backup" Command="{Binding SaveCameraCalibrationBackup}" Margin="5,10" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="Green" />
+                        <sharedControls:ImageButton Grid.Row="3" Content="Calibrate Camera" Command="{Binding ExecuteCalibrationCam}" Margin="5,10" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="Green" />
+                    </Grid>
+                </sharedControls:ImageGroupBox>
+
+                <sharedControls:ImageGroupBox Header="System Calibration" ImageGeometry="{StaticResource GearGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="0,10,0,0">
+                    <StackPanel Orientation="Vertical" Margin="5,0">
+                        <TextBlock Margin="0,0,0,5">Place the wafer in a standard position</TextBlock>
+                        <TextBlock>Periods</TextBlock>
+                        <ListBox ItemsSource="{Binding Periods}" IsHitTestVisible="False">
+                        </ListBox>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <sharedControls:ImageButton Grid.Row="1" Content="Save Calibration Backup" Command="{Binding SaveSystemCalibrationBackup}" Margin="0,10" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="Green" />
+                            <sharedControls:ImageButton Grid.Row="2" Content="Calibrate System" Command="{Binding ExecuteCalibrationSys}" Margin="0,10" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="Green" />
+                        </Grid>
+                    </StackPanel>
+                </sharedControls:ImageGroupBox>
+            </StackPanel>
+        </ScrollViewer>
+        <zb:ZoomboxImage ImageSource="{Binding LastAcquiredImage}" Grid.Column="1" Margin="5" />
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="{Binding BusyMessage}" Grid.ColumnSpan="2" />
+    </Grid>
+</UserControl>

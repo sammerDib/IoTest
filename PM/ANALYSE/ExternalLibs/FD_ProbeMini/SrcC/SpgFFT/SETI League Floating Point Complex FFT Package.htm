@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0046)http://www.setileague.org/software/karnfft.htm -->
+<HTML><HEAD><TITLE>SETI League: Floating Point Complex FFT Package</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><!--  linked from ../software/sftwrepg.htm   -->
+<META 
+content="The SETI League, Inc. is a membership-supported, nonprofit [501(c)(3)] educational and scientific organization, devoted to privatizing the electromagnetic Search for Extra-Terrestrial Intelligence." 
+name=description>
+<META 
+content="SETI, astronomy, radio astronomy, bioastronomy, astrobiology, microwave, radio, education, science, nonprofit, space, amateur radio, ham radio, EME, moonbounce, amateur astronomy, search, extraterrestrial, intelligence, Contact, alien, Search for Extra-Terrestrial Intelligence" 
+name=keywords>
+<META content="H. Paul Shuch, Ph.D." name=author>
+<META 
+content="entire Web site Copyright ©  by The SETI League, Inc.  All rights reserved.  SETI League, Dr. SETI and the SETI League Logo are service marks of The SETI League, Inc. registered in the United States and other countries." 
+name=copyright>
+<SCRIPT language=JavaScript1.2 type=text/javascript>
+<!--
+function mailto(user,domain, subject) {
+status="mailto:" + user + "@" + domain;
+locationstring = "mailto:" + user + "@" + domain + subject;
+window.location = locationstring;
+}
+-->
+</SCRIPT>
+
+<SCRIPT language=JavaScript type=text/javascript>
+	<!--
+	if( top.parent.frames.length > 0)
+	top.parent.location.href=self.location.href;
+	//-->
+</SCRIPT>
+
+<META content="MSHTML 6.00.2800.1400" name=GENERATOR></HEAD>
+<BODY text=#400000 link=navy bgColor=#fbfbff><A name=top></A><FONT size=+1><B><A 
+href="http://www.setileague.org/index.html"><IMG height=71 alt="small logo" 
+src="SETI League Floating Point Complex FFT Package_fichiers/logoanim.gif" 
+width=100 align=bottom border=0></A> SETI League Technical Manual -- <A 
+href="http://www.setileague.org/software/index.html">Software</A></B></FONT><BR>
+<HR align=center width="90%">
+
+<CENTER><FONT size=+2><B>Floating Point Complex FFT Package</B></FONT><BR><FONT 
+size=+1><B>contributed by <A href="http://people.qualcomm.com/karn/">Phil 
+Karn</A>, KA9Q (<A 
+href="javascript:mailto('ka9q','amsat.org',%20'%20?subject=Software via www.setileague.org')">ka9q 
+@ amsat.org</A>)</B></FONT></CENTER>
+<P>This floating point complex FFT package is in C, with assembler assist for 
+especially fast execution on the Intel Pentium. The core of the Pentium 
+assembler assist is a radix 4 FFT routine that has been heavily hand-optimized 
+for the Pentium's floating point pipeline.
+<P>This package requires the GCC (<A href="http://www.gnu.ai.mit.edu/">Gnu</A> C 
+Compiler) and assembler (gas). Both ELF and a.out formats are supported; ifdefs 
+in the asm code automatically take care of the different external symbol name 
+formats.
+<P>Usage notes:
+<P>0. Before compiling, set the variable MAXPOINTS in fft.h to the largest 
+number of points you will need in your FFTs. This dimensions the internal 
+twiddle factor array.
+<P>1. At run time, you must call the function fftinit() before doing your first 
+FFT. This computes the twiddle factors. You need only do this once.
+<P>2. The user entry point names are of the form fftn(x), where n is a power of 
+4 (e.g., 4, 16, 64, 256, etc) and x is an array of complex variables of 
+appropriate size. The complex data type is defined in fft.h (which you must 
+include in your program). The results are computed "in place", i.e., they 
+overwrite the input array.
+<P>3. The complex arguments are in single-precision floating point. Even though 
+the Pentium can perform double-precision operations at the same speed, I chose 
+single-precision to halve cache memory requirements. This makes the code 
+considerably faster on larger buffers while keeping enough signal resolution for 
+most applications.
+<P>4. Note that the FFT routines leave their frequency components in 
+bit-reversed order. If you want the components in correct order, you must call 
+fftswap() immediately after the fft. I made this a separate function to speed up 
+applications like carrier search (SETI, etc) that need not operate on in-order 
+frequency components.
+<P>The test programs ffttime and ffttest are provided as demos of how to call 
+the FFT functions. The ffttest program initializes a buffer to a sine wave, 
+takes the FFT, reorders the frequency components into the correct order and 
+prints them. The ffttime program repeatedly calls the FFT function (without 
+swapping) on a single buffer as a timing test. (Invoke this one with the "time" 
+command as a prefix.)
+<P>Speed test: on a P133 laptop, the Pentium version of the code does a 
+256-complex-point floating point FFT in about 216 microseconds. The pure C 
+version (no assembler speedups) compiled with the gcc -O4 and -ffast-math 
+options takes about 351 microseconds.
+<P>October 17, 1997<BR>Phil Karn, KA9Q
+<P>
+<CENTER><B><A href="http://www.setileague.org/software/karnfft.zip">Download</A> 
+karnfft.zip (6 kBytes)</B>
+<P>
+<HR width="95%" noShade SIZE=2>
+
+<TABLE cellPadding=5 width="98%" border=0>
+  <TBODY>
+  <TR>
+    <TD noWrap>
+      <CENTER><B><A 
+      href="javascript:mailto('paul','setileague.org',%20'%20?subject=Webmaster via www.setileague.org')"><IMG 
+      height=45 alt="Click to email the Webmaster" 
+      src="SETI League Floating Point Complex FFT Package_fichiers/webmastr.gif" 
+      width=45 align=middle border=0><BR>email</A> 
+    the<BR>Webmaster</B></CENTER></TD>
+    <TD noWrap>
+      <CENTER><FONT face="arial, helvetica, sans-serif" size=-1>| <A 
+      href="http://www.setileague.org/index.html">Home</A> | <A 
+      href="http://www.setileague.org/general/index.html">General</A> | <A 
+      href="http://www.setileague.org/admin/index.html">Memb Svcs</A> | <A 
+      href="http://www.setileague.org/articles/index.html">Publications</A> | <A 
+      href="http://www.setileague.org/press/index.html">Press</A> | <A 
+      href="http://www.setileague.org/hardware/index.html">Technical</A> | <A 
+      href="http://www.setileague.org/otherweb/index.html">Internet</A> | <A 
+      href="http://www.setileague.org/admin/contents.htm">Index</A> | 
+      <BR><I>entire website <A 
+      href="http://www.setileague.org/admin/copyrigh.htm">copyright ©</A> The 
+      SETI League, Inc.</I><BR>this page last updated 23 November 2002</FONT> 
+      </CENTER></TD>
+    <TD noWrap>
+      <CENTER><A href="http://www.setileague.org/software/karnfft.htm#top"><IMG 
+      height=28 alt="Click for top of page" 
+      src="SETI League Floating Point Complex FFT Package_fichiers/top.gif" 
+      width=40 align=middle border=0><BR><B>Top of 
+  Page</B></A></CENTER></TD></TR></TBODY></TABLE></CENTER></BODY></HTML>

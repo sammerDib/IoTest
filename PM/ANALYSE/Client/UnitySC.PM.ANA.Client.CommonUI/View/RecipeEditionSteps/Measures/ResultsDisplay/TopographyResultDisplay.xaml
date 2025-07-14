@@ -1,0 +1,262 @@
+﻿<Window x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.TopographyResultDisplay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+        xmlns:resConverters="clr-namespace:UnitySC.Shared.ResultUI.Metro.Converters;assembly=UnitySC.Shared.ResultUI.Metro"
+        xmlns:topographyView="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Topography;assembly=UnitySC.Shared.ResultUI.Metro"
+        xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+        xmlns:resUI="clr-namespace:UnitySC.Shared.ResultUI.Metro.View.WaferDetail.Common;assembly=UnitySC.Shared.ResultUI.Metro"
+        xmlns:helpers="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.Helpers"
+        xmlns:extensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+        xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+        xmlns:camera="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera;assembly=UnitySC.PM.ANA.Client.Controls"
+        xmlns:reciperunview="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.RecipeRun"
+        mc:Ignorable="d"
+        d:DesignHeight="800" d:DesignWidth="600" WindowStyle="ToolWindow" Title="Topography Result" SizeToContent="Width" Height="800" MinWidth="600">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <resConverters:MeasureStateToToleranceDisplayerConverter x:Key="MeasureStateToToleranceDisplayerConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Visibility="{Binding ResultAvailable,Converter={StaticResource BooleanToVisibilityConverter}}">
+                <topographyView:TopographyMeasureInfoView Margin="10,10,10,5" DataContext="{Binding TopographyDetailResult}" />
+            </Grid>
+            <Grid Grid.Row="1" Visibility="{Binding ResultAvailable,Converter={StaticResource BooleanToVisibilityConverter}}">
+                <resUI:ThumbnailViewerView  DataContext="{Binding Topo}" Margin="50,0"/>
+            </Grid>
+            <Grid Margin="10" Grid.RowSpan="3" Visibility="{Binding ResultAvailable,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                <TextBlock Text="Not measured" Foreground="{StaticResource ImageErrorColor}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">POST PROCESSING</Label>
+            </Grid>
+            <Grid Grid.Row="3">
+                <ListBox ItemsSource="{Binding ExternalProcessingResults}" MinHeight="100" Style="{StaticResource ListBoxWithoutSelection}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Background="{StaticResource LeftPaneBackgroundBrush}" Orientation="Horizontal">
+                                <controls:ToleranceDisplayer Margin="0,5,0,0" VerticalAlignment="Center" Tolerance="{Binding State, Converter={StaticResource MeasureStateToToleranceDisplayerConverter}}" />
+                                <TextBlock Text="{Binding Name}" Margin="6,4" VerticalAlignment="Center" MinWidth="150"/>
+                                <TextBlock Text="{Binding Value}" Margin="2" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="4" Margin="0,10,0,0" MinWidth="570">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid Margin="0,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" IsEnabled="{Binding IsStaticRepetaInProgress, Converter={converters:InvertedBooleanConverter}}" IsChecked="{Binding UseRepeta}" Margin="0,13,5,13" />
+                    <TextBlock Grid.Column="1" Margin="0,10,10,10" VerticalAlignment="Center">Use Repeta</TextBlock>
+                </Grid>
+                <Button Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" IsCancel="True" IsEnabled="{Binding IsStaticRepetaInProgress, Converter={converters:InvertedBooleanConverter}}" Style="{StaticResource HighlightedButton}">Close</Button>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1" Visibility="{Binding UseRepeta, Converter={converters:BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Visibility="{Binding UseRepeta, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" Width="350" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="5,0,10,0" HorizontalAlignment="Left" VerticalAlignment="Center">Number of repeats</TextBlock>
+                    <controls:IntegerUpDown Grid.Column="1"
+                                            IsEnabled="{Binding IsStaticRepetaInProgress, Converter={converters:InvertedBooleanConverter}}"
+                                            Width="120"
+                                            Margin="0,0,10,0"
+                                            x:Name="integerUpDown"
+                                            Maximum="10000"
+                                            Minimum="2"
+                                            ImageGeometryDown="{StaticResource MinusGeometry}"
+                                            ImageGeometryUp="{StaticResource PlusGeometry}"
+                                            HorizontalContentAlignment="Right"
+                                            Value="{Binding NbRepeats}">
+                    </controls:IntegerUpDown>
+                    <controls:ImageButton Grid.Column="2"
+                                          ImageGeometry="{StaticResource PlayGeometry}"
+                                          ImageGeometryBrush="{StaticResource IconsColor}"
+                                          HorizontalAlignment="Left"
+                                          Margin="5"
+                                          Command="{Binding StartStaticRepetaCommand}"
+                                          Visibility="{Binding IsStaticRepetaInProgress, Converter={converters:InvertedBooleanToVisibilityConverter}}"
+                                          Width="95">
+                        Start
+                    </controls:ImageButton>
+                    <controls:ImageButton Grid.Column="2"
+                                          ImageGeometry="{StaticResource StopGeometry}"
+                                          ImageGeometryBrush="Red"
+                                          HorizontalAlignment="Left"
+                                          Margin="5"
+                                          Command="{Binding StopStaticRepetaCommand}"
+                                          Visibility="{Binding IsStaticRepetaInProgress, Converter={converters:BooleanToVisibilityConverter}}"
+                                          Width="95">
+                        Stop
+                    </controls:ImageButton>
+                </Grid>
+            </Grid>
+            <DataGrid Grid.Row="1" x:Name="MeasurePointResultsDataGrid" ItemsSource="{Binding MeasurePointsResults}"
+                   AutoGenerateColumns="False"
+                   SelectionMode="Single"
+                   Margin="5,5"
+                   MinWidth="865"
+                   CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserSortColumns="false"
+                   GridLinesVisibility="Horizontal" 
+                   helpers:ScrolDataGridBehavior.Autoscroll="True" 
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"  
+                   helpers:DataGridBehavior.DisplayRowNumber="True">
+                <DataGrid.RowBackground>
+                    <SolidColorBrush Color="Transparent" />
+                </DataGrid.RowBackground>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <!-- Update from comments. Remove the focus indication for the selected cell -->
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="State" IsReadOnly="True" Width="auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2">
+                                    <StackPanel Orientation="Horizontal" Visibility="{Binding IsInProgress, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                                        <Viewbox Width="22">
+                                            <controls:ToleranceDisplayer
+                    		    	        x:Name="ToleranceDisplayer"
+			                                HorizontalAlignment="Center"
+                                            Tolerance="{Binding Result.State, Converter={resConverters:MeasureStateToToleranceDisplayerConverter}}"/>
+                                        </Viewbox>
+                                        <Image
+                                         Width="20"
+                                         Height="20"
+                                         Margin="3,0"
+                                         Visibility="{Binding Result.Message, Mode=OneWay, Converter={converters:EmptyStringToVisibilityConverter}}"
+                                         ToolTip="{Binding Result.Message, Mode=OneWay}"
+                                         extensions:ImageExt.GeometryBrush="{StaticResource HighLightBrush}"
+                                         extensions:ImageExt.SourceGeometry="{StaticResource InformationGeometry}"
+                                         Style="{StaticResource Icon}"
+                                     />
+                                    </StackPanel>
+                                    <Image x:Name="InProgressImage" Height="22" Source="/UnitySC.Shared.UI;component/Controls/Status/ProgressGradient.png" Visibility="{Binding IsInProgress, Converter={converters:BooleanToVisibilityConverter}}" Style="{StaticResource ImageSpinnerVisible}" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Repeat" Width="auto" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}/{1}">
+                                            <Binding Path="RepeatIndex" />
+                                            <Binding Path="NbRepeat" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Quality" Width="auto" IsReadOnly="True" Binding="{Binding Path=Result.QualityScore, StringFormat='{}{0:F2}', Converter={converters:ScaleToPercentConverter Round=False}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Values" Width="auto" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <reciperunview:ResultValuesDisplay DataContext="{Binding}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid Grid.Row="2" Visibility="{Binding ShowRepetaResults, Converter={converters:InvertedBooleanToVisibilityConverter}}" MinHeight="120">
+                <!-- Empty Grid Row used to preserve space for stats before displaying them -->
+            </Grid>
+            <Grid Grid.Row="2" Visibility="{Binding ShowRepetaResults, Converter={converters:BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ComboBox VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="5"
+                        ItemsSource="{Binding StaticRepetaAvailableStatTypes}"
+                        SelectedItem="{Binding StaticRepetaStatTypeSelected}"
+                        Margin="20,5,0,5"
+                        Width="200"
+                        HorizontalAlignment="Left" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Avg" />
+                <controls:TextBoxUnit IsReadOnly="True"
+                                      Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"
+                                      Unit="{Binding StaticRepetaStatMean.UnitSymbol, FallbackValue=''}"
+                                      Text="{Binding StaticRepetaStatMean, StringFormat='{}{0:F3}'}" />
+                <TextBlock Grid.Row="1" Grid.Column="2" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Std dev" />
+                <controls:TextBoxUnit IsReadOnly="True" Grid.Row="1" Grid.Column="3" Margin="0,0,0,5"
+                                      Unit="{Binding StaticRepetaStatStdDev.UnitSymbol, FallbackValue=''}"
+                                      Text="{Binding StaticRepetaStatStdDev, StringFormat='{}{0:F3}'}" />
+                <controls:ImageButton Grid.Row="1" Grid.Column="4" Grid.RowSpan="2" Width="30" Height="30" Margin="0" HorizontalAlignment="Center" VerticalContentAlignment="Center" Command="{Binding ExportCsvCommand}" ImageGeometry="{StaticResource Export2Geometry}" ImageGeometryBrush="{StaticResource IconsColor}" ToolTip="Export CSV" />
+
+                <TextBlock Grid.Row="2"	Grid.Column="0"	Margin="20,0,0,10" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Min" />
+                <controls:TextBoxUnit IsReadOnly="True" Grid.Row="2" Grid.Column="1" Margin="0,0,0,15"
+                                      Unit="{Binding StaticRepetaStatMin.UnitSymbol, FallbackValue=''}"
+                                      Text="{Binding StaticRepetaStatMin, StringFormat='{}{0:F3}'}" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Margin="20,0,0,10" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Max" />
+                <controls:TextBoxUnit IsReadOnly="True" Grid.Row="2" Grid.Column="3" Margin="0,0,0,15"
+                                      Unit="{Binding StaticRepetaStatMax.UnitSymbol, FallbackValue=''}"
+                                      Text="{Binding StaticRepetaStatMax, StringFormat='{}{0:F3}'}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,134 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Controls.EdgesDetection.EdgesDetectionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:navigationcontrols="clr-namespace:UnitySC.PM.ANA.Client.Controls.NavigationControls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+             md:DialogServiceViews.IsRegistered="True"
+             x:Name="EdgeDetectionControl"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DrawingImage x:Key="TransparentSquare">
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="Transparent" Geometry="M0,0 L30,0 L30,30 L0,30 Z" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+
+            <RowDefinition Height="*" />
+
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="50" />
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="SquareImage" Source="{StaticResource TransparentSquare}" Grid.Row="1" Grid.Column="1"></Image>
+
+        <Grid Grid.Row="1" Grid.Column="1" Width="{Binding ElementName=SquareImage, Path=ActualWidth}" Height="{Binding ElementName=SquareImage, Path=ActualHeight}">
+            <navigationcontrols:WaferNavigationControl Grid.Row="1" Grid.Column="1" WaferDimentionalCharac="{Binding Wafer.DimentionalCharacteristic}"
+                                                       WaferBrush="Transparent" CurrentPosBrush="Transparent" EdgeExclusionBrush="Transparent"
+                                                       Visibility="Visible" IsHitTestVisible="False">
+                <navigationcontrols:WaferNavigationControl.WaferBorderPen>
+                    <Pen Brush="{StaticResource ButtonForegroundBrush}" Thickness="2" />
+                </navigationcontrols:WaferNavigationControl.WaferBorderPen>
+                <navigationcontrols:WaferNavigationControl.CurrentPosBorderPen>
+                    <Pen Brush="Transparent" Thickness="1" />
+                </navigationcontrols:WaferNavigationControl.CurrentPosBorderPen>
+            </navigationcontrols:WaferNavigationControl>
+
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Height="80" Width="80" Margin="0,-50,0,0">
+                <Button  Height="60" Width="80" VerticalAlignment="Bottom" Background="{StaticResource ButtonBackgroundBrush}" Padding="0" Command="{Binding EdgeTop.ZoomImage}" Style="{StaticResource ButtonChromelessStyle}">
+                    <Grid>
+                        <Border Background="Transparent" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" CornerRadius="5" Visibility="{Binding EdgeTop.Image, Converter={converters:InvertedNullToVisibilityConverter}}" />
+                        <Image Source="{Binding EdgeTop.Image}" RenderOptions.BitmapScalingMode="Fant" VerticalAlignment="Center" HorizontalAlignment="Center"  Cursor="Hand" sharedExtensions:RoundedCornersExt.CornerRadius="5" />
+                    </Grid>
+                </Button>
+                <sharedControls:StepStateImage HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,4,4" StepState="{Binding EdgeTop.StepState}"></sharedControls:StepStateImage>
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Top"  Margin="0,20,-30,0" Height="25" Width="25" Visibility="{Binding IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                    <sharedControls:ImageButton  ImageGeometry="{StaticResource PencilGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Style="{StaticResource ImageButtonWithoutBorder}" Visibility="{Binding EdgeTop.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding EdgeTop.Edit}"></sharedControls:ImageButton>
+                    <sharedControls:ImageButton ImageGeometry="{StaticResource ValidateGeometry}" ImageGeometryBrush="{StaticResource HighlightButtonBackgroundBrush}" Height="Auto"  Padding="0,2,2,2" Visibility="{Binding EdgeTop.IsEditing, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding EdgeTop.Submit}"></sharedControls:ImageButton>
+                </Grid>
+            </Grid>
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Right" Height="120" Width="80" Margin="0,0,-50,0">
+                <Button  Height="60" Width="80"  Background="{StaticResource ButtonBackgroundBrush}" Padding="0" Command="{Binding EdgeRight.ZoomImage}" Style="{StaticResource ButtonChromelessStyle}">
+                    <Grid>
+                        <Border Background="Transparent" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" CornerRadius="5" Visibility="{Binding EdgeRight.Image, Converter={converters:InvertedNullToVisibilityConverter}}" />
+
+                        <Image Source="{Binding EdgeRight.Image}" RenderOptions.BitmapScalingMode="Fant" Cursor="Hand" sharedExtensions:RoundedCornersExt.CornerRadius="5" />
+                    </Grid>
+                </Button>
+                <sharedControls:StepStateImage HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,4,4" StepState="{Binding EdgeRight.StepState}"></sharedControls:StepStateImage>
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="0,0,-20,0" Height="25" Width="25" Visibility="{Binding IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                    <sharedControls:ImageButton  ImageGeometry="{StaticResource PencilGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Style="{StaticResource ImageButtonWithoutBorder}" Visibility="{Binding EdgeRight.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding EdgeRight.Edit}"></sharedControls:ImageButton>
+                    <sharedControls:ImageButton ImageGeometry="{StaticResource ValidateGeometry}" ImageGeometryBrush="{StaticResource HighlightButtonBackgroundBrush}" Height="Auto" Padding="0,2,2,2" Visibility="{Binding EdgeRight.IsEditing, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding EdgeRight.Submit}"></sharedControls:ImageButton>
+                </Grid>
+            </Grid>
+
+            <Grid VerticalAlignment="Bottom"  Height="80" Width="80" Margin="0,0,0,-50">
+
+                <Button  Height="60" Width="80" VerticalAlignment="Top" Background="{StaticResource ButtonBackgroundBrush}" Padding="0" Command="{Binding EdgeBottom.ZoomImageNotch}" Style="{StaticResource ButtonChromelessStyle}">
+                    <Grid>
+                        <Border Background="Transparent" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" CornerRadius="5" Visibility="{Binding EdgeBottom.Image, Converter={converters:InvertedNullToVisibilityConverter}}" />
+                        <Image Source="{Binding EdgeBottom.Image}" RenderOptions.BitmapScalingMode="Fant" Cursor="Hand" sharedExtensions:RoundedCornersExt.CornerRadius="5" />
+                    </Grid>
+                </Button>
+
+                <sharedControls:StepStateImage HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4" StepState="{Binding EdgeBottom.StepState}"></sharedControls:StepStateImage>
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Center"  Margin="-30,0" Height="25" Width="25" Visibility="{Binding IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                    <sharedControls:ImageButton  ImageGeometry="{StaticResource PencilGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Style="{StaticResource ImageButtonWithoutBorder}" Visibility="{Binding EdgeBottom.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding EdgeBottom.Edit}"></sharedControls:ImageButton>
+                    <sharedControls:ImageButton ImageGeometry="{StaticResource ValidateGeometry}" ImageGeometryBrush="{StaticResource HighlightButtonBackgroundBrush}"  Visibility="{Binding EdgeBottom.IsEditing, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding EdgeBottom.Submit}" Height="Auto" Padding="0,2,2,2"></sharedControls:ImageButton>
+                </Grid>
+            </Grid>
+
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Height="120" Width="80" Margin="-50,0,0,0">
+
+                <Button  Height="60" Width="80" Background="{StaticResource ButtonBackgroundBrush}" Padding="0" Command="{Binding EdgeLeft.ZoomImage}" Style="{StaticResource ButtonChromelessStyle}">
+                    <Grid>
+                        <Border Background="Transparent" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1" CornerRadius="5" Visibility="{Binding EdgeLeft.Image, Converter={converters:InvertedNullToVisibilityConverter}}" />
+                        <Image Source="{Binding EdgeLeft.Image}" RenderOptions.BitmapScalingMode="Fant" Cursor="Hand" sharedExtensions:RoundedCornersExt.CornerRadius="5" />
+                    </Grid>
+                </Button>
+                <!--<TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,10,0,0">GOF 90%</TextBlock>-->
+                <sharedControls:StepStateImage HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,4,4" StepState="{Binding EdgeLeft.StepState}"></sharedControls:StepStateImage>
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom"  Margin="-20,0,0,0" Height="25" Width="25" Visibility="{Binding IsInAutomaticMode, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                    <sharedControls:ImageButton  ImageGeometry="{StaticResource PencilGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Style="{StaticResource ImageButtonWithoutBorder}" Visibility="{Binding EdgeLeft.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding EdgeLeft.Edit}"></sharedControls:ImageButton>
+                    <sharedControls:ImageButton ImageGeometry="{StaticResource ValidateGeometry}" ImageGeometryBrush="{StaticResource HighlightButtonBackgroundBrush}" Height="Auto" Padding="0,2,2,2" Visibility="{Binding EdgeLeft.IsEditing, Mode=OneWay, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding EdgeLeft.Submit}"></sharedControls:ImageButton>
+                </Grid>
+            </Grid>
+
+            <Grid Width="auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.Done}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Center" Margin="0,5"><Run Text="Score: "></Run><Run Text="{Binding Score}" /><Run>&#160;%</Run></TextBlock>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Margin="0,5"><Run Text="Shift X: "></Run><Run Text="{Binding ResultShiftX.Value,StringFormat={}{0:F3}, Mode=OneWay}" /><Run>&#160;</Run><Run Text="{Binding ResultShiftX.UnitSymbol, Mode=OneWay}"></Run></TextBlock>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Center" Margin="0,5"><Run Text="Shift Y: "></Run><Run Text="{Binding ResultShiftY.Value,StringFormat={}{0:F3}, Mode=OneWay}" /><Run>&#160;</Run><Run Text="{Binding ResultShiftY.UnitSymbol, Mode=OneWay}"></Run></TextBlock>
+                <TextBlock Grid.Row="3" HorizontalAlignment="Center" Margin="0,5"><Run Text="Shift Angle: "></Run><Run Text="{Binding ResultAngle.Degrees,StringFormat={}{0:F3}, Mode=OneWay}" /><Run>&#160;</Run><Run Text="°"></Run></TextBlock>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

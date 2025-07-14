@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings.BowSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:t="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedMetroTSV="clr-namespace:UnitySC.Shared.Format.Metro.TSV;assembly=UnitySC.Shared.Format.Metro"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:measures="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:measures1="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.ProbeSelector"
+             mc:Ignorable="d"
+             d:DesignHeight="1024" d:DesignWidth="400">
+    <UserControl.Resources>
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,10">CHARACTERISTICS</Label>
+            <StackPanel Grid.Row="1" IsEnabled="{Binding IsEditingHardware, Converter={converters:InvertedBooleanConverter}}">
+
+                <Grid Margin="10,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Bow Max" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding BowMax, StringFormat='{}{0:F2}'}"  sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                </Grid>
+                <Grid Margin="10,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Bow Min" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding BowMin, StringFormat='{}{0:F2}'}"  sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                </Grid>
+
+                <Separator Margin="0,5"></Separator>
+                <Button HorizontalAlignment="Right" MinWidth="100" Margin="5,5" Command="{Binding SubmitCharacteristics}">Submit</Button>
+            </StackPanel>
+
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,0">HARDWARE</Label>
+
+            <StackPanel IsEnabled="{Binding CharacteristicsChanged, Converter={converters:InvertedBooleanConverter}}">
+                <measures1:ProbeSelector DataContext="{Binding ProbeSelector}"></measures1:ProbeSelector>
+                <Button Grid.Row="2" Grid.Column="1" Margin="0,0,10,10" Visibility="{Binding IsEditingHardware, Converter={converters:InvertedBooleanToVisibilityConverter}}" Command="{Binding StartEditHardware}" MinWidth="100" HorizontalAlignment="Right">Edit</Button>
+                <Button Grid.Row="2" Grid.Column="1" Margin="0,0,10,10"  Visibility="{Binding IsEditingHardware, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding SubmitHardware}" MinWidth="100" HorizontalAlignment="Right">Submit</Button>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

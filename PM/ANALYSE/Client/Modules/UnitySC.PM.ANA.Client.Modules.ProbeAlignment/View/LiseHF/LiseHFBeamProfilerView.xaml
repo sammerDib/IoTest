@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.ProbeAlignment.View.LiseHF.LiseHFBeamProfilerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:viewModel="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel"
+             xmlns:liseHf="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel.LiseHF"
+             mc:Ignorable="d" d:DesignHeight="750" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance liseHf:LiseHFBeamProfilerVM}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <Grid>
+            <headers:HeaderRight Content="BEAM PROFILER" />
+            <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,0,0,0"
+                                  ImageGeometry="{StaticResource PlayGeometry}"
+                                  ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                  Visibility="{Binding IsMeasurementRunning, Converter={converters:InvertedBooleanToVisibilityConverter}}"
+                                  Command="{Binding StartCommand}" />
+            <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,0,0,0"
+                                  ImageGeometry="{StaticResource StopGeometry}"
+                                  ImageGeometryBrush="{StaticResource IconsErrorColor}"
+                                  Visibility="{Binding IsMeasurementRunning, Converter={converters:BooleanToVisibilityConverter}}"
+                                  Command="{Binding StopCommand}" />
+        </Grid>
+        <Grid Margin="5" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Success: " />
+            <Label Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Ampl: " />
+            <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="X Gauss: " />
+            <Label Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Y Gauss: " />
+            <Label Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Radius: " />
+            <Grid Grid.Row="0" Grid.Column="1" Height="20">
+                <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ErrorGeometry}"
+                       sharedExtensions:ImageExt.GeometryBrush="{StaticResource IconsErrorColor}"
+                       Visibility="{Binding IsSuccess, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource ValidateGeometry}"
+                       sharedExtensions:ImageExt.GeometryBrush="{StaticResource HighLightBrush}"
+                       Visibility="{Binding IsSuccess, Converter={converters:BooleanToVisibilityConverter}}" />
+            </Grid>
+            <controls:TextBoxUnit Grid.Row="1" Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding Amplitude, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="2" Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding GaussX, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="3" Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding GaussY, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="4" Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding Radius, StringFormat=F4}" />
+            <Label Grid.Row="0" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Background: " />
+            <Label Grid.Row="1" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Norm: " />
+            <Label Grid.Row="2" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Weighted Norm: " />
+            <Label Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Ratio of Axis of Ellipse: " />
+            <Label Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Margin="5" Content="Angle of Ellipse: " />
+            <controls:TextBoxUnit Grid.Row="0" Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding Background, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="1" Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding Norme, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="2" Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding WeightedNorme, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="3" Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding EllipseAxisRatio, StringFormat=F4}" />
+            <controls:TextBoxUnit Grid.Row="4" Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding EllipseAngle, StringFormat=F4}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,153 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.AutoFocusSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:vms="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps"
+             xmlns:recipeMeasure="clr-namespace:UnitySC.PM.ANA.Service.Interface.Recipe.Measure;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800" x:Name="AutoFocusSettingsUserControl">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label Style="{StaticResource TitleLevel2}" Grid.Column="0" DockPanel.Dock="Left">AUTOFOCUS</Label>
+                <ToggleButton  Grid.Column="1" Width="16" Style="{StaticResource ToggleButtonChromelessStyle}" Margin="0 0 10 0"  Visibility="{Binding AutoFocusSettings.IsAutoFocusEnabled ,ElementName=AutoFocusSettingsUserControl, Converter={converters:BooleanToVisibilityConverter}}"  IsEnabled="{Binding AutoFocusSettings.IsEditing ,ElementName=AutoFocusSettingsUserControl, Converter={converters:InvertedBooleanConverter}}" IsChecked="{Binding AutoFocusSettings.AreSettingsVisible ,ElementName=AutoFocusSettingsUserControl}" Cursor="Hand">
+                    <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource GearGeometry}">
+                        <Image.Style>
+                            <Style TargetType="{x:Type Image}">
+                                <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource ButtonForegroundBrush}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AutoFocusSettings.AreSettingsVisible}" Value="true">
+                                        <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource ToggleButtonCheckedImageBrush}" />
+                                    </DataTrigger>
+                                    <!--<DataTrigger Binding="{Binding AutoFocusSettings.IsAutoFocusEnaVisibilityEbled}" Value="false">
+                                        <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource IconsDisabledColor}" />
+                                    </DataTrigger>-->
+                                    <DataTrigger Binding="{Binding AutoFocusSettings.IsAutoFocusEnabled}" Value="false">
+                                        <Setter Property="sharedExtensions:ImageExt.GeometryBrush" Value="{StaticResource IconsDisabledColor}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </ToggleButton>
+                <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" Grid.Column="2" HorizontalAlignment="Right" Margin="0,0,5,0" IsChecked="{Binding AutoFocusSettings.IsAutoFocusEnabled ,ElementName=AutoFocusSettingsUserControl}" />
+            </Grid>
+            <StackPanel IsEnabled="{Binding AutoFocusSettings.IsAutoFocusEnabled ,ElementName=AutoFocusSettingsUserControl}"  Visibility="{Binding AutoFocusSettings.AreSettingsVisible, Converter={converters:BooleanToVisibilityConverter},ElementName=AutoFocusSettingsUserControl, FallbackValue=Collapsed}">
+                <StackPanel Orientation="Vertical"  IsEnabled="{Binding AutoFocusSettings.IsEditing ,ElementName=AutoFocusSettingsUserControl}">
+                    <Grid  Margin="0,5" Visibility="{Binding AvailableAutoFocusTypes, ElementName=AutoFocusSettingsUserControl, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static  vms:AvailableAutoFocus.CameraAndLise}}">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Type" Style="{StaticResource LabelForm}" />
+                        <ComboBox Grid.Column="1"
+                SelectedValuePath="Enum"
+                DisplayMemberPath="Translation"
+                ItemsSource="{sharedExtensions:EnumValuesExtension EnumType=recipeMeasure:AutoFocusType, ResourceAssemblyName='UnitySC.PM.ANA.Client.CommonUI'}"
+                SelectedValue="{Binding AutoFocusSettings.Type ,ElementName=AutoFocusSettingsUserControl}" Margin="0,5" Width="200" Grid.ColumnSpan="2" HorizontalAlignment="Left" />
+                    </Grid>
+
+                    <Grid  Margin="0,5" Visibility="{Binding AutoFocusSettings.Type ,ElementName=AutoFocusSettingsUserControl,Converter={local:LiseAutofocusToVisibilityConverter}}">
+                        <!-- Lise autofocus settings -->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Margin="10,5,5,0" Style="{StaticResource TextForm}">Lise</Label>
+                        <Label Grid.Row="1" Content="Objective" Style="{StaticResource LabelForm}"  Visibility="{Binding CanSelectLiseObjective, ElementName=AutoFocusSettingsUserControl, Converter={converters:BooleanToVisibilityConverter}}" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AutoFocusSettings.LiseObjectives ,ElementName=AutoFocusSettingsUserControl}" DisplayMemberPath="Name" SelectedItem="{Binding AutoFocusSettings.LiseObjective ,ElementName=AutoFocusSettingsUserControl}" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" Margin="0,5" Visibility="{Binding CanSelectLiseObjective, ElementName=AutoFocusSettingsUserControl, Converter={converters:BooleanToVisibilityConverter}}" />
+
+                        <Label Grid.Row="2" Content="Gain" Style="{StaticResource LabelForm}" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AutoFocusSettings.LiseGain ,ElementName=AutoFocusSettingsUserControl}" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Margin="0,5" />
+                        <Label Grid.Row="3" Content="Offset X" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Row="3" Grid.Column="1" LengthValue="{Binding AutoFocusSettings.LiseOffsetX ,ElementName=AutoFocusSettingsUserControl}" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Margin="0,5" />
+                        <Label Grid.Row="4" Content="Offset Y" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Row="4" Grid.Column="1" LengthValue="{Binding AutoFocusSettings.LiseOffsetY ,ElementName=AutoFocusSettingsUserControl}" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Margin="0,5" />
+                    </Grid>
+                    <Grid  Margin="0,0,0,5" Visibility="{Binding AutoFocusSettings.Type ,ElementName=AutoFocusSettingsUserControl,Converter={local:CameraAutofocusToVisibilityConverter}}">
+                        <!-- Camera autofocus settings -->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Margin="10,0,5,0" Style="{StaticResource TextForm}">Camera</Label>
+                        <Label Grid.Row="1" Content="Objective" Style="{StaticResource LabelForm}"  Visibility="{Binding CanSelectCameraObjective, ElementName=AutoFocusSettingsUserControl, Converter={converters:BooleanToVisibilityConverter}}"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AutoFocusSettings.CameraObjectives ,ElementName=AutoFocusSettingsUserControl}" DisplayMemberPath="Name" SelectedItem="{Binding AutoFocusSettings.CameraObjective ,ElementName=AutoFocusSettingsUserControl}" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" Margin="0,5"  Visibility="{Binding CanSelectCameraObjective, ElementName=AutoFocusSettingsUserControl, Converter={converters:BooleanToVisibilityConverter}}"/>
+
+                        <Label Grid.Row="2" Content="Lights" Style="{StaticResource LabelForm}" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                        <ItemsControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="200" Background="Transparent" IsHitTestVisible="False" ItemsSource="{Binding AutoFocusSettings.AutoFocusLights ,ElementName=AutoFocusSettingsUserControl}" HorizontalAlignment="Left" Margin="0,5,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="130" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Name}" Style="{StaticResource LabelForm}" />
+                                        <Label Grid.Column="1" Content="{Binding Intensity}" ContentStringFormat="{}{0} %" Style="{StaticResource TextForm}" Margin="0" Padding="0" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Label Grid.Row="3" Content="Scan Range" Style="{StaticResource LabelForm}" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding AutoFocusSettings.CameraScanRanges ,ElementName=AutoFocusSettingsUserControl}" SelectedItem="{Binding AutoFocusSettings.CameraScanRange ,ElementName=AutoFocusSettingsUserControl}" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" Margin="0,5" />
+                    </Grid>
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <controls:StepStateImage Grid.Column="0" Height="16" Width="16" Margin="10,5" StepState="{Binding AutoFocusSettings.StepState, Mode=OneWay}" ToolTip="{Binding AutoFocusSettings.ErrorMessage}" Visibility="{Binding AutoFocusSettings.StepState, Mode=OneWay, Converter={converters:InvertedEnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.NotDone}}" />
+                    <TextBlock Grid.Column="1" Visibility="{Binding AutoFocusSettings.StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.Done}}" VerticalAlignment="Center"><Run Text="Score: " /><Run Text="{Binding AutoFocusSettings.TestScore}" /><Run Text=" %"></Run></TextBlock>
+                    <Button Grid.Column="2" HorizontalAlignment="Right" MinWidth="100" Margin="5,5" Command="{Binding AutoFocusSettings.StartTestAutoFocus ,ElementName=AutoFocusSettingsUserControl}" Visibility="{Binding AutoFocusSettings.IsTestInProgress,Converter={converters:InvertedBooleanToVisibilityConverter}, FallbackValue=Visible}">Test</Button>
+                    <Button Grid.Column="2" HorizontalAlignment="Right" MinWidth="100" Margin="5,5" Command="{Binding AutoFocusSettings.StopTestAutoFocus ,ElementName=AutoFocusSettingsUserControl}" Visibility="{Binding AutoFocusSettings.IsTestInProgress,Converter={converters:BooleanToVisibilityConverter}, FallbackValue=Collapsed}">Cancel</Button>
+                    <Button Grid.Column="3" HorizontalAlignment="Right" MinWidth="100" Margin="5,5" Command="{Binding AutoFocusSettings.Edit ,ElementName=AutoFocusSettingsUserControl}" Visibility="{Binding AutoFocusSettings.IsEditing, Converter={converters:InvertedBooleanToVisibilityConverter} }">Edit</Button>
+                    <Button Grid.Column="3" HorizontalAlignment="Right" MinWidth="100" Margin="5,5" Command="{Binding AutoFocusSettings.Submit ,ElementName=AutoFocusSettingsUserControl}" Visibility="{Binding AutoFocusSettings.IsEditing, Converter={converters:BooleanToVisibilityConverter}}">Submit</Button>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

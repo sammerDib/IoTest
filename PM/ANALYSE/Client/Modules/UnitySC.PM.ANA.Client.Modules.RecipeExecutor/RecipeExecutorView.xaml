@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.RecipeExecutor.RecipeExecutorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cameraView="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:stagemovecontrol="clr-namespace:UnitySC.PM.ANA.Client.Controls.StageMoveControl;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:wizardControl="clr-namespace:UnitySC.Shared.UI.Controls.WizardNavigationControl;assembly=UnitySC.Shared.UI"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.RecipeExecutor"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource PanelBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!-- Menu -->
+
+        <!-- Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="1.5*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Controls-->
+            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <Border Background="{StaticResource LeftPaneBackgroundBrush}" BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="0,0,1,0" Padding="0,0,1,0">
+                    <StackPanel Width="320">
+                        <headers:HeaderLeft Content="CONTROLS" />
+                        <!-- Stage-->
+                        <stagemovecontrol:StageMoveControl Margin="2"
+                            WaferDimentionalCharac="{markupextensions:ChuckSupervisorBinding
+                            ChuckVM.SelectedWaferCategory.DimentionalCharacteristic}"
+                            IsAutofocusAvailable="False"
+                            DisplayClampStatus="True"
+                            CanControlClamp="True"
+                            DefaultSpecificPosition="{Binding DataContext.DefaultSpecificPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                            AvailablePositions="{Binding DataContext.AvailablePositions, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" />
+
+                        <StackPanel Orientation="Horizontal" Margin="10">
+                            <Label Content="WAFER CATEGORY" VerticalAlignment="Center"  Margin="0,0,10,0" />
+
+                            <!-- Wafer categories -->
+                            <ComboBox HorizontalAlignment="Center" MaxWidth="200" ItemsSource="{markupextensions:ChuckSupervisorBinding  ChuckVM.WaferCategories}" SelectedItem="{markupextensions:ChuckSupervisorBinding  ChuckVM.SelectedWaferCategory, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </ScrollViewer>
+
+            <Grid Grid.Column="1">
+                <!-- Camera-->
+                <cameraView:RichCameraDisplay  UsePixelUnit="True" MoveIsEnabled="False" IsRoiSelectorVisible="False" IsAutoNormaliseSelectorVisible="False" />
+            </Grid>
+
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
+
+            <!-- Start recipe -->
+            <Grid Grid.Column="3">
+                <StackPanel Orientation="Vertical" Margin="0">
+                    <headers:HeaderRight Content="EXECUTION" />
+                    <Label Content="Recipe file" Margin="2" />
+                    <Grid  Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding RecipePath}" />
+                        <Button Grid.Column="1" Content="..." Margin="4,0" Command="{Binding OpenFileCommand}" />
+                    </Grid>
+                    <sharedControls:ImageButton Grid.Column="1" ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Start" Margin="4" HorizontalAlignment="Left" Command="{Binding StartRecipeCommand}" />
+                </StackPanel>
+                <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="Recipe execution in progress.." DisplayAfter="0" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

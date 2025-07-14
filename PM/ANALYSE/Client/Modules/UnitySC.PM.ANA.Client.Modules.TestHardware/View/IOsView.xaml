@@ -1,0 +1,187 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.IOsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls" 
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI" 
+             xmlns:viewmodel="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.ViewModel"                            
+             d:DataContext="{d:DesignInstance Type=viewmodel:IOsViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.TestHardware;component/ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--Input-->
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <TextBlock Text="Input" FontSize="18" Margin="6" FontWeight="Bold" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <controls:ImageButton ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Start Wafer Presence"
+                                  Command="{Binding CheckWaferPresenceCommand}"
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6"
+                Grid.Column="0" />
+                <!-- Result -->
+                <TextBlock Text="{Binding CheckWaferPresence}" Grid.Column="1" />
+            </Grid>
+        </StackPanel>
+
+        <!--List of Input-->
+        <TreeView Grid.Column="0" Grid.Row="1" ItemsSource="{markupextensions:ControllersSupervisorBinding  ControllersVM.InputsDisplayed}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Value}">
+                    <TextBlock Text="{Binding Path=Key}" />
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <!--DigitalInput IO-->
+                                <ToggleButton Grid.Column="1" IsEnabled="False" HorizontalAlignment="Left"
+				                              IsChecked="{Binding Value}" Margin="0 6 0 6">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource ToggleAnimatedSwitchNew}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="DI">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="AI">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+                                <!--AnalogInput IO-->
+                                <TextBlock Grid.Column="1" Text="{Binding AnalogicValue, StringFormat='{}{0:F3}'}" Margin="0 6 0 6">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="DI">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="AI">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="2" Text="{Binding Name}" Margin="6 6 0 6"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="6" VerticalAlignment="Stretch" />
+
+        <!--Output-->
+        <TextBlock Text="Output" Grid.Column="2" Grid.Row="0" FontSize="18" FontWeight="Bold" Margin="6" />
+        <!--List of Output-->
+        <TreeView Grid.Column="2" Grid.Row="1" ItemsSource="{markupextensions:ControllersSupervisorBinding  ControllersVM.OutputsDisplayed}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Focusable" Value="False" />
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Value}">
+                    <TextBlock Text="{Binding Path=Key}" />
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <!--DigitalOutput IO-->
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                        Margin="0 6 0 6"
+                                        Content="Enable"
+                                        CommandParameter="{Binding}"
+                                        Command="{markupextensions:ControllersSupervisorBinding ControllersVM.EnableIoCommand}" />
+                                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                        Margin="6 6 0 6"
+                                        Content="Disable"
+                                        CommandParameter="{Binding}"
+                                        Command="{markupextensions:ControllersSupervisorBinding ControllersVM.DisableIoCommand}" />
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="DO">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="AO">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                </StackPanel>
+                                <!--AnalogOutput IO-->
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <TextBox Text="{Binding AnalogicValue}" Width="25"
+                                           Margin="0 6 0 6" />
+                                    <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                        Margin="6 6 0 6"
+                                        Content="Set value"
+                                        CommandParameter="{Binding}"
+                                        Command="{markupextensions:ControllersSupervisorBinding ControllersVM.SetAnalogOutputValueCommand}" />
+                                    <StackPanel.Style>
+                                        <Style TargetType="{x:Type StackPanel}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="DO">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=Identifier}" Value="AO">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                </StackPanel>
+                                <!--IO Name-->
+                                <TextBlock Grid.Column="2" Text="{Binding Name}" Margin="6 6 0 6"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>

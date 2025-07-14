@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{73302A6A-93FE-44AB-A6BA-A59530F74AC5}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>FDProbe</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
+    <OutDir>$(ProjectDir)bin\$(Configuration)</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
+    <OutDir>$(ProjectDir)bin\$(Configuration)</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
+    <OutDir>$(ProjectDir)bin\$(Configuration)</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
+    <OutDir>$(ProjectDir)bin\$(Configuration)</OutDir>
+    <IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Hardware\Libs\$(ProjectName).dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile />
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Hardware\Libs\$(ProjectName).dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Hardware\Libs\$(ProjectName).dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)Hardware\Libs\$(ProjectName).dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Config.h" />
+    <ClInclude Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Internal.h" />
+    <ClInclude Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Log.h" />
+    <ClInclude Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Settings.h" />
+    <ClInclude Include="FD_FogaleProbe\Example.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbe.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeApp.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeAppDlg.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeCalibrate.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeCommonInterface.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeInternal.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeParamID.h" />
+    <ClInclude Include="FD_FogaleProbe\FogaleProbeReturnValues.h" />
+    <ClInclude Include="FD_FogaleProbe\NIDAQmxConfig.h" />
+    <ClInclude Include="FD_FogaleProbe\resource.h" />
+    <ClInclude Include="FD_FogaleProbe\resource1.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Acquisition.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Config.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Create.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_External.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_General.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Internal.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Log.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Process.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_Reglages.h" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_UI_Fct.H" />
+    <ClInclude Include="FD_LISEED\LISE_ED_DLL_UI_Struct.H" />
+    <ClInclude Include="FD_LISE_General\LISE_Consts.h" />
+    <ClInclude Include="FD_LISE_General\LISE_Process.h" />
+    <ClInclude Include="FD_LISE_General\LISE_Struct.h" />
+    <ClInclude Include="FD_LISE_General\LISE_Struct_Process.h" />
+    <ClInclude Include="FD_LISE_General\PeakMatch.h" />
+    <ClInclude Include="FD_LISE_General\sc_fixed_array.h" />
+    <ClInclude Include="LiseHardwareConfiguration.h" />
+    <ClInclude Include="NIDAQ_SDK\SPG_NIDAQmxConfig.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SrcC\3DSelect.h" />
+    <ClInclude Include="SrcC\BackupMe.h" />
+    <ClInclude Include="SrcC\BreakHook.h" />
+    <ClInclude Include="SrcC\Bres.h" />
+    <ClInclude Include="SrcC\CD_CHECK_KEY.h" />
+    <ClInclude Include="SrcC\Clipboard.h" />
+    <ClInclude Include="SrcC\ColorGenerator.h" />
+    <ClInclude Include="SrcC\Colors256.h" />
+    <ClInclude Include="SrcC\ComplexType.h" />
+    <ClInclude Include="SrcC\CutManager.h" />
+    <ClInclude Include="SrcC\CutView.h" />
+    <ClInclude Include="SrcC\Date.h" />
+    <ClInclude Include="SrcC\DigitalSurf.h" />
+    <ClInclude Include="SrcC\FFT.h" />
+    <ClInclude Include="SrcC\FftwCompat.h" />
+    <ClInclude Include="SrcC\FIR_Design.h" />
+    <ClInclude Include="SrcC\FIR_Invert.h" />
+    <ClInclude Include="SrcC\GraphicHistoryCurves.h" />
+    <ClInclude Include="SrcC\HDF_Loader.h" />
+    <ClInclude Include="SrcC\HYP_Walker.h" />
+    <ClInclude Include="SrcC\Interpolateur.h" />
+    <ClInclude Include="SrcC\LagrangePolynome.h" />
+    <ClInclude Include="SrcC\Logfile.h" />
+    <ClInclude Include="SrcC\LogTime.h" />
+    <ClInclude Include="SrcC\LogTimeWatch.h" />
+    <ClInclude Include="SrcC\M3D_AVI_Recorder.h" />
+    <ClInclude Include="SrcC\md5.h" />
+    <ClInclude Include="SrcC\PG_DiskBuffer.h" />
+    <ClInclude Include="SrcC\PG_RingBuffer.h" />
+    <ClInclude Include="SrcC\Profil3D.h" />
+    <ClInclude Include="SrcC\ProfilConvert.h" />
+    <ClInclude Include="SrcC\ProfileManager.h" />
+    <ClInclude Include="SrcC\ProfilExtract.h" />
+    <ClInclude Include="SrcC\PRO_Loader.h" />
+    <ClInclude Include="SrcC\P_IList.h" />
+    <ClInclude Include="SrcC\SCM_ConnexionBackupMe.h" />
+    <ClInclude Include="SrcC\SCM_NIDAQmxEnum.h" />
+    <ClInclude Include="SrcC\SCM_NIDAQmxSynchro.h" />
+    <ClInclude Include="SrcC\SelectionProfile.h" />
+    <ClInclude Include="SrcC\SGRAPH.h" />
+    <ClInclude Include="SrcC\Sgraph_emc.h" />
+    <ClInclude Include="SrcC\SGRAPH_geom.h" />
+    <ClInclude Include="SrcC\SGRAPH_opts.h" />
+    <ClInclude Include="SrcC\SpecList.h" />
+    <ClInclude Include="SrcC\SpecStack.h" />
+    <ClInclude Include="SrcC\SPG.h" />
+    <ClInclude Include="SrcC\SpgFFT\Fft4asm.h" />
+    <ClInclude Include="SrcC\SpgFFT\Fft4c.h" />
+    <ClInclude Include="SrcC\SpgFFT\FourierFloat.h" />
+    <ClInclude Include="SrcC\SPG_AAGraphics.h" />
+    <ClInclude Include="SrcC\SPG_AbnormalTerminationHandler.h" />
+    <ClInclude Include="SrcC\SPG_Accumulateur.h" />
+    <ClInclude Include="SrcC\SPG_Align.h" />
+    <ClInclude Include="SrcC\Spg_avi.h" />
+    <ClInclude Include="SrcC\SPG_BinCorr.h" />
+    <ClInclude Include="SrcC\SPG_BmpIO.h" />
+    <ClInclude Include="SrcC\SPG_Buttons.h" />
+    <ClInclude Include="SrcC\SPG_CameraHighPass.h" />
+    <ClInclude Include="SrcC\SPG_Carac.h" />
+    <ClInclude Include="SrcC\SPG_CaracFormatter.h" />
+    <ClInclude Include="SrcC\SPG_CD_Check.h" />
+    <ClInclude Include="SrcC\SPG_ConfigFile.h" />
+    <ClInclude Include="SrcC\SPG_Console.h" />
+    <ClInclude Include="SrcC\SPG_DecalageDePhase.h" />
+    <ClInclude Include="SrcC\SPG_Demodule.h" />
+    <ClInclude Include="SrcC\SPG_Discretiseur.h" />
+    <ClInclude Include="SrcC\SPG_DispField.h" />
+    <ClInclude Include="SrcC\SPG_DispFieldConfig.h" />
+    <ClInclude Include="SrcC\SPG_ExceptionGenericHandler.h" />
+    <ClInclude Include="SrcC\SPG_FastConvolve.h" />
+    <ClInclude Include="SrcC\SPG_FileList.h" />
+    <ClInclude Include="SrcC\SPG_Files.h" />
+    <ClInclude Include="SrcC\SPG_FloatIO.h" />
+    <ClInclude Include="SrcC\Spg_ftp.h" />
+    <ClInclude Include="SrcC\SPG_General.h" />
+    <ClInclude Include="SrcC\SPG_Global.h" />
+    <ClInclude Include="SrcC\SPG_GlobalConst.h" />
+    <ClInclude Include="SrcC\SPG_GlobalThreadName.h" />
+    <ClInclude Include="SrcC\SPG_Global_LogTime.h" />
+    <ClInclude Include="SrcC\SPG_Global_MotionBlur.h" />
+    <ClInclude Include="SrcC\SPG_Graphics.h" />
+    <ClInclude Include="SrcC\SPG_Graphics_Effect.h" />
+    <ClInclude Include="SrcC\SPG_Histogram256.h" />
+    <ClInclude Include="SrcC\SPG_Includes.h" />
+    <ClInclude Include="SrcC\SPG_InhibitedFunctions.h" />
+    <ClInclude Include="SrcC\SPG_InhibitedIncludes.h" />
+    <ClInclude Include="SrcC\SPG_Inline_RGBP5SN.h" />
+    <ClInclude Include="SrcC\SPG_Inline_RGBUP5SN.h" />
+    <ClInclude Include="SrcC\SPG_Interact2D.h" />
+    <ClInclude Include="SrcC\SPG_Interact3D.h" />
+    <ClInclude Include="SrcC\SPG_Inverseur.h" />
+    <ClInclude Include="SrcC\SPG_K_FIT.H" />
+    <ClInclude Include="SrcC\SPG_LearningSet.h" />
+    <ClInclude Include="SrcC\SPG_License_Check.h" />
+    <ClInclude Include="SrcC\SPG_Linearize.h" />
+    <ClInclude Include="SrcC\SPG_List.h" />
+    <ClInclude Include="SrcC\SPG_LogTime.h" />
+    <ClInclude Include="SrcC\SPG_LoopThread.h" />
+    <ClInclude Include="SrcC\SPG_Meca.h" />
+    <ClInclude Include="SrcC\SPG_Mem.h" />
+    <ClInclude Include="SrcC\SPG_MemLink.h" />
+    <ClInclude Include="SrcC\SPG_Mem_Type.h" />
+    <ClInclude Include="SrcC\SPG_MinIncludes.h" />
+    <ClInclude Include="SrcC\SPG_MultiCutView.h" />
+    <ClInclude Include="SrcC\SPG_Network.h" />
+    <ClInclude Include="SrcC\SPG_NetworkEmule.h" />
+    <ClInclude Include="SrcC\SPG_Network_OPTS.h" />
+    <ClInclude Include="SrcC\SPG_Network_Protocol.h" />
+    <ClInclude Include="SrcC\SPG_Paint.h" />
+    <ClInclude Include="SrcC\SPG_ParaFit.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet2D.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet2DGetLaserLine.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet2DModele.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet2DModeleMatlab.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet2DModeleParams.h" />
+    <ClInclude Include="SrcC\SPG_PeakDet2DParams.h" />
+    <ClInclude Include="SrcC\SPG_PixelInterpole.h" />
+    <ClInclude Include="SrcC\SPG_ProgPrincipal.h" />
+    <ClInclude Include="SrcC\SPG_RingRec.h" />
+    <ClInclude Include="SrcC\SPG_RingRec16.h" />
+    <ClInclude Include="SrcC\SPG_RingRecFileIO.h" />
+    <ClInclude Include="SrcC\SPG_Scale.h" />
+    <ClInclude Include="SrcC\SPG_SerialComm.h" />
+    <ClInclude Include="SrcC\Spg_smtp.h" />
+    <ClInclude Include="SrcC\SPG_Snake.h" />
+    <ClInclude Include="SrcC\SPG_Son.h" />
+    <ClInclude Include="SrcC\SPG_SpecMacro.h" />
+    <ClInclude Include="SrcC\SPG_SpecMacroEnder.h" />
+    <ClInclude Include="SrcC\SPG_SpecMacroHeader.h" />
+    <ClInclude Include="SrcC\SPG_StereoVision.h" />
+    <ClInclude Include="SrcC\SPG_String.h" />
+    <ClInclude Include="SrcC\SPG_StringIO.h" />
+    <ClInclude Include="SrcC\SPG_StructVersionCheck.h" />
+    <ClInclude Include="SrcC\SPG_SysInc.h" />
+    <ClInclude Include="SrcC\SPG_Timer.h" />
+    <ClInclude Include="SrcC\SPG_TreeView.h" />
+    <ClInclude Include="SrcC\SPG_TxtIO.h" />
+    <ClInclude Include="SrcC\SPG_VidCap.h" />
+    <ClInclude Include="SrcC\SPG_WavIO.h" />
+    <ClInclude Include="SrcC\SPG_WeightBuffer.h" />
+    <ClInclude Include="SrcC\SPG_Window.h" />
+    <ClInclude Include="SrcC\SPG_wLogTime.h" />
+    <ClInclude Include="SrcC\SpinLock.h" />
+    <ClInclude Include="SrcC\SUR_Loader.h" />
+    <ClInclude Include="SrcC\TryCatchBlock.h" />
+    <ClInclude Include="SrcC\ULIPS.h" />
+    <ClInclude Include="SrcC\ULIPS_Interface.h" />
+    <ClInclude Include="SrcC\UW_Utils.h" />
+    <ClInclude Include="SrcC\V_ConvertToGraph.h" />
+    <ClInclude Include="SrcC\V_General.h" />
+    <ClInclude Include="SrcC\WhatFFT.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Config.cpp" />
+    <ClCompile Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Internal.cpp" />
+    <ClCompile Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Log.cpp" />
+    <ClCompile Include="FD_DBLLISEED\DBL_LISE_ED_DLL_Settings.cpp" />
+    <ClCompile Include="FD_FogaleProbe\FogaleProbe.cpp" />
+    <ClCompile Include="FD_FogaleProbe\FogaleProbeDouble.cpp" />
+    <ClCompile Include="FD_FogaleProbe\FogaleProbeHelper.cpp" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Acquisition.cpp" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Config.cpp" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Create.cpp" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Internal.CPP" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Log.cpp" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Process.cpp" />
+    <ClCompile Include="FD_LISEED\LISE_ED_DLL_Reglages.cpp" />
+    <ClCompile Include="FD_LISE_General\LISE_Process.cpp" />
+    <ClCompile Include="FD_LISE_General\PeakMatch.cpp" />
+    <ClCompile Include="LiseHardwareConfiguration.cpp" />
+    <ClCompile Include="SrcC\BreakHook.cpp" />
+    <ClCompile Include="SrcC\FFT.cpp" />
+    <ClCompile Include="SrcC\Logfile.cpp" />
+    <ClCompile Include="SrcC\LogTime.cpp" />
+    <ClCompile Include="SrcC\md5.cpp" />
+    <ClCompile Include="SrcC\SpgFFT\Fft4c.cpp" />
+    <ClCompile Include="SrcC\SPG_CaracFormatter.cpp" />
+    <ClCompile Include="SrcC\SPG_ConfigFile.cpp" />
+    <ClCompile Include="SrcC\SPG_ExceptionGenericHandler.cpp" />
+    <ClCompile Include="SrcC\SPG_Files.cpp" />
+    <ClCompile Include="SrcC\SPG_Global.cpp" />
+    <ClCompile Include="SrcC\SPG_K_FIT2.CPP" />
+    <ClCompile Include="SrcC\SPG_K_FIT_RT.CPP" />
+    <ClCompile Include="SrcC\SPG_List.cpp" />
+    <ClCompile Include="SrcC\SPG_Mem.cpp" />
+    <ClCompile Include="SrcC\SPG_Paint.cpp" />
+    <ClCompile Include="SrcC\SPG_ProgPrincipal.cpp" />
+    <ClCompile Include="SrcC\Spg_smtp.cpp" />
+    <ClCompile Include="SrcC\SpinLock.cpp" />
+    <ClCompile Include="SrcC\STree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SrcC\3DSelect.agh" />
+    <None Include="SrcC\BreakHook.agh" />
+    <None Include="SrcC\ColorGenerator.agh" />
+    <None Include="SrcC\Colors256.agh" />
+    <None Include="SrcC\CutManager.agh" />
+    <None Include="SrcC\CutManagerFileIO.agh" />
+    <None Include="SrcC\FFT.agh" />
+    <None Include="SrcC\FFT_M3D.agh" />
+    <None Include="SrcC\FIR_Design.agh" />
+    <None Include="SrcC\GraphicsInlineFastX.agh" />
+    <None Include="SrcC\GraphicsInlineX.agh" />
+    <None Include="SrcC\GraphicsInlineY.agh" />
+    <None Include="SrcC\GraphicsInpoly.agh" />
+    <None Include="SrcC\GraphicsInpolyNinit.agh" />
+    <None Include="SrcC\HDF_Loader.agh" />
+    <None Include="SrcC\HYP_Walker.agh" />
+    <None Include="SrcC\InlineBuildCoulC.agh" />
+    <None Include="SrcC\InlineCombineColor.agh" />
+    <None Include="SrcC\Interpolateur.agh" />
+    <None Include="SrcC\PG_DiskBuffer.agh" />
+    <None Include="SrcC\Profil3D.agh" />
+    <None Include="SrcC\ProfilConvert.agh" />
+    <None Include="SrcC\ProfileManager.agh" />
+    <None Include="SrcC\ProfileManagerFileIO.agh" />
+    <None Include="SrcC\ProfilExtract.agh" />
+    <None Include="SrcC\PRO_Loader.agh" />
+    <None Include="SrcC\SelectionProfile.agh" />
+    <None Include="SrcC\SGRAPH.agh" />
+    <None Include="SrcC\SGRAPH_bloc.agh" />
+    <None Include="SrcC\Sgraph_emc.agh" />
+    <None Include="SrcC\SGRAPH_geom.agh" />
+    <None Include="SrcC\SGRAPH_Load3D.agh" />
+    <None Include="SrcC\SGRAPH_Normales.agh" />
+    <None Include="SrcC\SGRAPH_opts.agh" />
+    <None Include="SrcC\SGRAPH_pgl.agh" />
+    <None Include="SrcC\SGRAPH_tex.agh" />
+    <None Include="SrcC\SPG_Accumulateur.agh" />
+    <None Include="SrcC\SPG_Argum_Inline.agh" />
+    <None Include="SrcC\SPG_Argum_Inline_0_1.agh" />
+    <None Include="SrcC\SPG_Argum_Inline_0_2pi.agh" />
+    <None Include="SrcC\SPG_BmpIO.agh" />
+    <None Include="SrcC\SPG_Buttons.agh" />
+    <None Include="SrcC\SPG_Carac.agh" />
+    <None Include="SrcC\SPG_CaracFormatter.agh" />
+    <None Include="SrcC\SPG_CD_Check.agh" />
+    <None Include="SrcC\SPG_Discretiseur.agh" />
+    <None Include="SrcC\SPG_Fftw.agh" />
+    <None Include="SrcC\SPG_FileList.agh" />
+    <None Include="SrcC\SPG_Files.agh" />
+    <None Include="SrcC\SPG_FloatIO.agh" />
+    <None Include="SrcC\SPG_Global.agh" />
+    <None Include="SrcC\SPG_Global_Network.agh" />
+    <None Include="SrcC\SPG_Graphics.agh" />
+    <None Include="SrcC\SPG_Graphics_Render.agh" />
+    <None Include="SrcC\SPG_Graphics_RenderPoly.agh" />
+    <None Include="SrcC\SPG_Graphics_Render_NoCompile.agh" />
+    <None Include="SrcC\SPG_Histogram256.agh" />
+    <None Include="SrcC\SPG_Inverseur.agh" />
+    <None Include="SrcC\SPG_List.agh" />
+    <None Include="SrcC\SPG_Meca.agh" />
+    <None Include="SrcC\SPG_Mem.agh" />
+    <None Include="SrcC\SPG_MemLink.agh" />
+    <None Include="SrcC\SPG_Network.agh" />
+    <None Include="SrcC\SPG_Network_OPTS.agh" />
+    <None Include="SrcC\SPG_Network_Protocol.agh" />
+    <None Include="SrcC\SPG_ParaFit.agh" />
+    <None Include="SrcC\SPG_ProgPrincipal.agh" />
+    <None Include="SrcC\SPG_RingRec.agh" />
+    <None Include="SrcC\SPG_RingRec16.agh" />
+    <None Include="SrcC\SPG_SerialComm.agh" />
+    <None Include="SrcC\SPG_Son.agh" />
+    <None Include="SrcC\SPG_Timer.agh" />
+    <None Include="SrcC\SPG_TxtIO.agh" />
+    <None Include="SrcC\SPG_WavIO.agh" />
+    <None Include="SrcC\SUR_Loader.agh" />
+    <None Include="SrcC\UW_Utils.agh" />
+    <None Include="SrcC\V_ConvertToGraph.agh" />
+    <None Include="SrcC\V_General.agh" />
+    <None Include="SrcC\Win32Entry.agh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FD_ProbeMini.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,236 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasurePointsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures"
+             xmlns:vm="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps.Measures"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs" xmlns:view="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.View"
+             md:DialogServiceViews.IsRegistered="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.CommonUI;component/View/RecipeEditionSteps/Measures/CustomPointsManagement/CustomPointsManagementDataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="MeasurePointTemplate" DataType="{x:Type vm:MeasurePointVM}">
+
+                <Grid Margin="10,5,5,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+
+                    </Grid.ColumnDefinitions>
+                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"></CheckBox>
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="5,0" Text="{Binding Id}"></TextBlock>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Visibility="{Binding StepState,Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.Done}}" Margin="5,0,0,0">
+                        <sharedControls:ImageButton Width="20" Height="20" Style="{StaticResource ImageButtonWithoutBorder}" ImageGeometry="{StaticResource TargetGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Command="{Binding GotoPointPosition}" ></sharedControls:ImageButton>
+                        <TextBlock Text="X :"  Margin="5,0" VerticalAlignment="Center" />
+                        <TextBlock Margin="5,0,0,0" Text="{Binding PointPosition.X, Mode=OneWay,StringFormat='{}{0:F3} mm'}" VerticalAlignment="Center" />
+                        <TextBlock Margin="20,0,0,0" Text="Y :" VerticalAlignment="Center" />
+                        <TextBlock Margin="5,0,0,0" Text="{Binding PointPosition.Y, Mode=OneWay,StringFormat='{}{0:F3} mm'}" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <sharedControls:ImageButton Grid.Row="0" Width="20" Height="20" Grid.Column="3"  Margin="0,3,5,3" Style="{StaticResource ImageButtonWithoutBorder}" Padding="0" ImageGeometry="{StaticResource UpdateGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Command="{Binding UpdatePointPosition}" ToolTip="Update point position and image to current position"></sharedControls:ImageButton>
+
+                    <sharedControls:ImageButton Grid.Column="4" Width="20" Height="20" Margin="0,3" Style="{StaticResource ImageButtonWithoutBorder}" ImageGeometry="{StaticResource GearGeometry}" ImageGeometryBrush="{StaticResource ButtonForegroundBrush}" Command="{Binding DisplayParameters}"  />
+                    <sharedControls:ImageButton Grid.Column="5" Width="20" Height="20"  Margin="3,0,0,0" Style="{StaticResource ImageButtonWithoutBorder}" Padding="0" ImageGeometry="{StaticResource TrashGeometry}" ImageGeometryBrush="{StaticResource IconsErrorColor}" Command="{Binding DeletePoint}" Visibility="{Binding IsMain, Converter={converters:InvertedBooleanToVisibilityConverter}}" />
+                    <StackPanel Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" Visibility="{Binding StepState,Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.Done}}" Margin="5,0,0,0">
+                        <TextBlock Text="Z Top :"  Margin="5,0" VerticalAlignment="Center" />
+                        <TextBlock Margin="5,0,0,0" Text="{Binding PointPosition.ZTop, Mode=OneWay,StringFormat='{}{0:F3} mm'}" VerticalAlignment="Center" />
+                        <TextBlock Margin="20,0,0,0" Text="Z Bottom :" VerticalAlignment="Center" />
+                        <TextBlock Margin="5,0,0,0" Text="{Binding PointPosition.ZBottom, Mode=OneWay,StringFormat='{}{0:F3} mm'}" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock Visibility="{Binding IsSubMeasurePoint, Converter={converters:InvertedBooleanToVisibilityConverter}}" Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0">
+                        <Hyperlink Command="{Binding TestMeasureOnPoint}">Test</Hyperlink>
+                    </TextBlock>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="5,5,5,0" Grid.Row="1" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Margin="5,0,5,5" Visibility="{Binding RecipeMeasure.EditedRecipe.WaferMap, Converter={converters:InvertedNullToVisibilityConverter}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--Import from files-->
+            <sharedControls:ImageButton Command="{Binding ImportPointsFromFileCommand}"
+                                        Margin="0,0,5,0"
+                                        ImageGeometry="{StaticResource InputGeometry}"
+                                        ImageGeometryBrush="{StaticResource ButtonForegroundBrush}">
+                Import points..
+            </sharedControls:ImageButton>
+
+            <!--Export points-->
+            <sharedControls:ImageButton Name="ExportImgBtn"
+                                        Grid.Column="1" Margin="5,0,0,0"
+                                        Command="{Binding ExportPointsCommand}"
+                                        ImageGeometry="{StaticResource Export2Geometry}"
+                                        ImageGeometryBrush="{StaticResource ButtonForegroundBrush}">
+                Export points
+            </sharedControls:ImageButton>
+            <Popup AllowsTransparency="True" Grid.Column="1"
+				HorizontalOffset="{Binding ElementName=ExportImgBtn, Path=ActualWidth}"
+				IsOpen="{Binding ExportPoints.IsStayPopup, Mode=TwoWay}"
+				Placement="Left"
+				PlacementTarget="{Binding ElementName=ExportImgBtn}"
+				StaysOpen="False"
+				VerticalOffset="{Binding ElementName=ExportImgBtn, Path=ActualHeight}">
+                <view:ExportPointsView Margin="10" DataContext="{Binding ExportPoints}" />
+            </Popup>
+        </Grid>
+        <Grid Grid.Row="2" Margin="5,0,5,5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Margin="0,5,0,5">
+                <sharedControls:ImageButton Name="ResetSiteIdImgBtn" Grid.Column="2" Margin="0,0,5,0"
+                                Command="{Binding RenumberAllPoints}"
+                                ImageGeometry="{StaticResource ResetGeometry}"
+                                ImageGeometryBrush="{StaticResource ButtonForegroundBrush}">
+                    Reset site IDs
+                </sharedControls:ImageButton>
+            </Grid>
+            <Grid Grid.Column="1" Margin="5,5,0,5" Visibility="{Binding MeasuresToImportPoints.Count, Converter={converters:IntToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Button Padding="7"
+                        Content="Import from measure"
+                        Style="{StaticResource LeftButton}" IsHitTestVisible="False" Background="#EEEEEE" />
+                <ToggleButton x:Name="DisplayMeasuresList"
+                                      Grid.Column="1"
+                                      Padding="0"
+                                      Width="20"
+                                      IsHitTestVisible="{Binding ElementName=PopupMeasures, Path=IsOpen, Converter={StaticResource InvertedBooleanConverter}}"
+                                      Style="{StaticResource RightToggleButton}">
+
+                    <Grid x:Name="Images">
+                        <Image Source="{DynamicResource SimpleDown}" Height="15" Width="15" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}, Path=IsChecked, Converter= {StaticResource InvertedBooleanToVisibilityConverter}}" />
+                        <Image Source="{DynamicResource SimpleUp}" Height="15" Width="15" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}, Path=IsChecked, Converter= {StaticResource BooleanToVisibilityConverter}}" />
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Opacity" Value="1" />
+                                <!-- Here is the 'normal' content -->
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEnabled, ElementName=DisplayMeasuresList}" Value="False">
+                                        <Setter Property="Opacity" Value="0.4" />
+                                        <!-- Here is the 'override' content -->
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
+                </ToggleButton>
+                <Popup x:Name="PopupMeasures"
+                               IsOpen="{Binding IsChecked, ElementName=DisplayMeasuresList}"
+                               StaysOpen="False"
+                               PlacementTarget="{Binding ElementName=DisplayMeasuresList}"
+                               Placement="Left"
+                                HorizontalOffset="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}"
+                                VerticalOffset="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualHeight}">
+                    <Border Background="White" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1">
+                        <ListBox x:Name="MeasuresList"  Style="{StaticResource ListBoxForComboBox}" Margin="0"
+                                         ItemsSource="{Binding MeasuresToImportPoints}"
+                                         DisplayMemberPath="Name"
+                                         SelectedItem="{Binding MeasurePointsToImport, Mode=OneWayToSource, BindsDirectlyToSource=True}"
+                                         PreviewMouseUp="ListBox_PreviewMouseUp"></ListBox>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Grid>
+        <Separator Grid.Row="3"></Separator>
+        <Grid Grid.Row="4" Margin="5,5,5,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <sharedControls:ImageButton Grid.Column="2" Margin="5,0,0,5"
+                                        Command="{Binding AddPoint}"
+                                        Style="{StaticResource HighlightedImageButton}"
+                                        ImageGeometry="{StaticResource PlusGeometry}"
+                                        ImageGeometryBrush="{StaticResource ButtonForegroundBrush}"
+                                        Grid.ColumnSpan="2" >
+                Add point
+            </sharedControls:ImageButton>
+            <Label Grid.Row="1"  Content="Objective" Style="{StaticResource LabelForm}" HorizontalAlignment="Left" />
+            <ComboBox Grid.Row="1" Grid.Column="1"
+                        ItemsSource="{Binding Objectives}"
+                        SelectedItem="{Binding SelectedObjective}"
+                        DisplayMemberPath="Name" />
+            <sharedControls:ImageButton IsEnabled="{Binding IsReadyToAddPointWithImage}"
+                                        Grid.Row="1" Grid.Column="2" Margin="5,0,0,0"
+                                        Command="{Binding AddPointWithImage}"
+                                        Style="{StaticResource HighlightedImageButton}"
+                                        ImageGeometry="{StaticResource PlusGeometry}"
+                                        ImageGeometryBrush="{StaticResource ButtonForegroundBrush}">
+                Add point with image
+            </sharedControls:ImageButton>
+        </Grid>
+        <Grid Grid.Row="5">
+            <ContentControl>
+                <ContentPresenter Content="{Binding Path=CustomPointsManagement}" Margin="0,0,0,10"/>
+            </ContentControl>
+        </Grid>
+        <Grid Grid.Row="6" Visibility="{Binding Points.Count, Converter={converters:IntToVisibilityConverter}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Content="Select All" Margin="7,0,0,0" IsChecked="{Binding AreAllPointsSelected}" />
+            <TextBlock HorizontalAlignment="Right" Grid.Column="1">
+                        <Hyperlink Command="{Binding DeleteSelectedPoints}">Delete Selected</Hyperlink>
+            </TextBlock>
+        </Grid>
+        <ListBox Grid.Row="7" Style="{StaticResource ListBoxWithoutSelection}"
+                         ItemsSource="{Binding Points}"
+                         ItemTemplate="{StaticResource MeasurePointTemplate}" Margin="0,2,0,0"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         SelectionMode="Multiple"
+                         Background="Transparent">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ListBoxItemWithoutSelectionStyle}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </Grid>
+</UserControl>

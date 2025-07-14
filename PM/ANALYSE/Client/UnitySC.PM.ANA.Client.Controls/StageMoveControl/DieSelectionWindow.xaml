@@ -1,0 +1,111 @@
+﻿<Window x:Class="UnitySC.PM.ANA.Client.Controls.StageMoveControl.DieSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls"
+        xmlns:xamlbehaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviors="clr-namespace:UnitySC.Shared.UI.Behaviors;assembly=UnitySC.Shared.UI"
+        xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+        xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+        xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        d:DesignHeight="450" d:DesignWidth="800" WindowStyle="ToolWindow" Title="Die Selection">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid  Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="400" />
+            </Grid.ColumnDefinitions>
+
+            <xctk:Zoombox x:Name="theZoombox"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                        MaxScale="100" MinScale="0.01"
+                        IsAnimated="False" IsUsingScrollBars="False"  ViewStackMode="Disabled"
+                        ZoomOnPreview="False"
+                        ZoomOn="View" KeepContentInBounds="True" Margin ="10" RenderOptions.BitmapScalingMode="Fant">
+                <controls:WaferMapControl x:Name="WaferMapControl"
+                                          WaferDimentionalCharac="{Binding WaferDimensions}"
+                                          WaferMap="{Binding WaferMap}"
+                                          SelectedDie="{Binding SelectedDie, Mode=TwoWay}"
+                                          DieReference="{Binding WaferMap.DieReference, Mode=TwoWay}"
+                                          DisplayPositions="True"
+                                          RenderOptions.BitmapScalingMode="Fant" />
+            </xctk:Zoombox>
+
+            <Border Grid.Column="1" Background="{StaticResource RightPaneBackgroundBrush}" BorderBrush="{StaticResource LeftPaneBorderBrush}" BorderThickness="1,0,0,0" Padding="0,0,1,0">
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Separator Grid.Row="0"></Separator>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Style="{StaticResource TitleLevel2}" Margin="5,0,0,0">SELECTED DIE</Label>
+                    </Grid>
+                    <Grid Grid.Row="2" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,10">Column</TextBlock>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding SelectedDieColumn}"
+                                 sharedExtensions:TextBoxMaskExt.Mask="PositiveInteger"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding WaferMap.NbColumns}" MaxLength="4">
+                            <xamlbehaviors:Interaction.Behaviors>
+                                <behaviors:TextboxEnterBehaviour />
+                            </xamlbehaviors:Interaction.Behaviors>
+                        </TextBox>
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center"  Margin="20,0,0,0">Row</TextBlock>
+                        <TextBox Grid.Column="3"
+                                 Text="{Binding SelectedDieRow}"
+                                 sharedExtensions:TextBoxMaskExt.Mask="PositiveInteger"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding WaferMap.NbRows}"
+                                 MaxLength="4">
+                            <xamlbehaviors:Interaction.Behaviors>
+                                <behaviors:TextboxEnterBehaviour />
+                            </xamlbehaviors:Interaction.Behaviors>
+                        </TextBox>
+                    </Grid>
+                    <Button Grid.Row="3" Margin="10,5" Visibility="{Binding StepState, Mode=OneWay, Converter={converters:EnumToVisibilityConverter}, ConverterParameter={x:Static sharedControls:StepStates.InProgress}}" Command="{Binding SelectCenterDie}">Center Die
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,10,0" MinWidth="100" IsCancel="true">Cancel</Button>
+            <Button Grid.Column="2" HorizontalAlignment="Right" MinWidth="100" IsCancel ="False" Style="{StaticResource HighlightedButton}" IsDefault="True" Click="ButtonOK_Click">Ok</Button>
+        </Grid>
+    </Grid>
+</Window>

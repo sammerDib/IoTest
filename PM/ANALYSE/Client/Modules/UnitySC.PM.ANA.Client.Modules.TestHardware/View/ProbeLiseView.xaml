@@ -1,0 +1,487 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.ProbeLiseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:probe="clr-namespace:UnitySC.PM.ANA.Client.Proxy.Probe;assembly=UnitySC.PM.ANA.Client.Proxy"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:interface="clr-namespace:UnitySC.PM.ANA.Service.Interface;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:sharedHardwareInterface="clr-namespace:UnitySC.PM.Shared.Hardware.Service.Interface;assembly=UnitySC.PM.Shared.Hardware.Service.Interface"
+             xmlns:l="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View"
+             xmlns:conv="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View.Converter"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+             xmlns:vm="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.ViewModel" 
+             xmlns:lcub="http://schemas.lightningchart.com/chartingMVVM/"
+             md:DialogServiceViews.IsRegistered="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="800"
+             x:Name="UserControlProbeLise">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <sys:String x:Key="FormatDecimalThreePlaces">{0:F3}</sys:String>
+            <Color x:Key="ZoneBackgroundColor">#FFF5F5F5</Color>
+            <conv:NotEqualEnumToVisibilityConverter x:Key="NotEqualEnumToVisibilityConverter" />
+            <conv:EqualEnumToVisibilityConverter x:Key="EqualEnumToVisibilityConverter" />
+            <SolidColorBrush x:Key="ZoneBackground"
+                         Color="{StaticResource ZoneBackgroundColor}" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.TestHardware;component/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="White"
+          Margin="5,0,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <!--<RowDefinition Height="Auto"/>-->
+        </Grid.RowDefinitions>
+        <Grid Background="White"
+              Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MaxWidth="450"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox FontSize="18"
+                      Margin="0,0,5,0"
+                      Header="SETTINGS">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--<TextBlock FontSize="18" VerticalAlignment="Center" Margin="5,0">Objective</TextBlock>
+                <ComboBox Grid.Column="1" ItemsSource="{Binding Configuration.Objectives}" DisplayMemberPath="Name" FontSize="18" Margin="5" SelectedItem="{Binding SelectedObjective}"></ComboBox>
+                <TextBlock Grid.Row="1" FontSize="18" VerticalAlignment="Center" Margin="5,0">Camera</TextBlock>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Configuration.Cameras}" DisplayMemberPath="Name" FontSize="18" Margin="5"></ComboBox>
+                <TextBlock Grid.Row="2" FontSize="18" Margin="5">Lights</TextBlock>
+                <ListBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Configuration.Lights}" Height="200" Margin="5" FontSize="18" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox></CheckBox>
+                                <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="10,0"></TextBlock>
+                                <Slider Orientation="Horizontal" Grid.Column="2"></Slider>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+               </ListBox>-->
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="5">Gain</TextBlock>
+                    <TextBox Grid.Column="1"
+                             Grid.Row="0"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             Text="{Binding Probe.InputParametersLise.Gain, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="5">Quality Threshold</TextBlock>
+                    <TextBox Grid.Column="1"
+                             Grid.Row="1"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             Text="{Binding Probe.InputParametersLise.QualityThreshold, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="5">Detection Threshold</TextBlock>
+                    <TextBox Grid.Column="1"
+                             Grid.Row="2"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="-100"
+                             Text="{Binding Probe.InputParametersLise.DetectionThreshold, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="3"
+                               Grid.Column="0"
+                               Margin="5">Nb Average</TextBlock>
+                    <TextBox Grid.Column="1"
+                             Grid.Row="3"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Integer"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             Text="{Binding Probe.InputParametersLise.NbMeasuresAverage}" />
+                    <Button Grid.Row="8"
+                            Grid.Column="2"
+                            Width="160"
+                            HorizontalAlignment="Right"
+                            Command="{Binding Probe.ApplySettings}"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Content="Apply" />
+                </Grid>
+            </GroupBox>
+            <GroupBox FontSize="18"
+                      Grid.Column="1"
+                      Margin="5,0,0,0"
+                      Header="SAMPLE">
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock>Name</TextBlock>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Probe.Sample.Name}"></TextBox>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock>Info</TextBlock>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Probe.Sample.Info}"></TextBox>
+                    </Grid>
+                    <Grid Margin="0,10,0,5"
+                          Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Layers"
+                                   FontSize="18"
+                                   VerticalAlignment="Center"></TextBlock>
+                        <Button Grid.Column="1"
+                                Margin="5,0"
+                                Command="{Binding Probe.AddSampleLayer}">+</Button>
+                        <Button Command="{Binding Probe.AddSampleLayer}"
+                                Grid.Column="1"
+                                Margin="5,0"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                ToolTip="Add new layer">
+                            <materialDesign:PackIcon Kind="TableColumnAddAfter"
+                                                     Height="24"
+                                                     Width="24" />
+                        </Button>
+                        <Button Grid.Column="2"
+                                Command="{Binding Probe.DeleteSampleLayer}"
+                                CommandParameter="{Binding ElementName=LayersDataGrid, Path=SelectedItem}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                ToolTip="Delete layer">
+                            <materialDesign:PackIcon Kind="Delete"
+                                                     Height="24"
+                                                     Width="24" />
+                        </Button>
+                    </Grid>
+                    <DataGrid x:Name="LayersDataGrid"
+                              Grid.Row="3"
+                              ItemsSource="{Binding Probe.Sample.ObservableLayers}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserSortColumns="False"
+                              Height="200">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                                 sharedExtensions:TextBoxMaskExt.MaximumValue="100000"
+                                                 sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                                                 MaxLength="10"
+                                                 Text="{Binding Thickness, Mode=TwoWay,UpdateSourceTrigger=LostFocus,StringFormat='{}{0:F3}' }" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Thickness (&#x00B5;m)" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                                 sharedExtensions:TextBoxMaskExt.MaximumValue="100000"
+                                                 sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                                                 MaxLength="10"
+                                                 Text="{Binding Tolerance, Mode=TwoWay,UpdateSourceTrigger=LostFocus,StringFormat='{}{0:F3}'}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Tolerance (µm)" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                                 sharedExtensions:TextBoxMaskExt.MaximumValue="100000"
+                                                 sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                                                 MaxLength="10"
+                                                 Text="{Binding RefractionIndex, Mode=TwoWay,UpdateSourceTrigger=LostFocus,StringFormat='{}{0:F4}'}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Refraction Index" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MeasuredThickness, Mode=OneWay, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                                                   Margin="0,4"
+                                                   HorizontalAlignment="Right" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Measure (µm)" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MeasuredQuality, Mode=OneWay, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                                                   Margin="0,4"
+                                                   HorizontalAlignment="Right" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Measure Quality" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="1"
+              Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180" />
+                <ColumnDefinition Width="180" />
+                <ColumnDefinition Width="180" />
+
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Command="{Binding Probe.DoMeasure}"
+                    Margin="0,10,10,10" Style="{StaticResource MaterialDesignRaisedDarkButton}" >Do one Measure</Button>
+            <Button Grid.Column="1"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Command="{Binding RepeatMeasure}"
+                    Margin="0,10,10,10"
+                    Visibility="{Binding Probe.State.Status.Busy, Converter={StaticResource InvertedBooleanToVisibilityConverter}, FallbackValue=Visible}">Do X Measures</Button>
+            <Grid Grid.Column="1"
+                  HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="10"
+                           FontSize="16"
+                           Visibility="{Binding Probe.State.Status.Busy, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                Measuring ...</TextBlock>
+                <materialDesign:PackIcon Kind="Export"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding Probe.State.Status.Busy, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"></materialDesign:PackIcon>
+            </Grid>
+            <Button Grid.Column="2"
+                    Command="{Binding Probe.StartContinuousAcquisition}"
+                    Margin="10"
+                    Visibility="{Binding Probe.State.Status, ConverterParameter={x:Static sharedHardwareInterface:DeviceStatus.Busy}, Converter={StaticResource NotEqualEnumToVisibilityConverter}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" >Start acquisition</Button>
+            <Button Grid.Column="2"
+                    Command="{Binding Probe.StopContinuousAcquisition}"
+                    Margin="0,10,10,10"
+                    Visibility="{Binding Probe.State.Status, ConverterParameter={x:Static sharedHardwareInterface:DeviceStatus.Busy}, Converter={StaticResource EqualEnumToVisibilityConverter}}" Style="{StaticResource MaterialDesignRaisedDarkButton}" >Stop acquisition</Button>
+            <Button Grid.Column="3"
+                    HorizontalAlignment="Right"
+                    Margin="10"
+                    Command="{Binding ExportAcquisition}"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Width="140"
+                    Visibility="{Binding ExportConfiguration.IsRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}, FallbackValue=Visible}">Export ...</Button>
+            <Grid Grid.Column="3"
+                  HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right"
+                           Margin="10"
+                           FontSize="16"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding ExportConfiguration.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">Exporting ...</TextBlock>
+                <materialDesign:PackIcon Kind="Export"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding ExportConfiguration.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"></materialDesign:PackIcon>
+            </Grid>
+        </Grid>
+        <lcub:LightningChart x:Name="RawAcquisitionChart" ChartName="Point Line Series Chart" Grid.Row="2" Margin="5,0" ColorTheme="SkyBlue">
+            <lcub:LightningChart.ChartBackground>
+                <lcub:Fill Color="DimGray"/>
+            </lcub:LightningChart.ChartBackground>
+            <lcub:LightningChart.ChartRenderOptions>
+                <lcub:RenderOptionsCommon DeviceType="SoftwareOnlyD11" />
+            </lcub:LightningChart.ChartRenderOptions>
+
+            <lcub:LightningChart.Title>
+                <lcub:ChartTitle Text="Probe Lise Acquisition" Visible="False"/>
+            </lcub:LightningChart.Title>
+            <lcub:LightningChart.ViewXY>
+                <lcub:ViewXY>
+                    <lcub:ViewXY.GraphBackground>
+                        <lcub:Fill Color="White"/>
+                    </lcub:ViewXY.GraphBackground>
+                    <lcub:ViewXY.Annotations>
+                        <lcub:AnnotationXY
+                            Style="Rectangle"
+                            Text="{Binding ElementName=LiseChartCursor, Path=ValueAtXAxis, Mode=OneWay,StringFormat={}{0:F0}}"
+                             AllowTargetMove="False"
+                                            LocationCoordinateSystem="RelativeCoordinatesToTarget"
+                                            AllowUserInteraction="False"
+                                            AllowDragging="False"
+                                            AllowResize="False" AutoSizePadding="5">
+                            <lcub:AnnotationXY.Fill>
+                                <lcub:Fill/>
+                            </lcub:AnnotationXY.Fill>
+                            <lcub:AnnotationXY.LocationRelativeOffset>
+                                <lcub:PointDoubleXY Y="0" X="30"/>
+                            </lcub:AnnotationXY.LocationRelativeOffset>
+                            <lcub:AnnotationXY.TargetAxisValues>
+                                <lcub:PointDoubleXY X="{Binding ElementName=LiseChartCursor, Path=ValueAtXAxis, Mode=OneWay}"/>
+                            </lcub:AnnotationXY.TargetAxisValues>
+                        </lcub:AnnotationXY>
+                    </lcub:ViewXY.Annotations>
+
+                    <lcub:ViewXY.LineSeriesCursors>
+                        <lcub:LineSeriesCursor x:Name="LiseChartCursor"  IndicateTrackingYRange="True" SnapToPoints="True" ValueAtXAxis="{Binding CursorPosition, Mode=TwoWay}"/>
+                    </lcub:ViewXY.LineSeriesCursors>
+                    <lcub:ViewXY.YAxes>
+                        <lcub:AxisY Minimum="-10" Maximum="15" AutoFormatLabels="False" ValueType="Number" LabelsNumberFormat="0">
+                            <lcub:AxisY.Title>
+                                <lcub:AxisYTitle Text="Volts"/>
+                            </lcub:AxisY.Title>
+                        </lcub:AxisY>
+                    </lcub:ViewXY.YAxes>
+                    <lcub:ViewXY.XAxes>
+                        <lcub:AxisX Minimum="0" Maximum="6100" AutoFormatLabels="False" ValueType="Number" LabelsNumberFormat="0">
+                            <lcub:AxisX.Title>
+                                <lcub:AxisXTitle Text="Microns"/>
+                            </lcub:AxisX.Title>
+                        </lcub:AxisX>
+                    </lcub:ViewXY.XAxes>
+                    <lcub:ViewXY.LegendBoxes>
+                        <lcub:LegendBoxXY Position="RightCenter"
+                                          Layout="Vertical" />
+                    </lcub:ViewXY.LegendBoxes>
+                    <lcub:ViewXY.PointLineSeries>
+                        <lcub:PointLineSeries Points="{Binding Probe.RawAcquisitionPoints}" PointsVisible="False" >
+                            <lcub:PointLineSeries.Title>
+                                <lcub:SeriesTitle Text="Raw Values" Color="Black"/>
+                            </lcub:PointLineSeries.Title>
+                            <lcub:PointLineSeries.LineStyle>
+                                <lcub:LineStyle Color="Black" Width="1" AntiAliasing="Normal"/>
+                            </lcub:PointLineSeries.LineStyle>
+                        </lcub:PointLineSeries>
+                        <lcub:PointLineSeries
+                            PointsVisible="True"
+                            LineVisible="False"
+                            IndividualPointColoring = "Color1"
+                            Points="{Binding Probe.SelectedPeaksPoints}" AllowUserInteraction="False">
+                            <lcub:PointLineSeries.Title>
+                                <lcub:SeriesTitle Text="Selected Peaks" Color="Black"/>
+                            </lcub:PointLineSeries.Title>
+                            <lcub:PointLineSeries.PointStyle>
+                                <lcub:PointShapeStyle Color1="#FF00FF00" Color2="#FF00FF00" Height="20" BorderColor="#4CFFFFFF" BodyThickness="3" Shape="Cross" Width="20" GradientFill="Solid"/>
+                            </lcub:PointLineSeries.PointStyle>
+                            <lcub:PointLineSeries.LineStyle>
+                                <lcub:LineStyle Color="White" Width="1" AntiAliasing="Normal"/>
+                            </lcub:PointLineSeries.LineStyle>
+                        </lcub:PointLineSeries>
+                        <lcub:PointLineSeries
+                            PointsVisible="True"
+                            LineVisible="False"
+                            IndividualPointColoring = "Color1"
+                            Points="{Binding Probe.DiscarderPeaksPoints}" AllowUserInteraction="False">
+                            <lcub:PointLineSeries.Title>
+                                <lcub:SeriesTitle Text="Discarded Peaks" Color="Black"/>
+                            </lcub:PointLineSeries.Title>
+                            <lcub:PointLineSeries.PointStyle>
+                                <lcub:PointShapeStyle Color1="#FFFF0000" Color2="#FF00FF00" Height="20" BorderColor="#4CFFFFFF" BodyThickness="3" Shape="Cross" Width="20" GradientFill="Solid"/>
+                            </lcub:PointLineSeries.PointStyle>
+                            <lcub:PointLineSeries.LineStyle>
+                                <lcub:LineStyle Color="White" Width="1" AntiAliasing="Normal"/>
+                            </lcub:PointLineSeries.LineStyle>
+                        </lcub:PointLineSeries>
+                    </lcub:ViewXY.PointLineSeries>
+
+                    <lcub:ViewXY.ConstantLines>
+                        <lcub:ConstantLine Value="{Binding Probe.InputParametersLise.DetectionThreshold}" AllowUserInteraction="False" AllowMoveByUser="False">
+                            <lcub:ConstantLine.LineStyle>
+                                <lcub:LineStyle Color="Blue" Width="1" AntiAliasing="Normal"/>
+                            </lcub:ConstantLine.LineStyle>
+                            <lcub:ConstantLine.Title>
+                                <lcub:SeriesTitle Text="Detection Threshold" Color="Black"/>
+                            </lcub:ConstantLine.Title>
+                        </lcub:ConstantLine>
+                        <lcub:ConstantLine Value="{Binding Probe.Saturation}" AllowUserInteraction="False" AllowMoveByUser="False">
+                            <lcub:ConstantLine.LineStyle>
+                                <lcub:LineStyle Color="white" Width="1" AntiAliasing="Normal"/>
+                            </lcub:ConstantLine.LineStyle>
+                            <lcub:ConstantLine.Title>
+                                <lcub:SeriesTitle Text="Saturation Value" Color="Black"/>
+                            </lcub:ConstantLine.Title>
+                        </lcub:ConstantLine>
+                    </lcub:ViewXY.ConstantLines>
+                </lcub:ViewXY>
+            </lcub:LightningChart.ViewXY>
+        </lcub:LightningChart>
+
+        <!--<TextBlock VerticalAlignment="Center" FontSize="18" Grid.Row="6" Grid.Column="0">Test Config</TextBlock>
+        <TextBox Grid.Column="1"  Grid.Row="6" FontSize="18" Text="{Binding Configuration.ConfigLise1}" VerticalAlignment="Center"></TextBox>-->
+    </Grid>
+</UserControl>

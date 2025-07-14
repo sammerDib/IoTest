@@ -1,0 +1,31 @@
+﻿<Window x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings.ThicknessLayersEditorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings"
+        xmlns:view="clr-namespace:UnitySC.PM.Shared.UI.Recipes.Management.View;assembly=UnitySC.PM.Shared.UI"
+        mc:Ignorable="d"
+        Title="Layers Editor" Height="450" Width="1024">
+    <Window.Resources>
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </Window.Resources>
+    <Grid Background="{StaticResource PanelBackgroundBrush}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <view:LayersEditorControl Margin="5,10,5,5" DataContext="{Binding LayersEditor}" />
+        <Grid Grid.Row="2" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" HorizontalAlignment="Right" MinWidth="100" IsCancel ="True" Style="{StaticResource HighlightedButton}">Cancel</Button>
+            <Button Grid.Column="2" HorizontalAlignment="Right" MinWidth="100" IsCancel ="False" Command="{Binding Validate}"  Style="{StaticResource HighlightedButton}" Margin="10,0,0,0">Ok</Button>
+            
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.Modules.Settings.View.CameraFocusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:exposuresettingsShared="clr-namespace:UnitySC.PM.DMT.CommonUI.View.ExposureSettings;assembly=UnitySC.PM.DMT.CommonUI"
+             xmlns:zb="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage;assembly=UnitySC.Shared.UI"
+             xmlns:behaviors="clr-namespace:UnitySC.Shared.UI.Behaviors;assembly=UnitySC.Shared.UI" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"         
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:local="clr-namespace:UnitySC.PM.DMT.Modules.Settings.View"
+             mc:Ignorable="d"
+             x:Name="CameraFocusUC"
+             d:DesignHeight="600" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:FocusOverlay x:Key="focusOverlay" FocusOverlayItems="{Binding DataContext.FocusDataItems, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            <ResourceDictionary.MergedDictionaries>            
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="5">
+            <TextBlock FontSize="16">Place a calibration wafer in the tool</TextBlock>
+
+            <Image Width="200" Height="200" Source="/UnitySC.PM.DMT.Modules.Settings;component/Resources/CalibrationWafer.png" />
+
+            <exposuresettingsShared:ExposureSettingsWithAuto DataContext="{Binding ExposureSettings}" DisplayApplyButton="True"></exposuresettingsShared:ExposureSettingsWithAuto>
+            <sharedControls:ImageGroupBox Header="Parameters" ImageGeometry="{StaticResource GearGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Margin="0,10,0,0">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="90" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock VerticalAlignment="Center">Calibration wafer size</TextBlock>
+                    <sharedControls:TextBoxUnit Grid.Column="1" Margin="0,3" Text="{Binding WaferSize}" Unit="mm">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextboxEnterBehaviour />
+                        </i:Interaction.Behaviors>
+                    </sharedControls:TextBoxUnit>
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" >Pattern size</TextBlock>
+                    <sharedControls:TextBoxUnit Grid.Row="1" Grid.Column="1" Margin="0,3" Text="{Binding PatternSize}" Unit="µm">
+                        <i:Interaction.Behaviors>
+                            <behaviors:TextboxEnterBehaviour />
+                        </i:Interaction.Behaviors>
+                    </sharedControls:TextBoxUnit>
+                </Grid>
+            </sharedControls:ImageGroupBox>
+            <sharedControls:ImageButton ImageGeometry="{StaticResource ResetGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Reset Focus Values"  Command="{Binding Reset}" Margin="0,10,0,0" />
+        </StackPanel>
+        <zb:ZoomboxImage ImageSource="{Binding CameraBitmapSource}" Grid.Column="1" Margin="5"  Overlay="{StaticResource focusOverlay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                          ImageWidth="{Binding ImageWidth}" ImageHeight="{Binding ImageHeight}" AutoSize="False" 
+                         Scale="1"
+                         />
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="{Binding BusyMessage}" Grid.ColumnSpan="2" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,215 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.ProbeAlignment.View.LiseHF.LiseHFSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:viewModel="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel"
+             xmlns:liseHf="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel.LiseHF"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance liseHf:LiseHFSettingsVM}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <GroupBox Header="LightSource" Margin="10,5" MinHeight="70">
+            <UniformGrid Rows="1" HorizontalAlignment="Center" Margin="0">
+                <Label Content="Status: " HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                <Label VerticalAlignment="Center" Content="{Binding LaserVM.InterlockStatus}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Slider" Margin="10,5" MinHeight="70">
+            <UniformGrid Rows="1" Margin="0">
+                <Label Content="Position: " HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                <Label VerticalAlignment="Center" Content="{Binding MotionAxesVM.LinearPosition}" />
+                <Label Content="Move Position: " HorizontalContentAlignment="Right"
+                       VerticalContentAlignment="Center" />
+                <ComboBox
+                    ItemsSource="{Binding MotionAxesVM.ConfigurationAxisLinear.NameLenses}"
+                    SelectedValue="{Binding SliderSelectedPosition}"
+                    IsEnabled="{Binding IsSliderMoving, Converter={converters:InvertedBooleanConverter}}" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Shutter" Margin="10,5" MinHeight="70">
+            <UniformGrid Rows="1">
+                <Label Content="Status: " HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+                <Label VerticalAlignment="Center" Content="{Binding ShutterVM.ShutterIrisPosition}" />
+                <UniformGrid Rows="1">
+                    <Button Content="Open" Margin="0 0 5 0" Command="{Binding ShutterVM.OpenShutterCommand}" />
+                    <Button Content="Close" Margin="5 0 0 0" Command="{Binding ShutterVM.CloseShutterCommand}" />
+                </UniformGrid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="Acquisition" Margin="10,5">
+            <UniformGrid Columns="2">
+                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="Average: " />
+                <controls:DoubleUpDown Maximum="64"
+                                       Minimum="0"
+                                       Step="1"
+                                       Value="{Binding ProbeInputs.NbMeasuresAverage}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
+                       Content="Integration Time: " />
+                <controls:DoubleUpDown Maximum="100"
+                                       Minimum="0"
+                                       Step="0.1"
+                                       Unit="ms"
+                                       Value="{Binding ProbeInputs.IntegrationTimems, StringFormat=F2}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
+                       Content="Quality Threshold: " />
+                <controls:DoubleUpDown Maximum="10"
+                                       Minimum="0"
+                                       Step="0.1"
+                                       Value="{Binding QualityThreshold, StringFormat=F1}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Header="TSV" Margin="10,5">
+            <UniformGrid Columns="2">
+                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="TSV diameter: " />
+                <controls:DoubleUpDown Maximum="300"
+                                       Minimum="-300"
+                                       Step="0.1"
+                                       Unit="µm"
+                                       Value="{Binding TSVDiameter, StringFormat=F3}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Right"
+                       Content="Signal Threshold: " />
+                <controls:DoubleUpDown Maximum="300"
+                                       Minimum="-300"
+                                       Step="0.1"
+                                       Value="{Binding ProbeInputs.Threshold, StringFormat=F3}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+                <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Content="Peak Threshold: " />
+                <controls:DoubleUpDown Maximum="300"
+                                       Minimum="-300"
+                                       Step="0.1"
+                                       Value="{Binding ProbeInputs.ThresholdPeak, StringFormat=F3}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="0" Header="Dark" Margin="10,5">
+            <UniformGrid Rows="1">
+                <UniformGrid Columns="1">
+                    <RadioButton IsChecked="True">Use Reference Position</RadioButton>
+                    <RadioButton>Use Current Position</RadioButton>
+                    <RadioButton x:Name="DarkCustomRadioButton">Custom</RadioButton>
+                </UniformGrid>
+                <Grid
+                    Visibility="{Binding IsChecked, ElementName=DarkCustomRadioButton, Converter={converters:BooleanToHiddenVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Content="X: " />
+                    <controls:DoubleUpDown Grid.Row="0" Grid.Column="1" Maximum="300"
+                                           Minimum="-300"
+                                           Step="0.1"
+                                           Unit="mm"
+                                           Value="{Binding DarkPosX, StringFormat=F3}"
+                                           ImageGeometryDown="{StaticResource MinusGeometry}"
+                                           ImageGeometryUp="{StaticResource PlusGeometry}"
+                                           HorizontalContentAlignment="Right" />
+                    <Label Grid.Row="1" Grid.Column="0" VerticalContentAlignment="Center" Content="Y: " />
+                    <controls:DoubleUpDown Grid.Row="1" Grid.Column="1" Maximum="300"
+                                           Minimum="-300"
+                                           Step="0.1"
+                                           Unit="mm"
+                                           Value="{Binding DarkPosY, StringFormat=F3}"
+                                           ImageGeometryDown="{StaticResource MinusGeometry}"
+                                           ImageGeometryUp="{StaticResource PlusGeometry}"
+                                           HorizontalContentAlignment="Right" />
+                    <Label Grid.Row="2" Grid.Column="0" VerticalContentAlignment="Center" Content="Z: " />
+                    <controls:DoubleUpDown Grid.Row="2" Grid.Column="1" Maximum="300"
+                                           Minimum="-300"
+                                           Step="0.1"
+                                           Unit="mm"
+                                           Value="{Binding DarkPosZ, StringFormat=F3}"
+                                           ImageGeometryDown="{StaticResource MinusGeometry}"
+                                           ImageGeometryUp="{StaticResource PlusGeometry}"
+                                           HorizontalContentAlignment="Right" />
+                </Grid>
+            </UniformGrid>
+        </GroupBox>
+        <GroupBox Grid.Column="2" Header="Reference" Margin="10,5">
+            <UniformGrid Rows="1">
+                <UniformGrid Columns="1">
+                    <RadioButton IsChecked="True">Use Reference Position</RadioButton>
+                    <RadioButton>Use Current Position</RadioButton>
+                    <RadioButton x:Name="RefCustomRadioButton">Custom</RadioButton>
+                </UniformGrid>
+                <Grid
+                    Visibility="{Binding IsChecked, ElementName=RefCustomRadioButton, Converter={converters:BooleanToHiddenVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Content="X: " />
+                    <controls:DoubleUpDown Grid.Row="0" Grid.Column="1" Maximum="300"
+                                           Minimum="-300"
+                                           Step="0.1"
+                                           Unit="mm"
+                                           Value="{Binding RefPosX, StringFormat=F3}"
+                                           ImageGeometryDown="{StaticResource MinusGeometry}"
+                                           ImageGeometryUp="{StaticResource PlusGeometry}"
+                                           HorizontalContentAlignment="Right" />
+                    <Label Grid.Row="1" Grid.Column="0" VerticalContentAlignment="Center" Content="Y: " />
+                    <controls:DoubleUpDown Grid.Row="1" Grid.Column="1" Maximum="300"
+                                           Minimum="-300"
+                                           Step="0.1"
+                                           Unit="mm"
+                                           Value="{Binding RefPosY, StringFormat=F3}"
+                                           ImageGeometryDown="{StaticResource MinusGeometry}"
+                                           ImageGeometryUp="{StaticResource PlusGeometry}"
+                                           HorizontalContentAlignment="Right" />
+                    <Label Grid.Row="2" Grid.Column="0" VerticalContentAlignment="Center" Content="Z: " />
+                    <controls:DoubleUpDown Grid.Row="2" Grid.Column="1" Maximum="300"
+                                           Minimum="-300"
+                                           Step="0.1"
+                                           Unit="mm"
+                                           Value="{Binding RefPosZ, StringFormat=F3}"
+                                           ImageGeometryDown="{StaticResource MinusGeometry}"
+                                           ImageGeometryUp="{StaticResource PlusGeometry}"
+                                           HorizontalContentAlignment="Right" />
+                </Grid>
+            </UniformGrid>
+        </GroupBox>
+        <Button Grid.Column="1" Content="Get Dark And Reference" Command="{Binding GetDarkAndReferenceCommand}" />
+    </StackPanel>
+</UserControl>

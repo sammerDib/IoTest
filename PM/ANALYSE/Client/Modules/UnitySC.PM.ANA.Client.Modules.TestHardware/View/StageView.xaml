@@ -1,0 +1,1069 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:stage="clr-namespace:UnitySC.PM.ANA.Client.Proxy.Axes.Models;assembly=UnitySC.PM.ANA.Client.Proxy"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:conv="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View.Converter"
+             xmlns:l="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View"
+             x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.StageView"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             TextElement.FontSize="14"
+             x:Name="UserControlStage">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.TestHardware;component/ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <sys:String x:Key="FormatDecimalThreePlaces">{0:F3}</sys:String>
+            <sys:String x:Key="mm">mm</sys:String>
+            <Color x:Key="ZoneBackgroundColor">#FFF5F5F5</Color>
+            <SolidColorBrush x:Key="ZoneBackground"
+                         Color="{StaticResource ZoneBackgroundColor}" />
+            <conv:DifferentDoublesToVisibilityConverter x:Key="DifferentDoublesToVisibilityConverter" />
+            <Style x:Key="IncrementalButtonStyle"
+               BasedOn="{StaticResource MaterialDesignIconForegroundButton}"
+               TargetType="{x:Type Button}">
+                <Setter Property="Background"
+                    Value="White"></Setter>
+                <Setter Property="Width"
+                    Value="45" />
+                <Setter Property="Height"
+                    Value="45" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                           HorizontalAlignment="Center"
+                           Margin="8,10,7,10"
+                           Grid.RowSpan="2">Enabled</TextBlock>
+                    <materialDesign:PackIcon Kind="PowerPlug"
+                                         Foreground="Green"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding AxesSupervisor.AxesVM.Status.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         Grid.RowSpan="2" />
+                    <materialDesign:PackIcon Kind="PowerPlug"
+                                         Grid.Column="1"
+                                         Foreground="Red"
+                                         Width="30"
+                                         Height="30"
+                                        HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding AxesSupervisor.AxesVM.Status.IsEnabled, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+                                         Grid.RowSpan="2" />
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                           HorizontalAlignment="Center"
+                           Margin="10">Moving</TextBlock>
+                    <materialDesign:PackIcon Kind="Repeat"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <materialDesign:PackIcon.RenderTransform>
+                            <RotateTransform Angle="0"
+                                         CenterX="15"
+                                         CenterY="15" />
+                        </materialDesign:PackIcon.RenderTransform>
+                        <materialDesign:PackIcon.Style>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Style.Triggers>
+                                    <Trigger Property="IsVisible"
+                                         Value="true">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard x:Name="startRotate">
+                                                <Storyboard>
+                                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                                                 From="0"
+                                                                 To="360"
+                                                                 Duration="0:0:1"
+                                                                 RepeatBehavior="Forever" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                        <Trigger.ExitActions>
+                                            <StopStoryboard BeginStoryboardName="startRotate" />
+                                        </Trigger.ExitActions>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </materialDesign:PackIcon.Style>
+                    </materialDesign:PackIcon>
+                    <materialDesign:PackIcon Kind="RepeatOff"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                          HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="100" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                           HorizontalAlignment="Center"
+                           Margin="10">Landed</TextBlock>
+                    <ToggleButton
+                              Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Style="{StaticResource ToggleAnimatedSwitchNew}"
+                              ToolTip="Manage air bearing"
+                              Command="{Binding AxesSupervisor.AxesVM.ChangeLandStatus}"
+                              IsChecked="{Binding AxesSupervisor.AxesVM.Status.IsLanded}" />
+                </Grid>
+                <Grid Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125" />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                           HorizontalAlignment="Center"
+                           Margin="10">Clamped</TextBlock>
+                    <ToggleButton
+                              Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Style="{StaticResource ToggleAnimatedSwitchNew}"
+                              Command="{Binding ChuckSupervisor.ChuckVM.ChangeClampStatus}"
+                              ToolTip="Manage vacuum (check if wafer is present)"
+                              IsChecked="{Binding ChuckSupervisor.ChuckVM.Status.IsWaferClamped}" 
+                              IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}"/>
+                    <!-- Wafer categories -->
+                    <ComboBox VerticalAlignment="Center" MaxWidth="200" ItemsSource="{Binding ChuckSupervisor.ChuckVM.WaferCategories}" SelectedItem="{Binding ChuckSupervisor.ChuckVM.SelectedWaferCategory}" Grid.Column="2" Margin="5,0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </Grid>
+            <GroupBox Grid.Row="1"
+                  Margin="10,0,10,0">
+                <GroupBox.Header>
+                    <TextBlock><materialDesign:PackIcon Kind="EthernetCableOff"
+                                                    Margin="0 0 10 0"
+                                                    Visibility="{Binding AxesSupervisor.AxesVM.Configuration.IsSimulated, Converter={StaticResource BooleanToVisibilityConverter}}" />CURRENT POSITION</TextBlock>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Center"
+                           FontSize="16"
+                           Text="{Binding AxesSupervisor.AxesVM.Position.X, StringFormat='X : {0:F3} mm'}"
+                           VerticalAlignment="Center"
+                           Width="150"
+                           Style="{StaticResource MaterialDesignButtonTextBlock}" />
+                    <TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
+                           FontSize="16"
+                           Width="150"
+                           Text="{Binding AxesSupervisor.AxesVM.Position.Y, StringFormat='Y : {0:F3} mm'}"
+                           Grid.Column="1"
+                           VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding AxesSupervisor.AxesVM.Position.ZTop, StringFormat='Z Top : {0:F3} mm'}"
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           Width="150"
+                           Style="{StaticResource MaterialDesignButtonTextBlock}"
+                           Grid.Column="2" />
+                    <TextBlock HorizontalAlignment="Center"
+                           Grid.Column="3"
+                           FontSize="16"
+                           Width="170"
+                           VerticalAlignment="Center"
+                           Text="{Binding AxesSupervisor.AxesVM.Position.ZBottom, StringFormat='Z Bottom : {0:F3} mm'}"
+                           Style="{StaticResource MaterialDesignButtonTextBlock}" />
+                    <TextBlock Text="Piezos" Margin="4,0"
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           Style="{StaticResource MaterialDesignButtonTextBlock}"
+                           Grid.Column="4" />
+                    <ListBox   VerticalAlignment="Center"
+                           ItemsSource="{Binding AxesSupervisor.AxesVM.Piezos}"
+                           FontSize="16"
+                           Width="150"
+                           HorizontalAlignment="Left"
+                           Grid.Column="5">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="4,0" Text="{Binding Name}" />
+                                    <sharedControls:LabelUnit Margin="4,0" Grid.Row="2"  Grid.Column="1" Content="{Binding Position.Value, FallbackValue=0}" ContentStringFormat="{}{0:F3}" Unit="{Binding Position.UnitSymbol}" FontWeight="Bold" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Focusable" Value="False" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Button Command="{Binding GetCurrentPosition}"
+                        Margin="10,0,0,0"
+                        Width="75"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        ToolTip="Recover stage's position"
+                        Grid.Column="6"
+                        HorizontalAlignment="Right">
+                        <materialDesign:PackIcon Kind="CrosshairsGps"
+                                             Height="24"
+                                             Width="24" />
+                    </Button>
+                </Grid>
+            </GroupBox>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="400" />
+                </Grid.ColumnDefinitions>
+                <Grid Margin="10,10,0,10"
+                  Background="{StaticResource ZoneBackground}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="45" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="225" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Margin="10 5 0 0"
+                            Padding="7"
+                            Content="Park"
+                            Command="{Binding AxesSupervisor.AxesVM.GoToPark}"
+                            IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}" />
+                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Grid.Column="1"
+                            Margin="10 5 0 0"
+                            Padding="7"
+                            Content="Manual Load"
+                            Command="{Binding AxesSupervisor.AxesVM.GoToManualLoad}"
+                            IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}" />
+                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Grid.Column="2"
+                            Margin="10 5 0 0"
+                            Padding="7"
+                            Content="Home"
+                            Command="{Binding AxesSupervisor.AxesVM.GoToHome}"
+                            IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}" />
+                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Grid.Column="3"
+                            Margin="10 5 0 0"
+                            Padding="7"
+                            Content="Chuck Center"
+                            Command="{Binding AxesSupervisor.AxesVM.GoToChuckCenter}"
+                            IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}" />
+                        <Grid Grid.Column="4"
+                          Margin="10 5 0 0"
+                          IsEnabled="{Binding AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="ButtonGotoRef"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                materialDesign:ButtonAssist.CornerRadius="2 0 0 2"
+                                Padding="7"
+                                Content="{Binding SelectedReference.ReferenceName}"
+                                Command="{Binding AxesVM.GotoRefPos}"
+                                CommandParameter="{Binding SelectedReference}"
+                                ToolTip="Move to the selected Reference position" />
+                            <ToggleButton x:Name="DisplayRefsList"
+                                      Grid.Column="1"
+                                      Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                      materialDesign:ButtonAssist.CornerRadius="0 2 2 0"
+                                      Padding="0"
+                                      Width="20"
+                                      IsHitTestVisible="{Binding ElementName=PopupReferences, Path=IsOpen, Converter={StaticResource InvertedBooleanConverter}}"
+                                      IsEnabled="{Binding ElementName=ButtonGotoRef, Path=IsEnabled}">
+                                <Grid x:Name="Images">
+                                    <Image Source="{DynamicResource SimpleDown}" Height="15" Width="15" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}, Path=IsChecked, Converter= {StaticResource InvertedBooleanToVisibilityConverter}}" />
+                                    <Image Source="{DynamicResource SimpleUp}" Height="15" Width="15" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ToggleButton}}, Path=IsChecked, Converter= {StaticResource BooleanToVisibilityConverter}}" />
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Opacity" Value="1" />
+                                            <!-- Here is the 'normal' content -->
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEnabled, ElementName=DisplayRefsList}" Value="False">
+                                                    <Setter Property="Opacity" Value="0.4" />
+                                                    <!-- Here is the 'override' content -->
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ToggleButton>
+
+                            <Popup x:Name="PopupReferences"
+                               IsOpen="{Binding IsChecked, ElementName=DisplayRefsList}"
+                               StaysOpen="False"
+                               PlacementTarget="{Binding ElementName=DisplayRefsList}"
+                               Placement="Left"
+                               HorizontalOffset="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualWidth}"
+                               VerticalOffset="{Binding RelativeSource={RelativeSource Self}, Path=PlacementTarget.ActualHeight}">
+                                <Border Background="White" BorderBrush="{StaticResource ButtonBorderBrush}" BorderThickness="1">
+                                    <ListBox x:Name="RefsList"
+                                         Style="{StaticResource ListBoxForComboBox}"
+                                         ItemsSource="{Binding ChuckVM.AnaChuckConfiguration.ReferencesList}"
+                                         DisplayMemberPath="ReferenceName"
+                                         SelectedItem="{Binding SelectedReference}"
+                                         PreviewMouseUp="ListBox_PreviewMouseUp">
+                                    </ListBox>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <!--<xctk:SplitButton
+                            Grid.Column="3"
+                            Margin="10 5 0 0"
+                            Content="Ref"
+                            Command="{Binding AxesSupervisor.AxesVM.GoToHome}">
+                        <xctk:SplitButton.DropDownContent>
+                            <ListBox>
+                                <RadioButton Content="Default Command" GroupName="variations" Margin="5" IsChecked="True" />
+                                <RadioButton Content="Alternate Command 1" GroupName="variations" Margin="5" />
+                                <RadioButton Content="Alternate Command 2" GroupName="variations" Margin="5" />
+                            </ListBox>
+                        </xctk:SplitButton.DropDownContent>
+                    </xctk:SplitButton>-->
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                            Grid.Column="5"
+                            Margin="10 5 10 0"
+                            Padding="7"
+                            Content="Scenario >"
+                            Command="{Binding SwitchToScenario}" />
+                    </Grid>
+                    <GroupBox Grid.Row="1"
+                          Header="XY"
+                          Margin="10">
+                        <GroupBox.HeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Kind="LeadPencil"
+                                                         Height="16"
+                                                         Width="16"
+                                                         Margin="0 0 10 0"
+                                                         VerticalAlignment="Center"
+                                                         Grid.Column="2">
+                                        <materialDesign:PackIcon.Visibility>
+                                            <MultiBinding Converter="{StaticResource DifferentDoublesToVisibilityConverter}">
+                                                <Binding ElementName="PositionTargetX"
+                                                     Path="Value"></Binding>
+                                                <Binding ElementName="UserControlStage"
+                                                     Path="DataContext.AxesSupervisor.AxesVM.Position.X"></Binding>
+                                            </MultiBinding>
+                                        </materialDesign:PackIcon.Visibility>
+                                    </materialDesign:PackIcon>
+                                    <materialDesign:PackIcon Kind="LeadPencil"
+                                                         Height="16"
+                                                         Width="16"
+                                                         Margin="0 0 10 0"
+                                                         VerticalAlignment="Center"
+                                                         Grid.Column="2">
+                                        <materialDesign:PackIcon.Visibility>
+                                            <MultiBinding Converter="{StaticResource DifferentDoublesToVisibilityConverter}">
+                                                <Binding ElementName="PositionTargetY"
+                                                     Path="Value"></Binding>
+                                                <Binding ElementName="UserControlStage"
+                                                     Path="DataContext.AxesSupervisor.AxesVM.Position.Y"></Binding>
+                                            </MultiBinding>
+                                        </materialDesign:PackIcon.Visibility>
+                                    </materialDesign:PackIcon>
+                                    <TextBlock VerticalAlignment="Center"
+                                           Text="{Binding}" />
+                                    <!--Style="{StaticResource MaterialDesignSubtitle1TextBlock}"-->
+                                </Grid>
+                            </DataTemplate>
+                        </GroupBox.HeaderTemplate>
+                        <Grid VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Content="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.MovingDirection}" />
+                            <Slider x:Name="PositionTargetX"
+                                TickFrequency="10"
+                                Margin="10 0"
+                                Grid.Column="1"
+                                Orientation="Horizontal"
+                                Minimum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMin}"
+                                Maximum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMax}"
+                                Value="{Binding PositionTarget.X, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                                VerticalAlignment="Center" />
+                            <TextBox x:Name="PositionXTextbox"
+                                 materialDesign:HintAssist.Hint="X Position"
+                                 Grid.Column="2"
+                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMax}"
+                                 sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisX.PositionMin}"
+                                 MaxLength="10"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding PositionTarget.X, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                            <TextBlock Grid.Column="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="{StaticResource mm}"></TextBlock>
+                            <Label FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Grid.Row="1"
+                               Content="{Binding AxesSupervisor.AxesVM.ConfigurationAxisY.MovingDirection}" />
+                            <Slider x:Name="PositionTargetY"
+                                TickFrequency="10"
+                                Margin="10 0"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Minimum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisY.PositionMin}"
+                                Maximum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisY.PositionMax}"
+                                Value="{Binding PositionTarget.Y, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                            <TextBox materialDesign:HintAssist.Hint="Y Position"
+                                 HorizontalAlignment="Center"
+                                 Grid.Column="2"
+                                 Grid.Row="1"
+                                 MaxLength="10"
+                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                 sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisY.PositionMax, NotifyOnSourceUpdated=True}"
+                                 sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisY.PositionMin, NotifyOnSourceUpdated=True}"
+                                 Text="{Binding PositionTarget.Y, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                                 VerticalAlignment="Center" />
+                            <TextBlock Grid.Row="1"
+                                   Grid.Column="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="{StaticResource mm}"></TextBlock>
+                            <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                BorderBrush="Gray"
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Content="Reset"
+                                HorizontalAlignment="Center"
+                                Command="{Binding ResetXY}" />
+                        </Grid>
+                    </GroupBox>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="Z TOP"
+                              Margin="10,0">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock VerticalAlignment="Center"
+                                               Text="{Binding}" />
+                                        <!--Style="{StaticResource MaterialDesignSubtitle1TextBlock}"-->
+                                        <materialDesign:PackIcon Kind="LeadPencil"
+                                                             Height="16"
+                                                             Width="16"
+                                                             Margin="0 0 10 0"
+                                                             VerticalAlignment="Center"
+                                                             Grid.Column="2">
+                                            <materialDesign:PackIcon.Visibility>
+                                                <MultiBinding Converter="{StaticResource DifferentDoublesToVisibilityConverter}">
+                                                    <Binding ElementName="PositionTargetZTop"
+                                                         Path="Value"></Binding>
+                                                    <Binding ElementName="UserControlStage"
+                                                         Path="DataContext.AxesSupervisor.AxesVM.Position.ZTop"></Binding>
+                                                </MultiBinding>
+                                            </materialDesign:PackIcon.Visibility>
+                                        </materialDesign:PackIcon>
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="PositionTargetZTop"
+                                    TickFrequency="1"
+                                    Grid.Column="1"
+                                    Grid.RowSpan="2"
+                                    Orientation="Vertical"
+                                    Minimum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZTop.PositionMin}"
+                                    Maximum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZTop.PositionMax}"
+                                    HorizontalAlignment="Center"
+                                    Value="{Binding PositionTarget.ZTop, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                                <TextBlock Grid.Column="3"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Text="{StaticResource mm}"></TextBlock>
+                                <TextBox materialDesign:HintAssist.Hint="Z Top Position"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     Grid.Column="2"
+                                     MaxLength="10"
+                                     sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                     sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZTop.PositionMax}"
+                                     sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZTop.PositionMin}"
+                                     Text="{Binding PositionTarget.ZTop, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                                <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    BorderBrush="Gray"
+                                    Content="Reset"
+                                    HorizontalAlignment="Center"
+                                    Grid.Column="2"
+                                    Grid.Row="1"
+                                    Command="{Binding ResetZTop}" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1"
+                              Header="Z BOTTOM"
+                              Margin="10,0">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <materialDesign:PackIcon Kind="LeadPencil"
+                                                             Height="16"
+                                                             Width="16"
+                                                             Margin="0 0 10 0"
+                                                             VerticalAlignment="Center"
+                                                             Grid.Column="2">
+                                            <materialDesign:PackIcon.Visibility>
+                                                <MultiBinding Converter="{StaticResource DifferentDoublesToVisibilityConverter}">
+                                                    <Binding ElementName="PositionTargetZBottom"
+                                                         Path="Value"></Binding>
+                                                    <Binding ElementName="UserControlStage"
+                                                         Path="DataContext.AxesSupervisor.AxesVM.Position.ZBottom"></Binding>
+                                                </MultiBinding>
+                                            </materialDesign:PackIcon.Visibility>
+                                        </materialDesign:PackIcon>
+                                        <TextBlock VerticalAlignment="Center"
+                                               Text="{Binding}" />
+                                        <!--Style="{StaticResource MaterialDesignSubtitle1TextBlock}"-->
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Slider x:Name="PositionTargetZBottom"
+                                    TickFrequency="1"
+                                    Grid.Column="1"
+                                    Grid.RowSpan="2"
+                                    Orientation="Vertical"
+                                    Minimum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZBottom.PositionMin}"
+                                    Maximum="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZBottom.PositionMax}"
+                                    HorizontalAlignment="Center"
+                                    Value="{Binding PositionTarget.ZBottom, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                                <TextBlock Grid.Column="3"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Text="{StaticResource mm}"></TextBlock>
+                                <TextBox materialDesign:HintAssist.Hint="Z Bottom Position"
+                                     HorizontalAlignment="Center"
+                                     Grid.Column="2"
+                                     MaxLength="10"
+                                     sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                     sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZBottom.PositionMax}"
+                                     sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding AxesSupervisor.AxesVM.ConfigurationAxisZBottom.PositionMin}"
+                                     VerticalAlignment="Center"
+                                     Text="{Binding PositionTarget.ZBottom, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                                <Button Style="{StaticResource MaterialDesignOutlinedButton}"
+                                    BorderBrush="Gray"
+                                    Content="Reset"
+                                    HorizontalAlignment="Center"
+                                    Grid.Column="2"
+                                    Grid.Row="1"
+                                    Command="{Binding ResetZBottom}" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Column="2"
+                              Header="Piezo"
+                              Margin="10,0">
+                            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding PiezosTarget}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Width="150">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Text="{Binding Name}" />
+                                            <Slider TickFrequency="1" Grid.Row="1"
+                                        Orientation="Vertical"
+                                        Height="100"
+                                                Margin="0,5"
+                                        Minimum="{Binding Min.Value}"
+                                        Maximum="{Binding Max.Value}"
+                                        HorizontalAlignment="Center"
+                                        Value="{Binding Position.Value}" />
+                                            <sharedControls:DoubleUpDown  Grid.Row="2"
+                                                 Unit="{Binding Position.UnitSymbol}"
+                                                 Maximum="{Binding Max.Value}"
+                                                 Minimum="{Binding Min.Value}"
+                                                 ImageGeometryDown="{StaticResource MinusGeometry}"
+                                                 ImageGeometryUp="{StaticResource PlusGeometry}"
+                                                 Value="{Binding Position.Value, StringFormat='{}{0:F3}', Mode=TwoWay}"
+                                                 sharedExtensions:TextBoxMaskExt.Mask="Decimal" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </GroupBox>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*"
+                                          MinWidth="200"
+                                          MaxWidth="300" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label FontWeight="Bold"
+                           Content="Speed"
+                           VerticalAlignment="Center"
+                           Margin="10" />
+                        <ComboBox SelectedItem="{Binding AxesSupervisor.AxesVM.SelectedAxisSpeed}"
+                              ItemsSource="{Binding AxesSupervisor.AxesVM.SpeedAxisValues}"
+                              Grid.Column="1"
+                              Margin="10"></ComboBox>
+                        <Button Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Grid.Column="3"
+                            Margin="10"
+                            ToolTip="Start Move"
+                            Height="60"
+                            HorizontalAlignment="Center"
+                            Command="{Binding StartMove}">
+                            <materialDesign:PackIcon Kind="ArrowRightDropCircleOutline"
+                                                 Height="50"
+                                                 Width="50" />
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                            Grid.Column="4"
+                            Margin="10"
+                            ToolTip="Stop all moves"
+                            Height="60"
+                            HorizontalAlignment="Center"
+                            IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving}"
+                            Command="{Binding AxesSupervisor.AxesVM.Stop}">
+                            <materialDesign:PackIcon Kind="Stop"
+                                                 Height="50"
+                                                 Width="50" />
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Column="1"
+                  Background="{StaticResource ZoneBackground}"
+                  Margin="10"
+                  IsEnabled="{Binding AxesSupervisor.AxesVM.Status.IsMoving, Converter={StaticResource InvertedBooleanConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalAlignment="Center"
+                      Grid.Row="0"
+                      Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100" />
+                            <RowDefinition Height="70" />
+                            <RowDefinition Height="100" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Style="{DynamicResource IncrementalButtonStyle}"
+                                HorizontalAlignment="Center"
+                                ToolTip="Fast Y move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepY="10" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                     Height="45"
+                                                     Width="45"></materialDesign:PackIcon>
+                            </Button>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                HorizontalAlignment="Center"
+                                Grid.Row="1"
+                                ToolTip="Slow Y move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepY="5" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                     Height="25"
+                                                     Width="25" />
+                            </Button>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                ToolTip="Fast X move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepX="-10" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowLeft"
+                                                     Height="40"
+                                                     Width="40" />
+                            </Button>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Grid.Row="11"
+                                Grid.Column="1"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                ToolTip="Slow X move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepX="-5" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowLeft"
+                                                     Height="25"
+                                                     Width="25" />
+                            </Button>
+                        </Grid>
+                        <Label Grid.Row="1"
+                           Grid.Column="1"
+                           FontSize="20"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center">XY</Label>
+                        <Grid Grid.Row="1"
+                          Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                VerticalAlignment="Center"
+                                ToolTip="Slow X move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepX="5" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowRight"
+                                                     Height="25"
+                                                     Width="25" />
+                            </Button>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                ToolTip="Fast X move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepX="10" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowRight"
+                                                     Height="40"
+                                                     Width="40" />
+                            </Button>
+                        </Grid>
+                        <Grid Grid.Row="2"
+                          Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                HorizontalAlignment="Center"
+                                ToolTip="Slow Y move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepY="-5" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                     Height="25"
+                                                     Width="25" />
+                            </Button>
+                            <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                Grid.Row="1"
+                                Style="{StaticResource IncrementalButtonStyle}"
+                                HorizontalAlignment="Center"
+                                ToolTip="Fast Y move">
+                                <Button.CommandParameter>
+                                    <stage:Increment StepY="-10" />
+                                </Button.CommandParameter>
+                                <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                     Height="40"
+                                                     Width="40" />
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Margin="0 20 0 10"
+                          Width="100"
+                          Height="270"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Top">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="70" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Fast Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZTop="3" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                         Height="40"
+                                                         Width="40" />
+                                </Button>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    Grid.Row="1"
+                                    ToolTip="Slow Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZTop="1" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                         Height="25"
+                                                         Width="25" />
+                                </Button>
+                            </Grid>
+                            <Label Grid.Row="1"
+                               FontSize="20"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center">Z Top</Label>
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Slow Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZTop="-1" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                         Height="25"
+                                                         Width="25" />
+                                </Button>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Grid.Row="1"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Fast Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZTop="-3" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                         Height="40"
+                                                         Width="40" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid Margin="0 20 0 10"
+                          Width="100"
+                          Height="270"
+                          Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Top">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="70" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    Height="45"
+                                    Width="45"
+                                    ToolTip="Fast Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZBottom="3" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                         Height="40"
+                                                         Width="40" />
+                                </Button>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Grid.Row="1"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    Height="45"
+                                    Width="45"
+                                    ToolTip="Slow Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZBottom="1" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                         Height="25"
+                                                         Width="25" />
+                                </Button>
+                            </Grid>
+                            <Label Grid.Row="1"
+                               FontSize="20"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center">Z Bottom</Label>
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Slow Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZBottom="-1" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                         Height="25"
+                                                         Width="25" />
+                                </Button>
+                                <Button Command="{Binding AxesSupervisor.AxesVM.MoveIncremental}"
+                                    Grid.Row="1"
+                                    Style="{StaticResource IncrementalButtonStyle}"
+                                    HorizontalAlignment="Center"
+                                    ToolTip="Fast Z move">
+                                    <Button.CommandParameter>
+                                        <stage:Increment StepZBottom="-3" />
+                                    </Button.CommandParameter>
+                                    <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                         Height="40"
+                                                         Width="40" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <l:StageScenarios Grid.Row="2"
+                          DataContext="{Binding ElementName=UserControlStage, Path=DataContext}"
+                          Visibility="{Binding IsInScenarioMode, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue='Hidden'}"></l:StageScenarios>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

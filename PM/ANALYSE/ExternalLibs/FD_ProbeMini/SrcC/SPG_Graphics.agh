@@ -1,0 +1,50 @@
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+
+#ifdef INC_SPG_Graphics_INC
+#error SPG_Graphics.agh included twice
+#endif
+
+#define INC_SPG_Graphics_INC
+
+void SPG_CONV G_FillBitmapInfoUnsafe(void* BitmapInfo, G_Ecran& E, int YReverse);
+void SPG_CONV G_FillBitmapInfo(void* BitmapInfo, G_Ecran& E, int YReverse);
+void* SPG_CONV G_CreateBitmapInfo(G_Ecran& E, int YReverse);
+int SPG_CONV G_InitEcran(G_Ecran& E, int EType,
+				BYTE* MECR, int Pitch, int POCT,
+				int SizeX, int SizeY,
+				int PosX, int PosY,
+				void* HDCECR,
+				bool YReverse=1);
+int SPG_CONV G_InitEcranWindows(G_Ecran& E, int POCT, int SizeX, int SizeY, void* HDCECR, bool YReverse=1);
+int SPG_CONV G_InitEcranDibSect(G_Ecran& E, int POCT, int SizeX, int SizeY, void* HDCECR, bool YReverse=1);
+int SPG_CONV G_InitEcranCompatBMP(G_Ecran& E, int POCT, int SizeX, int SizeY, void* HDCECR, bool YReverse=1);
+int SPG_CONV G_InitMemoryEcran(G_Ecran& E, int POCT, int SizeX, int SizeY);
+int SPG_CONV G_InitEcranFromPGLDisplay(G_Ecran& E, PGLDisplay* display);
+int SPG_CONV G_InitEcranFromPGLSurface(G_Ecran& E, PGLSurface* surface);
+int SPG_CONV G_InitSousEcran(G_Ecran& E, G_Ecran& ERef,int PosX,int PosY, int SizeX,int SizeY);
+void SPG_CONV G_InitSplit4(G_Ecran& E, G_Ecran& EUL, G_Ecran& EUR, G_Ecran& EDL, G_Ecran& EDR);
+void SPG_CONV G_CloseSplit4(G_Ecran& EUL, G_Ecran& EUR, G_Ecran& EDL, G_Ecran& EDR);
+int SPG_CONV G_InitAliasMemEcran(G_Ecran& E, BYTE* MECR, int Pitch, int POCT, int SizeX, int SizeY);
+#ifdef DebugMem
+int SPG_CONV G_InitAliasMemEcranSafe(G_Ecran& E, BYTE* MECR, int Pitch, int POCT, int SizeX, int SizeY);
+#else
+#define G_InitAliasMemEcranSafe(E,MECR,Pitch,POCT,SizeX,SizeY) G_InitAliasMemEcran(E,MECR,Pitch,POCT,SizeX,SizeY) 
+#endif
+#ifdef SPG_General_USEFilesWindows
+void SPG_CONV G_SaveAs_ToBMP(G_Ecran& E, char*SuggestedName);
+#endif
+void SPG_CONV G_SaveEcran(G_Ecran& E,char* FileName); 
+void SPG_CONV G_SaveToBMP(char * Name,BYTE* M, int POCT, int Pitch, int SizeX, int SizeY);
+int SPG_CONV G_InitEcranFromFile(G_Ecran& E, int POCT, int LoadYReverse, char*Name);
+void SPG_CONV G_CloseEcran(G_Ecran& E);
+void SPG_CONV G_InitJauge(G_Ecran& E,G_Jauge& J,float*ValeurAMesurer, float VMin,float VMax, int Y0, DWORD Coul1, DWORD Coul2);
+void SPG_CONV G_CloseJauge(G_Jauge& J);
+void SPG_CONV G_DrawJauge(G_Ecran& E, G_Jauge& J);
+void SPG_CONV SPG_FillColorPalette(PixCoul* Color, int MaxColor);
+int SPG_CONV DrawVector_Init(DRAWVECT& DV, float DrawScale=8.0f, float ColorScale=0.5f);
+void SPG_CONV DrawVector_Close(DRAWVECT& DV);
+void SPG_CONV DrawVector(DRAWVECT& DV, G_Ecran& E, int X, int Y, float VX, float VY);
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+

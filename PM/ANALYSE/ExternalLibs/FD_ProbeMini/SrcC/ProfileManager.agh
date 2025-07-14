@@ -1,0 +1,137 @@
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+
+#ifdef INC_ProfileManager_INC
+#error ProfileManager.agh included twice
+#endif
+
+#define INC_ProfileManager_INC
+
+int SPG_CONV P_Create(Profil& P, int SizeX, int SizeY, float XScale=1,float YScale=1, char* UnitX=0,char* UnitY=0,char* UnitZ=0, int WithMask=0);
+int SPG_CONV P8_Create(Profil8& P, int SizeX, int SizeY, float XScale=1,float YScale=1, char*UnitX=0,char*UnitY=0,char*UnitZ=0, int WithMask=0);
+int SPG_CONV PX_Create(ProfilX& P, int SizeX, int SizeY, float XScale=1,float YScale=1, char*UnitX=0,char*UnitY=0,char*UnitZ=0, int WithMask=0);
+int SPG_CONV P_Init(Profil& P, float* D, BYTE* Msk, int SizeX, int SizeY, int Mode);
+int SPG_CONV P8_Init(Profil8& P, BYTE* D, int SizeX, int SizeY, int Mode);
+void SPG_CONV P_SetScale(Profil& P, float XScale, float YScale, char * UnitX, char * UnitY, char * UnitZ);
+void SPG_CONV P_Close(Profil& P);
+void SPG_CONV P8_Close(Profil8& P);
+void SPG_CONV PX_Close(ProfilX& P);
+int SPG_CONV P_CreateForFFT(Profil& P,ProfilX& PFFT, int FFT_FLAG);
+int SPG_CONV P_CopyToComplex(Profil& P,ProfilX& PFFT);
+int SPG_CONV PX_GetRe(ProfilX& PFFT,Profil& P);
+int SPG_CONV PX_GetIm(ProfilX& PFFT,Profil& P);
+int SPG_CONV PX_GetPhase(ProfilX& PFFT,Profil& P);
+int SPG_CONV PX_GetPhase_0_2pi(ProfilX& PFFT,Profil& P);
+int SPG_CONV PX_GetPhase_0_1(ProfilX& PFFT,Profil& P);
+int SPG_CONV PX_GetModule(ProfilX& PFFT,Profil& P);
+int SPG_CONV PX_GetModuleAtNthPower(ProfilX& PFFT,Profil& P,float Power);
+#ifdef SPG_General_USEFFT
+int SPG_CONV P_FFT(Profil& P,ProfilX& PFFT,int Flag=0);
+int SPG_CONV PX_FFT(ProfilX& PFFT,int Flag=0);
+#endif
+int SPG_CONV PX_CircularFourier(ProfilX& PFFT, int mx, int my, int RadiusSquare);
+void SPG_CONV PX_TranslateToCenter_FFT_AlternateSign(ProfilX& PFFT);
+int SPG_CONV PX_FindCarrier(ProfilX& PFFT, int& X, int& Y, int MaxSizeX, int MaxSizeY, int AvoidSize);
+int SPG_CONV PX_Mul(ProfilX& P, Profil& Factor);
+int SPG_CONV PX_MulComplement(ProfilX& PRes, ProfilX& PRef);
+int SPG_CONV PX_ComplementMul(ProfilX& PRes, ProfilX& PRef);
+int SPG_CONV P_CopyAt(float* dD, int dStepXFloat, int dPitchFloat, int dPosX, int dPosY,
+			 float* sD, int sStepXFloat, int sPitchFloat, int sPosX, int sPosY, int SizeX, int SizeY);
+int SPG_CONV P8_CopyAt(BYTE* dD, int dStepXByte, int dPitchByte, int dPosX, int dPosY,
+			 BYTE* sD, int sStepXByte, int sPitchByte, int sPosX, int sPosY, int SizeX, int SizeY);
+void SPG_CONV P_Dupliquate(Profil& Pdest, Profil& Psrc);
+void SPG_CONV P_DupliquateWithNoMsk(Profil& Pdest, Profil& Psrc);
+void SPG_CONV P_DupliquateWithMsk(Profil& Pdest, Profil& Psrc);
+void SPG_CONV P_Copy(Profil& Pdest, Profil& Psrc);
+void SPG_CONV P_ResamCopy(Profil& Pdest, Profil& Psrc);
+void SPG_CONV PX_Copy(ProfilX& Pdest, ProfilX& Psrc);
+int SPG_CONV PX_PadCopy(ProfilX& PDest, ProfilX& PSrc);
+void SPG_CONV P_CosWindow(Profil& P, int BorderSize);
+void SPG_CONV P_EstimateSpectrum(Profil& P, Profil& PEnveloppe, int BorderSize);
+void SPG_CONV P_FFTFilter(Profil& Pdst, Profil& Psrc, Profil& PEnveloppe, int BorderSize);
+void SPG_CONV P_Equalize(Profil& P, float Epsilon, int BorderSize, int Iter);
+//void SPG_CONV P_Equalize(Profil& P, float Epsilon=1.0f, int BorderSize=32, int Iter=9);
+int SPG_CONV P8_CopyToFloat(Profil& P, Profil8& P8, int X, int Y, int SizeX, int SizeY);
+int SPG_CONV P_CopyFromByte(Profil& P, BYTE* GreyScale8BitsImage, int Pitch=0);
+void SPG_CONV P8_CopyFromFloat(Profil8& Pdest, Profil& Psrc);
+void SPG_CONV P_CopyToByte(Profil& Psrc, BYTE* Pdest);
+void SPG_CONV P_Extract(Profil& PDest, Profil& PSrc, int X0, int Y0, int SX, int SY);
+void SPG_CONV P8_GradientMoyen(Profil8& P, int XPos,int YPos, int SizeX, int SizeY, float& G);
+void SPG_CONV P8_HiFreqMoyen(Profil8& P, int XPos,int YPos, int SizeX, int SizeY, float& G);
+void SPG_CONV P_FindMinMax(Profil& P, float &fMin, float &fMax);
+int SPG_CONV P_FindMax(Profil& P, int& PosX, int& PosY);
+int SPG_CONV P_FindMin(Profil& P, int& PosX, int& PosY);
+void SPG_CONV P_Update(Profil& PN, Profil& PF, Profil& PMin, Profil& PMax, float dt, float dtzero);
+void SPG_CONV P_InterleavedFindMax(Profil& P, int Start, int Stop, int Step, int& PosOfMax);
+void SPG_CONV P_FullFindMaxFast(Profil& P, int Start, int Stop, int BiggestStep, int& PosOfMax);
+int SPG_CONV P_Add(Profil& PRes, Profil& PAdd);
+int SPG_CONV P_Substract(Profil& PRes, Profil& PSub);
+int SPG_CONV P_RevSubstract(Profil& PRes, Profil& PSub);
+int SPG_CONV P_Divise(Profil& PRes, Profil& PDiviseur);
+void SPG_CONV P_Normalize(Profil& PRes, Profil& PDiviseur);
+void SPG_CONV P_Soften(Profil& P);
+int SPG_CONV P_GetUndersW(Profil& Pdest, Profil& P, int xMin, int xMax, int yMin, int yMax, int Unders);
+int SPG_CONV P_GetUnders(Profil& Pdest, Profil& P, int Unders);
+int SPG_CONV P_HalfsampleMin(Profil& Pdest, Profil& P);
+int SPG_CONV P_DblSample(Profil& Pdest, Profil& P);
+int SPG_CONV P_DblSampleEx(Profil& Pdest, Profil& P);
+void SPG_CONV P_MedianFilter(Profil& P, Profil& Ptmp, int FilterSize);
+void SPG_CONV P_Convolve(Profil& Pdest, Profil& Psrc, Profil& Kernel);
+void SPG_CONV P_ConvolveFast(Profil& Pdest, Profil& Psrc, Profil& Kernel);
+void SPG_CONV P_FastConvHighPassG(short* D, int Step, int N, int FilterSize, int nBitsShr);
+void SPG_CONV P_FastConvHighPassG(float* D, int Step, int N, int FilterSize);
+void SPG_CONV P_FastConvLowPassG(short* D, int Step, int N, int FilterSize, int nBitsShr);
+void SPG_CONV P_FastConvLowPassG(float* D, int Step, int N, int FilterSize);
+void SPG_CONV P_FastConvLowPassPhase(float* D, int Step, int* K, int KStep, int N, int FilterSize);
+void SPG_CONV P_FastConvLowPass3D(float* D, int SizeX, int SizeY, int SizeZ, int FilterSizeX, int FilterSizeY, int FilterSizeZ);
+void SPG_CONV P_FastConvLowPassH(const Profil& P, int FilterSize);
+void SPG_CONV P_FastConvLowPassV(const Profil& P, int FilterSize);
+void SPG_CONV P_FastConvHighPassH(const Profil& P, int FilterSize);
+void SPG_CONV P_FastConvHighPassV(const Profil& P, int FilterSize);
+void SPG_CONV P_FastConvLowPass(const Profil& P, const int FilterSize);
+void SPG_CONV P_FastConvHighPass(const Profil& P, const int FilterSize);
+void SPG_CONV P_MaskConv3x3(Profil& P);
+void SPG_CONV P_MorphoFilterMax(Profil& Pdest, Profil& Psrc, Profil& Kernel);
+void SPG_CONV P_MorphoFilterMin(Profil& Pdest, Profil& Psrc, Profil& Kernel);
+void SPG_CONV P_MorphoFilterMinMax(Profil& PMin, Profil& PMax, const Profil& Psrc, const Profil& Kernel);
+void SPG_CONV P_SetBorderMsk(Profil& P, int BorderWidth);
+void SPG_CONV P_SetBorderVal(Profil& P, float Value, int BorderWidth);
+void SPG_CONV P_ExtendBorderVal(Profil& P, int BorderWidth);
+void SPG_CONV P_RemoveIsolated(Profil& P, int Radius);
+void SPG_CONV P_RemoveBorder(Profil& P, int Radius);
+int SPG_CONV P_FillInTheBlanks(Profil& P, int MskSafe, int SearchMax, int MskValue=-1, int MinFound=-1);
+void SPG_CONV P_Separate(Profil& PLow, Profil& PSrc, int Iter);
+void SPG_CONV P_MskThresholdAbs(Profil& PDest, Profil& PSrc, float Threshold, BYTE MskOr=1, BYTE MskAnd=0xff);
+void SPG_CONV P_MskThresholdMinMax(Profil& PDest, Profil& PSrc, float fMin, float fMax, BYTE MskOr=1, BYTE MskAnd=0xff);
+void SPG_CONV P_NonLinearFilter(Profil& P, float Threshold);
+void SPG_CONV P_YReverse(Profil& P);
+void SPG_CONV P_Unwrap_0_1(Profil& P);
+int SPG_CONV P_FindYMaxAndErase(Profil& PW, int x, int& yFound, float& yNorm, int& yWidth);
+float SPG_CONV P_GetOffset(Profil& P);
+float SPG_CONV P_RemoveOffset(Profil& P);
+int SPG_CONV P_Apodise(Profil& P, int BorderSize, int Iter);
+void SPG_CONV P_GetTilt(Profil& P, float& TiltX, float& TiltY);
+void SPG_CONV P_RemoveTilt(Profil& P);
+void SPG_CONV P_CircularHighPass(Profil& Pdst, Profil& Psrc, int HighPassRadius);
+void SPG_CONV P_Draw(Profil& P, G_Ecran& E, int PosX=0, int PosY=0, DWORD MskColor=0);
+void SPG_CONV P_DrawInternal(Profil& P, G_Ecran& E, int PosX,int PosY, float fMin, float fMax);
+#ifdef SPG_General_USEGraphics
+void SPG_CONV P_DrawPalette(Profil& P, G_Ecran& E, int PosX,int PosY, float fMin, float fMax, PixCoul* PX, int NPX);
+#endif
+void SPG_CONV P_DrawInternalWithMask(Profil& P, G_Ecran& E, int PosX,int PosY, float fMin, float fMax, DWORD MskColor=0x008000);
+void SPG_CONV P8_Draw(Profil8& P, G_Ecran& E, int PosX=0,int PosY=0);
+void SPG_CONV P_GetSurfaceTiltEstimate(Profil& P, float& TiltX, float& TiltY, int NumFilt);
+void SPG_CONV P_RemoveSurfaceTilt(Profil& P, int NumFilt);
+int SPG_CONV P_GetHist(DWORD* HistData, int HistSize, Profil& P, float& fMin, float& fStep);
+int SPG_CONV P_GetWHist(DWORD* HistData, int HistSize, Profil& P, float& fMin, float& fStep);
+int SPG_CONV P_GetW2Hist(DWORD* HistData, int HistSize, Profil& P, float& fMin, float& fStep);
+int SPG_CONV P_GetW3Hist(DWORD* HistData, int HistSize, Profil& P, float& fMin, float& fStep);
+int SPG_CONV P_GetStepHeight(Profil& P, float& S0, float& S1, int NumFilt, int TakeAll=0);
+void SPG_CONV P_LowPassMax(const Profil& PCourant, const Profil& Reference, const int KernelSize, const int IterMaxReplace);
+void SPG_CONV P_LowPassMin(const Profil& PCourant, const Profil& Reference, const int KernelSize, const int IterMaxReplace);
+void SPG_CONV P_LowPassMaxP(Profil& PCourant, Profil& Reference, int KernelSize, int IterMaxReplace, float Exposant);
+void SPG_CONV P_LowPassMinP(Profil& PCourant, Profil& Reference, int KernelSize, int IterMaxReplace, float Exposant);
+void SPG_CONV P_ScrollLeft(Profil& P);
+
+/* AUTOMATICALLY GENERATED HEADER FILE */
+

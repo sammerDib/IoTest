@@ -1,0 +1,256 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings.ThicknessSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:localvm="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps.Measures.MeasuresSettings"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:measures="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures"
+             xmlns:measuresSettings="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:probeSelector="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.ProbeSelector"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="LayerSettingsTemplate">
+                <StackPanel Visibility="{Binding IsMeasured, Converter={converters:BooleanToVisibilityConverter}}" IsEnabled="{Binding IsEnabled}">
+                    <Border Background="{Binding LayerColor, Converter={converters:MediaColorToSolidBrushConverter}}" CornerRadius="4"  BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}">
+                        <TextBlock Text="{Binding Name}" Margin="5"></TextBlock>
+                    </Border>
+                    <probeSelector:ProbeSelector DataContext="{Binding ProbeSelector}"></probeSelector:ProbeSelector>
+                    <Button Grid.Row="2" Grid.Column="1" Margin="0,0,10,10" Visibility="{Binding IsEditing, Converter={converters:InvertedBooleanToVisibilityConverter}}" Command="{Binding StartEdit}" MinWidth="100" HorizontalAlignment="Right">Edit</Button>
+                    <Button Grid.Row="2" Grid.Column="1" Margin="0,0,10,10"  Visibility="{Binding IsEditing, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding Submit}" MinWidth="100" HorizontalAlignment="Right">Submit</Button>
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <!--CHARACTERISTICS-->
+            <StackPanel IsEnabled="{Binding IsEditingALayerToMeasure, Converter={converters:InvertedBooleanConverter}, FallbackValue=true}">
+                <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,10">CHARACTERISTICS</Label>
+                <controls:ImageButton Command="{Binding EditLayers}" HorizontalAlignment="Right" ImageGeometry="{StaticResource PencilGeometry}">Edit Layers</controls:ImageButton>
+                <Label Style="{StaticResource TitleLevel2}">LAYERS TO MEASURE</Label>
+
+                <Grid Margin="10,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl ItemsSource="{Binding LayersToMeasure}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="LightGray" CornerRadius="4" Height="{Binding DisplayHeight}" BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}">
+                                    <Grid>
+                                        <CheckBox Margin="2" IsChecked="{Binding IsMeasured}"></CheckBox>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding Layers}"  Grid.Column="1" AlternationCount="6">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding LayerColor, Converter={converters:MediaColorToSolidBrushConverter}}" CornerRadius="4" Height="100" BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}"  Panel.ZIndex="1">
+                                    <Grid  Margin="0,10,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="90" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <!-- Content-->
+                                        <TextBlock  Text="{Binding Name}" Margin="5,0" FontWeight="Bold" VerticalAlignment="Center" />
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                            <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource HeightGeometry}" VerticalAlignment="Center" ToolTip="Thickness" Height="20"  Margin="-7,0,5,0" />
+                                            <TextBlock Text="{Binding Thickness, StringFormat='{} {0:0.###}'}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <Grid VerticalAlignment="Center" Grid.Row="1" >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Image Grid.Column="0" sharedExtensions:ImageExt.SourceGeometry="{StaticResource AtomGeometry}"  VerticalAlignment="Center" ToolTip="Material" Height="20" Margin="5,0,6,0" />
+                                            <TextBlock Grid.Column="1" x:Name="TextMaterial" Text="Unknown material" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, ElementName=TextMaterial}"/>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
+                                            <TextBlock Text="RI : " VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding RefractiveIndex, StringFormat='{}{0:F2}'}" VerticalAlignment="Center"  Grid.Row="1" Grid.Column="1" Visibility="{Binding RefractiveIndex, Converter={converters:NanToVisibilityConverter}}"/>
+                                            <TextBlock Text="?" VerticalAlignment="Center"  Grid.Row="1" Grid.Column="1" Visibility="{Binding RefractiveIndex, Converter={converters:InvertedNanToVisibilityConverter}}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding Layers}"  Grid.Column="1">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Height="100" BorderThickness="0" BorderBrush="{StaticResource ListItemStaticBorderColor}"  Panel.ZIndex="1">
+                                    <Grid>
+                                        <!-- Readonly -->
+                                        <sharedControls:ImageToggleButton Margin="10,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" ImageGeometry="{StaticResource LinkBreakVerticalGeometry}" ImageCheckedGeometry="{StaticResource LinkVerticalGeometry}"  ImageGeometryBrush="Black" ImageGeometryCheckedBrush="Green"   IsChecked="{Binding IsGroupedWithNext}">
+                                            <sharedControls:ImageToggleButton.RenderTransform>
+                                                <TranslateTransform Y="15">
+                                                </TranslateTransform>
+                                            </sharedControls:ImageToggleButton.RenderTransform>
+                                            <sharedControls:ImageToggleButton.Style>
+                                                <Style TargetType="sharedControls:ImageToggleButton" BasedOn="{StaticResource ImageToggleButtonChromeLessStyle}">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Value="True">
+                                                            <DataTrigger.Binding>
+                                                                <MultiBinding Converter="{localvm:IsLastItemInContainerConverter}">
+                                                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" />
+                                                                    <Binding Path="Items.Count" RelativeSource="{RelativeSource FindAncestor, AncestorType=ItemsControl}" />
+                                                                </MultiBinding>
+                                                            </DataTrigger.Binding>
+                                                            <Setter Property="Visibility" Value="Hidden"/>
+                                                        </DataTrigger>
+                                                        <!--<DataTrigger Binding="{Binding RelativeSource={RelativeSource TemplatedParent},  Converter={localvm:IsLastItemInContainerConverter}}" Value="True">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                    </DataTrigger>-->
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </sharedControls:ImageToggleButton.Style>
+                                        </sharedControls:ImageToggleButton>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding LayersToMeasure}" Grid.Column="2">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="LightGray" CornerRadius="4" Height="{Binding DisplayHeight}"  BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}">
+                                    <Grid  Width="140" Visibility="{Binding IsMeasured, Converter={converters:BooleanToHiddenVisibilityConverter}}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Vertical" Grid.Row="0" Visibility="{Binding HasMultipleLayers, Converter={converters:BooleanToVisibilityConverter}}">
+                                            <Label Content="Refractive index"  Foreground="Black" />
+                                            <TextBox Margin="5,0,5,5" Text="{Binding RefractiveIndex}" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                                            <Label Content="Tolerance"  Foreground="Black" />
+                                            <controls:LengthToleranceInput Grid.Column="1" ToleranceValue="{Binding ThicknessTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" Target="{Binding Thickness}" EditBoxWidth="80" UnitWidth="50" IsMicroMeterAvailable="True" VerticalAlignment="Center" Margin="5,0,0,5"></controls:LengthToleranceInput>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Row="2" Visibility="{Binding HasMultipleLayers, Converter={converters:BooleanToVisibilityConverter}}">
+                                            <Label Content="Thickness offset"  Foreground="Black" />
+                                            <controls:TextBoxUnit LengthValue="{Binding ThicknessOffset, StringFormat='{}{0:F2}'}" Margin="5,0,5,0" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+                <Separator Margin="0,5"></Separator>
+                <!--WAFER THICKNESS-->
+                <Grid Margin="10,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Background="LightGray" CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}">
+                        <Grid>
+                            <CheckBox Margin="2" IsChecked="{Binding WaferThicknessToMeasure.IsMeasured}"></CheckBox>
+                        </Grid>
+                    </Border>
+                    <Border Background="{Binding WaferThicknessToMeasure.LayerColor, Converter={converters:MediaColorToSolidBrushConverter}}" CornerRadius="4" BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}" Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="90" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center" Margin="5" FontWeight="Bold">Wafer Thickness</TextBlock>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left">
+                                <Image sharedExtensions:ImageExt.SourceGeometry="{StaticResource HeightGeometry}" VerticalAlignment="Center" ToolTip="Thickness" Height="20"  Margin="-7,0,5,0" />
+                                <TextBlock Text="{Binding WaferThicknessToMeasure.Thickness,StringFormat='{} {0:0.###}'}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Background="LightGray" CornerRadius="4"  BorderThickness="1" BorderBrush="{StaticResource ListItemStaticBorderColor}" Grid.Column="2">
+                        <Grid  Width="140" Visibility="{Binding WaferThicknessToMeasure.IsMeasured, Converter={converters:BooleanToHiddenVisibilityConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Vertical" Grid.Row="1">
+                                <Label Content="Tolerance"  Foreground="Black" />
+                                <controls:LengthToleranceInput Grid.Column="1" ToleranceValue="{Binding WaferThicknessToMeasure.ThicknessTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" Target="{Binding WaferThicknessToMeasure.Thickness}" EditBoxWidth="80" UnitWidth="50" IsMicroMeterAvailable="True" VerticalAlignment="Center" Margin="5,0,0,5"></controls:LengthToleranceInput>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+            </StackPanel>
+
+            <!--HARDWARE-->
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,0">HARDWARE</Label>
+
+            <ItemsControl ItemsSource="{Binding LayersToMeasure}" Margin="10,10,0,0" ItemTemplate="{StaticResource LayerSettingsTemplate}">
+
+            </ItemsControl>
+
+            <!--WAFER THICKNESS-->
+            <ContentControl IsEnabled="{Binding AutoFocus.IsEditing, Converter={converters:InvertedBooleanConverter}}"
+                            Content="{Binding WaferThicknessToMeasure}"
+                            ContentTemplate="{StaticResource LayerSettingsTemplate}"
+                            Visibility="{Binding WaferThicknessToMeasure.IsMeasured, Converter={converters:BooleanToVisibilityConverter}}" Margin="10,0,0,0"/>
+
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,0">MEASURE SETTINGS</Label>
+
+            <StackPanel Margin="0,10,0,0" IsEnabled="{Binding CanMeasureWarp}">
+                <!--WARP-->
+                <DockPanel Margin="0,5,0,0" >
+                    <Label Style="{StaticResource TitleLevel2}" DockPanel.Dock="Left">MEASURE WARP</Label>
+                    <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" DockPanel.Dock="Right" HorizontalAlignment="Right" IsChecked="{Binding IsWarpMeasured}" Margin="0,0,5,5" />
+                </DockPanel>
+                <StackPanel Grid.Row="1" IsEnabled="{Binding IsWarpMeasured}">
+                    <Grid Margin="10,0,0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="100"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Max Warp" Style="{StaticResource LabelForm}" />
+                        <controls:TextBoxUnit Grid.Column="1"
+                                              LengthValue="{Binding WarpTargetMax, StringFormat='{}{0:F2}'}"
+                                              sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"
+                                              sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+
+            <measuresSettings:AutoFocusSettingsView AutoFocusSettings="{Binding AutoFocusSettings}" AvailableAutoFocusTypes="CameraAndLise" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

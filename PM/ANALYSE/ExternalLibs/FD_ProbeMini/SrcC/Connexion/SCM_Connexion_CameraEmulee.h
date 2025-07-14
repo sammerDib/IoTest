@@ -1,0 +1,4 @@
+
+#ifdef SPG_General_USECAMERAEMULEE
+SCI_CONNEXIONINTERFACE* SPG_CONV sciCAMEMULEECreateConnexionInterface();
+#endif

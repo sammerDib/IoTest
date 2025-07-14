@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Controls.WaferMapControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Controls.WaferMap"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             x:Name="WaferMapUserControl"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Unity Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- Unity Styles New -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid RenderOptions.BitmapScalingMode="Fant">
+        <controls:WaferMapDisplayControl x:Name="WaferMapDisplay"
+                                         WaferDimentionalCharac="{Binding ElementName=WaferMapUserControl, Path=WaferDimentionalCharac}"
+                                         EdgeExclusionThickness="{Binding ElementName=WaferMapUserControl, Path=EdgeExclusionThickness}"
+                                         EdgeExclusionBrush="{Binding ElementName=WaferMapUserControl, Path=EdgeExclusionBrush}"
+                                         WaferBrush="{Binding ElementName=WaferMapUserControl, Path=WaferBrush}"
+                                         DiesBrush="{Binding ElementName=WaferMapUserControl, Path=DiesBrush}"
+                                         WaferMap="{Binding ElementName=WaferMapUserControl, Path=WaferMap}"
+                                         TextBrush="{Binding ElementName=WaferMapUserControl, Path=TextBrush, Mode=OneWay}"
+                                         />
+
+        <Canvas x:Name="CanvasSelected" Background="Transparent">
+            <Rectangle x:Name="DieSelectedDisplay" Fill="{Binding ElementName=WaferMapUserControl, Path=DieSelectedBrush}" Opacity="0.5" />
+        </Canvas>
+        <ItemsControl x:Name="MultiSelectionDisplay" ItemsSource="{Binding  ElementName=WaferMapUserControl, Path=SelectedDiesPositionPixels}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Path=DieRect.X}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Path=DieRect.Y}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:DiePositionPixels}">
+                    <Rectangle Fill="Brown" Width="{Binding Path=DieRect.Width, Mode=OneTime}" Height="{Binding Path=DieRect.Height, Mode=OneTime}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <ItemsControl x:Name="DiesPositionsDisplay" ItemsSource="{Binding  ElementName=WaferMapUserControl, Path=Dies}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Path=DieRect.X}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Path=DieRect.Y}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:DiePositionPixels}">
+                     <Grid Width="{Binding Path=DieRect.Width, Mode=OneTime}" Height="{Binding Path=DieRect.Height, Mode=OneTime}">
+                        <TextBlock FontSize="{Binding  ElementName=WaferMapUserControl, Path=PositionFontSize}"  HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{controls:PositionToStringConverter}">
+                                    <Binding Path="Position"></Binding>
+                                    <Binding ElementName="WaferMapUserControl"  Path="DieReference"></Binding>
+                                    <Binding ElementName="WaferMapUserControl" Path="WaferMap.NbRows"></Binding>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Canvas x:Name="CanvasHover" Background="Transparent" ToolTipService.ShowDuration="12000" ToolTipService.InitialShowDelay="0" ToolTipService.BetweenShowDelay="0">
+            <Canvas.Resources>
+                <ToolTip x:Key="DieToolTip" x:Name="DieToolTip" Placement="Top"
+        HorizontalOffset="0" VerticalOffset="0" IsOpen="False">
+                </ToolTip>
+            </Canvas.Resources>
+            <Grid x:Name="DieHoverDisplay" ToolTip="{StaticResource DieToolTip}">
+                <Rectangle Fill="{Binding ElementName=WaferMapUserControl, Path=DieHoverBrush}" Opacity="0.6"/>
+                <Rectangle Fill="{Binding ElementName=WaferMapUserControl, Path=DieHoverBrush}" Margin="40"/>
+                <Viewbox Visibility="{Binding ElementName=WaferMapUserControl, Path=DisplayPositions, Converter={converters:BooleanToVisibilityConverter}}">
+                    <TextBlock x:Name="DieHoverPosition"  FontWeight="Bold" Margin="5" />
+                </Viewbox>
+            </Grid>
+        </Canvas>
+    </Grid>
+</UserControl>

@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.ProbeSelector.LiseHFSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.ProbeSelector"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:extensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:serviceInterface="clr-namespace:UnitySC.PM.ANA.Service.Interface;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Content="Objective" Style="{StaticResource LabelForm}" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding Objectives}" SelectedItem="{Binding SelectedObjective}" DisplayMemberPath="Name" Width="200" HorizontalAlignment="Left" Margin="0,2" />
+        <Grid Grid.Row="1" Grid.ColumnSpan="2"  Width="300" HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label  Content="Low illumination power" Style="{StaticResource LabelForm}" HorizontalAlignment="Left" Margin="5" />
+
+            <ToggleButton  Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" DockPanel.Dock="Right" HorizontalAlignment="Right" IsChecked="{Binding ProbeInputParameters.IsLowIlluminationPower}" Margin="0,5" />
+        </Grid>
+       
+        <Label Grid.Row="2" Content="Intensity Factor" Style="{StaticResource LabelForm}" />
+        <controls:TextBoxUnit Grid.Row="2" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,2" Text="{Binding ProbeInputParameters.IntensityFactor}" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True"></controls:TextBoxUnit>
+       
+        <Label Grid.Row="3" Content="Average" Style="{StaticResource LabelForm}" />
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding AveragesList}" SelectedValue="{Binding ProbeInputParameters.NbMeasuresAverage}" Width="200" HorizontalAlignment="Left" Margin="0,2" />
+
+        <Label Grid.Row="4" Content="Threshold" Style="{StaticResource LabelForm}" />
+        <TextBox Grid.Row="4" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,2" Text="{Binding ProbeInputParameters.Threshold}" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"></TextBox>
+
+        <Label Grid.Row="5" Content="Threshold Peak" Style="{StaticResource LabelForm}" />
+        <TextBox Grid.Row="5" Grid.Column="1" Width="200" HorizontalAlignment="Left" Margin="0,2" Text="{Binding ProbeInputParameters.ThresholdPeak}" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal"></TextBox>
+
+        <Grid Grid.Row="6" Grid.ColumnSpan="2"  Width="300" HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label  Content="Save Signal" Style="{StaticResource LabelForm}" HorizontalAlignment="Left" Margin="5" />
+
+            <ToggleButton  Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" DockPanel.Dock="Right" HorizontalAlignment="Right" IsChecked="{Binding ProbeInputParameters.SaveFFTSignal}" Margin="0,5" />
+        </Grid>
+
+        <Label Grid.Row="7" Content="Calibration per" Style="{StaticResource LabelForm}" />
+        <ComboBox Grid.Column="1" Grid.Row="7"
+                SelectedValuePath="Enum"
+                DisplayMemberPath="Translation"
+                ItemsSource="{extensions:EnumValuesExtension EnumType=serviceInterface:CalibrationFrequency, ResourceAssemblyName='UnitySC.PM.ANA.Client.CommonUI'}"
+                SelectedValue="{Binding ProbeInputParameters.CalibrationFreq}" Margin="0,2" Width="200" Grid.ColumnSpan="2" HorizontalAlignment="Left" />
+
+        <controls:ImageButton Grid.Column="1" Grid.Row="8" Width="100" Margin="0,2" Command="{Binding EditLayers}" HorizontalAlignment="Left" ImageGeometry="{StaticResource PencilGeometry}">Edit Layers</controls:ImageButton>
+    </Grid>
+</UserControl>

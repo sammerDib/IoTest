@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestMeasure.View.StepMeasureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:coreStep="clr-namespace:UnitySC.PM.ANA.Service.Core.Step;assembly=UnitySC.PM.ANA.Service.Core.Step"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:viewModel="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestMeasure.ViewModel"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewModel:StepMeasureVM}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel Orientation="Vertical" Margin="0">
+        <headers:HeaderRight Content="Measure Step" />
+        <GroupBox Header="Measure settings">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" MinWidth="150"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Right" Content="X: " />
+                <controls:DoubleUpDown Grid.Row="0" Grid.Column="1" Maximum="200"
+                                       Minimum="-200"
+                                       Step="1"
+                                       Unit="mm"
+                                       Value="{Binding Point.X, StringFormat=F3}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+                <Label Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Right" Content="Y: " />
+                <controls:DoubleUpDown Grid.Row="1" Grid.Column="1" Maximum="200"
+                                       Minimum="-200"
+                                       Step="1"
+                                       Unit="mm"
+                                       Value="{Binding Point.Y, StringFormat=F3}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+                <controls:ImageButton Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Image="{StaticResource Position}"
+                                      Content="Set with Current Position" Margin="4"
+                                      HorizontalAlignment="Left" Command="{Binding SetPointCommand}" />
+
+                <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Right" Content="Scan size" />
+                <controls:TextBoxUnit Grid.Row="2" Grid.Column="1" 
+                      Unit="{Binding ScanSize.UnitSymbol}"
+                      Text="{Binding ScanSize.Value, StringFormat='{}{0:F3}'}" 
+                      sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" />
+                
+                <Label Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Right" Content="Scan orientation" />
+                <controls:DoubleUpDown Grid.Row="3" Grid.Column="1" Maximum="180"
+                                       Minimum="-180"
+                                       Step="1"
+                                       Unit="°"
+                                       Value="{Binding ScanOrientation, StringFormat=F3}"
+                                       ImageGeometryDown="{StaticResource MinusGeometry}"
+                                       ImageGeometryUp="{StaticResource PlusGeometry}"
+                                       HorizontalContentAlignment="Right" />
+
+                <Label Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Right" Content="Resolution" />
+                <Slider Grid.Row="4" Grid.Column="1"
+                        Minimum="0.1" 
+                        Maximum="1" 
+                        FlowDirection="RightToLeft"
+                        TickPlacement="BottomRight" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                        Value="{Binding Speed, Mode=TwoWay}"/>
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Target">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" MinWidth="200"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Right" Content="Height: " />
+                <controls:TextBoxUnit Grid.Row="0" Grid.Column="1" 
+                                      Unit="{Binding TargetHeight.UnitSymbol}"
+                                      Text="{Binding TargetHeight.Value, StringFormat='{}{0:F3}'}" 
+                                      sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" />
+                <Label Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Right" Content="Tolerance: " />
+                <controls:LengthToleranceInput Grid.Row="1" Grid.Column="1" 
+                                               ToleranceValue="{Binding Tolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" 
+                                               Target="{Binding TargetHeight.Value}" EditBoxWidth="100" UnitWidth="60" IsMicroMeterAvailable="True">
+                </controls:LengthToleranceInput>
+            </Grid>
+        </GroupBox>
+        <Grid Margin="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Content="Kind of step" />
+                <ComboBox Grid.Row="0" Grid.Column="1" 
+                          SelectedValuePath="Enum" DisplayMemberPath="Translation"
+                          ItemsSource="{sharedExtensions:EnumValuesExtension EnumType=coreStep:StepKind, ResourceAssemblyName='UnitySC.PM.ANA.Client.CommonUI'}"
+                          SelectedValue="{Binding StepKind}"/>
+
+            <controls:ImageButton Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Image="{StaticResource Play}"
+                                  Content="Start" Margin="4"
+                                  HorizontalAlignment="Left" Command="{Binding StartCommand}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" FontStyle="Italic" Margin="5"
+                       TextWrapping="Wrap" HorizontalAlignment="Left" Width="250"
+                       Text="Result will be available in Report folder (you need to activate report for the Profile1D flow)" />
+        </Grid>
+    </StackPanel>
+</UserControl>

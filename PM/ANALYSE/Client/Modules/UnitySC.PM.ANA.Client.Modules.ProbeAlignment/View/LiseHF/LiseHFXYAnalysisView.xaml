@@ -1,0 +1,183 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.ProbeAlignment.View.LiseHF.LiseHFXYAnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:viewModel="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel"
+             xmlns:liseHf="clr-namespace:UnitySC.PM.ANA.Client.Modules.ProbeAlignment.ViewModel.LiseHF"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance liseHf:LiseHFXYAnalysisVM}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <Grid>
+            <headers:HeaderRight Content="XY ANALYSIS" />
+            <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,0,0,0"
+                                  ImageGeometry="{StaticResource PlayGeometry}"
+                                  ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                  Visibility="{Binding IsMeasurementRunning, Converter={converters:InvertedBooleanToVisibilityConverter}}"
+                                  Command="{Binding StartCommand}" />
+            <controls:ImageButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,0,0,0"
+                                  ImageGeometry="{StaticResource StopGeometry}"
+                                  ImageGeometryBrush="{StaticResource IconsErrorColor}"
+                                  Visibility="{Binding IsMeasurementRunning, Converter={converters:BooleanToVisibilityConverter}}"
+                                  Command="{Binding StopCommand}" />
+        </Grid>
+        <Grid HorizontalAlignment="Center" Margin="10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="100" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="StepXY: " Margin="10,0" />
+            <controls:DoubleUpDown Grid.Column="1" Maximum="100"
+                                   Minimum="0"
+                                   Unit="µm"
+                                   Step="0.1"
+                                   Width="150"
+                                   Value="{Binding StepSize, StringFormat=F4}"
+                                   ImageGeometryDown="{StaticResource MinusGeometry}"
+                                   ImageGeometryUp="{StaticResource PlusGeometry}"
+                                   HorizontalContentAlignment="Right" />
+        </Grid>
+        <Grid HorizontalAlignment="Center" Margin="10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Average: " />
+            <controls:TextBoxUnit Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit="µm"
+                                  Text="{Binding MatrixAverage, StringFormat=F4}" />
+            <Label Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Defocus: " />
+            <controls:TextBoxUnit Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit="µm"
+                                  Text="{Binding Defocus, StringFormat=F4}" />
+        </Grid>
+        <GroupBox Header="Depths (nm)" Width="320" Height="350">
+            <UniformGrid Columns="5" Rows="5" Margin="5" Height="300" Width="300">
+                <UniformGrid.Resources>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Setter Property="IsReadOnly" Value="True" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Margin" Value="1" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="TextAlignment" Value="Center" />
+                    </Style>
+                </UniformGrid.Resources>
+                <TextBox Text="" BorderThickness="0" />
+                <TextBox Text="{Binding Matrix[0], StringFormat=F4}" Background="{Binding MatrixColor[0]}" />
+                <TextBox Text="{Binding Matrix[1], StringFormat=F4}" Background="{Binding MatrixColor[1]}" />
+                <TextBox Text="{Binding Matrix[2], StringFormat=F4}" Background="{Binding MatrixColor[2]}" />
+                <TextBox Text="" BorderThickness="0" />
+                <TextBox Text="{Binding Matrix[3], StringFormat=F4}" Background="{Binding MatrixColor[3]}" />
+                <TextBox Text="{Binding Matrix[4], StringFormat=F4}" Background="{Binding MatrixColor[4]}" />
+                <TextBox Text="{Binding Matrix[5], StringFormat=F4}" Background="{Binding MatrixColor[5]}" />
+                <TextBox Text="{Binding Matrix[6], StringFormat=F4}" Background="{Binding MatrixColor[6]}" />
+                <TextBox Text="{Binding Matrix[7], StringFormat=F4}" Background="{Binding MatrixColor[7]}" />
+                <TextBox Text="{Binding Matrix[8], StringFormat=F4}" Background="{Binding MatrixColor[8]}" />
+                <TextBox Text="{Binding Matrix[9], StringFormat=F4}" Background="{Binding MatrixColor[9]}" />
+                <TextBox Text="{Binding Matrix[10], StringFormat=F4}"
+                         Background="{Binding MatrixColor[10]}" />
+                <TextBox Text="{Binding Matrix[11], StringFormat=F4}"
+                         Background="{Binding MatrixColor[11]}" />
+                <TextBox Text="{Binding Matrix[12], StringFormat=F4}"
+                         Background="{Binding MatrixColor[12]}" />
+                <TextBox Text="{Binding Matrix[13], StringFormat=F4}"
+                         Background="{Binding MatrixColor[13]}" />
+                <TextBox Text="{Binding Matrix[14], StringFormat=F4}"
+                         Background="{Binding MatrixColor[14]}" />
+                <TextBox Text="{Binding Matrix[15], StringFormat=F4}"
+                         Background="{Binding MatrixColor[15]}" />
+                <TextBox Text="{Binding Matrix[16], StringFormat=F4}"
+                         Background="{Binding MatrixColor[16]}" />
+                <TextBox Text="{Binding Matrix[17], StringFormat=F4}"
+                         Background="{Binding MatrixColor[17]}" />
+                <TextBox Text="" BorderThickness="0" />
+                <TextBox Text="{Binding Matrix[18], StringFormat=F4}"
+                         Background="{Binding MatrixColor[18]}" />
+                <TextBox Text="{Binding Matrix[19], StringFormat=F4}"
+                         Background="{Binding MatrixColor[19]}" />
+                <TextBox Text="{Binding Matrix[20], StringFormat=F4}"
+                         Background="{Binding MatrixColor[20]}" />
+                <TextBox Text="" BorderThickness="0" />
+            </UniformGrid>
+        </GroupBox>
+        <Grid HorizontalAlignment="Center" Margin="10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Range: " />
+            <controls:TextBoxUnit Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit="µm"
+                                  Text="{Binding MatrixRange, StringFormat=F4}" />
+            <Label Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Std Dev: " />
+            <controls:TextBoxUnit Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit="µm"
+                                  Text="{Binding StdDev, StringFormat=F4}" />
+        </Grid>
+        <Grid HorizontalAlignment="Center" Margin="10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Mod of Grad: " />
+            <controls:TextBoxUnit Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit="µm"
+                                  Text="{Binding ModGrad, StringFormat=F4}" />
+        </Grid>
+        <Grid HorizontalAlignment="Center" Margin="10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Grad 45°: " />
+            <controls:TextBoxUnit Grid.Column="1" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding Grad45, StringFormat=F4}" />
+            <Label Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Grad 135°: " />
+            <controls:TextBoxUnit Grid.Column="3" IsHitTestVisible="False"
+                                  BorderThickness="0"
+                                  Unit=""
+                                  Text="{Binding Grad135, StringFormat=F4}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FEE9EB3E-CFA6-4E14-8C95-D8608E78936E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>UnitySC.PM.ANA.Client</RootNamespace>
+    <AssemblyName>UnitySC.PM.ANA.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <NoWarn>MSB3246</NoWarn>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>PMClient.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- other property settings -->
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>MSB3246</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_HMI|x64'">
+    <OutputPath>bin\x64\Debug_HMI\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;HMI_DEV</DefineConstants>
+    <NoWarn>MSB3246</NoWarn>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AxmountainsLib, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ExternalLibs\AxmountainsLib.dll</HintPath>
+    </Reference>
+    <Reference Include="mountainsLib">
+      <HintPath>..\..\ExternalLibs\mountainsLib.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Bootstrapper.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainViewModel.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="..\..\Service\UnitySC.PM.ANA.Service.Host\App.config">
+      <Link>App.config</Link>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Data\UnitySC.Shared.Data.csproj">
+      <Project>{2F55B3A5-F966-4650-9EDB-EDA8F4B4F3E2}</Project>
+      <Name>UnitySC.Shared.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Logger\UnitySC.Shared.Logger.csproj">
+      <Project>{5E8633AB-C625-49EF-A0A1-632C630E97C8}</Project>
+      <Name>UnitySC.Shared.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.Tools\UnitySC.Shared.Tools.csproj">
+      <Project>{FC8ED3A2-FF0A-48B1-A35D-BF6AF5C3DDC7}</Project>
+      <Name>UnitySC.Shared.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Shared\UnitySC.Shared.UI\UnitySC.Shared.UI.csproj">
+      <Project>{aba2c6a4-bcb4-478a-be76-cb62ab4941e9}</Project>
+      <Name>UnitySC.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.ClientProxy\UnitySC.PM.Shared.Hardware.ClientProxy.csproj">
+      <Project>{EEE94F55-381C-4FCE-A35C-3AEAE3EC7C63}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.ClientProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\Hardware\UnitySC.PM.Shared.Hardware.Service.Interface\UnitySC.PM.Shared.Hardware.Service.Interface.csproj">
+      <Project>{04AD1C23-71C2-46C4-880E-BC5CC2541DA4}</Project>
+      <Name>UnitySC.PM.Shared.Hardware.Service.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared.UI\UnitySC.PM.Shared.UI.csproj">
+      <Project>{97c741a4-6213-470b-9eb1-f19f61df281c}</Project>
+      <Name>UnitySC.PM.Shared.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Shared\UnitySC.PM.Shared\UnitySC.PM.Shared.csproj">
+      <Project>{34913414-05DA-458D-AD73-CC233DE1B0B5}</Project>
+      <Name>UnitySC.PM.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\Server\UnitySC.PM.ANA.EP.Mountains.Server.Implementation\UnitySC.PM.ANA.EP.Mountains.Server.Implementation.csproj">
+      <Project>{91A8B252-EC89-4252-AFFF-AD4DAE327C3A}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Server.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\UnitySC.PM.ANA.EP.Mountains.Interface\UnitySC.PM.ANA.EP.Mountains.Interface.csproj">
+      <Project>{CD02DC89-3683-4FCC-AC1C-D66CB5257931}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\Mountains\UnitySC.PM.ANA.EP.Mountains.Proxy\UnitySC.PM.ANA.EP.Mountains.Proxy.csproj">
+      <Project>{F038A491-8C0C-461D-9B0B-8109800B5136}</Project>
+      <Name>UnitySC.PM.ANA.EP.Mountains.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ExternalProcessing\UnitySC.PM.ANA.EP.Shared\UnitySC.PM.ANA.EP.Shared.csproj">
+      <Project>{25F235BB-FD0F-4744-B85B-BC68D579F853}</Project>
+      <Name>UnitySC.PM.ANA.EP.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.Calibration\UnitySC.PM.ANA.Client.Modules.Calibration.csproj">
+      <Project>{64f9ba28-c5f9-4de3-b9d6-026047f1f294}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.Calibration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.HardwareTool\UnitySC.PM.ANA.Client.Modules.HardwareTool.csproj">
+      <Project>{50a69e77-ab99-425b-acb6-6f7df6057bc1}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.HardwareTool</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.ManualWaferLoading\UnitySC.PM.ANA.Client.Modules.ManualWaferLoading.csproj">
+      <Project>{b57a614c-80ec-4241-a90e-893d6973fdda}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.ManualWaferLoading</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.ProbeAlignment\UnitySC.PM.ANA.Client.Modules.ProbeAlignment.csproj">
+      <Project>{1ae78e7b-0806-4c68-8240-942a893a3d7f}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.ProbeAlignment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.ProbeCapacity\UnitySC.PM.ANA.Client.Modules.ProbeCapacity.csproj">
+      <Project>{8284606d-620c-4aab-8e9c-4c35c5d6ae18}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.ProbeCapacity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.RecipeExecutor\UnitySC.PM.ANA.Client.Modules.RecipeExecutor.csproj">
+      <Project>{4dd49027-5692-4655-8be3-07c66c58f85c}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.RecipeExecutor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.TestAlgo\UnitySC.PM.ANA.Client.Modules.TestAlgo.csproj">
+      <Project>{319d853b-d4f2-417c-acd8-825960745b49}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.TestAlgo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.TestExternalProcessing\UnitySC.PM.ANA.Client.Modules.TestExternalProcessing.csproj">
+      <Project>{09d305cf-a398-4388-a97d-aed8559089a1}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.TestExternalProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.TestHardware\UnitySC.PM.ANA.Client.Modules.TestHardware.csproj">
+      <Project>{03e31f7b-ebd0-4754-b75f-72bfd23d0e09}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.TestHardware</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\UnitySC.PM.ANA.Client.Modules.TestMeasure\UnitySC.PM.ANA.Client.Modules.TestMeasure.csproj">
+      <Project>{1914ded0-7bbb-49e5-b20c-c133eb3093fb}</Project>
+      <Name>UnitySC.PM.ANA.Client.Modules.TestMeasure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Client.CommonUI\UnitySC.PM.ANA.Client.CommonUI.csproj">
+      <Project>{26d43c8d-5979-4cd3-b856-600d540f97fe}</Project>
+      <Name>UnitySC.PM.ANA.Client.CommonUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Client.Proxy\UnitySC.PM.ANA.Client.Proxy.csproj">
+      <Project>{B6570844-DA64-461B-AC43-46B5AFB07CB2}</Project>
+      <Name>UnitySC.PM.ANA.Client.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitySC.PM.ANA.Client.Shared\UnitySC.PM.ANA.Client.Shared.csproj">
+      <Project>{bfc619e6-9794-4f46-bd30-6ab1a8c88037}</Project>
+      <Name>UnitySC.PM.ANA.Client.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm">
+      <Version>8.2.2</Version>
+    </PackageReference>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>4.6.1</Version>
+    </PackageReference>
+    <PackageReference Include="SimpleInjector">
+      <Version>5.4.6</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PMClient.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo "Post build event"
+echo "--------------------------------------"  
+echo "Copy client configuration files"
+echo "--------------------------------------"  
+echo "Configuration : $(SolutionDir)_ClientConfiguration*"
+echo "Destination: $(ProjectDir)bin"
+xcopy  "$(SolutionDir)_ClientConfiguration" "$(ProjectDir)bin" /Y /E /D</PostBuildEvent>
+  </PropertyGroup>
+</Project>

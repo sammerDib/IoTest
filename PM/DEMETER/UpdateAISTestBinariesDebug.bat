@@ -1,0 +1,1 @@
+xcopy "UnitySC.PM.PSD.CommonUI\bin\Debug\*.*" "..\..\AIS\UI\UnitySC.AIS.UI.Test\bin\Debug\UnitySC\" /Y /E

@@ -1,0 +1,9 @@
+set(TEST_FILES
+    Helpers.cs
+    UT_bareWaferAlignment.cs
+    UT_imgOperators.cs
+    UT_registration.cs
+    UT_spikeDetector.cs
+    UT_shapeDetector.cs
+    UT_Logger.cs
+  )

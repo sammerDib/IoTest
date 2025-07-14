@@ -1,0 +1,9 @@
+﻿using UnitySC.PM.Shared.Flow.Interface;
+
+namespace UnitySC.PM.ANA.Service.Interface.Algo
+{
+    public class AutoAlignResult : IFlowResult
+    {
+        public FlowStatus Status { get; set; }
+    }
+}

@@ -1,0 +1,3 @@
+
+
+SPG_CONV SCI_CONNEXIONINTERFACE* sciCHAINCreateConnexionInterface();

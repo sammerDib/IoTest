@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings.WarpSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.MeasuresSettings"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:t="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:sharedMetroTSV="clr-namespace:UnitySC.Shared.Format.Metro.TSV;assembly=UnitySC.Shared.Format.Metro"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:measures="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps"
+             xmlns:measuresprobeselector="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.View.RecipeEditionSteps.Measures.ProbeSelector"
+             xmlns:measuressettings="clr-namespace:UnitySC.PM.ANA.Client.CommonUI.ViewModel.RecipeEditionSteps.Measures.MeasuresSettings"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=measuressettings:WarpSettingsVM}"
+             d:DesignHeight="1024" d:DesignWidth="400">
+    <UserControl.Resources>
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,10">CHARACTERISTICS</Label>
+            <StackPanel Grid.Row="1" IsEnabled="{Binding IsEditingHardware, Converter={converters:InvertedBooleanConverter}}">
+                <Grid Margin="10,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="145"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Warp Max" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Column="1" LengthValue="{Binding WarpMax, StringFormat='{}{0:F2}'}" Width="100" HorizontalAlignment="Left" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" />
+                </Grid>
+                <Grid Margin="10,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="145"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Surface Warp" Style="{StaticResource LabelForm}" />
+                    <ToggleButton Grid.Column="1" Style="{StaticResource ToggleAnimatedSwitchNew}" IsChecked="{Binding IsSurfaceWarp}" Margin="0,3,5,3" HorizontalAlignment="Left" />
+                </Grid>
+                <Grid Margin="10,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="145"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Total thickness tolerance" Style="{StaticResource LabelForm}" />
+                    <controls:LengthToleranceInput Grid.Column="1"
+                        ToleranceValue="{Binding TotalThicknessTolerance, StringFormat='{}{0:F2}', Mode=TwoWay}" 
+                        EditBoxWidth="100" UnitWidth="60" IsMicroMeterAvailable="True" IsPercentageAvailable="False">
+                    </controls:LengthToleranceInput>
+                </Grid>
+                <Separator Margin="0,5"></Separator>
+                <Button HorizontalAlignment="Right" MinWidth="100" Margin="5,5" Command="{Binding SubmitCharacteristics}">Submit</Button>
+            </StackPanel>
+
+            <Label Style="{StaticResource TitleLevel1}" Margin="0,10,0,0">HARDWARE</Label>
+
+            <StackPanel IsEnabled="{Binding CharacteristicsChanged, Converter={converters:InvertedBooleanConverter}}">
+                <measuresprobeselector:ProbeSelector DataContext="{Binding ProbeSelector}"></measuresprobeselector:ProbeSelector>
+                <Button Grid.Row="2" Grid.Column="1" Margin="0,0,10,10" Visibility="{Binding IsEditingHardware, Converter={converters:InvertedBooleanToVisibilityConverter}}" Command="{Binding StartEditHardware}" MinWidth="100" HorizontalAlignment="Right">Edit</Button>
+                <Button Grid.Row="2" Grid.Column="1" Margin="0,0,10,10" Visibility="{Binding IsEditingHardware, Converter={converters:BooleanToVisibilityConverter}}" Command="{Binding SubmitHardware}" MinWidth="100" HorizontalAlignment="Right">Submit</Button>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

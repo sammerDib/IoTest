@@ -1,0 +1,3 @@
+
+SCI_CONNEXIONINTERFACE* SPG_CONV sciSPLITFCreateConnexionInterface();
+

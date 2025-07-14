@@ -1,0 +1,275 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.OverviewChamberView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:extensions="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.Controls"
+             xmlns:extensions1="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Background="White"
+            Margin="5,0,5,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <sharedControls:ImageGroupBox ImageGeometry="{StaticResource HardwareGeometry}" ImageGeometryBrush="{StaticResource HighLightBrush}" Grid.Row="0" Grid.Column="0" Header="Status" Margin="4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.RowSpan="2" Grid.Row="0"
+                            Background="{StaticResource PanelBorderColorBrush}"
+                            BorderThickness="0,5,2,5"
+                            BorderBrush="{StaticResource PanelBorderColorBrush}"
+                            Margin="0,2,0,2">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="-90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </TextBlock.LayoutTransform><Run Text="FFU" /></TextBlock>
+                    </Border>
+                    <TextBlock VerticalAlignment="Center"
+                               Grid.Row="0" Grid.Column="1"
+                               Margin="5"><Run Text="Current speed (%)" /></TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="2"
+                             Margin="5"
+                             TextAlignment="Center"
+                             MaxLength="10"
+                             IsReadOnly="True"
+                             Height="30"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding FfuVM.SpeedPercent, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FfuVM.SpeedPercent}" Value="True">
+                                        <Setter Property="Background" Value="LightGreen" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding FfuVM.SpeedPercent}" Value="False">
+                                        <Setter Property="Background" Value="LightCoral" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <TextBlock VerticalAlignment="Center"
+                               Grid.Row="1" Grid.Column="1"
+                               Margin="5"><Run Text="Temperature (°)" /></TextBlock>
+                    <TextBox Grid.Row="1" Grid.Column="2"                             
+                             Margin="5"
+                             TextAlignment="Center"
+                             MaxLength="10"
+                             IsReadOnly="True"
+                             Height="30"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding FfuVM.Temperature, UpdateSourceTrigger=PropertyChanged}">
+                         <TextBox.Style>
+                             <Style TargetType="TextBox">
+                                 <Style.Triggers>
+                                     <DataTrigger Binding="{Binding FfuVM.Temperature}" Value="True">
+                                         <Setter Property="Background" Value="LightGreen" />
+                                     </DataTrigger>
+                                     <DataTrigger Binding="{Binding FfuVM.Temperature}" Value="False">
+                                         <Setter Property="Background" Value="LightCoral" />
+                                     </DataTrigger>
+                                 </Style.Triggers>
+                             </Style>
+                         </TextBox.Style>
+                     </TextBox>
+
+                </Grid>
+            </sharedControls:ImageGroupBox>
+
+            <sharedControls:ImageGroupBox ImageGeometry="{StaticResource ManualGeometry}" ImageGeometryBrush="{StaticResource HighLightBrush}" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Header="Manual operations" Margin="4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.RowSpan="1" Grid.Row="0"
+                            Background="{StaticResource PanelBorderColorBrush}"
+                            BorderThickness="0,5,2,5"
+                            BorderBrush="{StaticResource PanelBorderColorBrush}"
+                            Margin="0,0,0,5">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="-90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </TextBlock.LayoutTransform><Run Text="FFU" /></TextBlock>
+                    </Border>
+                    <Grid Margin="10,0,5,0" Background="White" Grid.Row="0" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="1.5*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   Text="Speed" />
+
+                        <Slider Margin="5,5,0,5" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="1"        
+                                Minimum="0" Maximum="100"
+                                IsSnapToTickEnabled="True" TickFrequency="10"
+                                Value="{Binding Path=FfuVM.FanSpeedPercentSliderValue}"
+                                extensions:SliderExtension.DragCompletedCommand="{Binding FfuVM.ChangeSpeed}" />
+                        <controls:TextBoxUnit Grid.Row="0" Grid.Column="5"
+                                Unit="%"
+                                Text="{Binding FfuVM.FanSpeedPercentSliderValue, UpdateSourceTrigger=PropertyChanged}"
+                                extensions1:TextBoxMaskExt.Mask="PositiveDecimal"
+                                extensions1:TextBoxMaskExt.MaximumValue="100"
+                                extensions1:TextBoxMaskExt.MinimumValue="0">
+                            <controls:TextBoxUnit.InputBindings>
+                                <KeyBinding Command="{Binding FfuVM.ChangeSpeed}" Key="Enter" />
+                            </controls:TextBoxUnit.InputBindings>
+                        </controls:TextBoxUnit>
+                    </Grid>
+
+                    <Border Grid.RowSpan="2" Grid.Row="1"
+                        Background="{StaticResource PanelBorderColorBrush}"
+                        BorderThickness="0,5,2,5"
+                        BorderBrush="{StaticResource PanelBorderColorBrush}"
+                        Margin="0,0,0,5">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="-90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </TextBlock.LayoutTransform><Run Text="PLC" /></TextBlock>
+                    </Border>
+                    <controls:IOImageToggleButtons Grid.Row="1" Grid.Column="1" Label="Restart program"
+                        LeftButtonContent="Run"
+                        LeftButtonVisibility="Hidden"
+                        LeftButtonImageGeometry="{StaticResource PlaySolidGeometry}"
+                        LeftButtonImageGeometryBrush="{StaticResource HighLightBrush}"
+                        LeftButtonCommand="{Binding OverviewChamberVM}"
+                        IsIOStatusMatchingLeftButton="{Binding}"
+                        RightButtonContent="Run"
+                        RightButtonImageGeometry="{StaticResource ReplayGeometry}"
+                        RightButtonImageGeometryBrush="{StaticResource HighLightBrush}"
+                        RightButtonCommand="{Binding PlcVM.RestartCommand}" />
+
+                    <controls:IOImageToggleButtons Grid.Row="2" Grid.Column="1"  Label="Reboot PC"
+                        LeftButtonContent="Run"
+                        LeftButtonVisibility="Hidden"
+                        LeftButtonImageGeometry="{StaticResource PlaySolidGeometry}"
+                        LeftButtonImageGeometryBrush="{StaticResource HighLightBrush}"
+                        LeftButtonCommand="{Binding}"
+                        IsIOStatusMatchingLeftButton="{Binding}"
+                        RightButtonContent="Run"
+                        RightButtonImageGeometry="{StaticResource ReplayGeometry}"
+                        RightButtonImageGeometryBrush="{StaticResource HighLightBrush}"
+                        RightButtonCommand="{Binding PlcVM.RebootCommand}" />
+
+                </Grid>
+            </sharedControls:ImageGroupBox>
+
+            <sharedControls:ImageGroupBox ImageGeometry="{StaticResource InformationGeometry}" ImageGeometryBrush="{StaticResource HighLightBrush}" Grid.Row="1" Grid.Column="0" Header="Maintenance information" Margin="4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.RowSpan="1" Grid.Row="0"
+                            Background="{StaticResource PanelBorderColorBrush}"
+                            BorderThickness="0,5,2,5"
+                            BorderBrush="{StaticResource PanelBorderColorBrush}"
+                            Margin="0,0,0,5">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="-90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </TextBlock.LayoutTransform><Run Text="PLC" /></TextBlock>
+                    </Border>
+                    <TextBlock VerticalAlignment="Center"
+                               Grid.Row="0" Grid.Column="1"
+                               Margin="5"><Run Text="AMS NetId" /></TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="2"                             
+                             Margin="5"
+                             TextAlignment="Center"
+                             MaxLength="10"
+                             IsReadOnly="True"
+                             Height="30"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding PlcVM.GetAmsNetId, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PlcVM.GetAmsNetId}" Value="">
+                                        <Setter Property="Background" Value="LightGreen" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PlcVM.GetAmsNetId}" Value=" ">
+                                        <Setter Property="Background" Value="LightYellow" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+
+
+                </Grid>
+            </sharedControls:ImageGroupBox>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

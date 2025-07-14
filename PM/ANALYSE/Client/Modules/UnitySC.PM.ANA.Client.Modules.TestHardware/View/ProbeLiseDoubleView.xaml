@@ -1,0 +1,832 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+            
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View"
+             xmlns:conv="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.View.Converter"
+             xmlns:interface="clr-namespace:UnitySC.PM.ANA.Service.Interface;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:sharedHardwareInterface="clr-namespace:UnitySC.PM.Shared.Hardware.Service.Interface;assembly=UnitySC.PM.Shared.Hardware.Service.Interface"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
+             xmlns:lcub="http://schemas.lightningchart.com/chartingMVVM/"
+             x:Class="UnitySC.PM.ANA.Client.Modules.TestHardware.View.ProbeLiseDoubleView"
+             mc:Ignorable="d"
+             d:DesignHeight="900"
+             d:DesignWidth="1024">
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+        <sys:String x:Key="FormatDecimalThreePlaces">{0:F3}</sys:String>
+        <conv:IsEqualConverter x:Key="IsEqual" />
+        <conv:NotEqualEnumToVisibilityConverter x:Key="NotEqualEnumToVisibilityConverter" />
+        <conv:EqualEnumToVisibilityConverter x:Key="EqualEnumToVisibilityConverter" />
+        <Color x:Key="ZoneBackgroundColor">#FFF5F5F5</Color>
+        <SolidColorBrush x:Key="ZoneBackground"
+                         Color="{StaticResource ZoneBackgroundColor}" />
+        <Style x:Key="MyMaterialDesignTabRadioButton"
+               TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle"
+                    Value="{StaticResource FocusVisual}" />
+            <Setter Property="Foreground"
+                    Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource SecondaryAccentBrush}" />
+            <Setter Property="Padding"
+                    Value="16 4 16 4" />
+            <Setter Property="Height"
+                    Value="32" />
+            <Setter Property="MinWidth"
+                    Value="80" />
+            <Setter Property="materialDesign:RippleAssist.Feedback"
+                    Value="{DynamicResource MaterialDesignFlatButtonRipple}" />
+            <Setter Property="TextBlock.FontWeight"
+                    Value="Medium" />
+            <Setter Property="TextBlock.FontSize"
+                    Value="14" />
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid SnapsToDevicePixels="true">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border x:Name="Background"
+                                    Background="{DynamicResource PrimaryHueMidBrush}"
+                                    Visibility="Hidden"></Border>
+                            <Border Background="{TemplateBinding Background}">
+                                <materialDesign:Ripple Content="{TemplateBinding Content}"
+                                                       ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                       Focusable="False"
+                                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                       Padding="{TemplateBinding Padding}"
+                                                       x:Name="contentPresenter"
+                                                       Opacity=".82"
+                                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Border>
+                            <Border x:Name="SelectionHighlightBorder"
+                                    Background="{TemplateBinding BorderBrush}"
+                                    Height="2"
+                                    Grid.Row="1"
+                                    Visibility="Hidden" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked"
+                                     Value="True">
+                                <Setter TargetName="contentPresenter"
+                                        Property="Opacity"
+                                        Value="1" />
+                                <Setter TargetName="SelectionHighlightBorder"
+                                        Property="Visibility"
+                                        Value="Visible" />
+                                <Setter TargetName="Background"
+                                        Property="Visibility"
+                                        Value="Visible" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.TestHardware;component/ResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="White"
+          Margin="5,0,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <!--<RowDefinition Height="Auto"/>-->
+        </Grid.RowDefinitions>
+        <Grid Background="White"
+              Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"
+                                  MaxWidth="450" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox FontSize="18"
+                      Margin="0,0,5,0"
+                      Header="SETTINGS">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.RowSpan="3"
+                            Background="{StaticResource PrimaryHueMidBrush}"
+                            BorderThickness="0,0,2,0"
+                            BorderBrush="{StaticResource PrimaryHueDarkBrush}"
+                            Margin="0,0,0,5">
+                        <TextBlock  HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="-90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </TextBlock.LayoutTransform><Run Text="TOP" /></TextBlock>
+                    </Border>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="0"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Gain" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="0"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.ProbeUpParams.Gain, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Quality Threshold" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="1"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.ProbeUpParams.QualityThreshold, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Detection Threshold" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="2"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="-100"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.ProbeUpParams.DetectionThreshold, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <Border Grid.RowSpan="3"
+                            Grid.Row="3"
+                            Background="{StaticResource PrimaryHueMidBrush}"
+                            BorderThickness="0,0,2,0"
+                            BorderBrush="{StaticResource PrimaryHueDarkBrush}"
+                            Margin="0,5,0,5">
+                        <TextBlock  HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <TextBlock.LayoutTransform>
+                                <TransformGroup>
+                                    <ScaleTransform />
+                                    <SkewTransform />
+                                    <RotateTransform Angle="-90" />
+                                    <TranslateTransform />
+                                </TransformGroup>
+                            </TextBlock.LayoutTransform><Run Text="BOTTOM" /></TextBlock>
+                    </Border>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="3"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Gain" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="3"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.ProbeDownParams.Gain, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="4"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Quality Threshold" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="4"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.ProbeDownParams.QualityThreshold, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="5"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Detection Threshold" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="5"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="-100"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.ProbeDownParams.DetectionThreshold, StringFormat={StaticResource FormatDecimalThreePlaces}}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="18"
+                               Grid.Row="6"
+                               Grid.Column="1"
+                               Margin="5"><Run Text="Nb Average" /></TextBlock>
+                    <TextBox Grid.Column="2"
+                             Grid.Row="6"
+                             FontSize="18"
+                             Margin="5"
+                             sharedExtensions:TextBoxMaskExt.Mask="Integer"
+                             sharedExtensions:TextBoxMaskExt.MaximumValue="100"
+                             sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                             MaxLength="10"
+                             Text="{Binding Probe.InputParametersLiseDouble.NbMeasuresAverage}" />
+                    <Button Grid.Row="8"
+                            Grid.Column="2"
+                            Width="160"
+                            HorizontalAlignment="Right"
+                            Command="{Binding Probe.ApplySettings}"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            Content="Apply" />
+                </Grid>
+            </GroupBox>
+            <GroupBox FontSize="18"
+                      Grid.Column="1"
+                      Margin="5,0,0,0"
+                      Header="SAMPLE">
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock><Run Text="Name" /></TextBlock>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Probe.Sample.Name}" />
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock><Run Text="Info" /></TextBlock>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Probe.Sample.Info}" />
+                    </Grid>
+                    <Grid Margin="0,10,0,5"
+                          Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Layers"
+                                   FontSize="18"
+                                   VerticalAlignment="Center" />
+                        <Button Grid.Column="1"
+                                Margin="5,0"
+                                Command="{Binding Probe.AddSampleLayer}"
+                                Content="+" />
+                        <Button Command="{Binding Probe.AddSampleLayer}"
+                                Grid.Column="1"
+                                Margin="5,0"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                ToolTip="Add new layer">
+                            <materialDesign:PackIcon Kind="TableColumnAddAfter"
+                                                     Height="24"
+                                                     Width="24" />
+                        </Button>
+                        <Button Grid.Column="2"
+                                Command="{Binding Probe.DeleteSampleLayer}"
+                                CommandParameter="{Binding SelectedItem, ElementName=LayersDataGrid}"
+                                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                ToolTip="Delete layer">
+                            <materialDesign:PackIcon Kind="Delete"
+                                                     Height="24"
+                                                     Width="24" />
+                        </Button>
+                    </Grid>
+                    <DataGrid x:Name="LayersDataGrid"
+                              Grid.Row="3"
+                              ItemsSource="{Binding Probe.Sample.ObservableLayers}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserSortColumns="False"
+                              Height="200">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding RefractionIndex, Converter={StaticResource IsEqual}, ConverterParameter=0, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Unknown" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                                 sharedExtensions:TextBoxMaskExt.MaximumValue="100000"
+                                                 sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                                                 MaxLength="10"
+                                                 Text="{Binding Thickness, Mode=TwoWay, StringFormat=\{0:F3\}, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Thickness (µm)" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                                 sharedExtensions:TextBoxMaskExt.MaximumValue="100000"
+                                                 sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                                                 MaxLength="10"
+                                                 Text="{Binding Tolerance, Mode=TwoWay, StringFormat=\{0:F3\}, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Tolerance (µm)" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox sharedExtensions:TextBoxMaskExt.Mask="Decimal"
+                                                 sharedExtensions:TextBoxMaskExt.MaximumValue="100000"
+                                                 sharedExtensions:TextBoxMaskExt.MinimumValue="0"
+                                                 MaxLength="10"
+                                                 Text="{Binding RefractionIndex, Mode=TwoWay, StringFormat=\{0:F3\}, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Refraction Index" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MeasuredThickness, Mode=OneWay, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                                                   Margin="0,4"
+                                                   HorizontalAlignment="Right" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Measure (µm)" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MeasuredQuality, Mode=OneWay, StringFormat={StaticResource FormatDecimalThreePlaces}}"
+                                                   Margin="0,4"
+                                                   HorizontalAlignment="Right" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.Header>
+                                    <TextBlock FontSize="14"
+                                               Text="Measure Quality" />
+                                </DataGridTemplateColumn.Header>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!--<Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="LightGray">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100">
+                                    
+                                </ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                        </Grid>
+                        
+                        
+                    </Grid>-->
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="1"
+              Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="170" />
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140" />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <ToggleButton x:Name="DisplayCalibrationResults"
+                              Grid.Column="1"
+                              Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                              Padding="0"
+                              materialDesign:ButtonAssist.CornerRadius="0 2 2 0"
+                              IsHitTestVisible="{Binding IsOpen, Converter={StaticResource InvertedBooleanConverter}, ElementName=PopupCalibrationResults}"
+                              IsEnabled="{Binding IsCalibrated}">
+                    <Grid>
+                        <materialDesign:PackIcon Kind="KeyboardArrowDown"
+                                                 Height="20"
+                                                 Width="20"
+                                                 Visibility="{Binding IsChecked, Converter={StaticResource InvertedBooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}, Mode=FindAncestor}}" />
+                        <materialDesign:PackIcon Kind="KeyboardArrowUp"
+                                                 Height="20"
+                                                 Width="20"
+                                                 Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}, Mode=FindAncestor}}" />
+                    </Grid>
+                </ToggleButton>
+                <Button  Style="{StaticResource MaterialDesignRaisedDarkButton}" Command="{Binding DoCalibration}" HorizontalContentAlignment="Stretch" x:Name="CalibrateButton"  materialDesign:ButtonAssist.CornerRadius="2 0 0 2" Width="140" HorizontalAlignment="Right">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon Kind="CrosshairsGps"
+                                                 Foreground="Green"
+                                                 Grid.Column="0"
+                                                 Width="30"
+                                                 Height="30"
+                                                 
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="{Binding IsCalibrated, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <materialDesign:PackIcon Kind="CrosshairsGps" x:Name="CalibrateIcon"
+                                                 Foreground="Red"
+                                                 Grid.Column="0"
+                                                 Width="30"
+                                                 Height="30"
+                                                 
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="{Binding IsCalibrated, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <materialDesign:PackIcon.Style>
+                                <Style TargetType="materialDesign:PackIcon">
+                                    <Setter Property="Width" Value="30"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Probe.State.Status}" Value="{x:Static sharedHardwareInterface:DeviceStatus.Busy}">
+                                            <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation 
+                      Storyboard.TargetProperty="Width"
+                      From="30" To="0" Duration="0:0:1" RepeatBehavior="Forever"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation 
+                      Storyboard.TargetProperty="Width"
+                      To="30" Duration="0:0:0"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
+                        </materialDesign:PackIcon>
+                        <TextBlock Grid.Column="1"
+                                   VerticalAlignment="Center" Margin="10,0,0,0"><Run Text="Calibrate" /></TextBlock>
+                    </Grid>
+                </Button>
+                <Popup x:Name="PopupCalibrationResults"
+                       IsOpen="{Binding IsChecked, ElementName=DisplayCalibrationResults}"
+                       StaysOpen="False"
+                       PlacementTarget="{Binding ElementName=DisplayCalibrationResults}">
+                    <Border Background="White">
+                        <local:DoubleLiseCalibrationResult DataContext="{Binding CalibrationResult}" />
+                    </Border>
+                </Popup>
+            </Grid>
+            <Button Grid.Column="1"
+                    Command="{Binding Probe.DoMeasure}"
+                    Margin="0,10,10,10"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Content="Do Measure" />
+            <Button Grid.Column="2"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Command="{Binding RepeatMeasure}"
+                    Margin="0,10,10,10"
+                    Visibility="{Binding Probe.State.Status.Busy, Converter={StaticResource InvertedBooleanToVisibilityConverter}, FallbackValue=Visible}">Do X Measures</Button>
+            <Grid Grid.Column="2"
+                  HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="10"
+                           FontSize="16"
+                           Visibility="{Binding Probe.State.Status.Busy, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                Measuring ...</TextBlock>
+                <materialDesign:PackIcon Kind="Export"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding Probe.State.Status.Busy, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"></materialDesign:PackIcon>
+            </Grid>
+            <Button Grid.Column="3"
+                    Command="{Binding StartDoubleAcquisition}"
+                    Margin="0,10,10,10"
+                    Visibility="{Binding ProbeUsed.State.Status, ConverterParameter={x:Static sharedHardwareInterface:DeviceStatus.Busy}, Converter={StaticResource NotEqualEnumToVisibilityConverter}}"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Content="Start acquisition" />
+            <Button Grid.Column="3"
+                    Command="{Binding StopDoubleAcquisition}"
+                    Margin="0,10,10,10"
+                    Visibility="{Binding ProbeUsed.State.Status, ConverterParameter={x:Static sharedHardwareInterface:DeviceStatus.Busy}, Converter={StaticResource EqualEnumToVisibilityConverter}}"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Content="Stop acquisition" />
+            <Button Grid.Column="6"
+                    HorizontalAlignment="Right"
+                    Margin="10"
+                    Command="{Binding Probe.ExportAcquisition}"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    Width="140"
+                    Visibility="{Binding ExportConfiguration.IsRunning, Converter={StaticResource InvertedBooleanToVisibilityConverter}, FallbackValue=Visible}">Export ...</Button>
+            <Grid Grid.Column="5"
+                  HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="10"
+                           FontSize="16"
+                           Visibility="{Binding ExportConfiguration.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                Exporting ...</TextBlock>
+                <materialDesign:PackIcon Kind="Export"
+                                         Grid.Column="1"
+                                         Width="30"
+                                         Height="30"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Visibility="{Binding ExportConfiguration.IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"></materialDesign:PackIcon>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2"
+              Margin="5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="405*" />
+                <ColumnDefinition Width="494*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel  Orientation="Vertical"
+                         Margin="4">
+                <RadioButton Style="{StaticResource MyMaterialDesignTabRadioButton}"
+                             Margin="4"
+                             IsChecked="{Binding Probe.IsAcquisitionForProbeUp}"
+                             Content="TOP"
+                             mah:ControlsHelper.ContentCharacterCasing="Normal"
+                             ToolTip="Display the Top Probe Graph"
+                             Cursor="Hand" />
+                <RadioButton Style="{StaticResource MyMaterialDesignTabRadioButton}"
+                             Margin="4"
+                             IsChecked="{Binding Probe.IsAcquisitionForProbeUp, Converter={StaticResource InvertedBooleanConverter}}"
+                             Content="BOTTOM"
+                             ToolTip="Display the Bottom Probe Graph"
+                             Cursor="Hand" />
+            </StackPanel>
+            <lcub:LightningChart x:Name="RawAcquisitionChart"
+                                         Grid.Column="1"
+                                         ChartName="Point Line Series Chart"
+                                         Grid.ColumnSpan="2"
+                                         Margin="0,0,-1,0" ColorTheme="SkyBlue">
+                <lcub:LightningChart.ChartRenderOptions>
+                    <lcub:RenderOptionsCommon DeviceType="SoftwareOnlyD11" />
+                </lcub:LightningChart.ChartRenderOptions>
+                <lcub:LightningChart.ChartBackground>
+                    <lcub:Fill Color="DimGray"/>
+                </lcub:LightningChart.ChartBackground>
+
+                <lcub:LightningChart.Title>
+                    <lcub:ChartTitle Text="Probe Lise Acquisition"
+                                     Visible="False" />
+                </lcub:LightningChart.Title>
+                <lcub:LightningChart.ViewXY>
+                    <lcub:ViewXY>
+                        <lcub:ViewXY.GraphBackground>
+                            <lcub:Fill Color="White"/>
+                        </lcub:ViewXY.GraphBackground>
+                        <lcub:ViewXY.Annotations>
+                            <lcub:AnnotationXY Style="Rectangle"
+                                               Text="{Binding ValueAtXAxis, ElementName=LiseChartCursor, Mode=OneWay, StringFormat=\{0:F0\}}"
+                                               AllowTargetMove="False"
+                                               LocationCoordinateSystem="RelativeCoordinatesToTarget"
+                                               AllowUserInteraction="False"
+                                               AllowDragging="False"
+                                               AllowResize="False"
+                                               AutoSizePadding="5">
+                                <lcub:AnnotationXY.Fill>
+                                    <lcub:Fill />
+                                </lcub:AnnotationXY.Fill>
+                                <lcub:AnnotationXY.LocationRelativeOffset>
+                                    <lcub:PointDoubleXY Y="0"
+                                                       X="30" />
+                                </lcub:AnnotationXY.LocationRelativeOffset>
+                                <lcub:AnnotationXY.TargetAxisValues>
+                                    <lcub:PointDoubleXY X="{Binding ValueAtXAxis, ElementName=LiseChartCursor, Mode=OneWay}" />
+                                </lcub:AnnotationXY.TargetAxisValues>
+                            </lcub:AnnotationXY>
+                        </lcub:ViewXY.Annotations>
+                        <lcub:ViewXY.LineSeriesCursors>
+                            <lcub:LineSeriesCursor x:Name="LiseChartCursor"
+                                                   IndicateTrackingYRange="True"
+                                                   SnapToPoints="True"
+                                                   ValueAtXAxis="{Binding CursorPosition, Mode=TwoWay}" />
+                        </lcub:ViewXY.LineSeriesCursors>
+                        <lcub:ViewXY.YAxes>
+                            <lcub:AxisY Minimum="-10"
+                                        Maximum="15"
+                                        AutoFormatLabels="False"
+                                        ValueType="Number"
+                                        LabelsNumberFormat="0">
+                                <lcub:AxisY.Title>
+                                    <lcub:AxisYTitle Text="Volts" />
+                                </lcub:AxisY.Title>
+                            </lcub:AxisY>
+                        </lcub:ViewXY.YAxes>
+                        <lcub:ViewXY.XAxes>
+                            <lcub:AxisX Minimum="0"
+                                        Maximum="6100"
+                                        AutoFormatLabels="False"
+                                        ValueType="Number"
+                                        LabelsNumberFormat="0">
+                                <lcub:AxisX.Title>
+                                    <lcub:AxisXTitle Text="Microns" />
+                                </lcub:AxisX.Title>
+                            </lcub:AxisX>
+                        </lcub:ViewXY.XAxes>
+                        <lcub:ViewXY.LegendBoxes>
+                            <lcub:LegendBoxXY Position="RightCenter"
+                                              Layout="Vertical" />
+                        </lcub:ViewXY.LegendBoxes>
+                        <lcub:ViewXY.PointLineSeries>
+                            <lcub:PointLineSeries Points="{Binding ProbeUsed.RawAcquisitionPoints}"
+                                                  PointsVisible="False">
+                                <lcub:PointLineSeries.Title>
+                                    <lcub:SeriesTitle Text="Raw Values"
+                                                      Color="White" />
+                                </lcub:PointLineSeries.Title>
+                                <lcub:PointLineSeries.LineStyle>
+                                    <lcub:LineStyle Color="White"
+                                                    Width="3"
+                                                    AntiAliasing="Normal" />
+                                </lcub:PointLineSeries.LineStyle>
+                            </lcub:PointLineSeries>
+                            <lcub:PointLineSeries PointsVisible="True"
+                                                  LineVisible="False"
+                                                  IndividualPointColoring="Color1"
+                                                  Points="{Binding ProbeUsed.SelectedPeaksPoints}"
+                                                  AllowUserInteraction="False">
+                                <lcub:PointLineSeries.Title>
+                                    <lcub:SeriesTitle Text="Selected Peaks"
+                                                      Color="Black" />
+                                </lcub:PointLineSeries.Title>
+                                <lcub:PointLineSeries.PointStyle>
+                                    <lcub:PointShapeStyle Color1="#FF00FF00"
+                                                          Color2="#FF00FF00"
+                                                          Height="20"
+                                                          BorderColor="#4CFFFFFF"
+                                                          BodyThickness="3"
+                                                          Shape="Cross"
+                                                          Width="20"
+                                                          GradientFill="Solid" />
+                                </lcub:PointLineSeries.PointStyle>
+                                <lcub:PointLineSeries.LineStyle>
+                                    <lcub:LineStyle Color="White"
+                                                    Width="2"
+                                                    AntiAliasing="Normal" />
+                                </lcub:PointLineSeries.LineStyle>
+                            </lcub:PointLineSeries>
+                            <lcub:PointLineSeries PointsVisible="True"
+                                                  LineVisible="False"
+                                                  IndividualPointColoring="Color1"
+                                                  Points="{Binding ProbeUsed.DiscarderPeaksPoints}"
+                                                  AllowUserInteraction="False">
+                                <lcub:PointLineSeries.Title>
+                                    <lcub:SeriesTitle Text="Discarded Peaks"
+                                                      Color="Black" />
+                                </lcub:PointLineSeries.Title>
+                                <lcub:PointLineSeries.PointStyle>
+                                    <lcub:PointShapeStyle Color1="#FFFF0000"
+                                                          Color2="#FF00FF00"
+                                                          Height="20"
+                                                          BorderColor="#4CFFFFFF"
+                                                          BodyThickness="3"
+                                                          Shape="Cross"
+                                                          Width="20"
+                                                          GradientFill="Solid" />
+                                </lcub:PointLineSeries.PointStyle>
+                                <lcub:PointLineSeries.LineStyle>
+                                    <lcub:LineStyle Color="White"
+                                                    Width="2"
+                                                    AntiAliasing="Normal" />
+                                </lcub:PointLineSeries.LineStyle>
+                            </lcub:PointLineSeries>
+                        </lcub:ViewXY.PointLineSeries>
+                        <lcub:ViewXY.ConstantLines>
+                            <lcub:ConstantLine Value="{Binding Probe.InputParametersLiseDoubleVM.DetectionThresholdUp, Mode=OneWay}"
+                                               AllowUserInteraction="False"
+                                               AllowMoveByUser="False"
+                                               Visible="{Binding Probe.IsAcquisitionForProbeUp}"
+                                               ShowInLegendBox="{Binding Probe.IsAcquisitionForProbeUp}">
+                                <lcub:ConstantLine.LineStyle>
+                                    <lcub:LineStyle Color="Blue"
+                                                    Width="3"
+                                                    AntiAliasing="Normal" />
+                                </lcub:ConstantLine.LineStyle>
+                                <lcub:ConstantLine.Title>
+                                    <lcub:SeriesTitle Text="Detection Threshold"
+                                                      Color="Black" />
+                                </lcub:ConstantLine.Title>
+                            </lcub:ConstantLine>
+                            <lcub:ConstantLine Value="{Binding Probe.InputParametersLiseDoubleVM.DetectionThresholdDown, Mode=OneWay}"
+                                               AllowUserInteraction="False"
+                                               AllowMoveByUser="False"
+                                               Visible="{Binding Probe.IsAcquisitionForProbeUp, Converter={StaticResource InvertedBooleanConverter}}"
+                                               ShowInLegendBox="{Binding Probe.IsAcquisitionForProbeUp, Converter={StaticResource InvertedBooleanConverter}}">
+                                <lcub:ConstantLine.LineStyle>
+                                    <lcub:LineStyle Color="Blue"
+                                                    Width="3"
+                                                    AntiAliasing="Normal" />
+                                </lcub:ConstantLine.LineStyle>
+                                <lcub:ConstantLine.Title>
+                                    <lcub:SeriesTitle Text="Detection Threshold"
+                                                      Color="Black" />
+                                </lcub:ConstantLine.Title>
+                            </lcub:ConstantLine>
+                            <lcub:ConstantLine Value="{Binding Probe.Saturation}" AllowUserInteraction="False" AllowMoveByUser="False">
+                                <lcub:ConstantLine.LineStyle>
+                                    <lcub:LineStyle Color="white" Width="3" AntiAliasing="Normal"/>
+                                </lcub:ConstantLine.LineStyle>
+                                <lcub:ConstantLine.Title>
+                                    <lcub:SeriesTitle Text="Saturation Value" Color="Black"/>
+                                </lcub:ConstantLine.Title>
+                            </lcub:ConstantLine>
+                        </lcub:ViewXY.ConstantLines>
+                    </lcub:ViewXY>
+                </lcub:LightningChart.ViewXY>
+            </lcub:LightningChart>
+        </Grid>
+    </Grid>
+    <!--<TextBlock VerticalAlignment="Center" FontSize="18" Grid.Row="6" Grid.Column="0">Test Config</TextBlock>
+        <TextBox Grid.Column="1"  Grid.Row="6" FontSize="18" Text="{Binding Configuration.ConfigLise1}" VerticalAlignment="Center"></TextBox>-->
+</UserControl>

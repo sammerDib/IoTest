@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="UnitySC.PM.DMT.Modules.Settings.View.ExposureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:zb="clr-namespace:UnitySC.Shared.UI.Controls.ZoomboxImage;assembly=UnitySC.Shared.UI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:dmtConverters="clr-namespace:UnitySC.PM.DMT.CommonUI.Converter;assembly=UnitySC.PM.DMT.CommonUI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+             xmlns:viewModel="clr-namespace:UnitySC.PM.DMT.Modules.Settings.ViewModel"
+             md:DialogServiceViews.IsRegistered="True"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="800" d:DataContext="{d:DesignInstance viewModel:ExposureVM}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary
+                    Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+
+            <TextBlock FontSize="16">Place a calibration wafer in the tool</TextBlock>
+
+            <Image Width="200" Height="200"
+                   Source="/UnitySC.PM.DMT.Modules.Settings;component/Resources/CalibrationWafer.png" />
+            <StackPanel Orientation="Horizontal" Margin="5 10" Height="auto">
+                <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" IsChecked="{Binding IsGoldenTool}" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Set this tool as golden tool</TextBlock>
+            </StackPanel>
+            <sharedControls:ImageGroupBox Header="Exposure Calibration" ImageGeometry="{StaticResource CameraGeometry}"
+                                          ImageGeometryBrush="{StaticResource IconsColor}" Margin="0,10,0,0"
+                                          MaxHeight="400"
+                                          Visibility="{Binding IsGoldenTool, Converter={converters:InvertedBooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Golden grey level values: "/>
+                    <Grid Margin="10 5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Top"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GoldenValues.Top}" Margin="5 0"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Left"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GoldenValues.Left}" Margin="5 0"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Bottom"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GoldenValues.Bottom}"  Margin="5 0"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Right"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GoldenValues.Right}"  Margin="5 0"/>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Center"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding GoldenValues.Center}"  Margin="5 0"/>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Exposure time: " />
+                        <TextBlock Text="{Binding ExposureMatchingInputs.AcquisitionExposureTimeMs, StringFormat={}{0:F2} ms}"></TextBlock>
+                    </StackPanel>
+                    <sharedControls:ImageButton Content="Import values from golden tool"
+                                                ImageGeometry="{StaticResource FolderOpenGeometry}"
+                                                ImageGeometryBrush="{StaticResource IconsColor}" Margin="0 5"
+                                                Command="{Binding ImportGoldenToolInputsCommand}" />
+                    <sharedControls:ImageButton Content="Acquire image and calibrate"
+                                                Command="{Binding ExecuteCalibrationCommand}"
+                                                Margin="0 5" ImageGeometry="{StaticResource PlayGeometry}"
+                                                ImageGeometryBrush="{StaticResource HighLightBrush}" />
+                    <TextBlock FontSize="12"
+                               Foreground="{Binding Path=IsCalibrationSuccessful, Converter={dmtConverters:BooleanToColorConverter}}"
+                               Text="{Binding CalibrationResultMessage}" TextWrapping="Wrap" />
+                </StackPanel>
+            </sharedControls:ImageGroupBox>
+            <sharedControls:ImageGroupBox ImageGeometry="{StaticResource CameraGeometry}"
+                                          ImageGeometryBrush="{StaticResource IconsColor}"
+                                          Header="Golden values computation" Margin="0 10 0 0"
+                                          Visibility="{Binding IsGoldenTool, Converter={converters:BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Vertical">
+                    <sharedControls:ImageButton Margin="5 10" ImageGeometry="{StaticResource PlayGeometry}"
+                                                ImageGeometryBrush="{StaticResource HighLightBrush}"
+                                                Content="Acquire image and export values"
+                                                Command="{Binding GetGoldenValuesCommand}"
+                                                Visibility="{Binding IsGoldenTool, Converter={converters:BooleanToVisibilityConverter}}" />
+                </StackPanel>
+
+
+            </sharedControls:ImageGroupBox>
+        </StackPanel>
+        <zb:ZoomboxImage ImageSource="{Binding LastAcquiredImage}" Grid.Column="1" Margin="10" />
+        <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="{Binding BusyMessage}"
+                            Grid.ColumnSpan="2" />
+    </Grid>
+</UserControl>

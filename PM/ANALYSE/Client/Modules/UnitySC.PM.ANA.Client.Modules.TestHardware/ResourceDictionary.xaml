@@ -1,0 +1,61 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+                    
+                    xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestHardware.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <!-- Images -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/ImageDictionary.xaml"/>
+
+        <!-- Converter -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Converters/BasicConverter.xaml"/>
+
+        <!-- Styles -->
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+
+
+        <ResourceDictionary Source="MaterialDesignColor.xaml"/>
+
+    </ResourceDictionary.MergedDictionaries>
+
+
+    <Style TargetType="{x:Type controls:NumericUpDown}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:NumericUpDown}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+
+                        <RepeatButton Grid.Column="0" Name="Part_DownButton" Padding="0">
+                            <materialDesign:PackIcon Kind="MenuDownOutline"
+                                             Height="20"
+                                             Width="20" />
+                        </RepeatButton>
+                        <TextBox Name="Part_TextBox" Grid.Column="1" Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                         Margin="10 0"
+                         sharedExtensions:TextBoxMaskExt.Mask="Integer"
+                                         
+                         sharedExtensions:TextBoxMaskExt.MinimumValue="{Binding Minimum, RelativeSource={RelativeSource TemplatedParent}}"
+                         sharedExtensions:TextBoxMaskExt.MaximumValue="{Binding Maximum, RelativeSource={RelativeSource TemplatedParent}}"
+                         MaxLength="{Binding MaxLength, RelativeSource={RelativeSource TemplatedParent}}"
+                                         FontSize="16"
+                         />
+
+                        <RepeatButton Grid.Column="2" Name="Part_UpButton" Padding="0">
+                            <materialDesign:PackIcon Kind="MenuUpOutline"
+                                             Height="20"
+                                             Width="20" />
+                        </RepeatButton>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

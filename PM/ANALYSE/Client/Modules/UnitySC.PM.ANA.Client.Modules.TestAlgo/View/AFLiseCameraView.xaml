@@ -1,0 +1,207 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.TestAlgo.View.AFLiseCameraView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.TestAlgo.View"
+             xmlns:controls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             xmlns:Anaconverters="clr-namespace:UnitySC.PM.ANA.Client.Shared.Converter;assembly=UnitySC.PM.ANA.Client.Shared"
+             xmlns:sharedExtensions="clr-namespace:UnitySC.Shared.UI.Extensions;assembly=UnitySC.Shared.UI"
+             xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI"
+              xmlns:recipeMeasure="clr-namespace:UnitySC.PM.ANA.Service.Interface.Recipe.Measure;assembly=UnitySC.PM.ANA.Service.Interface"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <controls:ImageGroupBox ImageGeometry="{StaticResource CameraGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Header="{Binding Name}">
+            <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label Style="{StaticResource TitleLevel2}" Grid.Column="0" DockPanel.Dock="Left">AUTOFOCUS</Label>
+                <ToggleButton Style="{StaticResource ToggleAnimatedSwitchNew}" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,5,0"
+                          IsChecked="{Binding AutoFocusSettings.IsAutoFocusEnabled}" />
+
+            </Grid>
+
+            <StackPanel Orientation="Vertical"  IsEnabled="{Binding AutoFocusSettings.IsEditing}">
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <!-- default value -->
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AutoFocusSettings.IsAutoFocusEnabled}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <Grid  Margin="0,5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Type" Style="{StaticResource LabelForm}" />
+                    <ComboBox Grid.Column="1"
+                SelectedValuePath="Enum"
+                DisplayMemberPath="Translation"
+                ItemsSource="{sharedExtensions:EnumValuesExtension EnumType=recipeMeasure:AutoFocusType, ResourceAssemblyName='UnitySC.PM.ANA.Client.CommonUI'}"
+                SelectedValue="{Binding AutoFocusSettings.Type}" Margin="0,5" Width="200" Grid.ColumnSpan="2" HorizontalAlignment="Left" />
+                </Grid>
+
+                <!-- Lise autofocus settings -->
+                <Grid  Margin="0,5">
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <!-- default value -->
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="Lise">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="LiseAndCamera">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Margin="10,5,5,0" Style="{StaticResource TextForm}">Lise</Label>
+                    <Label Grid.Row="1" Content="Objective" Style="{StaticResource LabelForm}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AutoFocusSettings.LiseObjectives}" DisplayMemberPath="Name" SelectedItem="{Binding AutoFocusSettings.LiseObjective}" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" Margin="0,5" />
+
+                    <Label Grid.Row="2" Content="Gain" Style="{StaticResource LabelForm}" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AutoFocusSettings.LiseGain}" sharedExtensions:TextBoxMaskExt.Mask="PositiveDecimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Margin="0,5" />
+                    <Label Grid.Row="3" Content="Offset X" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Row="3" Grid.Column="1" LengthValue="{Binding AutoFocusSettings.LiseOffsetX}" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Margin="0,5" />
+                    <Label Grid.Row="4" Content="Offset Y" Style="{StaticResource LabelForm}" />
+                    <controls:TextBoxUnit Grid.Row="4" Grid.Column="1" LengthValue="{Binding AutoFocusSettings.LiseOffsetY}" sharedExtensions:TextBoxMaskExt.Mask="Decimal" sharedExtensions:TextBoxExt.OnEnterAndEscUpdate="True" Margin="0,5" />
+                </Grid>
+
+                <!-- Camera autofocus settings -->
+                <Grid  Margin="0,5">
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <!-- default value -->
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="Camera">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="LiseAndCamera">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Margin="10,5,5,0" Style="{StaticResource TextForm}">Camera</Label>
+                    <Label Grid.Row="1" Content="Objective" Style="{StaticResource LabelForm}" />
+                    <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AutoFocusSettings.CameraObjectives}" DisplayMemberPath="Name" SelectedItem="{Binding AutoFocusSettings.CameraObjective}" Grid.ColumnSpan="2" Width="200" HorizontalAlignment="Left" Margin="0,5"/>
+
+                    <Label Grid.Row="2" Content="Lights" Style="{StaticResource LabelForm}" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                    <ItemsControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="200" Background="Transparent" IsHitTestVisible="False" ItemsSource="{Binding AutoFocusSettings.AutoFocusLights}" HorizontalAlignment="Left" Margin="0,5,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="130" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding Name}" Style="{StaticResource LabelForm}" />
+                                    <Label Grid.Column="1" Content="{Binding Intensity}" ContentStringFormat="{}{0} %" Style="{StaticResource TextForm}" Margin="0" Padding="0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Label  Grid.Row="3"  Content="Scan Range" Style="{StaticResource LabelForm}" />
+                        <ComboBox Grid.Row="3"  Grid.Column="1" ItemsSource="{Binding AutoFocusSettings.CameraScanRanges}" 
+                            SelectedItem="{Binding AutoFocusSettings.CameraScanRange}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,5" />
+
+                        <CheckBox Grid.Row="5" Grid.ColumnSpan="3" Margin="10,5,5,0" Content="Center scan on current z position"  IsChecked="{Binding UseCurrentZPosition}" />
+                </Grid>
+
+            </StackPanel>
+
+            <!--StartAF Command-->
+            <controls:ImageButton ImageGeometry="{StaticResource PlayGeometry}" ImageGeometryBrush="{StaticResource IconsColor}" Content="Start Autofocus" 
+                                      Command="{Binding StartAF}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6" />
+
+                <!--Lise and Camera-->
+                <StackPanel Orientation="Vertical">
+                    <StackPanel.Style>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <!-- default value -->
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="Lise">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="Camera">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AutoFocusSettings.Type}" Value="LiseAndCamera">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <!-- Camera Result  Status-->
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding AutofocusResult, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,5">
+                        <Image Source="{Binding AutofocusResult.Status.State, Converter={Anaconverters:FlowStateToImageDictionaryConverter}}" Style="{StaticResource Icon}" />
+                        <TextBlock Text="{Binding AutofocusResult.Status.State}" Margin="4,0" />
+                        <TextBlock Text="{Binding AutofocusResult.Status.Message}" />
+                    </StackPanel>
+                    <!-- Camera Result Data -->
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding AutofocusResult, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,5">
+                        <TextBlock Text="Quality Score" Margin="4,0" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding AutofocusResult.QualityScore}" VerticalAlignment="Center" IsReadOnly="True"  Width="80"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <!--</controls:ImageGroupBox>-->
+
+            <xctk:BusyIndicator IsBusy="{Binding IsBusy}" d:IsHidden="true" BusyContent="{Binding BusyMessage}" DisplayAfter="0" />
+                
+            </StackPanel>
+        </controls:ImageGroupBox>
+    </StackPanel>
+
+</UserControl>
