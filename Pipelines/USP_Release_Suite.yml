@@ -1,0 +1,844 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+name: USP_Manual_ReleaseSuite$(Date:yyyyMMdd)$(Rev:.r)
+
+pool: Default
+
+parameters:
+- name: Major
+  displayName: "Major in v(Major.Minor.Patch)"
+  type: number
+  #default: 1
+- name: Minor
+  displayName: "Minor in v(Major.Minor.Patch)" 
+  type: number
+  #default: 1
+- name: Patch
+  displayName: "Patch in v(Major.Minor.Patch)" 
+  type: number
+  #default: 0
+  
+- name: ReleaseProject
+  displayName: "Release TAG folder project"
+  type: string
+  default: ANALYSE
+  values:
+  - none
+  - ANALYSE
+  - DEMETER
+  - EMERA
+ 
+- name: ReleaseKind
+  displayName: "Release Kind"
+  type: string
+  default: Internal
+  values:
+  - Internal
+  - Official
+  - Specific
+  
+- name: ReleaseMessage
+  displayName: "Release TAG message"
+  type: string
+  default: '<!-- Enter Tag NewRelease Description -->'
+  
+- name: GenerateInstaller
+  displayName: Generate Installer
+  type: string
+  default: Analyse
+  values:
+  - none
+  - Analyse
+  - Demeter
+  - Emera
+  
+- name: UseLauncher
+  displayName: Pack Launcher
+  type: boolean
+  default: true
+- name: UseDataAccess
+  displayName: Pack DataAccess
+  type: boolean
+  default: true
+- name: UseDataFlow
+  displayName: Pack DataFlow
+  type: boolean
+  default: true
+- name: UseResultViewer
+  displayName: Pack Result Viewer
+  type: boolean
+  default: true
+- name: UseUTO
+  displayName: Pack UTO
+  type: boolean
+  default: true
+- name: UseANA
+  displayName: Pack ANALYSE
+  type: boolean
+  default: true
+- name: UseEME
+  displayName: Pack EMERA
+  type: boolean
+  default: false
+- name: UseDMT
+  displayName: Pack DEMETER
+  type: boolean
+  default: false
+- name: UseADC
+  displayName: Pack ADC
+  type: boolean
+  default: false
+
+variables:
+  #solution: "**/*.sln;!**/*Install.sln"
+  solution: "**/Launcher.sln;**/DataAccess.sln;**/UnitySC.Dataflow.sln;**/UnitySC.Result.sln;**/ANALYSE.sln;**/EMERA.sln;**/DEMETER.sln;**/AdC.sln;**/UnitySC.UTO.Controller.sln;!**/*Install.sln"
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+  pathToProjectDirectory: $(Build.SourcesDirectory)
+  build: $(Build.BuildId)
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  customArchiveName: USPv${{ parameters.Major }}.${{ parameters.Minor }}.${{ parameters.Patch }}.$(build)-Build$(currentDate)
+  assemblyversion: ${{ parameters.Major }}.${{ parameters.Minor }}.${{ parameters.Patch }}.$(build)
+  tag: ${{ parameters.ReleaseProject }}/Release/${{ parameters.ReleaseKind }}/v$(assemblyversion)
+
+stages:
+#This code allows for committing with the modification of assembly versions.
+  # - stage: Change_project_version 
+  #   jobs:
+  #     - job: Change_project_version
+  #       displayName: "Change project version"
+  #       cancelTimeoutInMinutes: 2
+  #       continueOnError: true
+
+  #       steps: 
+  #         - checkout: self      
+  #           persistCredentials: true
+  #           lfs: true
+          
+  #         - task: PowerShell@2
+  #           displayName: 'Set App Version'
+  #           inputs:
+  #               targetType: inline
+  #               script: |
+  #                   $projectDirectory = "$(pathToProjectDirectory)"
+  #                   $newVersion = "${env:MAJOR}.${env:MINOR}.${env:PATCH}.$(build)"
+  #                    Get-ChildItem -Path $pathToProjectDirectory -Filter AssemblyInfo.cs -Recurse |
+  #                        Where-Object { $_.FullName -match '\\(Dataflow|DataAccess|UTO|Result|PM\\ANALYSE)\\' } |
+  #                        ForEach-Object {
+  #                            $content = Get-Content -Path $_.FullName -Raw
+  #                            $content = $content -replace '\[assembly: AssemblyVersion\("[^"]*"\)\]', "[assembly: AssemblyVersion(`"$newVersion`")]"
+  #                            #$content = $content -replace '\[assembly: AssemblyFileVersion\("[^"]*"\)\]', "[assembly: AssemblyFileVersion(`"$newVersion`")]"
+  #                            Set-Content -Path $_.FullName -Value $content
+  #                            Write-Host "Update version $($_.FullName)"
+  #                        }
+
+  #                   git commit -a -m"[skip ci] Release ${env:PROJECTTAGNAME} $newVersion "
+  #                   $branchSource = "$(Build.SourceBranch)"
+  #                   $branchSourcePath = $branchSource -replace "refs/heads/", ""
+
+  #                   git push origin HEAD:$branchSourcePath
+
+  - stage: Build_Release_Packages
+    condition: eq(variables['Build.Reason'], 'Manual')
+    jobs:
+    - job: Build_And_Copy
+      steps:      
+      - checkout: self
+        clean: true
+        persistCredentials: true
+        lfs: true
+      
+      - script: |
+          git lfs fetch 
+          git lfs pull
+        displayName : git-lfs
+       
+      - task: NuGetToolInstaller@1
+        displayName: 'NuGet tool installer'
+        
+      - task: NuGetAuthenticate@1
+        enabled: true
+        timeoutInMinutes: 2 # minutes
+        displayName: "NuGet authenticate"
+
+      - script: |
+          echo 'Run on Agent $(Agent.Name) Working dir = $(System.DefaultWorkingDirectory)'        
+          echo 'Generate - ${{ parameters.ReleaseKind }} - Release = $(customArchiveName)'
+          echo 'Assembly version = $(assemblyversion)'
+          echo '----------'
+          echo 'Release TAG Project = ${{ parameters.ReleaseProject }}'
+          echo 'Release TAG message = ${{ parameters.ReleaseMessage }}'
+          echo 'Release Full TAG = $(tag)'
+          echo '----------'
+          echo 'Installer selected = ${{ parameters.GenerateInstaller }}'
+        displayName: 'Display information'
+        continueOnError: true 
+        
+      - task: NuGetCommand@2
+        displayName: 'NuGet restore'
+        timeoutInMinutes: 15 # minutes
+        enabled: true
+        inputs:
+          feedsToUse: config
+          nugetConfigPath: ./nuget.config
+          command: 'restore'
+          restoreSolution: '$(solution)'
+          
+      - task: Assembly-Info-NetFramework@3
+        displayName: 'Modify assembly version'
+        enabled: true
+        inputs:
+          Path: '$(System.DefaultWorkingDirectory)'
+          FileNames: '**\AssemblyInfo.cs'
+          InsertAttributes: true
+          FileEncoding: 'auto'
+          WriteBOM: false
+          VersionNumber: '$(assemblyversion)'
+          #FileVersionNumber: '$(assemblyversion)'
+          InformationalVersion: '$(assemblyversion)'
+          LogLevel: 'verbose'
+          FailOnWarning: false
+          DisableTelemetry: false
+          
+      - task: Assembly-Info-NetCore@3
+        condition: |
+          eq(${{ parameters.UseUTO }}, true)
+        displayName: 'Modify assembly version for UTO projects'
+        enabled: true
+        inputs:
+          Path: '$(System.DefaultWorkingDirectory)\UTO\src'
+          FileNames: '**\*.csproj'
+          IgnoreNetFrameworkProjects: true
+          InsertAttributes: true
+          FileEncoding: 'auto'
+          WriteBOM: false
+          #VersionNumber: '$(assemblyversion)'
+          #FileVersionNumber: '$(assemblyversion)'
+          InformationalVersion: '$(assemblyversion)'
+
+#############
+# AppLauncher 
+#############
+        
+      - task: VSBuild@1
+        displayName: "Build AppLauncher"
+        condition: |
+          eq(${{ parameters.UseLauncher }}, true)
+        inputs:
+          solution: "**/Launcher.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy AppLauncher Binaries"
+        condition: |
+          eq(${{ parameters.UseLauncher }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\Shared\Launcher\AppLauncher\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\AppLauncher'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+
+#############
+# DataAccess 
+#############
+                             
+      - task: VSBuild@1
+        displayName: "Build DataAccess"
+        condition: |
+          eq(${{ parameters.UseDataAccess }}, true)
+        inputs:
+          solution: "**/DataAccess.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy DataAccess Binaries"
+        condition: |
+          eq(${{ parameters.UseDataAccess }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\DataAccess\Service\UnitySC.DataAccess.Service.Host\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+             Stickers/**
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\DataAccess'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+          
+      - task: PowerShell@2
+        displayName: "Copy DataAccess Log Release Config"
+        condition: |
+          eq(${{ parameters.UseDataAccess }}, true)
+        inputs:
+          targetType: inline
+          script: Copy-Item -Path "$(System.DefaultWorkingDirectory)\DataAccess\Service\UnitySC.DataAccess.Service.Host\log.DataAccessService_RELEASE.config" -Destination "$(Build.ArtifactStagingDirectory)\Temp\Bin\DataAccess\log.DataAccessService.config"
+      
+#############
+# DataFlow 
+#############
+                             
+      - task: VSBuild@1
+        displayName: "Build DataFlow"
+        condition: |
+          eq(${{ parameters.UseDataFlow }}, true)
+        inputs:
+          solution: "**/UnitySC.Dataflow.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy DataFlow Binaries"
+        condition: |
+          eq(${{ parameters.UseDataFlow }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\Dataflow\Service\UnitySC.Dataflow.Service.Host\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Dataflow'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+           
+###############
+# ResultViewer 
+###############
+                             
+      - task: VSBuild@1
+        displayName: "Build ResultViewer"
+        condition: |
+          eq(${{ parameters.UseResultViewer }}, true)
+        inputs:
+          solution: "**/UnitySC.Result.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy ResultViewer 3DA Binaries"
+        retryCountOnTaskFailure: 2
+        condition: |
+          eq(${{ parameters.UseResultViewer }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\Result\UnitySC.Result\UnitySC.Result.3DaViewer\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\ResultViewer'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true           
+           
+      - task: CopyFiles@2
+        displayName: "Copy ResultViewer StandAlone Binaries"
+        retryCountOnTaskFailure: 2
+        condition: |
+          eq(${{ parameters.UseResultViewer }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\Result\UnitySC.Result\UnitySC.Result.StandaloneClient\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+             Settings/**
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\ResultViewer'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true    
+           
+      - task: CopyFiles@2
+        displayName: "Copy ResultViewer Client Binaries"
+        retryCountOnTaskFailure: 2
+        condition: |
+          eq(${{ parameters.UseResultViewer }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\Result\UnitySC.Result\UnitySC.Result.Client\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+             Stickers/**
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\ResultViewer'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true    
+           
+      - task: PowerShell@2
+        displayName: "Copy ResultViewer Log Release Config"
+        condition: |
+          eq(${{ parameters.UseResultViewer }}, true)
+        inputs:
+          targetType: inline
+          script: Copy-Item -Path "$(System.DefaultWorkingDirectory)\Result\UnitySC.Result\UnitySC.Result.Client\log.ResultClient_RELEASE.config" -Destination "$(Build.ArtifactStagingDirectory)\Temp\Bin\ResultViewer\log.ResultClient.config"
+           
+#############
+# UTO 
+#############
+                             
+      - task: VSBuild@1
+        displayName: "Build UTO"
+        condition: |
+          eq(${{ parameters.UseUTO }}, true)
+        inputs:
+          solution: "**/UnitySC.UTO.Controller.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy UTO Binaries"
+        condition: |
+          eq(${{ parameters.UseUTO }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\UTO\artifacts\$(buildConfiguration)\build\apps\UnitySC.UTO.Controller'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+             **/*.dylib
+             Stickers/**
+             x64/**
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\UTO'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true  
+           
+#############
+# ANALYSE 
+#############
+                             
+      - task: VSBuild@1
+        displayName: "Build ANALYSE"
+        condition: |
+          eq(${{ parameters.UseANA }}, true)
+        inputs:
+          solution: "**/ANALYSE.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy ANALYSE Server Binaries"
+        condition: |
+          eq(${{ parameters.UseANA }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\ANALYSE\Service\UnitySC.PM.ANA.Service.Host\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config    
+             DummyImages/**
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Server'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true           
+          
+      - task: CopyFiles@2
+        displayName: "Copy ANALYSE Client Binaries"
+        condition: |
+          eq(${{ parameters.UseANA }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\ANALYSE\Client\UnitySC.PM.ANA.Client\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Client'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+           
+      - task: CopyFiles@2
+        displayName: "Copy ANALYSE DataCollectionConverters Binaries"
+        condition: |
+          and( eq(${{ parameters.UseANA }}, true), eq(${{ parameters.UseDataFlow }}, true))
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\ANALYSE\DataCollectionConverters\Samsung\UnitySC.DataCollectionConverter.ANA.SG\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Dataflow\DataCollectionConverters'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+           
+      - task: PowerShell@2
+        displayName: "Make ANALYSE WaferLess Binaries"
+        condition: |
+          eq(${{ parameters.UseANA }}, true)
+        inputs:
+          targetType: inline
+          script: |  
+            Write-Output "make Client WaferLess..."
+            $BaseSrcClient = "$(System.DefaultWorkingDirectory)\PM\ANALYSE\Client\UnitySC.PM.ANA.Client\bin\x64\$(buildConfiguration)\UnitySC.PM.ANA.Client"
+            $BaseDestClient = "$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Client\UnitySC.PM.ANA.Client.Wl"
+            Copy-Item -Path "${BaseSrcClient}.exe" -Destination "${BaseDestClient}.exe"
+            Copy-Item -Path "${BaseSrcClient}.exe.config" -Destination "${BaseDestClient}.exe.config"
+            
+            Write-Output "make Server WaferLess..."
+            $BaseSrcServer = "$(System.DefaultWorkingDirectory)\PM\ANALYSE\Service\UnitySC.PM.ANA.Service.Host\bin\x64\$(buildConfiguration)\UnitySC.PM.ANA.Service.Host"
+            $BaseDestServer = "$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Server\UnitySC.PM.ANA.Service.Host.Wl" 
+            Copy-Item -Path "${BaseSrcServer}.exe" -Destination "${BaseDestServer}.exe"
+            Copy-Item -Path "${BaseSrcServer}.exe.config" -Destination "${BaseDestServer}.exe.config"
+            
+      - task: PowerShell@2
+        displayName: "Disabling ANALYSE Client Dev - Modules"
+        condition: |
+          eq(${{ parameters.UseANA }}, true)
+        inputs:
+          targetType: inline
+          script: |  
+            Write-Output "Disabling Module RecipeExecutor..."
+            $BaseModuleDllClient = "$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Client\UnitySC.PM.ANA.Client.Modules.RecipeExecutor.dll"
+            if (Test-Path $BaseModuleDllClient) {
+              Rename-Item -Path $BaseModuleDllClient -NewName "$BaseModuleDllClient.Disabled"
+              Write-Host "Disable Done"
+            } else {
+              Write-Host "File <$BaseModuleDllClient> does not exist."
+            }
+            
+            Write-Output "Disabling Module ExternalProcessing..."
+            $BaseModuleDllClient = "$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Client\UnitySC.PM.ANA.Client.Modules.TestExternalProcessing.dll"
+            if (Test-Path $BaseModuleDllClient) {
+              Rename-Item -Path $BaseModuleDllClient -NewName "$BaseModuleDllClient.Disabled"
+              Write-Host "Disable Done"
+            } else {
+              Write-Host "File <$BaseModuleDllClient> does not exist."
+            }
+            
+            Write-Output "Disabling Module TestMeasure..."
+            $BaseModuleDllClient = "$(Build.ArtifactStagingDirectory)\Temp\Bin\Analyse\Client\UnitySC.PM.ANA.Client.Modules.TestMeasure.dll"
+            if (Test-Path $BaseModuleDllClient) {
+              Rename-Item -Path $BaseModuleDllClient -NewName "$BaseModuleDllClient.Disabled"
+              Write-Host "Disable Done"
+            } else {
+              Write-Host "File <$BaseModuleDllClient> does not exist."
+            }
+                    
+#############
+# EMERA 
+#############
+                             
+      - task: VSBuild@1
+        displayName: "Build EMERA"
+        condition: |
+          eq(${{ parameters.UseEME }}, true)
+        inputs:
+          solution: "**/EMERA.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy EMERA Server Binaries"
+        condition: |
+          eq(${{ parameters.UseEME }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\EMERA\Service\UnitySC.PM.EME.Service.Host\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Emera\Server'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+          
+      - task: CopyFiles@2
+        displayName: "Copy EMERA Client Binaries"
+        condition: |
+          eq(${{ parameters.UseEME }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\EMERA\Client\UnitySC.PM.EME.Client\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Emera\Client'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+
+#############
+# DEMETER 
+#############
+
+      - task: VSBuild@1
+        displayName: "Build FocusQuality DLL"
+        condition: |
+          eq(${{ parameters.UseDMT }}, true)
+        inputs:
+          solution: "**/FocusQuality.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+
+      - task: VSBuild@1
+        displayName: "Build DEMETER"
+        condition: |
+          eq(${{ parameters.UseDMT }}, true)
+        inputs:
+          solution: "**/DEMETER.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+          
+      - task: CopyFiles@2
+        displayName: "Copy DEMETER Server Binaries"
+        condition: |
+          eq(${{ parameters.UseDMT }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\DEMETER\Service\UnitySC.PM.DMT.Service.Host\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Demeter\Server'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+          
+      - task: CopyFiles@2
+        displayName: "Copy DEMETER Client Binaries"
+        condition: |
+          eq(${{ parameters.UseDMT }}, true)
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\DEMETER\Client\UnitySC.PM.DMT.Client\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Demeter\Client'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+           
+      - task: CopyFiles@2
+        displayName: "Copy DEMETER DataCollectionConverters Binaries"
+        condition: |
+          and( eq(${{ parameters.UseDMT }}, true), eq(${{ parameters.UseDataFlow }}, true))
+        inputs:
+           SourceFolder: '$(System.DefaultWorkingDirectory)\PM\DEMETER\DataCollectionConverters\Soitec\UnitySC.DataCollectionConverter.DMT.SC\bin\x64\$(buildConfiguration)'
+           Contents: |
+             **/*.exe
+             **/*.dll
+             **/*.config
+           TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\Dataflow\DataCollectionConverters'
+           OverWrite: true
+           preserveTimestamp: true
+           ignoreMakeDirErrors: true
+        
+#############
+# ADC 
+#############
+
+      - task: VSBuild@1
+        displayName: "Build ADC"
+        condition: |
+          eq(${{ parameters.UseADC }}, true)
+        inputs:
+          solution: "**/AdC.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          msbuildArchitecture: x64
+
+      - task: CopyFiles@2
+        displayName: "Copy ADC Binaries"
+        condition: |
+          eq(${{ parameters.UseADC }}, true)
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)\PP\AdC\Output\$(buildConfiguration)'
+          Contents: |
+            **/*.exe
+            **/*.dll
+            **/*.config
+            **/*.xml
+          TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp\Bin\AdC'
+          OverWrite: true
+          preserveTimestamp: true
+          ignoreMakeDirErrors: true
+
+#############
+# GIT TAG 
+#############
+
+      - task: PowerShell@2
+        displayName: "Add Git TAG"
+        condition: |
+          and(
+            or(
+              eq('${{parameters.ReleaseKind}}', 'Internal'),
+              eq('${{parameters.ReleaseKind}}', 'Official')
+            ),
+            succeeded()
+          )
+        continueOnError: true
+        inputs:
+          targetType: 'inline'
+          script: |
+            Write-Host "tag = $(tag)"
+            Write-Host "tag message: ${{ parameters.ReleaseMessage }}"
+
+            git tag -a $(tag) -m "${{ parameters.ReleaseMessage }}"
+            git push origin $(tag)
+
+#############
+# VERSION FILE TRACKER 
+#############
+
+      - task: PowerShell@2
+        displayName: "Create Release Version File"
+        condition: always()
+        inputs:
+          targetType: inline
+          script: |
+            $VersionfileName = "Version_v${{ parameters.Major }}.${{ parameters.Minor }}.${{ parameters.Patch }}.$(build).xml"
+            
+            $MultilineComment=@"
+            <USPVersion>
+              <Version>v${{ parameters.Major }}.${{ parameters.Minor }}.${{ parameters.Patch }}.$(build)</Version>
+              <BuildType>${{ parameters.ReleaseKind }}</BuildType>
+              <ReleaseName>$(customArchiveName)</ReleaseName>
+              <ReleaseTag>$(tag)</ReleaseTag>
+              <Comment>
+                ${{ parameters.ReleaseMessage }}
+                
+                AppLauncher : ${{ parameters.UseLauncher }}
+                DataAccess : ${{ parameters.UseDataAccess }}
+                DataFlow : ${{ parameters.UseDataFlow }}
+                UTO : ${{ parameters.UseUTO }}
+                Viewers : ${{ parameters.UseResultViewer }}
+                ANALYSE : ${{ parameters.UseANA }}
+                DEMETER : ${{ parameters.UseDMT }}
+                EMERA : ${{ parameters.UseEME }} 
+              </Comment>
+            </USPVersion>
+            "@
+            
+            New-Item $(Build.ArtifactStagingDirectory)\Temp\$VersionfileName    
+            Set-Content -Path $(Build.ArtifactStagingDirectory)\Temp\$VersionfileName -Value $MultilineComment
+
+#############
+# LOGO 
+#############
+
+      - task: CopyFiles@2
+        displayName: 'Make logo ready for zip'
+        condition: always()
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)\Install\InnoSetup'
+          Contents: '**/*.ico'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)\Temp'
+
+#############
+# ARCHIVES 
+#############
+
+      - task: ArchiveFiles@2
+        displayName: 'Create ZIP archive'
+        condition: always()
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)\Temp'
+          includeRootFolder: false 
+          archiveFile: '$(Build.ArtifactStagingDirectory)\Zipped\$(customArchiveName).zip'
+
+#############
+# PUBLISH ZIP ARCHIVE
+#############
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Store zip'
+        condition: always()
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)\Zipped'
+          ArtifactName: 'Release'
+          publishLocation: 'Container'
+
+#############
+# INSTALLER 
+#############
+
+      - task: CopyFiles@2
+        displayName: 'Retrieve zip with bin'
+        inputs:
+          SourceFolder: '$(Build.ArtifactStagingDirectory)\Zipped'
+          Contents: '*.zip'
+          TargetFolder: '$(System.DefaultWorkingDirectory)\Install\InnoSetup'
+      - task: PowerShell@2
+        condition: |
+          and(eq('${{ parameters.GenerateInstaller }}', 'Analyse'), 
+          eq(${{ parameters.UseLauncher }}, true), 
+          eq(${{ parameters.UseDataFlow }}, true), 
+          eq(${{ parameters.UseDataAccess }}, true), 
+          eq(${{ parameters.UseResultViewer }}, true), 
+          eq(${{ parameters.UseUTO }}, true), 
+          eq(${{ parameters.UseANA }}, true),
+          succeeded())
+        displayName: 'Compile Analyse installer.exe'
+        inputs:
+          targetType: 'inline'
+          script: '$(System.DefaultWorkingDirectory)\Install\InnoSetup\compileAnalyse.ps1'
+      - task: PowerShell@2
+        condition: |
+          and(eq('${{ parameters.GenerateInstaller }}', 'Demeter'),
+          eq(${{ parameters.UseLauncher }}, true), 
+          eq(${{ parameters.UseDataFlow }}, true), 
+          eq(${{ parameters.UseDataAccess }}, true), 
+          eq(${{ parameters.UseResultViewer }}, true), 
+          eq(${{ parameters.UseUTO }}, true), 
+          eq(${{ parameters.UseDMT }}, true),
+          succeeded())
+        displayName: 'Compile Demeter installer.exe'
+        inputs:
+          targetType: 'inline'
+          script: '$(System.DefaultWorkingDirectory)\Install\InnoSetup\compileDemeter.ps1'        
+      - task: PowerShell@2
+        condition: |
+          and(eq('${{ parameters.GenerateInstaller }}', 'Emera'),
+          succeeded())
+        displayName: 'Compile Emera installer.exe'
+        inputs:
+          targetType: 'inline'
+          script: 'throw "Emera is not yet supported"'
+          failOnStderr: true
+
+#############
+# PUBLISH INSTALLER
+#############
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Store installer'
+        condition: |
+          and(ne('${{ parameters.GenerateInstaller }}', 'none'),
+          succeeded())
+        inputs:
+          PathtoPublish: '$(System.DefaultWorkingDirectory)\Install\InnoSetup\Output'
+          ArtifactName: 'Installer'
+          publishLocation: 'Container'

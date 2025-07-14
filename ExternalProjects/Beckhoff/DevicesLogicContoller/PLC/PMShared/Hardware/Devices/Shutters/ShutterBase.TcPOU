@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="ShutterBase" Id="{b50ae82a-0ab6-41ce-bbec-09f22dfef17d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT ShutterBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}	
+	_family : DeviceFamily;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_shutterConfig : DeviceConfiguration;	
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="DeviceID" Id="{3320d7d8-2470-4d78-b002-0e1f2e07810b}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{8a570f02-6bb5-4991-9a81-fc20cd1a0eae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{95d2c08e-9925-44b4-8558-081a568345cf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{9804369d-8071-4e2c-82c3-605c621f84d1}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{6c6e7e55-5389-4738-83b9-863a59212a07}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b39c2a7e-d313-4850-a0b3-ed046ab8a488}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="ManualClose" Id="{f98d88b4-f05d-4ac7-b235-4ef3eb5a7182}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT ManualClose
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ManualOpen" Id="{d22989d3-ac27-42f8-80f9-383388aa72cc}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT ManualOpen
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{94ddb3ec-0c25-46c1-923c-2690d50afccb}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{3bd12e72-19e8-490a-bdb9-dc0a4c2d5572}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{69061ac4-c8f4-4121-80da-cfc6fff43b40}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="ShutterBase">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.ManualClose">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.ManualOpen">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ShutterBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

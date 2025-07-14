@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="IoStageAxis" Id="{2e933a7b-88ea-4ff3-afaf-56e4e5e550ef}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK IoStageAxis EXTENDS AxesBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : IoStageAxisConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	IoStageStruct : IoStageStruct;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	PositionMsg : STRING(255);
+	
+	{region 'Commands'}	
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveAbsPosition	 : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;	 
+			
+	{endregion}
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : INT; //EPosition;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Init device
+InitDevice(); 
+
+// Deliver messages
+CASE _deliverMessages OF	
+	EFeedbackMsgStage.PositionMsg :
+		PositionMsg := INT_TO_STRING(GetPosition());			
+END_CASE
+	
+_deliverMessages := 0;
+
+// Commands
+MoveAbsPosition(_moveAbsPosition, _pos); 
+RaisePropertiesChanged(_raiseProperties);
+
+IF (NOT _moveAbsPosition AND NOT _raiseProperties) THEN
+	MessageScheduler();
+END_IF	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{4e1e22e9-f661-43a8-869a-d74714ff0ed7}" />
+    <Method Name="FB_init" Id="{58e6a079-3e5f-4b89-88c1-909c20cf94f6}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : IoStageAxisConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._axisConfig.Name := Config.Name;
+	SUPER^._axisConfig.DeviceID := Config.DeviceID;
+	SUPER^._axisConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._axisConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Axes;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPosition" Id="{77798f0c-d244-4c28-bbb5-24ef18dbab54}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetPosition : INT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgStage.PositionMsg;
+
+IF IsStageInProcessPosition(IoStageStruct.InputProcessPosition) THEN
+	GetPosition := EStagePosition.Process;
+ELSIF IsStageInProcessPosition(IoStageStruct.InputLoadingPosition) THEN
+	GetPosition := EStagePosition.Loading;
+ELSE
+	GetPosition := EStagePosition.Unknown;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{81366782-ecf4-49bb-81af-f7a93b664e47}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());
+							
+	THIS^.Status := TExecutionState.Ready;
+	
+	GetPosition();
+	
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsStageInLoadingPosition" Id="{c5b1f9b0-7e95-4fce-95ad-2755784654f2}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD IsStageInLoadingPosition : BOOL
+VAR_INPUT
+	Position : INT;
+END_VAR
+VAR
+	val : INT; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[val := ABS(Position - Const.FLEXO_AI_PISTON_LEFT_SENSING_RANGE_MAX);
+
+IF val < Const.FLEXO_AI_PISTON_LEFT_SENSING_RANGE_MIN THEN
+	IsStageInLoadingPosition := TRUE;
+ELSE
+	IsStageInLoadingPosition := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsStageInProcessPosition" Id="{efebcb0e-001d-4f27-93ac-18c1bf7b1242}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD IsStageInProcessPosition : BOOL
+VAR_INPUT
+	Position : INT;
+END_VAR
+VAR
+	val : INT; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[val := ABS(Position - Const.FLEXO_AI_PISTON_LEFT_SENSING_RANGE_MAX);
+
+IF val < Const.FLEXO_AI_PISTON_LEFT_SENSING_RANGE_MIN THEN
+	IsStageInProcessPosition := TRUE;
+ELSE
+	IsStageInProcessPosition := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{8433c8b5-c8eb-4149-94ef-8764fb8b100a}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0:	GetPosition();
+			_itemScheduler := 0;										
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{d93e53d9-3dc7-4e72-b545-0abbb4a42762}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED MoveAbsPosition 
+VAR_INPUT
+	Execute : BOOL;
+	Position : LREAL;
+END_VAR
+VAR	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Move absolute position : ').Append(TO_STRING(Position)).ToString());
+	
+	_moveAbsPosition := FALSE;	
+	
+	IF Position = EStagePosition.Loading THEN
+		IoStageStruct.OutputLoadingPosition := FALSE;
+		IoStageStruct.OutputProcessPosition := TRUE;		
+	ELSIF Position = EStagePosition.Process THEN
+		IoStageStruct.OutputLoadingPosition := TRUE;
+		IoStageStruct.OutputProcessPosition := FALSE;
+	ELSE
+		_logger.Error(_message.Reset().Append(_config.Name).Append(' - unknown position : ').Append(TO_STRING(Position)).ToString());								
+	END_IF
+			
+	_itemScheduler := 0;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{96e224e1-3749-4797-818c-5dd236e6e2e7}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raiseProperties := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0: PositionMsg := ' ';
+				_itemRaisedProperties := 1;
+			
+			1: GetPosition();		   
+				_itemRaisedProperties := 10;
+				
+			10: 
+				_logger.Information(_message.Reset().
+								    Append(_config.Name).
+								    Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;
+				_itemRaisedProperties := 0;
+		
+		END_CASE
+	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#50MS);	
+	END_IF
+		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadStagePosition" Id="{c591a735-f234-42fd-baa7-7fa3f13aa943}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadStagePosition
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="IoStageAxis">
+      <LineId Id="111" Count="0" />
+      <LineId Id="94" Count="16" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.FB_init">
+      <LineId Id="8" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.GetPosition">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="3" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.IsStageInLoadingPosition">
+      <LineId Id="22" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.IsStageInProcessPosition">
+      <LineId Id="22" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.MessageScheduler">
+      <LineId Id="6" Count="3" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.MoveAbsPosition">
+      <LineId Id="15" Count="1" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="129" Count="1" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="IoStageAxis.ReadStagePosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

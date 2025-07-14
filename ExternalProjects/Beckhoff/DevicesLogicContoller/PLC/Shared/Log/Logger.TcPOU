@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="Logger" Id="{be1f4ad8-0ce5-4bde-aeca-b5f947db7668}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Logger IMPLEMENTS ILogger
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	ipResultMessage : I_TcMessage := fbResult;
+END_VAR
+VAR
+	fbResult : FB_TcMessage;
+	fbSource : FB_TcSourceInfo;
+	
+	hrLastInternalError : HRESULT;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Debug" Id="{c400de67-60eb-43d6-b271-b20e176ef72c}">
+      <Declaration><![CDATA[METHOD Debug
+VAR_INPUT
+	message	: STRING;
+END_VAR
+VAR
+	hr : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[hr := fbResult.CreateEx(TC_EVENTS.EventLoggerPlc.PlcEventDebug, ipSourceInfo:=fbSource);
+Write(message, hr);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Error" Id="{bcf18f5c-f01e-4da0-930b-a08e3759103d}">
+      <Declaration><![CDATA[METHOD Error
+VAR_INPUT
+	message	: STRING;
+END_VAR
+VAR
+	hr : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[hr := fbResult.CreateEx(TC_EVENTS.EventLoggerPlc.PlcEventError, ipSourceInfo:=fbSource);
+Write(message, hr);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Fatal" Id="{cfd1644f-ce03-4ef9-a353-fe517e29affa}">
+      <Declaration><![CDATA[METHOD Fatal
+VAR_INPUT
+	message	: STRING;
+END_VAR
+VAR
+	hr : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[hr := fbResult.CreateEx(TC_EVENTS.EventLoggerPlc.PlcEventFatal, ipSourceInfo:=fbSource);
+Write(message, hr);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Information" Id="{4cc4e622-0cb9-4ccb-8de0-dd2c5c6c72f1}">
+      <Declaration><![CDATA[METHOD Information
+VAR_INPUT
+	message	: STRING;
+END_VAR
+VAR
+	hr : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[hr := fbResult.CreateEx(TC_EVENTS.EventLoggerPlc.PlcEventInformation, ipSourceInfo:=fbSource);
+Write(message, hr);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Verbose" Id="{1b73ddbb-5494-4163-817c-b03176bca5b8}">
+      <Declaration><![CDATA[METHOD Verbose
+VAR_INPUT
+	message	: STRING;
+END_VAR
+VAR
+	hr : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[hr := fbResult.CreateEx(TC_EVENTS.EventLoggerPlc.PlcEventVerbose, ipSourceInfo:=fbSource);
+Write(message, hr);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Warning" Id="{bdaee934-5679-4dc1-98bd-525abbaa460d}">
+      <Declaration><![CDATA[METHOD Warning
+VAR_INPUT
+	message	: STRING;
+END_VAR
+VAR
+	hr : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[hr := fbResult.CreateEx(TC_EVENTS.EventLoggerPlc.PlcEventWarning, ipSourceInfo:=fbSource);
+Write(message, hr);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Write" Id="{8d4fd826-cd66-4f89-817a-a0df49536ee7}">
+      <Declaration><![CDATA[METHOD PRIVATE Write
+VAR_INPUT
+	message : STRING;
+	handle : HRESULT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbResult.ipArguments.Clear().AddString(message);
+
+IF fbResult.eSeverity >= TcEventSeverity.Verbose THEN
+	handle := fbResult.Send(0);
+	IF FAILED(handle) THEN
+		hrLastInternalError := handle;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Logger">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Debug">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Error">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Fatal">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Information">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Verbose">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Warning">
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Logger.Write">
+      <LineId Id="11" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="12" Count="4" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

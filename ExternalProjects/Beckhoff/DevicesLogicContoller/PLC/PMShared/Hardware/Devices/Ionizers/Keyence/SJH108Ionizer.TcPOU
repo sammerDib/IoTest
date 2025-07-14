@@ -1,0 +1,332 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SJH108Ionizer" Id="{877406b8-0bd3-490a-a6af-0813a8d62411}" SpecialFunc="None">
+    <Declaration><![CDATA[ {attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK SJH108Ionizer EXTENDS IonizerBase
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : SJH108IonizerConfig;	
+	{attribute 'OPC.UA.DA' := '0'}
+	IoSJH108A : IoSJH108A;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	
+	{region 'Commands'}	
+		 	
+	{attribute 'OPC.UA.DA' := '0'}
+	_openAirValveCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_openValve : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_enableStaticEliminationInterruptCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_enable : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;	 
+			
+	{endregion}		 
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;	
+		 	
+	AlarmMsg : STRING(255);
+	AirValveIsOpenMsg : STRING(255);
+	StaticEliminationInterruptMsg : STRING(255);
+	RefreshingMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcat1 : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcat2 : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatName : STRING; 
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatDescription : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatAlarmID : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_alarmCount : UINT;
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+// Init device
+InitDevice();
+
+CASE _deliverMessages OF	
+	EFeedbackMsgSJH108.AlarmMsg :
+		AlarmMsg := message;
+	EFeedbackMsgSJH108.AirValveIsOpenMsg :
+		AirValveIsOpenMsg := TO_STRING(IoSJH108A.OutputOpenAirValve);
+END_CASE
+		
+// Commands		
+OpensAirValve(_openAirValveCmd, _openValve);
+EnableStaticEliminationInterrupt(_enableStaticEliminationInterruptCmd, _enable);
+RaisePropertiesChanged(_raisePropertiesCmd);
+
+IF (NOT _openAirValveCmd AND NOT _enableStaticEliminationInterruptCmd AND NOT _raisePropertiesCmd) THEN	
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{bd3ddf92-3ebd-457e-9c68-037f07551c70}" />
+    <Method Name="EnableStaticEliminationInterrupt" Id="{01c5c83f-779b-46f5-b75a-ead75412fb71}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PRIVATE EnableStaticEliminationInterrupt
+VAR_INPUT
+	Execute : BOOL;
+	Enable : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_enable := Enable;
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - EnableStaticEliminationInterrupt=').Append(TO_STRING(_enable)).ToString());
+		
+	IoSJH108A.OutputStaticEliminationInterrupt := _enable;
+	_enableStaticEliminationInterruptCmd := FALSE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{c4f9e8ae-dc45-470f-b179-ac7ece289020}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : SJH108IonizerConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._ionizerConfig.Name := Config.Name;
+	SUPER^._ionizerConfig.DeviceID := Config.DeviceID;
+	SUPER^._ionizerConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._ionizerConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Ionizer;
+		
+	IoSJH108A.OutputOpenAirValve := TRUE;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{d7d2e8d7-3700-45d6-8253-8e742150dd1f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Init device').ToString());
+	
+	THIS^.SetDone();	
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{24666361-8eb1-4866-8a5e-11e47ab2eb59}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+	
+	message := ' ';
+	CASE _itemScheduler OF			
+		0:  AirValveIsOpenMsg := ' ';
+			_itemScheduler := 1;
+			
+		1:	ReadAlarm(); 
+			_itemScheduler := 0;
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OpensAirValve" Id="{2fb73b5e-e5bf-4037-844a-f9c5a1431a1a}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PRIVATE OpensAirValve
+VAR_INPUT
+	Execute : BOOL;
+	OpenValve : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_openValve := OpenValve;	
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Open=').Append(TO_STRING(_openValve)).ToString());
+	
+	IoSJH108A.OutputOpenAirValve := _openValve;
+	
+	_openAirValveCmd := FALSE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{7df441c7-aee6-41eb-a3c6-a70217d04ad2}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesCmd := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0:  RefreshingMsg := TO_STRING(TRUE);
+				_alarmCount := 0;
+				_itemRaisedProperties := 1;
+				
+			1: 	ReadAlarm();
+				_alarmCount := _alarmCount + 1;
+				IF _alarmCount = IonizerConst.NUMBER_ALARMS THEN
+					_itemRaisedProperties := 2;
+				END_IF							
+			
+			2:  RefreshingMsg := TO_STRING(FALSE);
+				_raisePropertiesCmd := FALSE;
+				_itemRaisedProperties := 0;		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadAlarm" Id="{2a0071be-c731-4d1e-914f-b5e0fa5bb30f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadAlarm
+VAR_INPUT
+END_VAR
+VAR
+	triggered : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSJH108.AlarmMsg;
+
+_alarmCount := 0;
+
+tmpConcatName := CONCAT(_config.IonizerAlarm[_alarmCount].Name, ';');
+tmpConcatDescription := CONCAT(_config.IonizerAlarm[_alarmCount].Description, ';');
+tmpConcatAlarmID := CONCAT(UINT_TO_STRING(_config.IonizerAlarm[_alarmCount].AlarmID), ';');
+
+tmpConcat1 := CONCAT(tmpConcatName, tmpConcatDescription);
+tmpConcat2 := CONCAT(tmpConcat1, tmpConcatAlarmID);
+
+IF _config.IonizerAlarm[_alarmCount].Triggered THEN
+	triggered := FALSE;
+ELSE
+	triggered := TRUE;
+END_IF
+
+message := CONCAT(tmpConcat2, TO_STRING(triggered));]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="SJH108Ionizer">
+      <LineId Id="319" Count="1" />
+      <LineId Id="165" Count="2" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="250" Count="1" />
+      <LineId Id="175" Count="8" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.EnableStaticEliminationInterrupt">
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.FB_init">
+      <LineId Id="9" Count="11" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.InitDevice">
+      <LineId Id="6" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.MessageScheduler">
+      <LineId Id="51" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="63" Count="3" />
+      <LineId Id="54" Count="2" />
+      <LineId Id="49" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.OpensAirValve">
+      <LineId Id="131" Count="1" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="93" Count="3" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SJH108Ionizer.ReadAlarm">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="13" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

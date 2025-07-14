@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="EventRaised" Id="{8c5ab056-f156-412f-9c98-31dcefa70468}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK EventRaised
+VAR_INPUT
+	EventRaisedMsg : STRING;
+	EventTimerSeconds : UINT;
+	EventTimerSetCriteria : BOOL;
+	DeviceName	: STRING;
+END_VAR
+VAR_OUTPUT
+	EventMsg : STRING;
+END_VAR
+VAR
+	_eventtrigger : BOOL := FALSE;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_eventRaised : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_eventTimeOut : TON;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[_eventTimeOut(IN := EventTimerSetCriteria,
+			PT := TO_TIME(EventTimerSeconds*1000));
+	IF _eventTimeOut.Q THEN
+		_eventRaised := TRUE;
+		eventMsg := EventRaisedMsg;
+		IF	NOT _eventtrigger THEN
+			_Logger.Information(_message.Reset().Append(eventMsg).Append(' - ').Append(DeviceName).ToString()); 
+			_Eventtrigger := TRUE;
+		END_IF
+	ELSE
+		_eventtrigger := FALSE;
+		_eventRaised := FALSE;
+		eventMsg := '';
+	END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="EventRaised">
+      <LineId Id="83" Count="1" />
+      <LineId Id="86" Count="9" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="96" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

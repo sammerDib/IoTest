@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="StringBuilder" Id="{cb83af3e-7acc-470f-a3f2-ea518b91b0ac}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK StringBuilder IMPLEMENTS IStringBuilder, ILimitedStringBuilder
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'hide'}
+    _workString : STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Append" Id="{eb17deb0-cac2-49f1-9f9e-8c5927d682db}">
+      <Declaration><![CDATA[METHOD Append : IStringBuilder
+VAR_INPUT
+    text : STRING; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_workString := CONCAT(_workString, text);
+Append := THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InsertAtLocation" Id="{62589235-1008-41ba-bd68-cb90dfa17d3b}">
+      <Declaration><![CDATA[METHOD InsertAtLocation : REFERENCE TO StringBuilder
+VAR_INPUT
+    Text : STRING;
+    Position : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_workString := Tc2_Standard.INSERT(_WorkString, Text, Position);
+InsertAtLocation REF= THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{7fc6d06f-fa1c-475b-830c-8199514fa190}">
+      <Declaration><![CDATA[METHOD Reset : ILimitedStringBuilder
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_workString := '';
+Reset := THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ToString" Id="{d9afa94d-09f4-4404-8482-75a4b3c27ac8}">
+      <Declaration><![CDATA[METHOD ToString : STRING
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ToString := _workString;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="StringBuilder">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="StringBuilder.Append">
+      <LineId Id="7" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="StringBuilder.InsertAtLocation">
+      <LineId Id="8" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="StringBuilder.Reset">
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="StringBuilder.ToString">
+      <LineId Id="4" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

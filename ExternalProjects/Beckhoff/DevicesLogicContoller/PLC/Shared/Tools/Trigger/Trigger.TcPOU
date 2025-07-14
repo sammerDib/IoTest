@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Trigger" Id="{586c7298-54a8-43f3-b1e3-5df1e7eac297}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC Trigger
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execStartTrigger : BOOL;
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_stateCmd : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPeriod_ms : LREAL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	timerDelayOn : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	timerDelayOff: TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	pulseFlag : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	trigOff : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	OutputTrigger	AT %Q* : BOOL;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TriggerOutEmitSignal(_execStartTrigger, _setPeriod_ms);
+]]></ST>
+    </Implementation>
+    <Method Name="TriggerOutEmitSignal" Id="{0402d862-386b-4b9d-a2a1-b19a7ce5488c}">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED TriggerOutEmitSignal
+VAR_INPUT
+	Execute : BOOL;
+	PulseDuration_ms : LREAL;	
+END_VAR
+VAR
+	demiPulseDuration_ms : TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*
+// La FastTask a un cycle de 50µs. Il faut 4 instructions pour obtenir un pulse.
+// On aura donc un pulse minimum de 200 µs (4 * 50 µs) 
+*)
+
+IF Execute THEN
+	_execStartTrigger := TRUE;
+	_setPeriod_ms := PulseDuration_ms;
+	
+	demiPulseDuration_ms := LREAL_TO_TIME(_setPeriod_ms * 1E+6) / 2;
+	
+	_logger.Information(_message.Reset().Append('TriggerOutEmitSignal').ToString());
+	
+	CASE _stateCmd OF
+		0:  timerDelayOn(IN := _execStartTrigger AND NOT trigOff, PT := demiPulseDuration_ms);
+			OutputTrigger := timerDelayOn.Q;
+			
+			timerDelayOff(IN := OutputTrigger, PT := demiPulseDuration_ms);
+			trigOff := timerDelayOff.Q;
+				
+			//_execStartTrigger := FALSE;
+	END_CASE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Trigger">
+      <LineId Id="186" Count="0" />
+      <LineId Id="143" Count="0" />
+    </LineIds>
+    <LineIds Name="Trigger.TriggerOutEmitSignal">
+      <LineId Id="73" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

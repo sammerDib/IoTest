@@ -1,0 +1,1383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="C13336Mppc" Id="{0f99592b-a6c7-4242-8549-ebb9a38e3cc5}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK C13336Mppc EXTENDS MppcBase
+VAR_INPUT	
+	{attribute 'OPC.UA.DA' := '0'}
+	Conf : C13336MppcConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	SerialCom  : SerialCom(Prefix := Const.START_OF_TEXT, Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}
+	RefSerialCom : REFERENCE TO SerialCom(Prefix := Const.START_OF_TEXT, Suffix := Const.CARRIAGE_RETURN) := SerialCom;
+	{attribute 'OPC.UA.DA' := '0'}
+	MppcActivate : BOOL;
+END_VAR
+VAR_OUTPUT	
+END_VAR
+VAR		
+	{attribute 'OPC.UA.DA' := '0'}	 
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+		
+	OutputCurrentMsg : STRING(255);
+	OutputVoltageMsg : STRING(255);
+	OutputVoltageSettingMsg : STRING(255);
+	TemperatureMsg : STRING(255);
+	SensorTemperatureMsg : STRING(255);
+	PowerFctReadMsg : STRING(255);	
+	MonitorInfoStatusMsg : STRING(255);
+	HighVoltageStatusMsg : STRING(255);	
+	TempCorrectionFactorReadMsg : STRING(255);
+	FirmwareMsg : STRING(255);
+	IdentifierMsg : STRING(255);
+	StateSignalsMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	VoltageStabilityMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_tempCorrectionFactorSetting : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_switchTempCompensationMode : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_refVoltageTempSetting : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}		  
+	_powerFctSetting : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			   
+	_outputVoltageOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}		 
+	_outputVoltageOff : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerReset : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}		  
+	_powerFctRead : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_overcurrentProtection : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_outputVoltageControl : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	 
+	_tempCompensationMode : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  
+	_manageRelays : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_ioRelayActivated : BOOL; 
+	{attribute 'OPC.UA.DA' := '0'}
+	_setOutputVoltage : BOOL;
+				   
+	{attribute 'OPC.UA.DA' := '0'}
+	_collector : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fibersCollector : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_delimeter : STRING := ';';
+		 
+	{endregion}
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDeviceBase : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_setRefVoltage : LREAL := 0;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_setVoltage : LREAL := 0;				
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpMessage : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	msgWithoutPrefix : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	suffixDelete : INT := 5;
+	{attribute 'OPC.UA.DA' := '0'}
+	prefixDelete : INT := 3;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_length : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_conv : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	valConvert : LREAL;		
+	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	strTmp : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	strTmp1 : STRING;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF SerialCom.ErrorSendId <> COMERROR_NOERROR THEN
+	RETURN;
+END_IF
+
+// Deliver messages
+IF RefSerialCom.IsReceived THEN
+	IF (Conf.DeviceID = TO_STRING(EMppcCollector.WIDE)) THEN
+		_collector := TO_STRING(EMppcCollector.WIDE);
+	ELSE
+		_collector := TO_STRING(EMppcCollector.NARROW);
+	END_IF	
+		
+	_fibersCollector := CONCAT(_collector, _delimeter);
+	
+	msgWithoutPrefix := DELETE(RefSerialCom.LastReceivedString, suffixDelete, 0);	
+	_length := LEN(msgWithoutPrefix);
+	message := DELETE(msgWithoutPrefix, _length - prefixDelete, _length - prefixDelete);
+
+	CASE _deliverMessages OF		
+		EFeedbackMsgC13336.MonitorInfoStatusMsg :
+		 	MonitorInfoStatusMsg := CONCAT(_fibersCollector, message); 
+			VoltageStabilityMsg := CONCAT(_fibersCollector, FindVoltageStability(message)); 
+			HighVoltageStatusMsg := CONCAT(_fibersCollector, FindHighVoltageOutput(message));
+			
+		EFeedbackMsgC13336.OutputCurrentMsg :			
+			OutputCurrentMsg := CONCAT(_fibersCollector, ConvertMonitorHexaToCurrent(message));	
+			
+		EFeedbackMsgC13336.OutputVoltageMsg :
+			OutputVoltageMsg := CONCAT(_fibersCollector, ConvertMonitorHexaToVoltage(message));	
+			
+		EFeedbackMsgC13336.OutputVoltageSettingMsg :			
+			tmpMessage := LEFT(RIGHT(message, 8), 4);		
+			OutputVoltageSettingMsg := CONCAT(_fibersCollector, ConvertMonitorHexaToVoltage(tmpMessage));		
+	
+		EFeedbackMsgC13336.TemperatureMsg :
+			TemperatureMsg := CONCAT(_fibersCollector, message);
+			
+		EFeedbackMsgC13336.SensorTemperatureMsg :
+			tmpMessage := LEFT(RIGHT(message, 8), 4);
+			SensorTemperatureMsg := CONCAT(_fibersCollector, ConvertMonitorHexaToTemperature(tmpMessage));
+	
+		EFeedbackMsgC13336.PowerFctReadMsg :
+			PowerFctReadMsg := CONCAT(_fibersCollector, message);
+			
+		EFeedbackMsgC13336.TempCorrectionFactorReadMsg :
+			TempCorrectionFactorReadMsg := CONCAT(_fibersCollector, message);
+
+		EFeedbackMsgC13336.FirmwareMsg :
+			FirmwareMsg := CONCAT(_fibersCollector, message);	
+			
+		EFeedbackMsgC13336.IdentifierMsg :
+			IdentifierMsg := CONCAT(_fibersCollector, message);					
+	END_CASE	
+END_IF						   							   		
+	
+TempCorrectionFactorSetting(_tempCorrectionFactorSetting);
+SwitchTempCompensationMode(_switchTempCompensationMode, _tempCompensationMode);
+RefVoltageTempSetting(_refVoltageTempSetting, _setRefVoltage);
+PowerFctSetting(_powerFctSetting, _overcurrentProtection, _outputVoltageControl);
+OutputVoltageOn(_outputVoltageOn);
+OutputVoltageOff(_outputVoltageOff);
+PowerReset(_powerReset);
+CustomCommand(_customCmd, _cmd);
+RaisePropertiesChanged(_raiseProperties);		
+ManageRelays(_manageRelays, _ioRelayActivated);
+SetOutputVoltage(_setOutputVoltage, _setVoltage);
+
+
+IF (NOT _tempCorrectionFactorSetting AND NOT _switchTempCompensationMode AND NOT _refVoltageTempSetting AND NOT _powerFctSetting AND
+	NOT _outputVoltageOn AND NOT _outputVoltageOff AND NOT _powerReset AND NOT _raiseProperties AND NOT _manageRelays) THEN
+	
+	MessageScheduler();	
+END_IF
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{a17db96c-ed6e-461b-91a3-be8a276f6b4e}" />
+    <Folder Name="FindStatus" Id="{6c02f2ba-edbf-411f-b166-c72865f11c8a}" />
+    <Folder Name="Tools" Id="{9a3bafc3-9514-4b05-900a-28a572139d24}" />
+    <Folder Name="UnitConversion" Id="{a233d928-0984-409d-83fa-81c0b577169f}" />
+    <Method Name="ConvertMonitorHexaToCurrent" Id="{a2743404-2671-48d8-b19b-5f327213e66c}" FolderPath="UnitConversion\">
+      <Declaration><![CDATA[(** Convert Hexa to mA **)
+METHOD ConvertMonitorHexaToCurrent : STRING
+VAR_INPUT
+	Data : STRING;	
+END_VAR
+VAR
+	dataInDec : STRING;
+	dataToDint : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[dataInDec := CONCAT('16#', Data);
+dataToDint := STRING_TO_DINT(dataInDec);
+ConvertMonitorHexaToCurrent := LREAL_TO_FMTSTR(DINT_TO_LREAL(dataToDint) * 0.005194, 3, TRUE);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConvertMonitorHexaToTemperature" Id="{139dc469-7e37-409e-a5dc-37b14c429c88}" FolderPath="UnitConversion\">
+      <Declaration><![CDATA[(** Convert Hexa to Temperature **)
+METHOD ConvertMonitorHexaToTemperature : STRING
+VAR_INPUT
+	Data : STRING;
+END_VAR
+VAR
+	dataInDec : STRING;
+	dataToDint : DINT;
+	
+	sTmp0 : STRING;
+	sTmp1 : STRING;
+	sTmp2 : STRING;
+	sTemperature : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[dataInDec := CONCAT('16#', Data);
+dataToDint := STRING_TO_DINT(dataInDec);
+
+IF dataToDint > 0 THEN
+	sTmp0 := LREAL_TO_FMTSTR((DINT_TO_LREAL(dataToDint) * 10000.0) / (1024.0 - DINT_TO_LREAL(dataToDint)) * (1 / 9000.0), 15, FALSE);
+	IF STRING_TO_LREAL(sTmp0) > 0 THEN		
+		sTmp1 := LREAL_TO_FMTSTR(LN(STRING_TO_LREAL(sTmp0)), 15, FALSE);
+		sTmp2 := LREAL_TO_FMTSTR(STRING_TO_LREAL(sTmp1) * (1 / 3410.0) + (1 / 298.15), 15, FALSE);
+		sTemperature := LREAL_TO_FMTSTR(1 / STRING_TO_LREAL(sTmp2) - 273.15, 3, FALSE);
+	ELSE
+		sTemperature := 'NaN';
+	END_IF
+ELSE
+	sTemperature := 'NaN';
+
+END_IF
+
+ConvertMonitorHexaToTemperature := sTemperature;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConvertMonitorHexaToVoltage" Id="{4bacab02-cb61-4240-bbf3-a716cc772213}" FolderPath="UnitConversion\">
+      <Declaration><![CDATA[(** Convert Hexa to Volt **)
+METHOD ConvertMonitorHexaToVoltage : STRING
+VAR_INPUT
+	Data : STRING;
+END_VAR
+VAR
+	dataInDec : STRING;
+	dataToDint : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[dataInDec := CONCAT('16#', Data);
+dataToDint := STRING_TO_DINT(dataInDec);
+ConvertMonitorHexaToVoltage := LREAL_TO_FMTSTR(DINT_TO_LREAL(dataToDint) * 0.001812, 3, TRUE);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConvertMonitorVoltageToHexa" Id="{88d3f945-6782-49ef-992b-bac5f409bac9}" FolderPath="UnitConversion\">
+      <Declaration><![CDATA[METHOD ConvertMonitorVoltageToHexa : ARRAY[0..3] OF STRING
+VAR_INPUT
+	Data : LREAL;
+END_VAR
+VAR
+	dataCoef : STRING;
+	dataToDWord : DWORD;	
+	
+	sMonitorVoltageToHex : STRING;	
+	arrayVoltageToHex : ARRAY[0..3] OF STRING;
+	
+	counter : INT;
+	iLenVoltage : INT;
+	
+	lTmp1 : LREAL;
+	lTmp2 : LREAL;
+	
+	sTmp1 : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[lTmp1 := Data / 0.001812;
+lTmp2 := FRAC(lTmp1);
+IF lTmp2 < 0.5 THEN
+	dataCoef := LREAL_TO_STRING(lTmp1);
+ELSE
+	dataCoef := LREAL_TO_STRING(lTmp1 + 1);
+END_IF
+
+dataToDWord := STRING_TO_DWORD(dataCoef);
+sMonitorVoltageToHex := DWORD_TO_HEXSTR(dataToDWord, 4, FALSE);
+
+iLenVoltage := LEN(sMonitorVoltageToHex);
+FOR counter := 0 TO iLenVoltage - 1 BY 1 DO
+	sTmp1 := MID(sMonitorVoltageToHex, 1, counter + 1);
+	arrayVoltageToHex[counter] := BYTE_TO_HEXSTR(F_ToASC(sTmp1), 1, FALSE);
+END_FOR;
+
+ConvertMonitorVoltageToHexa := arrayVoltageToHex;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConvertStatusMessage" Id="{e4a3f597-331c-4b94-a8a9-0a5c6df8ee49}" FolderPath="UnitConversion\">
+      <Declaration><![CDATA[METHOD ConvertStatusMessage : STRING
+VAR_INPUT
+	Status : STRING;
+END_VAR
+VAR
+	voltageOutputMessage : BOOL;
+
+	tmp : UINT;		
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tmp := STRING_TO_UINT(RIGHT(Status, 1));
+
+voltageOutputMessage := UINT_TO_BOOL(tmp);
+
+IF voltageOutputMessage THEN
+	ConvertStatusMessage := 'ON'; 	
+ELSE
+	ConvertStatusMessage := 'OFF';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{1dcc0470-c19b-4521-8be9-aa7fc68cfb18}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand 
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Custom command : ').
+								Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgC13336.CustomMsg;														
+	SerialCom.Send(Cmd);	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FindHighVoltageOutput" Id="{0f92526b-21e2-4675-8eee-5979cc9336c4}" FolderPath="FindStatus\">
+      <Declaration><![CDATA[METHOD FindHighVoltageOutput : STRING
+VAR_INPUT
+	message : STRING;
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}	
+	_monitorHighVoltageStatus : STRING(255);			
+	{attribute 'OPC.UA.DA' := '0'}
+	statusMessageBin : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	messageToBin : STRING;
+	{attribute 'OPC.UA.DA' := '0'}		
+	mask : STRING := '16#1';
+	{attribute 'OPC.UA.DA' := '0'}
+	status : WORD;
+	{attribute 'OPC.UA.DA' := '0'}
+	statusMsg : WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[statusMsg := STRING_TO_WORD(CONCAT('16#', LEFT(message, 4)));
+statusMessageBin := WORD_TO_BINSTR(statusMsg, 16);
+
+status := STRING_TO_WORD(statusMessageBin) AND STRING_TO_WORD(mask);
+
+IF status = 0 THEN
+	_monitorHighVoltageStatus := 'OFF';
+ELSE
+	_monitorHighVoltageStatus := 'ON';
+END_IF
+
+FindHighVoltageOutput := _monitorHighVoltageStatus;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FindVoltageStability" Id="{c97d87be-b883-4b7c-a7c0-ad2c5db027fa}" FolderPath="FindStatus\">
+      <Declaration><![CDATA[METHOD FindVoltageStability : STRING
+VAR_INPUT
+	message : STRING;
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}	
+	_monitorInfoStatus : STRING(255);		
+	{attribute 'OPC.UA.DA' := '0'}
+	one : WORD := 1;
+	{attribute 'OPC.UA.DA' := '0'}
+	isolStatus : DWORD;
+	{attribute 'OPC.UA.DA' := '0'}
+	statusMessageBin : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	messageToBin : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	valueStatus : WORD;
+	{attribute 'OPC.UA.DA' := '0'}		
+	mask : STRING := '16#4000';
+	{attribute 'OPC.UA.DA' := '0'}
+	status : WORD;
+	{attribute 'OPC.UA.DA' := '0'}
+	statusMsg : WORD;
+	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+statusMsg := STRING_TO_WORD(CONCAT('16#', LEFT(message, 4)));
+statusMessageBin := WORD_TO_BINSTR(statusMsg, 16);
+
+status := STRING_TO_WORD(statusMessageBin) AND STRING_TO_WORD(mask);
+valueStatus := SHR(status, 14);
+
+
+IF valueStatus = 0 THEN
+	_monitorInfoStatus := 'Unstable';
+ELSE
+	_monitorInfoStatus := 'Stable';
+END_IF
+
+FindVoltageStability := _monitorInfoStatus;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFirmware" Id="{b097042c-4f80-482a-9629-337cd67b71fc}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetFirmware
+VAR_INPUT
+END_VAR
+VAR
+	// 'HFI'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#46, 16#49, 16#03, 16#44, 16#43, 16#0D];
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.FirmwareMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{b02f5665-9dbb-4fd0-be11-ae38070e996c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetIdentifier
+VAR_INPUT
+END_VAR
+VAR
+	// 'HGN'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#47, 16#4F, 16#03, 16#45, 16#32, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ _deliverMessages := EFeedbackMsgC13336.IdentifierMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMonitorInfoStatus" Id="{16d11606-2254-4053-8c7b-21603a0396e6}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetMonitorInfoStatus
+VAR_INPUT
+END_VAR
+VAR
+	// 'HPO'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#50, 16#4F, 16#03, 16#45, 16#43, 16#0D];
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.MonitorInfoStatusMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetOutputCurrent" Id="{a755edf7-eebd-4fa2-96e8-197d7c31014f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetOutputCurrent
+VAR_INPUT
+END_VAR
+VAR
+	// 'HGC'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#47, 16#43, 16#03, 16#44, 16#37, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.OutputCurrentMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetOutputVoltage" Id="{2027cf1a-cd54-4949-ae37-c0432672b4ad}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetOutputVoltage
+VAR_INPUT
+END_VAR
+VAR
+	// 'HGV'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#47, 16#56, 16#03, 16#45, 16#41, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.OutputVoltageMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetOutputVoltageSetting" Id="{6065879c-9742-45da-8e55-c5e0512caf4b}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetOutputVoltageSetting
+VAR_INPUT
+END_VAR
+VAR
+	// 'HRT'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#52, 16#54, 16#03, 16#46, 16#33, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.OutputVoltageSettingMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSensorTemperature" Id="{f904ac53-aa62-4d63-84ba-806cfd5e66ea}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetSensorTemperature
+VAR_INPUT
+END_VAR
+VAR
+	// 'TGV'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#54, 16#47, 16#56, 16#03, 16#46, 16#36, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.SensorTemperatureMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetStateSignals" Id="{b537d7b9-34c9-4531-805f-6df8409fa782}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetStateSignals
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.StateSignalsMsg;
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetStatus" Id="{b05de114-1db7-452f-b9fe-f43116e3732b}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetStatus
+VAR
+	// 'HGS'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#47, 16#53, 16#03, 16#45, 16#37, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.StatusMsg;
+SerialCom.Send8B(cmdArray);
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTemperature" Id="{d9360be5-a3c1-48dc-a286-2f86a53d940e}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetTemperature
+VAR_INPUT
+END_VAR
+VAR
+	// 'HGT'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#47, 16#54, 16#03, 16#45, 16#38, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.TemperatureMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{ec6488bc-c145-4b1b-999d-abd6255444c1}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDeviceBase THEN	
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Activates relays').ToString());
+		
+	ManageRelays(TRUE, TRUE);			
+	_initDeviceBase := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ManageRelays" Id="{be82cfd4-cd6f-450f-80d7-05611759be06}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ManageRelays
+VAR_INPUT
+	Execute : BOOL;
+	IoRelay : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append('MPPCs relay: ').
+								Append(BOOL_TO_STRING(IoRelay)).ToString());	
+
+	// Physically activates relay			
+	MppcActivate := IoRelay;
+	
+	_manageRelays := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{c7f5a4a7-632d-4ffc-a022-c222780a3c0b}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF		
+		0: GetOutputCurrent();
+			_itemScheduler := 1;
+				
+		1: GetOutputVoltage();
+			_itemScheduler := 2;
+			
+		2: GetMonitorInfoStatus();
+			_itemScheduler := 3;
+			
+		3: GetSensorTemperature();
+			_itemScheduler := 0;
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#200MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OutputVoltageOff" Id="{8e12e81e-2fbb-454d-aa57-6131bb91a676}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD OutputVoltageOff
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+	// 'HOF'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#4F, 16#46, 16#03, 16#45, 16#32, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_outputVoltageOff := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemExecScheduler OF		
+			0:  _logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - OutputVoltageOff').ToString());
+				SerialCom.Send8B(cmdArray);   
+				_itemExecScheduler := 1;
+				
+			1: GetStatus(); 
+				_outputVoltageOff := FALSE;
+				_itemExecScheduler := 0;
+		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#200MS);	
+	END_IF									
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OutputVoltageOn" Id="{9eb19843-f701-4189-952c-bbcc1c7a74a1}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD OutputVoltageOn
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	// 'HON'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#4F, 16#4E, 16#03, 16#45, 16#41, 16#0D]; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_outputVoltageOn := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemExecScheduler OF		
+			0:  _logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - OutputVoltageOn').ToString());
+				SerialCom.Send8B(cmdArray);   
+				_itemExecScheduler := 0;
+				_outputVoltageOn := FALSE;
+				
+			1: GetStatus(); 
+				_outputVoltageOn := FALSE;
+				_itemExecScheduler := 0;
+		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#2000MS);	
+	END_IF									
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerFctRead" Id="{972e468f-e2d2-4f3a-8d15-96e349379508}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PowerFctRead
+VAR_INPUT	
+END_VAR
+VAR
+	// 'HRC'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#52, 16#43, 16#03, 16#45, 16#32, 16#0D]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.PowerFctReadMSg;
+SerialCom.Send8B(cmdArray);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerFctSetting" Id="{d0353fea-6153-44e0-9125-3a2d28835c16}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PowerFctSetting
+VAR_INPUT
+	Execute : BOOL;
+	OvercurrentProtection : BOOL;
+	OutputVoltageControl : BOOL;
+END_VAR
+VAR
+	// 'HSC'
+	cmdArray : ARRAY[0..11] OF BYTE; 
+	data : BYTE := 16#32;
+	checksum : BYTE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - PowerFctSetting').ToString());		
+
+	IF OvercurrentProtection AND OutputVoltageControl THEN 
+		data := 16#33;
+		checksum := 16#36;
+	ELSIF OvercurrentProtection AND NOT OutputVoltageControl THEN
+		data := 16#31;
+		checksum := 16#34;
+	ELSIF NOT OvercurrentProtection AND OutputVoltageControl THEN
+		data := 16#32;
+		checksum := 16#35;
+	ELSE
+		data := 16#30;
+		checksum := 16#33;	
+	END_IF	
+	
+	cmdArray[0] := 16#02;
+	cmdArray[1] := 16#48; 
+	cmdArray[2] := 16#53; 
+	cmdArray[3] := 16#43; 
+	cmdArray[4] := 16#30; 
+	cmdArray[5] := 16#30; 
+	cmdArray[6] := 16#30; 
+	cmdArray[7] := data;	
+	cmdArray[8] := 16#03; 
+	cmdArray[9] := 16#41; 
+	cmdArray[10] := checksum; 
+	cmdArray[11] := 16#0D; 
+										
+	SerialCom.Send12B(cmdArray);
+	_powerFctSetting := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerReset" Id="{40db7b44-45ec-4b76-822a-81b78252049d}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PowerReset
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	// 'HRE'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#48, 16#52, 16#45, 16#03, 16#45, 16#34, 16#0D]; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_powerReset := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemExecScheduler OF		
+			0:  _logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - PowerReset').ToString());
+				SerialCom.Send8B(cmdArray);   
+				_itemExecScheduler := 2;				
+				
+			1: GetStatus(); 
+				_itemExecScheduler := 2;
+				
+			2:	_powerReset := FALSE;
+				_itemExecScheduler := 0;
+		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF									
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{34843e3a-68b3-4234-ac95-88a03e456efc}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+
+(*
+Ajouter fonction pour remonter les états des 2 IOs quand C# en fait la demande.
+La même chose avec LE On/off où l'info n'est pas remontée vu qu'elle n'a pas changé
+*)]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+	
+		CASE _itemRaisedProperties OF		
+			0:  //OutputCurrentMsg := ' ';	
+				//OutputVoltageMsg := ' ';			    		   			    		   
+			    //SensorTemperatureMsg := ' ';			    
+				OutputVoltageSettingMsg := ' ';	
+			    StateSignalsMsg := ' ';	
+			    			    
+			    TemperatureMsg := ' ';
+			    FirmwareMsg := ' ';
+			    TempCorrectionFactorReadMsg := ' ';				   
+   			    HighVoltageStatusMsg := ' ';	
+                IdentifierMsg := ' ';
+			    PowerFctReadMsg := ' ';		   
+			   
+				_itemRaisedProperties := 10;													
+
+			10:  GetOutputVoltageSetting();
+				_itemRaisedProperties := 11;			
+				
+			11: GetStateSignals();
+				_itemRaisedProperties := 12;
+								
+			12: _logger.Information(_message.Reset().Append(Conf.Name).
+													 Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;
+				_itemRaisedProperties := 0;
+				
+			(* Not necessary for the moment *)			
+			30: GetOutputCurrent();
+				_itemRaisedProperties := 31;
+
+			31: GetOutputVoltage();
+				_itemRaisedProperties := 32;						
+																				
+			32: GetSensorTemperature();
+				_itemRaisedProperties := 33;
+			
+			33: GetMonitorInfoStatus();
+				_itemRaisedProperties := 34;
+								
+			34: GetFirmware();
+				_itemRaisedProperties := 35;
+				
+			35: TempCorrectionFactorRead();
+				_itemRaisedProperties := 36;
+				
+			36: GetTemperature();
+				_itemRaisedProperties := 37;
+				
+			37: PowerFctRead();
+				_itemRaisedProperties := 38;
+				
+			38: GetIdentifier();
+				_itemRaisedProperties := 0;
+									
+		END_CASE
+	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RefVoltageTempSetting" Id="{aea8ec85-7ca3-4803-a2c5-faa068a1dfb8}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RefVoltageTempSetting
+VAR_INPUT
+	Execute    : BOOL;
+	RefVoltage : LREAL;
+END_VAR
+VAR
+	convertToString : STRING;
+
+	refVoltatgeToArray : ARRAY[0..3] OF STRING; 	
+
+	// 'HBV'
+	cmdArray : ARRAY[0..11] OF BYTE; // := [2, 48, 66, 86, 55, 53, 69, 66, 3, 50, 67, 13];
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - RefVoltageTempSetting').ToString());	
+
+	refVoltatgeToArray := ConvertMonitorVoltageToHexa(RefVoltage);	
+
+	cmdArray[0] := 16#02;
+	cmdArray[1] := 16#30; //48;
+	cmdArray[2] := 16#42; //66;
+	cmdArray[3] := 16#56; //86;	
+	cmdArray[4] := STRING_TO_BYTE(refVoltatgeToArray[0]);
+	cmdArray[5] := STRING_TO_BYTE(refVoltatgeToArray[1]);
+	cmdArray[6] := STRING_TO_BYTE(refVoltatgeToArray[2]);
+	cmdArray[7] := STRING_TO_BYTE(refVoltatgeToArray[3]);	
+	cmdArray[8] :=16#03;
+	cmdArray[9] := 16#32; //50;
+	cmdArray[10] := 16#43; //67;
+	cmdArray[11] := 16#0D; //13;
+				
+	SerialCom.Send12B(cmdArray);
+	_refVoltageTempSetting := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetOutputVoltage" Id="{47cf6172-2f0f-46aa-89ed-264655477ec0}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetOutputVoltage
+VAR_INPUT
+	Execute : BOOL;
+	SetVoltage : LREAL;
+END_VAR
+VAR
+	convertToString : STRING;
+	setVoltatgeToArrayToHex : ARRAY[0..3] OF STRING; 	
+
+	// 'HST'
+	cmdArray : ARRAY[0..31] OF BYTE; 
+	
+	voltageChecksum : DINT;
+	counter : INT;
+	
+	sPartOfChecksum : STRING := '16#4B4'; // Part of checksum, without voltage value (in hex)	
+	wSumVoltageValueToHex : WORD;
+	wChecksumTotalToDec : WORD;
+	sChecksumTotalToHex : STRING;
+	ArrayChecksum : ARRAY[0..MAX_STRING_LENGTH] OF BYTE;
+	
+	iLenCheksum : INT;
+	lastByteChecksum : BYTE;
+	secondLastByteChecksum : BYTE;
+	
+	sLastByteChecksum : STRING;
+	sSecondLastByteChecksum : STRING;	
+	
+	sLastByteChecksumHex : STRING;
+	sSecondLastByteChecksumHex : STRING;
+	
+END_VAR
+
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Set Output Voltage').ToString());	
+
+	setVoltatgeToArrayToHex := ConvertMonitorVoltageToHexa(SetVoltage);	
+
+	(** Checksum **)
+	// Add voltage value and convert it to decimal  
+	FOR counter := 0 TO 3 BY 1 DO
+		IF counter = 0 THEN
+			wSumVoltageValueToHex := STRING_TO_WORD(CONCAT('16#', setVoltatgeToArrayToHex[counter]));
+		ELSE
+			wSumVoltageValueToHex := wSumVoltageValueToHex + STRING_TO_WORD(CONCAT('16#', setVoltatgeToArrayToHex[counter]));	
+		END_IF					
+	END_FOR;	
+	
+	wChecksumTotalToDec := STRING_TO_WORD(sPartOfChecksum) + wSumVoltageValueToHex;
+	sChecksumTotalToHex := DWORD_TO_HEXSTR(wChecksumTotalToDec, 1, FALSE);		
+	
+	ArrayChecksum := MAXSTRING_TO_BYTEARR(sChecksumTotalToHex);
+	iLenCheksum := LEN(sChecksumTotalToHex);	
+	
+	sSecondLastByteChecksum := MID(sChecksumTotalToHex, 1, iLenCheksum-1);
+	sSecondLastByteChecksumHex := BYTE_TO_HEXSTR(F_ToASC(sSecondLastByteChecksum), 1, FALSE);
+	sLastByteChecksum := MID(sChecksumTotalToHex, 1, iLenCheksum);	
+	sLastByteChecksum :=  BYTE_TO_HEXSTR(F_ToASC(sLastByteChecksum), 1, FALSE);
+		
+	cmdArray[0] := 16#02;
+	cmdArray[1] := 16#48; //72;
+	cmdArray[2] := 16#53; //83;
+	cmdArray[3] := 16#54; //84;
+	cmdArray[4] := 16#30; //48;
+	cmdArray[5] := 16#30; //48;
+	cmdArray[6] := 16#30; //48;
+	cmdArray[7] := 16#30; //48;
+	cmdArray[8] := 16#30; //48;
+	cmdArray[9] := 16#30; //48;
+	cmdArray[10] := 16#30; //48;
+	cmdArray[11] := 16#30; //48;
+	cmdArray[12] := 16#30; //48;
+	cmdArray[13] := 16#30; //48;
+	cmdArray[14] := 16#30; //48;
+	cmdArray[15] := 16#30; //48;
+	cmdArray[16] := 16#30; //48;
+	cmdArray[17] := 16#30; //48;
+	cmdArray[18] := 16#30; //48;
+	cmdArray[19] := 16#30; //48;	
+	cmdArray[20] := STRING_TO_BYTE(CONCAT('16#', setVoltatgeToArrayToHex[0]));
+	cmdArray[21] := STRING_TO_BYTE(CONCAT('16#', setVoltatgeToArrayToHex[1]));
+	cmdArray[22] := STRING_TO_BYTE(CONCAT('16#', setVoltatgeToArrayToHex[2]));
+	cmdArray[23] := STRING_TO_BYTE(CONCAT('16#', setVoltatgeToArrayToHex[3]));
+	cmdArray[24] := 16#30; //48;
+	cmdArray[25] := 16#30; //48;
+	cmdArray[26] := 16#30; //48;
+	cmdArray[27] := 16#30; //48;		
+	cmdArray[28] := 16#03;
+	cmdArray[29] := STRING_TO_BYTE(CONCAT('16#', sSecondLastByteChecksumHex)); // 16#38 -> 56;
+	cmdArray[30] := STRING_TO_BYTE(CONCAT('16#', slastByteChecksum)); // 16#42 -> 66;
+	cmdArray[31] := 16#0D; //13;
+				
+	SerialCom.Send32B(cmdArray);
+	_setOutputVoltage := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SwitchTempCompensationMode" Id="{0ea522e1-a7a6-4028-a7e2-e8eb8c782037}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SwitchTempCompensationMode
+VAR_INPUT
+	Execute : BOOL;
+	TempCompensationMode : BOOL; //0: Disable, 1: Enable
+END_VAR
+VAR
+	// 'HCM'
+	cmdArray : ARRAY[0..8] OF BYTE; 
+	compensationMode : BYTE;
+	mode : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	IF TempCompensationMode THEN
+		compensationMode := 49;
+		mode := 'Enable';
+	ELSE
+		compensationMode := 48;
+		mode := 'Disable';
+	END_IF	
+	
+	_logger.Information(_message.Reset().Append(Conf.Name).
+										 Append(' - SwitchTempCompensationMode: ').
+										 Append(mode).ToString());
+	
+	cmdArray[0] := 16#02;
+	cmdArray[1] := 16#48;//72;
+	cmdArray[2] := 16#43;//67;
+	cmdArray[3] := 16#4D;//77;	
+	cmdArray[4] := compensationMode;
+	cmdArray[5] := 16#03;
+	cmdArray[6] := 16#30;//48;
+	cmdArray[7] := 16#45;//69;	
+	cmdArray[8] := 16#0D;//13;
+							
+	SerialCom.Send9B(cmdArray);
+	_switchTempCompensationMode := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TempCorrectionFactorRead" Id="{ae5069f0-f674-47a7-b773-f048b4249798}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD TempCorrectionFactorRead
+VAR_INPUT
+END_VAR
+VAR
+	// 'HRT'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#30, 16#52, 16#54, 16#03, 16#46, 16#33, 16#0D];
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgC13336.TempCorrectionFactorReadMsg;
+SerialCom.Send8B(cmdArray);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TempCorrectionFactorSetting" Id="{1a413866-481f-4838-800b-bfcf0dfe48b5}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD TempCorrectionFactorSetting
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	// 'HST'
+	cmdArray : ARRAY[0..7] OF BYTE := [16#02, 16#30, 16#53, 16#54, 16#03, 16#46, 16#34, 16#0D];
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - TempCorrectionFactorSetting').ToString());								
+	SerialCom.Send8B(cmdArray);
+	_tempCorrectionFactorSetting := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="C13336Mppc">
+      <LineId Id="2017" Count="1" />
+      <LineId Id="853" Count="0" />
+      <LineId Id="2019" Count="0" />
+      <LineId Id="854" Count="14" />
+      <LineId Id="1358" Count="0" />
+      <LineId Id="1356" Count="0" />
+      <LineId Id="1375" Count="0" />
+      <LineId Id="1616" Count="0" />
+      <LineId Id="1886" Count="0" />
+      <LineId Id="871" Count="1" />
+      <LineId Id="1887" Count="0" />
+      <LineId Id="873" Count="1" />
+      <LineId Id="1888" Count="0" />
+      <LineId Id="1736" Count="0" />
+      <LineId Id="1754" Count="0" />
+      <LineId Id="1735" Count="0" />
+      <LineId Id="1741" Count="0" />
+      <LineId Id="877" Count="1" />
+      <LineId Id="1889" Count="0" />
+      <LineId Id="1757" Count="0" />
+      <LineId Id="1759" Count="0" />
+      <LineId Id="1756" Count="0" />
+      <LineId Id="1758" Count="0" />
+      <LineId Id="879" Count="1" />
+      <LineId Id="1890" Count="0" />
+      <LineId Id="881" Count="1" />
+      <LineId Id="1734" Count="0" />
+      <LineId Id="883" Count="1" />
+      <LineId Id="1891" Count="0" />
+      <LineId Id="885" Count="0" />
+      <LineId Id="1497" Count="0" />
+      <LineId Id="887" Count="0" />
+      <LineId Id="890" Count="1" />
+      <LineId Id="1223" Count="8" />
+      <LineId Id="1233" Count="1" />
+      <LineId Id="1731" Count="0" />
+      <LineId Id="1235" Count="4" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="1222" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.ConvertMonitorHexaToCurrent">
+      <LineId Id="32" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.ConvertMonitorHexaToTemperature">
+      <LineId Id="104" Count="16" />
+      <LineId Id="72" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.ConvertMonitorHexaToVoltage">
+      <LineId Id="33" Count="2" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.ConvertMonitorVoltageToHexa">
+      <LineId Id="81" Count="0" />
+      <LineId Id="87" Count="2" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="107" Count="2" />
+      <LineId Id="111" Count="1" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="49" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.ConvertStatusMessage">
+      <LineId Id="21" Count="1" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="12" Count="3" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.CustomCommand">
+      <LineId Id="10" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.FindHighVoltageOutput">
+      <LineId Id="20" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.FindVoltageStability">
+      <LineId Id="85" Count="1" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="10" Count="5" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetFirmware">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetIdentifier">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetMonitorInfoStatus">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetOutputCurrent">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetOutputVoltage">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetOutputVoltageSetting">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetSensorTemperature">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetStateSignals">
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetStatus">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.GetTemperature">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.ManageRelays">
+      <LineId Id="14" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.MessageScheduler">
+      <LineId Id="72" Count="17" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.OutputVoltageOff">
+      <LineId Id="29" Count="12" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="45" Count="5" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.OutputVoltageOn">
+      <LineId Id="12" Count="0" />
+      <LineId Id="29" Count="4" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.PowerFctRead">
+      <LineId Id="34" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.PowerFctSetting">
+      <LineId Id="12" Count="3" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="30" Count="12" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.PowerReset">
+      <LineId Id="29" Count="22" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.RaisePropertiesChanged">
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="64" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.RefVoltageTempSetting">
+      <LineId Id="12" Count="3" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.SetOutputVoltage">
+      <LineId Id="18" Count="5" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="213" Count="1" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="25" Count="34" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.SwitchTempCompensationMode">
+      <LineId Id="12" Count="0" />
+      <LineId Id="37" Count="22" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.TempCorrectionFactorRead">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="C13336Mppc.TempCorrectionFactorSetting">
+      <LineId Id="12" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

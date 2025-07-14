@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PsdChuck" Id="{56b8a35a-5f6b-4f98-a4b9-2397fb2dd689}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PsdChuck EXTENDS ChuckBase
+VAR_INPUT
+	IoChuckPsd : IoChuckPsd;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : PsdChuckConfig;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	WaferPresenceMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;
+	
+	{region 'Commands'}
+		
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;
+			
+	{endregion}	
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_waferPresenceSensorCounter : UINT;
+		 
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+// Init device
+InitDevice(); 
+
+// Deliver messages
+CASE _deliverMessages OF		
+	EFeedbackMsgPsdChuck.WaferPresenceMsg :
+		WaferPresenceMsg := message;		
+END_CASE
+	
+_deliverMessages := 0;
+
+// Commands	
+RaisePropertiesChanged(_raisePropertiesCmd);
+
+IF (NOT _raisePropertiesCmd) THEN
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{61621eb1-94b0-4b03-9271-888005c2934d}" />
+    <Method Name="FB_init" Id="{f52019d8-75dd-4c64-a8c6-2e2af8e7e757}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PsdChuckConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._chuckConfig.Name := Config.Name;
+	SUPER^._chuckConfig.DeviceID := Config.DeviceID;
+	SUPER^._chuckConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._chuckConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Chuck;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{d5df8234-9ecd-4f13-964f-343bf91ec072}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - init device').ToString());		
+								
+	_initDevice := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{fa8a3e0e-a3b5-415c-91d2-ed9db904a976}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0:	WaferPresenceMsg := ' ';
+			_itemScheduler := 1;
+	
+		1:	ReadWaferPresence();
+			_itemScheduler := 0;		
+									
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{a25de0c6-b075-4ea7-bce3-1d10e903b33b}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+	waferPresence : STRING;
+	diameter : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesCmd := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0:  diameter := TO_STRING(_config.WaferPresenceSensor[_waferPresenceSensorCounter].Diameter);
+				WaferPresenceMsg := CONCAT(CONCAT(diameter, ';'), INT_TO_STRING(EMaterialPresence.Unknown));
+				_itemRaisedProperties := 10;
+				
+			10: _logger.Information(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raisePropertiesCmd := FALSE;
+				_itemRaisedProperties := 0;		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadWaferPresence" Id="{0c159c27-7c95-47e5-8b5f-235439f0cf2c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadWaferPresence
+VAR_INPUT
+END_VAR
+VAR	
+	waferPresence : STRING;
+	diameter : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChuck.WaferPresenceMsg;
+
+IF _waferPresenceSensorCounter < Const.PSD_NUMBER_WAFER_PRESENCE_SENSORS - 1 THEN
+	_waferPresenceSensorCounter := _waferPresenceSensorCounter + 1;
+ELSE
+	_waferPresenceSensorCounter := 0;
+END_IF
+
+diameter := TO_STRING(_config.WaferPresenceSensor[_waferPresenceSensorCounter].Diameter);
+IF _config.WaferPresenceSensor[_waferPresenceSensorCounter].InputWaferPresence THEN
+	waferPresence := INT_TO_STRING(EMaterialPresence.Present);
+ELSE
+	waferPresence := INT_TO_STRING(EMaterialPresence.NotPresent);		
+END_IF
+
+message := CONCAT(CONCAT(diameter, ';'), waferPresence);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PsdChuck">
+      <LineId Id="225" Count="1" />
+      <LineId Id="158" Count="4" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="167" Count="1" />
+      <LineId Id="227" Count="1" />
+      <LineId Id="169" Count="3" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="35" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChuck.FB_init">
+      <LineId Id="9" Count="18" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChuck.InitDevice">
+      <LineId Id="42" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChuck.MessageScheduler">
+      <LineId Id="6" Count="3" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChuck.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChuck.ReadWaferPresence">
+      <LineId Id="23" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

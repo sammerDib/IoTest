@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SerialCom" Id="{021c865f-d526-4bbb-af86-624cff5a8c7f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK SerialCom
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	LastReceivedString : STRING(255);
+	IsReceived         : BOOL;
+	ErrorReceiveId	   : ComError_t;
+	ErrorSendId		   : ComError_t;
+END_VAR
+VAR_IN_OUT
+	TxBuffer : ComBuffer;
+	RxBuffer : ComBuffer;
+END_VAR
+VAR
+	_logger  : Logger;
+	_message : StringBuilder;
+	_prefix  : STRING;
+	_suffix  : STRING;
+	
+	{region 'Send'}		
+	_send		 : SendString;
+	_send3B		 : SendByte;
+	_send6B 	 : SendByte;
+	_send8B 	 : SendByte;
+	_send9B 	 : SendByte;
+	_send12B 	 : SendByte;
+	_send32B 	 : SendByte;
+	_sendBusy	 : BOOL;
+	_sendErrorId : ComError_t;
+	_sendError   : BOOL;
+	{endregion}
+		 
+	{region 'Receive'}		 
+	_receive		: ReceiveString255;
+	_receivedString : STRING(255);	
+    _receiveBusy 	: BOOL;
+    _receiveErrorId : ComError_t;
+    _receiveTimeout : BOOL;
+	{endregion}
+		 		 
+	length  		: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+_receive(
+	Prefix:= _prefix,
+	Suffix:= _suffix, // Carriage return: '$0D' - Line feel  : '$0A'
+	ReceivedString:= _receivedString,
+	RXbuffer:= RxBuffer,
+	StringReceived=> IsReceived,
+	Busy=> _receiveBusy,
+	Error=> _receiveErrorId,
+	RxTimeout=> _receiveTimeout);
+	
+IF IsReceived THEN
+	LastReceivedString := _receivedString;
+	ErrorReceiveId := COMERROR_NOERROR;
+END_IF
+
+	
+IF _receiveErrorId <> COMERROR_NOERROR AND ErrorReceiveId <> _receiveErrorId THEN
+	_logger.Error(_message.Reset().Append('Error receiving data - ErrorId : ').
+								   Append(TO_STRING(_receiveErrorId)).ToSTRING());
+	ErrorReceiveId := _receiveErrorId;
+ELSIF _receiveTimeout THEN
+	_logger.Error('Error receive timeout');
+END_IF	]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{241fff38-cd93-429e-80d2-6e798e43c84a}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Prefix : STRING;
+    Suffix : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_prefix := Prefix;
+_suffix := Suffix;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send" Id="{93c37537-5a85-427a-a76b-4b4ec0b81119}">
+      <Declaration><![CDATA[METHOD Send
+VAR_INPUT
+	Cmd : STRING;
+END_VAR
+VAR
+	tmpConcat : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+tmpConcat := CONCAT(_prefix, Cmd);
+
+_send(SendString:= CONCAT(tmpConcat, _suffix), // Carriage return: '$0D' - Line feel  : '$0A'
+			TXbuffer:= TxBuffer,
+			Busy=> _sendBusy,
+			Error=> _sendErrorId);
+	
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+	
+IF _sendErrorId <> COMERROR_NOERROR AND ErrorSendId <> _sendErrorId THEN
+	_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').
+								   Append(TO_STRING(_sendErrorId)).ToSTRING());									
+END_IF			
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send12B" Id="{a81374e5-14e4-411c-a241-5ed9fb5aa144}">
+      <Declaration><![CDATA[METHOD Send12B
+VAR_INPUT
+	PosArray : ARRAY[0..11] OF BYTE;
+END_VAR
+VAR
+	counter : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+FOR counter:=0 TO SIZEOF(PosArray) BY 1 DO    	
+	_send12B (SendByte:= PosArray[counter], 
+			   TXbuffer:= TxBuffer,
+			   Busy=> _sendBusy,
+			   Error=> _sendErrorID);
+			
+	IF _send12B.Error <> COMERROR_NOERROR AND ErrorSendId <> _sendErrorId THEN
+		_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').
+								 	   Append(TO_STRING(_sendErrorId)).ToSTRING());
+	END_IF			
+END_FOR;
+
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send32B" Id="{53bffa9d-dc51-4b34-a02f-c7d92fb00112}">
+      <Declaration><![CDATA[METHOD Send32B
+VAR_INPUT
+	PosArray : ARRAY[0..31] OF BYTE;
+END_VAR
+VAR
+	counter : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+FOR counter:=0 TO SIZEOF(PosArray) BY 1 DO    	
+	_send12B (SendByte:= PosArray[counter], 
+			   TXbuffer:= TxBuffer,
+			   Busy=> _sendBusy,
+			   Error=> _sendErrorID);
+			
+	IF _send32B.Error <> COMERROR_NOERROR AND ErrorSendId <> _sendErrorId THEN
+		_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').
+								 	   Append(TO_STRING(_sendErrorId)).ToSTRING());
+	END_IF			
+END_FOR;
+
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send3B" Id="{ee678f03-f4aa-4227-b3ae-564cc650e341}">
+      <Declaration><![CDATA[METHOD Send3B
+VAR_INPUT
+	PosArray : ARRAY[0..2] OF BYTE;
+END_VAR
+VAR
+	counter : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+FOR counter:=0 TO SIZEOF(PosArray) BY 1 DO    	
+	_send3B (SendByte:= posArray[counter], 
+			TXbuffer:= TxBuffer,
+			Busy=> _sendBusy,
+			Error=> _sendErrorID);
+			
+	IF _send3B.Error <> COMERROR_NOERROR THEN
+		_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').
+									   Append(TO_STRING(_sendErrorId)).ToSTRING());
+	END_IF			
+END_FOR;
+
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send6B" Id="{b7bf5563-0220-4572-b190-e6f7514382e4}">
+      <Declaration><![CDATA[METHOD Send6B
+VAR_INPUT
+	PosArray : ARRAY[0..5] OF BYTE;
+END_VAR
+VAR
+	counter : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+FOR counter:=0 TO SIZEOF(PosArray) BY 1 DO    	
+	_send6B (SendByte:= PosArray[counter], 
+			   TXbuffer:= TxBuffer,
+			   Busy=> _sendBusy,
+			   Error=> _sendErrorID);
+			
+	IF _send6B.Error <> COMERROR_NOERROR THEN
+		_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').Append(TO_STRING(_sendErrorId)).ToSTRING());
+	END_IF			
+END_FOR;
+
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send8B" Id="{b1e50078-6dfa-4054-91eb-375e789edb16}">
+      <Declaration><![CDATA[METHOD Send8B
+VAR_INPUT
+	PosArray : ARRAY[0..7] OF BYTE;
+END_VAR
+VAR
+	counter : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+FOR counter:=0 TO SIZEOF(PosArray) BY 1 DO    	
+	_send8B (SendByte:= PosArray[counter], 
+			   TXbuffer:= TxBuffer,
+			   Busy=> _sendBusy,
+			   Error=> _sendErrorID);
+			
+	IF _send8B.Error <> COMERROR_NOERROR THEN
+		_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').Append(TO_STRING(_sendErrorId)).ToSTRING());
+	END_IF			
+END_FOR;
+
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Send9B" Id="{62e62441-9ba2-4b11-a7db-d8f8096a3784}">
+      <Declaration><![CDATA[METHOD Send9B
+VAR_INPUT
+	PosArray : ARRAY[0..8] OF BYTE;
+END_VAR
+VAR
+	counter : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The warning can be disabled here as the user is aware of the risk that the reference may not be valid by checking its validity
+{warning disable C0371}
+
+// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(TxBuffer) THEN
+     RETURN;
+END_IF
+
+FOR counter:=0 TO SIZEOF(PosArray) BY 1 DO    	
+	_send9B (SendByte:= PosArray[counter], 
+			   TXbuffer:= TxBuffer,
+			   Busy=> _sendBusy,
+			   Error=> _sendErrorID);
+			
+	IF _send9B.Error <> COMERROR_NOERROR THEN
+		_logger.Error(_message.Reset().Append('Error sending data - ErrorId : ').Append(TO_STRING(_sendErrorId)).ToSTRING());
+	END_IF			
+END_FOR;
+
+// The warning may be restored at the end of the access area
+{warning restore C0371}
+
+ErrorSendId := _sendErrorId;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="SerialCom">
+      <LineId Id="70" Count="0" />
+      <LineId Id="11" Count="8" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="180" Count="1" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.FB_init">
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send">
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="6" Count="4" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send12B">
+      <LineId Id="11" Count="15" />
+      <LineId Id="28" Count="4" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send32B">
+      <LineId Id="62" Count="22" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send3B">
+      <LineId Id="36" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="26" Count="3" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="6" Count="7" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send6B">
+      <LineId Id="11" Count="15" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send8B">
+      <LineId Id="11" Count="15" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="SerialCom.Send9B">
+      <LineId Id="11" Count="15" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

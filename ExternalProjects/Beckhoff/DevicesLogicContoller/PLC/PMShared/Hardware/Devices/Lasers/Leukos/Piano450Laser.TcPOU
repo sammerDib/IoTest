@@ -1,0 +1,1032 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Piano450Laser" Id="{1154ccca-b205-41e2-88ca-72581930128d}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK Piano450Laser EXTENDS LaserBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Piano450LaserConfig;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	sReplyPrefix4 : STRING(4) := '>'; //DEFINE expected device reply string start sequence
+	{attribute 'OPC.UA.DA' := '0'}
+	iReplyPrefixLen : INT := LEN(sReplyPrefix4);
+	{attribute 'OPC.UA.DA' := '0'}
+	sReplySuffix4 : STRING(4) := Const.LF_CR; //DEFINE expected device reply string termination sequence
+	{attribute 'OPC.UA.DA' := '0'}
+	iReplySuffixLen : INT := LEN(sReplySuffix4);
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := sReplySuffix4);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := sReplySuffix4) := _serialCom;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+		
+	StateMsg : STRING(255);
+	StatusMsg : STRING(255);
+	IsAliveMsg : STRING(255);
+	PowerMsg : STRING(255);
+	InterlockStatusMsg : STRING(255);
+	LaserTemperatureMsg : STRING(255);
+	CrystalTemperatureMsg : STRING(255);
+	RunningTimeLaserOnMsg : STRING(255);
+	RunningTimeElectroOnMsg : STRING(255);		
+	CustomMsg : STRING(255);	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	crystalTemp : REAL;
+	{attribute 'OPC.UA.DA' := '0'} 
+	laserTemp : REAL;
+	{attribute 'OPC.UA.DA' := '0'} 
+	interlockTemp : STRING;
+		
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOff : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPowerCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	 
+	_setCurrentCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			 
+	_controlModeCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	
+	{endregion}			
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_setpoint : LREAL := 0;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseIsAliveGenerator : TON;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_length : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	sSubStr4 : STRING(4) := '';
+	{attribute 'OPC.UA.DA' := '0'}
+	_mode : EControlModeSmd12;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lifeTimeCount : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_notifyIsAlive : BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferLaser, 
+		 	      	  RxBuffer:= HardwareGlobalVariables.RxBufferLaser);
+	END_IF				  
+	
+	// Init device
+	InitDevice(); 				  				 
+
+	// Check if it's still alive	
+	IF _notifyIsAlive THEN
+		IsAliveMsg := TO_STRING(_lifeTimeCount);
+		_notifyIsAlive := FALSE;
+	END_IF		
+	
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN				 	
+		CASE _deliverMessages OF			
+			EFeedbackMsgPiano450.StatusMsg :
+			_length := LEN(_refSerialCom.LastReceivedString);	
+				IF _length = 4 THEN
+					sSubStr4 := RIGHT(_refSerialCom.LastReceivedString, iReplySuffixLen);
+					IF sSubStr4 = sReplySuffix4 THEN
+						sSubStr4 := LEFT(_refSerialCom.LastReceivedString, iReplyPrefixLen);
+						IF sSubStr4 = sReplyPrefix4 THEN
+							StatusMsg := LEFT(_refSerialCom.LastReceivedString, 2);
+							StatusMsg := DELETE(StatusMsg, 1, 1);//remove 1st character
+						END_IF
+					END_IF
+				END_IF		
+								
+			EFeedbackMsgPiano450.InterlockStatusMsg :
+			_length := LEN(_refSerialCom.LastReceivedString);	
+				IF _length = 9 THEN
+					sSubStr4 := RIGHT(_refSerialCom.LastReceivedString, iReplySuffixLen);
+					IF sSubStr4 = sReplySuffix4 THEN
+						sSubStr4 := LEFT(_refSerialCom.LastReceivedString, iReplyPrefixLen);
+						IF sSubStr4 = sReplyPrefix4 THEN
+							InterlockStatusMsg := LEFT(_refSerialCom.LastReceivedString, 7);													
+							interlockTemp := CONCAT('2#', DELETE(InterlockStatusMsg, 1, 1));
+							
+							InterlockStatusMsg := TranslateStatusLaser(STRING_TO_BYTE(interlockTemp));
+						END_IF
+					END_IF
+				END_IF
+				
+			EFeedbackMsgPiano450.LaserTemperatureMsg :
+				_length := LEN(_refSerialCom.LastReceivedString);	
+				IF _length = 11 THEN
+					sSubStr4 := RIGHT(_refSerialCom.LastReceivedString, iReplySuffixLen);
+					IF sSubStr4 = sReplySuffix4 THEN
+						sSubStr4 := LEFT(_refSerialCom.LastReceivedString, iReplyPrefixLen);
+						IF sSubStr4 = sReplyPrefix4 THEN
+							LaserTemperatureMsg := LEFT(_refSerialCom.LastReceivedString, 9);
+							LaserTemperatureMsg := DELETE(LaserTemperatureMsg, 1, 1);//remove 1st character
+							
+							laserTemp := STRING_TO_REAL(DELETE(LaserTemperatureMsg, 4, 1)) + 45; // Add 45 °C
+							LaserTemperatureMsg := REAL_TO_STRING(laserTemp);
+						END_IF
+					END_IF
+				END_IF
+				
+			EFeedbackMsgPiano450.CrystalTemperatureMsg :
+				_length := LEN(_refSerialCom.LastReceivedString);	
+				IF _length = 11 THEN
+					sSubStr4 := RIGHT(_refSerialCom.LastReceivedString, iReplySuffixLen);
+					IF sSubStr4 = sReplySuffix4 THEN
+						sSubStr4 := LEFT(_refSerialCom.LastReceivedString, iReplyPrefixLen);
+						IF sSubStr4 = sReplyPrefix4 THEN
+							CrystalTemperatureMsg := LEFT(_refSerialCom.LastReceivedString, 9);
+							CrystalTemperatureMsg := DELETE(CrystalTemperatureMsg, 1, 1);//remove 1st character
+							
+							crystalTemp := STRING_TO_REAL(DELETE(CrystalTemperatureMsg, 4, 4)) * 0.01;							
+							CrystalTemperatureMsg:= REAL_TO_STRING(crystalTemp);							
+						END_IF
+					END_IF
+				END_IF
+				
+			EFeedbackMsgPiano450.CustomMsg :
+				CustomMsg := _refSerialCom.LastReceivedString;			
+		END_CASE
+	ELSE
+		CASE _deliverMessages OF			
+			EFeedbackMsgPiano450.StateMsg :
+				StateMsg := ANY_TO_STRING(State);
+		END_CASE
+	END_IF								   							   	
+	
+	PowerOn(_powerOn);
+	PowerOff(_powerOff);	
+	CustomCommand(_customCmd, _cmd);
+	RaisePropertiesChanged(_raiseProperties);
+	
+	IF (NOT _powerOn AND NOT _powerOff AND NOT _customCmd AND NOT _raiseProperties) THEN
+		MessageScheduler();
+	END_IF
+END_IF	
+	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{ec27d728-3a48-4796-8801-cc64052ca638}" />
+    <Method Name="ConfigureSerialCom" Id="{be4d03af-2007-4728-95ee-862adf01f4f3}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ControlMode" Id="{7feef246-638b-42de-8572-f11d789dec06}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ControlMode
+VAR_INPUT
+	Execute : BOOL;
+	Mode : EControlModeSmd12;
+END_VAR
+VAR
+//	currentModecmd : STRING := 'CONTROL=CURRENT';
+//	powerModecmd : STRING := 'CONTROL=POWER';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+//	_logger.Information(_message.Reset().
+//								Append(_config.Name).
+//								Append(' - ControlMode : ').Append(TO_STRING(Mode)).ToString());
+//	
+//	IF MODE = EControlModeSmd12.CurrentMode THEN
+//		_serialCom.Send(currentModecmd);
+//	ELSIF MODE = EControlModeSmd12.PowerMode THEN
+//		_serialCom.Send(powerModecmd);
+//	END_IF
+//	
+	_controlModeCmd := FALSE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{525ca231-4606-4a6b-9896-312f6988c4d6}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Custom command : ').
+								Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgSMD12.CustomMsg;														
+	_serialCom.Send(Cmd);	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{16ae8a40-657c-46c3-a2d9-952b5d1a945c}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Piano450LaserConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._laserConfig.Name := Config.Name;
+	SUPER^._laserConfig.DeviceID := Config.DeviceID;
+	SUPER^._laserConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._laserConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Laser;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetCrystalTemperature" Id="{1bbd8a87-ffc0-41ac-8c36-4a42aad62653}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the temperature of the PSU in degrees centigrade **)
+METHOD GetCrystalTemperature
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '*mede'; //*mede-> CCCC LLL, CCCC: crystal temperature (0.01 of °C), LLL: laser temperature + 45°C
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPiano450.CrystalTemperatureMsg;
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetInterlockStatus" Id="{8246979a-e801-4058-9f7e-58b44331479c}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the status of the Interlock **)
+METHOD PROTECTED GetInterlockStatus 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '*regi'; //*regi-> ABCDEE A: Interlock 0:ok 1:nok reboot, B: Laser com 0:ok 1:nok reboot, C: Laser temp 0: Ok 1: nok, D: Peltier 0: Nok 1: Ok, EE: diode 00: Off 01: Computer Off 10: Fully On 11: Modulation On
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPiano450.InterlockStatusMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetLaserStatus" Id="{2030fefb-3b61-428f-9c91-cb124a4f5cd4}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Return status laser **)
+METHOD GetLaserStatus
+VAR_INPUT	
+END_VAR
+VAR
+	cmd : STRING := '*lase'; // 0: Laser off - 1: Laser On
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPiano450.StatusMsg;
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetLaserTemperature" Id="{b6af951d-9938-413c-8544-728d46d5259e}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the temperature of the laser head in degrees centigrade **)
+METHOD GetLaserTemperature 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '*mede'; //*mede-> CCCC LLL, CCCC: crystal temperature (0.01 of °C), LLL: laser temperature + 45°C
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPiano450.LaserTemperatureMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetRunningTimeElectroOnMsg" Id="{72fe7412-8ee2-4a16-b804-b81663e10d1c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetRunningTimeElectroOnMsg
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '*durl';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPiano450.RunningTimeLaserOnMsg;
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetRunningTimeLaserOnMsg" Id="{bc8fd099-d001-4478-b7f0-957f67072395}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetRunningTimeLaserOnMsg
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '*dura';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPiano450.RunningTimeElectroOnMsg;
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTimers" Id="{3a8d9f1c-956f-49f8-9d1f-4cf8b9e0704e}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+//*dura-> electronic DDDDdHHhMMmin, DDDD: days, HH: hours, MM: minutes
+//*durl-> diode DDDDdHHhMMmin, DDDD: days, HH: hours, MM: minutes
+METHOD GetTimers : HoursStruct
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '*dura';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - GetTimers').ToString());
+	_serialCom.Send(cmd);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{d264d7a9-4fb9-4f2d-9d30-fd51d39dbb54}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cfddcfad-dbe3-4c95-99a6-aea39c3b4744}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{903b4ddb-5912-4790-a6dd-72734ce87063}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{ae7b20c5-84af-4405-aff1-1e3fc668acc5}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - InitDevice').ToString());	
+	_raiseProperties:= TRUE;	
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsAlive" Id="{c049aea5-6eed-410d-826e-f32db41c89bc}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED IsAlive
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_notifyIsAlive := TRUE;
+
+IF _lifeTimeCount < 5 THEN
+	_lifeTimeCount := _lifeTimeCount + 1;
+ELSE
+	_lifeTimeCount := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{7293f6c9-afe3-43f6-bda8-3d0336d71768}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF					
+		0:	GetLaserStatus(); 
+			_itemScheduler := 1;	
+
+		1:	GetInterlockStatus(); 
+			_itemScheduler := 2;				
+	
+		2:  GetLaserTemperature();
+			_itemScheduler := 3;	
+		
+		3:  GetCrystalTemperature();
+			_itemScheduler := 0;		
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF
+
+
+IF _pulseIsAliveGenerator.Q THEN
+	_pulseIsAliveGenerator(IN := FALSE, PT := T#10MS);
+		
+	IsAlive();	
+ELSE
+	_pulseIsAliveGenerator(IN := TRUE, PT := T#1000MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOff" Id="{9364700a-1fce-4df8-9aa6-76436ff17581}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Disables the laser, regardless of the interlock status **)
+METHOD PROTECTED PowerOff
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '*lase 0';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOff := TRUE;	
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - PowerOff').ToString());
+				_serialCom.Send(cmd);
+				_itemExecScheduler := 1;
+			
+			1:  GetInterlockStatus();
+				_itemExecScheduler := 2;
+				
+			2:  _powerOff := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOn" Id="{ccab43b6-5100-4930-aa41-78f206e6f14f}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(* Enables the laser subject to Interlock and Enable Switch status *)
+METHOD PROTECTED PowerOn
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '*lase 1';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOn := TRUE;	
+
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - PowerOn').ToString());
+				_serialCom.Send(cmd);
+				_itemExecScheduler := 1;
+			
+			1:  GetInterlockStatus();
+				_itemExecScheduler := 2;
+				
+			2:  _powerOn := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{19e6d40b-e3ab-49b6-bcfe-f8c0c03ac5e5}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  StateMsg := ' ';
+				StatusMsg := ' ';
+			    InterlockStatusMsg := ' ';
+				LaserTemperatureMsg := ' ';
+				CrystalTemperatureMsg := ' ';
+				RunningTimeLaserOnMsg := ' ';
+				RunningTimeElectroOnMsg := ' ';
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;											
+			
+			10 : GetLaserStatus();
+				 _itemRaisedProperties := 11;
+				 
+			11 : GetInterlockStatus();
+				 _itemRaisedProperties := 12;
+				 
+			12 : GetLaserTemperature();
+				 _itemRaisedProperties := 13;
+				 
+			13 : GetCrystalTemperature();
+				 _itemRaisedProperties := 14;
+				
+			14 : _deliverMessages := EFeedbackMsgPiano450.StateMsg;
+				_itemRaisedProperties := 15;
+				
+			15:  GetRunningTimeLaserOnMsg();
+				_itemRaisedProperties := 16;
+				
+			16:  GetRunningTimeElectroOnMsg();
+				_itemRaisedProperties := 17;
+				
+			17:  _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadPower" Id="{448c61ea-06fa-4a57-b68e-6a5ed7e1c43c}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the power of the laser **)
+METHOD PROTECTED ReadPower 
+VAR_INPUT
+END_VAR
+VAR
+//	cmd : STRING := 'POWER?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//EC::not available on this device...
+
+//_deliverMessages := EFeedbackMsgSMD12.PowerMsg;
+//_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetPower" Id="{236d3213-5e8e-4167-87fc-aa082a95f4ee}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** This sets the output power of the laser 
+For example, to set a power of 2800 mW, send the string POWER=2800, followed by striking the RETURN key
+**)
+METHOD PROTECTED SetPower 
+VAR_INPUT
+	Execute : BOOL;
+	Power : LREAL;
+END_VAR
+VAR
+	cmd : STRING := 'POWER=';
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//EC//NOT USED on this device!...
+IF Execute THEN	
+	_setPowerCmd := TRUE;	
+
+	_setpoint := Power;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - SetPower : ').Append(TO_STRING(_setpoint)).ToString());
+				_serialCom.Send(CONCAT(cmd, TO_STRING(_setpoint)));
+				_itemExecScheduler := 1;
+			
+			1:  ReadPower();
+				_itemExecScheduler := 2;
+				
+			2:  _setPowerCmd := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TranslateStatusLaser" Id="{b9045ca4-c3b1-4ff3-b060-9eed3d1e3fcb}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** he full status of the laser system **)
+METHOD TranslateStatusLaser : STRING
+VAR_INPUT
+	status : BYTE; // Data 	ABCDEE	
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF (status AND STRING_TO_BYTE('2#100000')) = STRING_TO_BYTE('2#100000') THEN
+	// A: Interlock -> 0: no problem - 1: problem interlock (reboot needed)
+	TranslateStatusLaser := 'Problem interlock (reboot needed)';
+	
+ELSIF (status AND STRING_TO_BYTE('2#010000')) = STRING_TO_BYTE('2#010000')  THEN
+	// B: Laser head communication -> 0: no problem - 1: problem (reboot needed)
+	TranslateStatusLaser := 'Problem (reboot needed)';
+	
+ELSIF (status AND STRING_TO_BYTE('2#001000')) = STRING_TO_BYTE('2#001000')  THEN
+	// C: Laser temperature -> 0: OK - 1:outside the running range
+	TranslateStatusLaser := 'Outside the running range';
+	
+ELSIF (status AND STRING_TO_BYTE('2#000100')) <> STRING_TO_BYTE('2#000100')  THEN
+	// D: Peltier regulation status -> 0: Laser non thermalized - 1: Temperature Ok
+	TranslateStatusLaser := 'Laser non thermalized';
+	
+ELSIF (status AND STRING_TO_BYTE('2#000001')) = STRING_TO_BYTE('2#000001') THEN	
+	// EE: Status of laser diode -> 00: Off - 01: Computer Off - 10: Fully On - 11: Modulation On	
+	TranslateStatusLaser := 'Laser diode - Computer Off';
+	
+ELSIF (status AND STRING_TO_BYTE('2#000010')) = STRING_TO_BYTE('2#000010') THEN
+	// EE: Status of laser diode -> 00: Off - 01: Computer Off - 10: Fully On - 11: Modulation On
+	TranslateStatusLaser := 'Laser diode - Fully On';
+		
+ELSIF (status AND STRING_TO_BYTE('2#000011')) = STRING_TO_BYTE('2#000011') THEN
+	// EE: Status of laser diode -> 00: Off - 01: Computer Off - 10: Fully On - 11: Modulation On
+	
+	TranslateStatusLaser := 'Laser diode - Modulation On';
+ELSE
+	TranslateStatusLaser := 'OK';	
+END_IF
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Piano450Laser">
+      <LineId Id="199" Count="2" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="202" Count="2" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="1401" Count="1" />
+      <LineId Id="1410" Count="1" />
+      <LineId Id="1415" Count="0" />
+      <LineId Id="1412" Count="0" />
+      <LineId Id="1405" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="1124" Count="0" />
+      <LineId Id="1220" Count="0" />
+      <LineId Id="1222" Count="2" />
+      <LineId Id="1227" Count="5" />
+      <LineId Id="1226" Count="0" />
+      <LineId Id="1225" Count="0" />
+      <LineId Id="975" Count="0" />
+      <LineId Id="1520" Count="12" />
+      <LineId Id="1519" Count="0" />
+      <LineId Id="1533" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="1007" Count="4" />
+      <LineId Id="1238" Count="0" />
+      <LineId Id="1248" Count="1" />
+      <LineId Id="1268" Count="0" />
+      <LineId Id="1247" Count="0" />
+      <LineId Id="1267" Count="0" />
+      <LineId Id="1017" Count="2" />
+      <LineId Id="1276" Count="0" />
+      <LineId Id="1251" Count="8" />
+      <LineId Id="1261" Count="1" />
+      <LineId Id="1264" Count="2" />
+      <LineId Id="1250" Count="0" />
+      <LineId Id="1277" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="1126" Count="0" />
+      <LineId Id="1128" Count="1" />
+      <LineId Id="1127" Count="0" />
+      <LineId Id="1125" Count="0" />
+      <LineId Id="808" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="279" Count="1" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.ConfigureSerialCom">
+      <LineId Id="6" Count="8" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.ControlMode">
+      <LineId Id="13" Count="3" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.CustomCommand">
+      <LineId Id="13" Count="3" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetCrystalTemperature">
+      <LineId Id="53" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetInterlockStatus">
+      <LineId Id="45" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetLaserStatus">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetLaserTemperature">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetRunningTimeElectroOnMsg">
+      <LineId Id="21" Count="1" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetRunningTimeLaserOnMsg">
+      <LineId Id="21" Count="1" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.GetTimers">
+      <LineId Id="30" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.IsAlive">
+      <LineId Id="12" Count="1" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.MessageScheduler">
+      <LineId Id="97" Count="2" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="138" Count="1" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="101" Count="7" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="150" Count="2" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="170" Count="1" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.PowerOff">
+      <LineId Id="52" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="54" Count="9" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="64" Count="7" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.PowerOn">
+      <LineId Id="81" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="61" Count="3" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="66" Count="3" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="101" Count="2" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="117" Count="2" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="106" Count="6" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="92" Count="2" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="63" Count="2" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="67" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.ReadPower">
+      <LineId Id="81" Count="1" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.SetPower">
+      <LineId Id="156" Count="0" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="118" Count="3" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="124" Count="3" />
+      <LineId Id="138" Count="2" />
+      <LineId Id="128" Count="7" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="Piano450Laser.TranslateStatusLaser">
+      <LineId Id="49" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="25" Count="4" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="30" Count="2" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

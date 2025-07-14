@@ -1,0 +1,1078 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Ps10Axis" Id="{65318552-fa8a-4be4-9877-1eb5da08e2e6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Ps10Axis EXTENDS AxesBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Ps10OwisAxisConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN) := _serialCom;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	StatusMsg : STRING(255);
+	AxisStatusMsg : STRING(255);
+	DrivingCurrentMsg : STRING(255);
+	HoldingCurrentMsg : STRING(255);
+	LimitSwitchtMsg : STRING(255);
+	ErrMsg : STRING(255);
+	PositionMsg : STRING(255);
+	CustomMsg : STRING(255);
+	IsInMovingMsg : STRING(255);
+	
+	{region 'Commands'}	
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdConfigDeviceParameters : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdClearErr : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdMotorInit : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdDrivingCurrent : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdHoldingCurrent : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	 
+	_cmdLimitSwitch : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdReset : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdStopMotion : BOOL;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdHomePosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdMoveAbsPosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_cmdRaiseProperties : BOOL;	 
+			
+	{endregion}
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	_posToDegree : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemMove : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemdConfigDeviceParameters : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseMoveGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initPulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_execPulseGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_configDeviceParamsPulseGenerator : TON;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	lastMessage : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	stringLength : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_convertDegreeToCount : LREAL := 83;
+	{attribute 'OPC.UA.DA' := '0'}
+	_currentAxisMode : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_currentPos : LREAL;	
+	{attribute 'OPC.UA.DA' := '0'} 
+	_currentPositionCounter : UINT;
+	{attribute 'OPC.UA.DA' := '0'} 
+	_isInMoving : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN				
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferFilterWheel, 
+		 	      	  RxBuffer:= HardwareGlobalVariables.RxBufferFilterWheel);
+	END_IF			
+
+	// Init device	
+	InitDevice();
+		 				  	
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN		
+		lastMessage := _refSerialCom.LastReceivedString;			
+		stringLength := LEN(lastMessage);
+		
+		IF stringLength > 1 THEN
+			message := LEFT(lastMessage, stringLength - 1);
+		ELSE
+			message := ' ';
+		END_IF; 
+				
+		CASE _deliverMessages OF	
+			EFeedbackMsgOwisPs10.AxisStateMsg :
+				_currentAxisMode := MID(message, 1, STRING_TO_INT(AxesConst.AXIS_FILTER_WHEEL));
+				AxisStatusMsg := ParseAxisStatus(_currentAxisMode);
+			EFeedbackMsgOwisPs10.DrivingCurrentMsg :
+				 DrivingCurrentMsg := message;
+			EFeedbackMsgOwisPs10.HoldingCurrentMsg :
+				 HoldingCurrentMsg := message;
+			EFeedbackMsgOwisPs10.LimitSwitchMsg :
+				 LimitSwitchtMsg := message;
+			EFeedbackMsgOwisPs10.ErrMsg :
+				 ErrMsg := message;
+			EFeedbackMsgOwisPs10.PositionMsg :					
+				_currentPos := STRING_TO_LREAL(message) / _convertDegreeToCount;
+				PositionMsg := LREAL_TO_STRING(_currentPos);				
+			EFeedbackMsgOwisPs10.CurrentPositionCounterMsg :
+				_currentPositionCounter := STRING_TO_UINT(message);			
+			EFeedbackMsgOwisPs10.CustomMsg :
+				CustomMsg := message;						
+			END_CASE
+	END_IF		
+			
+	IF (_initDevice AND NOT _cmdClearErr AND NOT _cmdMotorInit AND NOT _cmdConfigDeviceParameters AND NOT _cmdDrivingCurrent AND NOT 
+		_cmdHoldingCurrent AND NOT _cmdLimitSwitch AND NOT _cmdStopMotion AND NOT _cmdHomePosition AND NOT _cmdMoveAbsPosition AND NOT 
+		_customCmd AND NOT _cmdRaiseProperties) THEN
+			MessageScheduler();
+	END_IF
+	
+	ConfigDeviceParameters(_cmdConfigDeviceParameters);
+	ClearError(_cmdClearErr);
+	MotorInit(_cmdMotorInit);
+	SetDrivingCurrent(_cmdDrivingCurrent);
+	SetHoldingCurrent(_cmdHoldingCurrent);
+	SetLimitSwitch(_cmdLimitSwitch);
+	Reset(_cmdReset);
+	StopMotion(_cmdStopMotion);
+	HomePosition(_cmdHomePosition);	
+	MoveAbsPosition(_cmdMoveAbsPosition, _posToDegree);
+	CustomCommand(_customCmd, _cmd);	
+	RaisePropertiesChanged(_cmdRaiseProperties);	
+	
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Comamnds" Id="{350d7b4c-9999-4614-8983-2b0788406443}" />
+    <Method Name="ClearError" Id="{9cf50f82-dedf-4020-a341-c2e03f9bd16b}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ClearError
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'ERRCLEAR';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Clear error').ToString());
+	_serialCom.Send(cmd);	
+
+	_cmdClearErr := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConfigDeviceParameters" Id="{9dd7c1a3-38a3-4271-adf2-d5c1fd271f87}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[METHOD ConfigDeviceParameters
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+
+	_cmdConfigDeviceParameters := TRUE;	
+
+	IF _configDeviceParamsPulseGenerator.Q THEN
+		_configDeviceParamsPulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemdConfigDeviceParameters OF
+			0:  _logger.Information(_message.Reset().Append(_config.Name).Append(' - Configure device parameters').ToString());
+				_itemdConfigDeviceParameters := 1;				
+								
+			1: _cmdDrivingCurrent := TRUE;
+				_itemdConfigDeviceParameters := 2;
+
+			2: _cmdHoldingCurrent := TRUE;
+				_itemdConfigDeviceParameters := 3;				
+			
+			3: _cmdLimitSwitch := TRUE;
+				_itemdConfigDeviceParameters := 4;	
+			
+			4: _cmdMotorInit := TRUE;
+				_itemdConfigDeviceParameters := 5;					
+				
+			5: _logger.Information(_message.Reset(). Append(_config.Name). Append(' - Configure device parameters done').ToString());	
+			   _itemdConfigDeviceParameters := 0;			
+			   _cmdConfigDeviceParameters := FALSE;
+		END_CASE
+	ELSE
+		_configDeviceParamsPulseGenerator(IN := TRUE, PT := T#200MS);		
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConfigureSerialCom" Id="{92ee4274-1822-4857-a351-1af2244cf04e}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+ 
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{04426e00-f477-4383-857a-2ae2c5de4dbe}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Custom : ').Append(Cmd).ToString());
+	_deliverMessages := EFeedbackMsgOwisPs10.CustomMsg;									
+	_serialCom.Send(Cmd);
+	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ErrorMessages" Id="{af95c508-4de3-4b04-ad88-3fb38c9b4a6e}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ErrorMessages
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?MSG';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgOwisPs10.ErrMsg;	
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{c9eecb17-8010-4deb-b770-2d445332fb7a}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Ps10OwisAxisConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._axisConfig.Name := Config.Name;
+	SUPER^._axisConfig.DeviceID := Config.DeviceID;
+	SUPER^._axisConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._axisConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Axes;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetAxisStatus" Id="{3fbf2da0-a10e-4662-ab0b-95ea943ad0ed}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[(** Axis state inquiry **)
+METHOD GetAxisStatus : STRING
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?ASTAT';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgOwisPs10.AxisStateMsg;	
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDrivingCurrent" Id="{92b3f748-1524-4586-a2ca-ecd6e1233df8}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[(** Read out driving current with stepper motors in percent **)
+METHOD PROTECTED GetDrivingCurrent
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?DRICUR';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgOwisPs10.DrivingCurrentMsg;	
+_serialCom.Send(Concat(cmd, AxesConst.AXIS_FILTER_WHEEL));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetHoldingCurrent" Id="{1eac2e4b-31a7-47d1-83e9-91a91d90e56e}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[(** Read out holding current with stepper motor axis in percent **)
+METHOD PROTECTED GetHoldingCurrent
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?HOLCUR';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgOwisPs10.HoldingCurrentMsg;	
+_serialCom.Send(Concat(cmd, AxesConst.AXIS_FILTER_WHEEL));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetLimitSwitch" Id="{d69a0b29-70d3-44d2-b788-e7ab365eced6}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[(** Read out limit switch mask for the axis **)
+METHOD PROTECTED GetLimitSwitch
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?SMK';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgOwisPs10.LimitSwitchMsg;	
+_serialCom.Send(Concat(cmd, AxesConst.AXIS_FILTER_WHEEL));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPosition" Id="{55a3b673-e715-4d70-9fa7-5225e4770e89}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[(** Position Query **)
+METHOD PROTECTED GetPosition
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?PSET';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgOwisPs10.PositionMsg;	
+_serialCom.Send(Concat(cmd, AxesConst.AXIS_FILTER_WHEEL));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HomePosition" Id="{142d51a5-57ef-4f7b-b18a-4cfaf2920b91}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD HomePosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'REF';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Home position : ').ToString());
+	cmd := Concat(CONCAT(cmd, AxesConst.AXIS_FILTER_WHEEL), '=');	
+	_serialCom.Send(Concat(cmd, '4'));
+	
+	_cmdHomePosition := FALSE;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{2aa5b88d-df39-4f9b-949f-1e8e44a662c9}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{494cec2c-0a6e-4e21-8cea-50ca2358b100}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5729c6bb-be11-4151-8251-605ad3510059}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{5c2fcf27-05f4-4bb9-9c40-55e9bc5563c8}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+VAR
+	displayingPositionCmd : STRING := 'PWMSMODE';
+	absoluteModeCmd : STRING := 'ABSOL';
+	
+	displayingPositionInDegree : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	IF _initPulseGenerator.Q THEN
+		_initPulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemInit OF
+			0:  _logger.Information(_message.Reset().Append(_config.Name).Append(' - InitDevice').ToString());
+				_itemInit := 1;				
+				
+			1:  _cmdClearErr := TRUE;
+				_itemInit := 2;
+			
+			2: // Absolute mode
+				_serialCom.Send(CONCAT(absoluteModeCmd, AxesConst.AXIS_FILTER_WHEEL));	
+				_itemInit := 10;
+				
+			10: _cmdConfigDeviceParameters := TRUE;	
+			   _itemInit := 11;
+			
+			11: IF NOT _cmdConfigDeviceParameters THEN
+					_itemInit := 20;
+				END_IF
+			
+			20: GetAxisStatus();
+				_itemInit := 21;
+				
+			21: // Displaying position in °
+				displayingPositionInDegree := Concat(CONCAT(displayingPositionCmd, AxesConst.AXIS_FILTER_WHEEL), '=');
+				_serialCom.Send(CONCAT(displayingPositionInDegree, '3'));				
+				_itemInit := 22;													
+				
+			22:  IF _currentAxisMode = 'R' THEN	
+					_itemInit := 30;	
+				ELSE			
+					_logger.Error(_message.Reset().Append(_config.Name).Append(' - Axis status : ').
+								  Append(_currentAxisMode).ToString());
+					_itemInit := 40;				  
+			    END_IF							
+				
+			30:  GetPosition();
+				_itemInit := 31;	
+				
+			31: _posToDegree := _currentPos;
+				_itemInit := 40;
+				
+			40: _logger.Information(_message.Reset(). Append(_config.Name). Append(' - InitDevice done').ToString());	
+				_itemInit := 0;			
+				_initDevice	:= TRUE;
+		END_CASE
+	ELSE
+		_initPulseGenerator(IN := TRUE, PT := T#100MS);		
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsInMoving" Id="{43f5a690-3f81-4021-9bd2-2250a324fef6}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[PROPERTY IsInMoving : bool]]></Declaration>
+      <Get Name="Get" Id="{43b5b94b-ba0a-4053-90d8-b0b48186412a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsInMoving := _isInMoving;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5eefe730-1f7f-423f-84ac-5e9df6527cc9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_isInMoving := IsInMoving;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="MessageScheduler" Id="{d15cb2a3-cb63-4708-a63c-d14e3c192308}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+	
+	CASE _itemScheduler OF				
+		0:	GetAxisStatus();
+			_itemScheduler := 1;
+						
+		1:	GetPosition();
+			_itemScheduler := 0;			
+	END_CASE		
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MotorInit" Id="{9d90297e-68a2-4beb-b5a0-edfb71b5534e}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD MotorInit
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+	cmd : STRING := 'INIT';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Enable the motor power stage').ToString());
+	_serialCom.Send(Concat(cmd, AxesConst.AXIS_FILTER_WHEEL));	
+
+	_cmdMotorInit := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{e52af445-02be-4345-a161-7a76bf74adb8}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED MoveAbsPosition 
+VAR_INPUT
+	Execute : BOOL;
+	Position : LREAL;
+END_VAR
+VAR
+	cmdSet : STRING := 'PSET';
+	cmdGo : STRING := 'PGO';
+	cmdCnt : STRING := '?CNT';
+	cmd : STRING;	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+
+	_cmdMoveAbsPosition := TRUE;
+	_posToDegree := Position;	
+	
+	IF _pulseMoveGenerator.Q THEN
+		_pulseMoveGenerator(IN := FALSE, PT := T#10MS);
+	
+		CASE _itemMove OF
+			0:	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Move absolute position : ').
+													 Append(TO_STRING(_posToDegree)).Append(' °').ToString());
+								
+				cmd := Concat(CONCAT(cmdSet, AxesConst.AXIS_FILTER_WHEEL), '=');				
+				_serialCom.Send(CONCAT(cmd, LREAL_TO_STRING(_posToDegree * _convertDegreeToCount)));				
+				_itemMove := 1;						
+				
+			1:  _serialCom.Send(Concat(cmdGo, AxesConst.AXIS_FILTER_WHEEL));											
+				_itemMove := 2;	
+				
+			2:  _deliverMessages := EFeedbackMsgOwisPs10.CurrentPositionCounterMsg;	
+				IF _currentPositionCounter <> (_posToDegree * _convertDegreeToCount) THEN					
+					_serialCom.Send(Concat(cmdCnt, AxesConst.AXIS_FILTER_WHEEL));
+					IsInMovingMsg := BOOL_TO_STRING(TRUE);	
+				ELSE
+					IsInMovingMsg := BOOL_TO_STRING(FALSE);	
+					_itemMove := 3;	
+				END_IF
+								
+			3: _cmdMoveAbsPosition := FALSE;
+				_itemMove := 0;
+			
+		END_CASE			
+	ELSE
+		_pulseMoveGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ParseAxisStatus" Id="{2ff9b0bb-a1ce-404f-9822-774a93978c34}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[METHOD PRIVATE ParseAxisStatus : STRING
+VAR_INPUT
+	CurrentAxisMode : STRING;
+END_VAR
+VAR
+	Description : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF CurrentAxisMode = 'I' THEN
+	Description := 'Axis is not initialized';
+ELSIF CurrentAxisMode = 'O' THEN
+	Description := 'Axis is disabled';
+ELSIF CurrentAxisMode = 'R' THEN
+	Description := 'Axis initialized and ready';
+ELSIF CurrentAxisMode = 'T' THEN
+	Description := 'Axis is positioning in trapezoidal profile';
+ELSIF CurrentAxisMode = 'V' THEN
+	Description := 'Axis is operating in velocity mode';
+ELSIF CurrentAxisMode = 'P' THEN
+	Description := 'Reference motion is in progress';
+ELSIF CurrentAxisMode = 'F' THEN
+	Description := 'Axis is releasing a limit switch';
+ELSIF CurrentAxisMode = 'L' THEN
+	Description := 'Axis has been disabled after approaching a hardware limit switch(MINSTOP, MAXSTOP)';
+ELSIF CurrentAxisMode = 'B' THEN
+	Description := 'Aaxis has been stopped after approaching a brake switch(MINDEC, MAXDEC)';
+ELSIF CurrentAxisMode = 'A' THEN
+	Description := 'Axis has been disabled after limit switch error';
+ELSIF CurrentAxisMode = 'M' THEN
+	Description := 'Axis has been disabled after motion-controller error';
+ELSIF CurrentAxisMode = 'Z' THEN
+	Description := 'Axis has been disabled after timeout error';
+ELSIF CurrentAxisMode = 'H' THEN
+	Description := 'Phase initialization active (step motor axis)';
+ELSIF CurrentAxisMode = 'U' THEN
+	Description := 'Axis not enabled';
+ELSIF CurrentAxisMode = 'E' THEN
+	Description := 'Axis has been disabled after motion error';
+ELSIF CurrentAxisMode = '?' THEN
+	Description := 'Error, unknown state of axis';
+ELSE
+	Description := 'Unknown error';
+END_IF
+
+ParseAxisStatus := Description;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{45cfc383-769d-41a8-b977-b8e03a3eabf9}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	IF THIS^.Status <> TExecutionState.Ready THEN	
+		_cmdRaiseProperties := FALSE;
+		RETURN;
+	END_IF	
+
+	_cmdRaiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  StateMsg := ' ';
+				AxisStatusMsg := ' ';
+				ErrMsg := ' ';
+				PositionMsg := ' ';
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;
+			
+			10:  GetPosition();
+				_itemRaisedProperties := 11;
+			
+			11:  GetAxisStatus();
+				 _itemRaisedProperties := 12;
+				 
+			12:  ErrorMessages();
+				 _itemRaisedProperties := 20;			
+				 
+			20:  _logger.Information(_message.Reset().Append(_config.Name).Append(' - PS10 Axis RaisePropertiesChanged').ToString());
+				_cmdRaiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{01c8b468-ecb2-466c-944f-2e53330ceefa}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD Reset
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'RESETMB';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Release reset main board').ToString());
+	_serialCom.Send(cmd);	
+	
+	_cmdReset := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetDrivingCurrent" Id="{27024876-06ae-4839-8285-7cc84996afd3}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetDrivingCurrent
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmdSet : STRING := 'DRICUR';
+	cmd : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - driving current with stepper motor: ').
+		Append(TO_STRING(AxesConst.FW_DRIVING_CURRENT_IN_PERCENT)).ToString());
+	
+	cmd := Concat(CONCAT(cmdSet, AxesConst.AXIS_FILTER_WHEEL), '=');
+	_serialCom.Send(CONCAT(cmd, TO_STRING(AxesConst.FW_DRIVING_CURRENT_IN_PERCENT)));	
+
+	_cmdDrivingCurrent := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetHoldingCurrent" Id="{d857ec78-2ed8-4b2a-9270-7cf05b795f2c}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetHoldingCurrent
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmdSet : STRING := 'HOLCUR';
+	cmd : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - holding current with stepper motor axes: ').
+		Append(TO_STRING(AxesConst.FW_HOLDING_CURRENT_IN_PERCENT)).ToString());
+	
+	cmd := Concat(CONCAT(cmdSet, AxesConst.AXIS_FILTER_WHEEL), '=');
+	_serialCom.Send(CONCAT(cmd, TO_STRING(AxesConst.FW_HOLDING_CURRENT_IN_PERCENT)));	
+
+	_cmdHoldingCurrent := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetLimitSwitch" Id="{f83492f6-17f2-404b-ad6a-1bc3f26ce477}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetLimitSwitch
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmdSet : STRING := 'SMK';
+	cmd : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' -  limit switch mask for the axis: ').
+		Append(TO_STRING(AxesConst.FW_LIMIT_SWITCH_MASK)).ToString());
+	
+	cmd := Concat(CONCAT(cmdSet, AxesConst.AXIS_FILTER_WHEEL), '=');
+	_serialCom.Send(CONCAT(cmd, TO_STRING(AxesConst.FW_LIMIT_SWITCH_MASK)));	
+
+	_cmdLimitSwitch := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StopMotion" Id="{f85cc7d7-3ac6-41e1-8df5-12989e0bdb2e}" FolderPath="Comamnds\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD StopMotion
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'STOP1';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Stop motion').ToString());
+	_serialCom.Send(cmd);
+	
+	_cmdStopMotion := FALSE;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Ps10Axis">
+      <LineId Id="565" Count="6" />
+      <LineId Id="634" Count="1" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="576" Count="17" />
+      <LineId Id="847" Count="1" />
+      <LineId Id="948" Count="1" />
+      <LineId Id="849" Count="1" />
+      <LineId Id="594" Count="1" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="740" Count="0" />
+      <LineId Id="744" Count="0" />
+      <LineId Id="599" Count="3" />
+      <LineId Id="748" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="964" Count="1" />
+      <LineId Id="606" Count="2" />
+      <LineId Id="963" Count="0" />
+      <LineId Id="609" Count="1" />
+      <LineId Id="840" Count="1" />
+      <LineId Id="951" Count="0" />
+      <LineId Id="611" Count="5" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="59" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.ClearError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.ConfigDeviceParameters">
+      <LineId Id="6" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="137" Count="1" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.ConfigureSerialCom">
+      <LineId Id="6" Count="27" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.CustomCommand">
+      <LineId Id="12" Count="1" />
+      <LineId Id="17" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.ErrorMessages">
+      <LineId Id="21" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.FB_init">
+      <LineId Id="8" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.GetAxisStatus">
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.GetDrivingCurrent">
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.GetHoldingCurrent">
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.GetLimitSwitch">
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.GetPosition">
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.HomePosition">
+      <LineId Id="34" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.InitDevice">
+      <LineId Id="6" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="53" Count="2" />
+      <LineId Id="100" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.IsInMoving.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.IsInMoving.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.MessageScheduler">
+      <LineId Id="6" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="19" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.MotorInit">
+      <LineId Id="38" Count="4" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.MoveAbsPosition">
+      <LineId Id="420" Count="3" />
+      <LineId Id="481" Count="0" />
+      <LineId Id="425" Count="6" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="433" Count="3" />
+      <LineId Id="488" Count="1" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="493" Count="0" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="495" Count="0" />
+      <LineId Id="502" Count="0" />
+      <LineId Id="496" Count="0" />
+      <LineId Id="490" Count="0" />
+      <LineId Id="507" Count="0" />
+      <LineId Id="499" Count="1" />
+      <LineId Id="451" Count="5" />
+      <LineId Id="119" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.ParseAxisStatus">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="29" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.RaisePropertiesChanged">
+      <LineId Id="27" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="28" Count="6" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="99" Count="2" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="49" Count="7" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.Reset">
+      <LineId Id="11" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.SetDrivingCurrent">
+      <LineId Id="32" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="34" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.SetHoldingCurrent">
+      <LineId Id="32" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="34" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.SetLimitSwitch">
+      <LineId Id="32" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="34" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ps10Axis.StopMotion">
+      <LineId Id="11" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

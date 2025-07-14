@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FfuBase" Id="{6e4bd828-778e-4a35-a17e-2bf286e13d2e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT FfuBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}	
+	_family : DeviceFamily;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_ffuConfig : DeviceConfiguration;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="DeviceID" Id="{696f1bf7-03ca-4271-a31c-8a0990d30e8d}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{82300cf4-79ca-414f-ae34-0a6d6d6b212a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{781a85b7-7471-4d52-ba7e-d354315609cd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{49791ea6-1576-44ad-b918-d51dc9f94150}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{ba867f48-add3-4c87-a3f7-a57fe8c09207}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{79c0f197-18f0-4fea-9bde-6b69ca6be42a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Name" Id="{34d792bb-e071-486b-869d-0a847f06020b}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{15d91879-d03e-4728-a6d0-5e4d7c18a3a4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{bbd27c2a-2d8b-4506-bbbe-d8f7c5da8a00}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SetSpeed" Id="{72ac4b56-ab38-4a0a-89e7-bebe51ee8c4a}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT SetSpeed
+VAR_INPUT
+	Execute : BOOL;
+	SpeedPercent : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FfuBase">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FfuBase.SetSpeed">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

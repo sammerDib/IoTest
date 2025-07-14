@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MicroEpsilonDistanceSensor" Id="{91c283b8-b9f4-4d72-8928-81f1abb414fa}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK MicroEpsilonDistanceSensor EXTENDS DistanceSensorBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : MicroEpsilonDistanceSensorConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	IoMicroEpsilonDistanceSensor : IoMicroEpsilonDistanceSensor;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	DistanceMsg : STRING(255);	
+	IdMsg : STRING(255);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_customCmd : BOOL;	
+			  		   
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;		 			
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Init device
+InitDevice();
+
+MessageScheduler();	
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{2dc27f9f-2cc5-4be0-8b38-72c942bede97}" />
+    <Method Name="FB_init" Id="{95a1638e-c6b8-4b15-b792-6ea7dc9c1773}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : MicroEpsilonDistanceSensorConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._distanceSensorConfig.Name := Config.Name;
+	SUPER^._distanceSensorConfig.DeviceID := Config.DeviceID;
+	SUPER^._distanceSensorConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._distanceSensorConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.DistanceSensors;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{535e149b-5a1d-445d-a1ed-33bd632cd5f2}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Init device').ToString());
+
+	THIS^.SetDone();							
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{7cc029d9-ae6c-4826-b22a-89f0d6dd963e}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+VAR
+	distanceToMM : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF
+		0:  			
+			// The return value is in millimeter 
+			//distanceToMM := TO_LREAL(IoMicroEpsilonDistanceSensor.InputMicroEpsilonDistanceSensor) / TO_LREAL(1000000);
+			//DistanceMsg := LREAL_TO_STRING(distanceToMM);
+			
+			DistanceMsg := REAL_TO_STRING(IoMicroEpsilonDistanceSensor.InputMicroEpsilonDistanceSensor);
+			_itemScheduler := 0;
+					
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#50MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{988e552c-a5a4-4c9f-b271-619add37ac98}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	DistanceMsg := ' ';
+	IdMsg := ' ';
+	CustomMsg := ' ';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="MicroEpsilonDistanceSensor">
+      <LineId Id="106" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="148" Count="0" />
+    </LineIds>
+    <LineIds Name="MicroEpsilonDistanceSensor.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="MicroEpsilonDistanceSensor.InitDevice">
+      <LineId Id="6" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MicroEpsilonDistanceSensor.MessageScheduler">
+      <LineId Id="13" Count="4" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MicroEpsilonDistanceSensor.RaisePropertiesChanged">
+      <LineId Id="11" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

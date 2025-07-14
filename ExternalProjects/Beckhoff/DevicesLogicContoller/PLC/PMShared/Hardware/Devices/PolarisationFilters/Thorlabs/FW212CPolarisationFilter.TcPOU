@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FW212CPolarisationFilter" Id="{ff9e6a1d-f467-403a-ae33-bac95d4ebb11}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK FW212CPolarisationFilter EXTENDS PolarisationFilterBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : FW212CPolarisationFilterConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}	
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN) := _serialCom; 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	CheckConnectionMsg : STRING(255);
+	PositionMsg : STRING(255);
+	PositionCountMsg : STRING(255);
+	IdMsg : STRING(255);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveAbsPosition     : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_jogBackwardPosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_jogForwardPosition  : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;	
+	
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : INT;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_length : INT;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSE
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer := HardwareGlobalVariables.TxBufferPolarisation, 
+		 	      	  RxBuffer := HardwareGlobalVariables.RxBufferPolarisation);
+	END_IF	
+				  
+	// Init device
+	InitDevice(); 				  
+				  
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN
+		CASE _deliverMessages OF			
+			EFeedbackMsgPolarisationFW212C.CheckConnectionMsg :
+				CheckConnectionMsg := _refSerialCom.LastReceivedString;	
+			EFeedbackMsgPolarisationFW212C.PositionMsg :
+				PositionMsg := _refSerialCom.LastReceivedString;
+			EFeedbackMsgPolarisationFW212C.PositionCountMsg :
+				PositionCountMsg := _refSerialCom.LastReceivedString;
+			EFeedbackMsgPolarisationFW212C.IdMsg :
+				IdMsg := _refSerialCom.LastReceivedString;
+			EFeedbackMsgPolarisationFW212C.CustomMsg :
+				CustomMsg := _refSerialCom.LastReceivedString;						
+		END_CASE
+		
+		_deliverMessages := 0;
+	END_IF							   							   		
+END_IF
+
+IF InitConfigSerialCom THEN			
+	MoveAbsPosition(_moveAbsPosition, _pos);	
+	JogBackwardPosition(_jogBackwardPosition);				
+	JogForwardPosition(_jogForwardPosition);
+	CustomCommand(_customCmd, _cmd);	
+
+	IF (NOT _moveAbsPosition AND NOT _jogBackwardPosition AND NOT _jogForwardPosition AND NOT _customCmd) THEN
+		MessageScheduler();
+	END_IF	
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{02498fe1-037b-4e7a-8095-ae600a4eac7f}" />
+    <Method Name="CheckConnection" Id="{0ecc6f1c-2669-4558-972d-b42c8eac2825}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD CheckConnection
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationFW212C.CheckConnectionMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConfigureSerialCom" Id="{1f9898b2-9ec1-4261-a627-98bda2b19de6}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{d8c45193-ca7d-4083-9635-7b290ad8fb6a}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Custom : ').
+								Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgPolarisationFW212C.CustomMsg;								
+	_serialCom.Send(Cmd);
+	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{3d12d8a4-2b9d-44ce-b7c8-6eb15ad0cebd}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : FW212CPolarisationFilterConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._polarisationFilterConfig.Name := Config.Name;
+	SUPER^._polarisationFilterConfig.DeviceID := Config.DeviceID;
+	SUPER^._polarisationFilterConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._polarisationFilterConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.PolarisationFilter;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{659aa7b3-a36a-4f1a-a805-7ca918e413ab}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the model number and firmware version **)
+METHOD GetIdentifier : STRING
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '*idn?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationFW212C.IdMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPosition" Id="{cb43dfb6-138d-4e8b-8621-4074e0d8c4f1}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Position Query **)
+METHOD PROTECTED GetPosition 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'pos?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationFW212C.PositionMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPositionCount" Id="{e48d1370-530e-425e-bb7d-eaa0fcfcc4a3}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the wheel type **)
+METHOD GetPositionCount
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'pcount?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationFW212C.PositionCountMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{14f4e0ee-8e30-49e3-a89e-19614b337338}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{4c053e10-8d57-49ac-a5f4-dc1e8ae8297a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3b3c764f-6536-4ed2-a0b1-b7cec589de65}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{084a1bc3-a8d6-4aa3-ad26-23754f27bafc}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());
+
+	// TODO : define max count 
+	
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogBackwardPosition" Id="{6bfc15cc-9c7d-4f07-a05f-77706cdd9ed5}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Decrements the filter position by 1 **)
+METHOD PROTECTED JogBackwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	DecFilterPos : BYTE := 68;
+	posArray     : ARRAY[1..3] OF BYTE := [27, 91, DecFilterPos];
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Jog backward position').ToString());
+	_serialCom.Send3B(posArray);
+	_jogBackwardPosition := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogForwardPosition" Id="{72316f18-fceb-4771-a6b8-f7fd8ba702e4}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Increments the filter position by 1 **)
+METHOD PROTECTED JogForwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	jogForwardPos : BYTE := 67;
+	posArray     : ARRAY[1..3] OF BYTE := [27, 91, jogForwardPos];
+END_VAR	]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Jog forward position').ToString());
+	_serialCom.Send3B(posArray);
+	_jogForwardPosition := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{94b75cfd-9e5e-49a8-a1a3-7bbd319f5321}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF
+		0:  GetIdentifier();
+			_itemScheduler := 1;
+
+		1:	GetPosition();
+			_itemScheduler := 2;
+			
+		2:  GetPositionCount();
+			_itemScheduler := 3;
+			
+		3:  CheckConnection();
+			_itemScheduler := 0;								
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#50MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{56e5996d-f845-41f2-a3db-95b5baf40e4b}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Moves the wheel to filter position n **)
+METHOD PROTECTED MoveAbsPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : LREAL;
+END_VAR
+VAR
+	cmd : STRING := 'pos=';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Move absolute position : ').Append(TO_STRING(Position)).ToString());
+	_serialCom.Send(CONCAT(cmd, TO_STRING(Position)));
+	_moveAbsPosition := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{9951505e-bde0-4233-b7ac-c6b72c97ee87}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	CheckConnectionMsg := ' ';
+	PositionMsg := ' ';
+	IdMsg := ' ';
+	CustomMsg := ' ';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FW212CPolarisationFilter">
+      <LineId Id="30" Count="3" />
+      <LineId Id="544" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="545" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="351" Count="18" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="457" Count="0" />
+      <LineId Id="480" Count="0" />
+      <LineId Id="482" Count="1" />
+      <LineId Id="475" Count="1" />
+      <LineId Id="478" Count="0" />
+      <LineId Id="466" Count="0" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.CheckConnection">
+      <LineId Id="22" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.ConfigureSerialCom">
+      <LineId Id="6" Count="10" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="18" Count="7" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.CustomCommand">
+      <LineId Id="9" Count="4" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="3" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.GetIdentifier">
+      <LineId Id="25" Count="0" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.GetPosition">
+      <LineId Id="33" Count="0" />
+      <LineId Id="68" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.GetPositionCount">
+      <LineId Id="21" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.InitConfigSerialCom.Get">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.InitDevice">
+      <LineId Id="6" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.JogBackwardPosition">
+      <LineId Id="29" Count="1" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.JogForwardPosition">
+      <LineId Id="21" Count="0" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.MessageScheduler">
+      <LineId Id="13" Count="14" />
+      <LineId Id="37" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.MoveAbsPosition">
+      <LineId Id="25" Count="0" />
+      <LineId Id="7" Count="2" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+    <LineIds Name="FW212CPolarisationFilter.RaisePropertiesChanged">
+      <LineId Id="15" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

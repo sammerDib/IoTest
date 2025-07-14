@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="Ed12dssShutter" Id="{b22bcf16-8cd3-4c81-8172-4044d24b4355}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK Ed12dssShutter EXTENDS ShutterBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Ed12dssShutterConfig;		
+	{attribute 'OPC.UA.DA' := '0'}
+	IoEd12dssShutter : IoEd12dssShutter;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	ShutterIrisPositionMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_open : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_close : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+			
+	{endregion}		
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemCycling : INT;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_bCycling : BOOL;
+		
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Init device
+InitDevice();
+
+CASE _deliverMessages OF			
+	EFeedbackMsgEd12dss.ShutterIrisPositionMsg :	
+		ShutterIrisPositionMsg := message;	
+END_CASE
+_deliverMessages := 0;
+		
+// Commands		
+ManualOpen(_open);
+ManualClose(_close);
+Cycling(_bCycling);
+RaisePropertiesChanged(_raiseProperties);
+
+IF (NOT _open AND NOT _close AND NOT _raiseProperties) THEN
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{77124df0-12e3-4886-8fc5-edf9cbd1d3e4}" />
+    <Method Name="Cycling" Id="{057ed00b-db3f-4e25-afb0-58cefe5e1187}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED Cycling
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN			
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemCycling OF		
+			0: _open := TRUE;
+			   _close := FALSE;
+				_itemCycling := 1;
+				
+			1: _open := FALSE;
+			   _close := TRUE;
+				_itemCycling := 0;
+		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF									
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{6da64d75-62be-4970-ab2c-00f2ffdbaad8}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Ed12dssShutterConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._shutterConfig.Name := Config.Name;
+	SUPER^._shutterConfig.DeviceID := Config.DeviceID;
+	SUPER^._shutterConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._shutterConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Shutter;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{e4177f0e-c528-41df-8121-eb6974e0e5cb}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());
+	
+	THIS^.SetDone();
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ManualClose" Id="{3635d383-63a3-4f09-8ffa-ea4019c23ac2}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED ManualClose
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - ManualClose : ').ToString());								
+	IoEd12dssShutter.OutputSwitchContactClosure := FALSE;
+	_close := FALSE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ManualOpen" Id="{3ff5bb0c-6767-4fc4-a432-5437c3f91236}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED ManualOpen
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - ManualOpen : ').ToString());		
+	IoEd12dssShutter.OutputSwitchContactClosure := TRUE;
+	_open := FALSE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{221baca8-9624-411a-98b0-b17726ff2748}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE _itemScheduler OF
+		0:  ShutterIrisPosition();		
+			_itemScheduler := 0;		
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{fbe6de41-9e46-4528-8c11-889e02f9d8f0}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raiseProperties := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0: ShutterIrisPositionMsg := ' ';		   
+				_itemRaisedProperties := 10;
+				
+			10: 
+				_logger.Information(_message.Reset().
+								    Append(_config.Name).
+								    Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;
+				_itemRaisedProperties := 0;
+		
+		END_CASE
+	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#200MS);	
+	END_IF
+		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ShutterIrisPosition" Id="{cc5ff000-e323-4928-a4fa-45e56c6c3690}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ShutterIrisPosition 
+VAR_INPUT
+END_VAR
+VAR 
+	close : STRING := 'CLOSE';
+	open : STRING := 'OPEN';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgEd12dss.ShutterIrisPositionMsg;
+
+IF IoEd12dssShutter.OutputSwitchContactClosure THEN
+	message := open; 	
+ELSE
+	message := close; 
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Ed12dssShutter">
+      <LineId Id="128" Count="4" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="139" Count="2" />
+      <LineId Id="94" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.Cycling">
+      <LineId Id="29" Count="0" />
+      <LineId Id="32" Count="3" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="44" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.FB_init">
+      <LineId Id="9" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.ManualClose">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.ManualOpen">
+      <LineId Id="8" Count="3" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.MessageScheduler">
+      <LineId Id="27" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Ed12dssShutter.ShutterIrisPosition">
+      <LineId Id="22" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

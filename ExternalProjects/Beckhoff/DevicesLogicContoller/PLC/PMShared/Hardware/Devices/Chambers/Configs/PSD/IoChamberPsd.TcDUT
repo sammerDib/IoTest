@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="IoChamberPsd" Id="{d7be83b3-e9ca-4103-81b8-4f7f1806548d}">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+TYPE IoChamberPsd :
+STRUCT		
+	(** Physical inputs **)					
+	InputOpenSlitDoor	AT %I* : BOOL;
+    InputCloseSlitDoor	AT %I* : BOOL;
+	
+	(** Physical outputs **)	
+	OutputOpenSlitDoor	AT %Q* : BOOL;	
+	OutputCloseSlitDoor	AT %Q* : BOOL;
+
+	OutputEnableCameraFS AT %Q* : BOOL;
+	OutputEnableCameraBS AT %Q* : BOOL;		
+	OutputCdaPneumaticValve AT %Q* :BOOL;		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

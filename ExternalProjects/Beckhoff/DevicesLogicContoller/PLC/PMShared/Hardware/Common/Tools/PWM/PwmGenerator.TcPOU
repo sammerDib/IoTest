@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="PwmGenerator" Id="{bb25915e-78fe-4aa6-8555-cfe5f3b14180}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC PwmGenerator
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+	
+END_VAR
+VAR_IN_OUT
+   StParams : ST_CTRL_PWM_OUT_PARAMS;
+END_VAR
+VAR
+	{region 'FB_CTRL_PWM_OUT'}		
+	_pwm : FB_CTRL_PWM_OUT;
+	
+	fPwmInput : LREAL := 1;
+   	eMode     : E_CTRL_MODE;
+	bPwmOutBitPos : BOOL;       
+	bPwmOutBitNeg : BOOL;       
+	eState		 : E_CTRL_STATE;
+	_pwmError    : BOOL;
+	_pwmErrorId  : E_CTRL_ERRORCODES;
+	{endregion}
+		 
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+_pwm(
+	fPwmInput:= fPwmInput ,
+	eMode:= E_CTRL_MODE.eCTRL_MODE_MANUAL,
+	stParams:= StParams,
+	bPwmOutBitPos=> bPwmOutBitPos,
+	bPwmOutBitNeg=> bPwmOutBitNeg,
+	eState=> eState,
+	eErrorId=> _pwmErrorId,
+	bError=> _pwmError);
+	
+	]]></ST>
+    </Implementation>
+    <LineIds Name="PwmGenerator">
+      <LineId Id="46" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="7" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

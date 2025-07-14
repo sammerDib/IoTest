@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Safety" Id="{747e9edb-099e-48be-8648-a964116c48d6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Safety
+VAR_INPUT	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execStartSafety : BOOL := TRUE;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execErrAcq : BOOL; 
+
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupComErr AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupComStartup AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupFBDeactivate AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupFBErr AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupFBRun AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupInRun AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupOtherErr AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupOutErr AT %I* : BOOL;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupModuleFault AT %Q* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	GroupStartStop AT %Q* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	GroupErrAck AT %Q* : BOOL;
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT GroupInRun THEN
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemScheduler OF					
+			0:	IF NOT GroupFBRun THEN
+					_logger.Information(_message.Reset().Append('Safety: started').ToString());
+					GroupStartStop := TRUE;	
+				END_IF
+				_itemScheduler := 1;
+	
+			1:	IF NOT GroupErrAck THEN
+					GroupErrAck := TRUE;
+				END_IF
+				_itemScheduler := 2;
+	
+			2:  IF GroupErrAck THEN
+					GroupErrAck := FALSE;
+					_logger.Information(_message.Reset().Append('Error acknowledgement: executed').ToString());
+				END_IF
+				_itemScheduler := 0;
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#1000MS);		
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="Safety">
+      <LineId Id="112" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="88" Count="4" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="93" Count="1" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="141" Count="1" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="86" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

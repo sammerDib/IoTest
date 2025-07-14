@@ -1,0 +1,113 @@
+name: USP_Manual_PushAlgoSharedOpenCVNugetPackageToAlgos$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  BuildPlatform: "x64"
+  BuildConfiguration: "Release"
+  vcpkgGitRef: "2022.04.12"
+  
+jobs:
+  - job: USP_Manual_PushAlgoSharedOpenCVNugetPackageToAlgos
+    displayName: "[USP - Manual] Push SharedOpenCV Package to “Algos” artifact."   
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+    pool:
+      name: Default
+      demands:
+          - msbuild
+          - visualstudio
+          - vstest
+
+    steps:
+        - checkout: self
+          lfs: true
+
+        - script: |
+           git lfs fetch 
+           git lfs pull
+          displayName : git-lfs
+
+        - task: NuGetAuthenticate@1
+          timeoutInMinutes: 1 # minutes
+          displayName: 'NuGet authenticate'
+          inputs:
+            forceReinstallCredentialProvider: true
+          
+        - task: NuGetToolInstaller@0
+          displayName: 'Use NuGet 6.0.0'
+          inputs:
+            versionSpec: 6.0.0
+
+        - task: NuGetCommand@2
+          displayName: 'NuGet restore'      
+          timeoutInMinutes: 10 # minutes
+          inputs:
+            feedsToUse: config
+            nugetConfigPath: ./nuget.config
+            restoreSolution: ./Shared/UnitySC.Shared.Algos/SharedOpenCV/SharedOpenCV.sln
+            
+        # - task: Cache@2
+          # displayName: 'Cache vcpkg'
+          # inputs:
+            # key: '$(Build.SourcesDirectory)/vcpkg_x64-windows.txt | "$(vcpkgGitRef)" | "$(Agent.Name)"'
+            # path: '$(Build.BinariesDirectory)/vcpkg'
+
+        # - task: run-vcpkg@0
+          # displayName: 'Run vcpkg'
+          # inputs:
+            # vcpkgGitCommitId: '$(vcpkgGitRef)'
+            # vcpkgTriplet: 'x64-windows'
+            # vcpkgArguments: 'opencv4'
+            # cleanAfterBuild: false
+
+        # - task: CmdLine@2
+          # displayName: 'Command Line Script - vcpkg integrate'
+          # inputs:
+            # script: 'vcpkg integrate install'
+
+        - task: VSBuild@1
+          displayName: 'Build ALGOS SHARED OPENCV solution'
+          inputs:
+            solution: './Shared/UnitySC.Shared.Algos/SharedOpenCV/SharedOpenCV.sln'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
+            maximumCpuCount: true
+
+        - task: VSTest@2
+          displayName: 'Run Unit Test Shared OPENCV Native'
+          inputs:
+            testSelector: 'testAssemblies'
+            testAssemblyVer2: |
+              **\$(BuildPlatform)\$(BuildConfiguration)\SharedOpenCV.NativeTests.dll
+              !**\obj\**
+            searchFolder: '$(System.DefaultWorkingDirectory)'
+            testRunTitle: 'Test Shared cpp Native'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
+            rerunFailedTests: true
+
+        - task: VSTest@2
+          displayName: 'Run Unit Test Shared OPENCV Wrapper'
+          inputs:
+            testAssemblyVer2: |
+             **\$(BuildPlatform)\$(BuildConfiguration)\SharedOpenCV.WrapperTests.dll
+             !**\obj\**
+            testRunTitle: 'Test Shared OPENCV Wrapper'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
+            rerunFailedTests: true
+
+        - task: NuGetCommand@2
+          displayName: 'NuGet pack'
+          inputs:
+            command: 'pack'
+            packagesToPack: './Shared/UnitySC.Shared.Algos/SharedOpenCV/UnitySC.Shared.Algos.OpenCVWrapper/UnitySC.Shared.Algos.OpenCVWrapper.nuspec'
+            buildProperties: 'Plateforme=x64'
+
+        - task: NuGetCommand@2
+          displayName: 'NuGet push'
+          inputs:
+            command: 'push'
+            publishVstsFeed: 'UnityControl/USP_AlgosNugetPackage'
+            allowPackageConflicts: false
+

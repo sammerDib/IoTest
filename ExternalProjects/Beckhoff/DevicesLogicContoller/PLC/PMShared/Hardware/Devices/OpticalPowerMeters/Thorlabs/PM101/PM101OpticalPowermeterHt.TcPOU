@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PM101OpticalPowermeterHt" Id="{e25f19f4-fdfc-4631-897f-437f7c79b736}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK PM101OpticalPowermeterHt EXTENDS PM101OpticalPowermeter
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : PM101OpticalPowermeterConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_polarisationConfig : PolarisationConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_rFactorSettings : RFactorSettings;
+	{attribute 'OPC.UA.DA' := '0'}
+	_responsivityConfig : ResponsivityConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.LINE_FEED);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.LINE_FEEL) := _serialCom;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorInit : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF _config.IsSimulated THEN
+	SUPER^(Conf := _config, PolarisationConfig := _polarisationConfig, RFactorSettings := _rfactorSettings, ResponsivityConfig := _responsivityConfig, SerialCom := _serialCom, RefSerialCom := _refSerialCom);
+ELSE
+	IF NOT InitConfigSerialCom THEN
+		ConfigureSerialCom();
+	ELSIF THIS^.Status = TExecutionState.Ready THEN
+		IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+			_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferOpticalPowermeterHt, 
+						  RxBuffer:= HardwareGlobalVariables.RxBufferOpticalPowermeterHt);
+		END_IF	
+					
+		// Init device
+		InitDevice(); 
+  
+		SUPER^(Conf := _config, PolarisationConfig := _polarisationConfig, RFactorSettings := _rfactorSettings, ResponsivityConfig := _responsivityConfig, SerialCom := _serialCom, RefSerialCom := _refSerialCom);							
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{f350bd74-2873-4b2c-bf64-e2244013a150}" />
+    <Method Name="ConfigureSerialCom" Id="{7434936f-8635-46bc-b41e-38a9c328d528}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{e497c21b-666d-4718-9f85-5f33865cbb96}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PM101OpticalPowermeterConfig;
+	PolarisationConfig : PolarisationConfig;
+	RFactorSettings : RFactorSettings;
+	ResponsivityConfig : ResponsivityConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	_polarisationConfig := PolarisationConfig;
+	_rFactorSettings := RFactorSettings;
+	_responsivityConfig := ResponsivityConfig;
+	
+	SUPER^._opticalPowermeterConfig.Name := Config.Name;
+	SUPER^._opticalPowermeterConfig.DeviceID := Config.DeviceID;
+	SUPER^._opticalPowermeterConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._opticalPowermeterConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.OpticalPowermeter;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{586176b1-6c27-45e2-bb12-0604a616e80d}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9615dc4e-8676-4d13-856d-f0751a9d5c1f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4e319e66-1640-48f5-9fdf-48752e9f12e5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{11aebc39-96a6-4ae4-9757-4f031f341321}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice 
+VAR_INPUT	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	CASE _itemInit OF
+		0:  _logger.Information(_message.Reset().Append(_config.Name).Append(' - InitDevice').ToString());
+			_itemInit := 1;
+		
+		1:  SUPER^._rangeAuto := TRUE;
+			SUPER^._cmdRange := 'TRUE';
+			_itemInit := 2;			
+			
+		2:  SUPER^._setSensorAttenuation := TRUE;
+			SUPER^._cmdSensorAttenuation := _config.Sensor.Attenuation;
+			_itemInit := 3;
+			
+		3:  IF _config.Sensor.Name = Const.POWERMETER_SENSOR_NAME_S150C THEN
+				_logger.Error(_message.Reset().Append(_config.Name).Append(' - Sensor name: ').Append(_config.Sensor.Name).ToString());
+				_itemInit := 10;
+			ELSIF _config.Sensor.Name = Const.POWERMETER_SENSOR_NAME_TAP_COUPLER THEN
+				_logger.Error(_message.Reset().Append(_config.Name).Append(' - Sensor name: ').Append(_config.Sensor.Name).ToString());
+				_itemInit := 20;
+			ELSE
+				_logger.Error(_message.Reset().Append(_config.Name).Append(' - NAME OF FAILED SENSOR').ToString());
+		    END_IF
+			
+		10:  SUPER^._setWavelength := TRUE;
+			 SUPER^._cmdWavelength := _config.Sensor.Wavelength;
+			 _itemInit := 50;		
+		
+		20:  GetResponsivity();
+			 _itemInit := 21;
+			
+		21:	 _pulseGeneratorInit(IN := TRUE, PT := T#3000MS);
+			 IF _pulseGeneratorInit.Q THEN
+				_pulseGeneratorInit(IN := FALSE);				
+			 	_itemInit := 22;
+			 END_IF
+		
+		22:	 IF ResponsivityMsg = LREAL_TO_STRING(_responsivityConfig.Responsivity_mA_W) THEN
+			 	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Responsivity already defined').ToString());
+			 	_itemInit := 50;
+			 ELSE				 
+				_itemInit := 23;
+			 END_IF	
+			 
+		23:  _logger.Information(_message.Reset().
+							Append(_config.Name).
+							Append(' - Init responsivity: ').
+							Append(LREAL_TO_STRING(_responsivityConfig.Responsivity_mA_W)).ToString());
+			
+			SUPER^._setpoint := _responsivityConfig.Responsivity_ma_W;
+			SUPER^._setResponsivity := TRUE;
+			
+			_itemInit := 50;
+
+		50: _logger.Information(_message.Reset().
+							Append(_config.Name).
+							Append(' - InitDevice done').ToString());				
+			_initDevice	:= TRUE;
+	END_CASE			
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PM101OpticalPowermeterHt">
+      <LineId Id="100" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="102" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeterHt.ConfigureSerialCom">
+      <LineId Id="6" Count="10" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="46" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeterHt.FB_init">
+      <LineId Id="9" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="11" Count="4" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeterHt.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeterHt.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeterHt.InitDevice">
+      <LineId Id="147" Count="0" />
+      <LineId Id="360" Count="56" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

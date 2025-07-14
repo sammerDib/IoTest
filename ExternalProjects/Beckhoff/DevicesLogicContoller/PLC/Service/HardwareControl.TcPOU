@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="HardwareControl" Id="{fa81361c-29a6-4772-bbc9-5971ade645ee}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+Récupère la Config de AppConfig
+Démarre HardwareManager
+Todo : Démarre la Bdd
+Todo : Démarre le monitoring
+*)
+
+FUNCTION_BLOCK HardwareControl
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{region "manage file" }	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_xml : TXml;	
+	{attribute 'hide'}
+	_filePath : T_MaxString := Const.APP_CONFIG_FILE_PATH; 
+	{attribute 'hide'}  			
+    _xPath : T_MaxString := Const.APP_CONFIG_XPATH; 
+	{endregion}		
+		
+	{attribute 'hide'}  
+	_loadConfigDone : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initialized : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initializedError : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	
+	autoBoot : BOOL := TRUE;
+	
+	HardwareManager : HardwareManager;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF autoBoot THEN
+	InitHardware();
+END_IF
+
+	
+
+]]></ST>
+    </Implementation>
+    <Action Name="AppDeserialize" Id="{69c1e4cb-6232-4e87-83a9-28a30f5bea14}">
+      <Implementation>
+        <ST><![CDATA[_xml(FilePath := _filePath, XPath := _xPath, 
+	 AddHeaderNodeXml := ADR(GlobalConfig.AppConfig), 
+	 SizeOfHeaderNodeXml := SIZEOF(GlobalConfig.AppConfig));]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="InitHardware" Id="{e6e410ac-de6a-4ad8-b93a-5d7927e1195b}">
+      <Declaration><![CDATA[METHOD PRIVATE InitHardware
+VAR_INPUT
+END_VAR
+VAR	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _xml.DeserialisationOperation.Ready AND 
+   NOT _initialized THEN
+    _logger.Information('Initializing hardware...');
+END_IF;
+
+IF NOT _initialized  AND NOT _xml.DeserialisationOperation.Error THEN    
+	_xml.DeserialisationOperation.Start();
+	AppDeserialize();	
+END_IF
+ 
+IF _xml.DeserialisationOperation.Done THEN				
+	_logger.Debug(_message.Reset().Append('App configuration from ').
+						           Append(TO_STRING(Const.APP_CONFIG_FILE_PATH)).ToString());
+		
+	_logger.Information('App configuration loading done');				
+	_xml.DeserialisationOperation.SetReady();
+	
+	LoadConfigDone := TRUE;	
+	_initialized := TRUE;
+END_IF
+ 
+IF NOT _initializedError AND _xml.DeserialisationOperation.Error THEN		
+	_logger.Error('App configuration loading error');    		
+	_xml.SetError(_xml.DeserialisationOperation.ErrorId);
+	
+	_initializedError := TRUE;
+END_IF
+
+IF _loadConfigDone THEN
+	HardwareManager();	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="LoadConfigDone" Id="{f2492bcb-9f94-40ea-9997-a2989502da5e}">
+      <Declaration><![CDATA[PROPERTY LoadConfigDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{76bf09ed-9890-4d51-aee5-b4bd8d01cd82}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[LoadConfigDone := _loadConfigDone;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d7466f95-34af-454a-a116-819e2e0bb480}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_loadConfigDone := LoadConfigDone;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="HardwareControl">
+      <LineId Id="141" Count="2" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="60" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareControl.AppDeserialize">
+      <LineId Id="1" Count="0" />
+      <LineId Id="3" Count="1" />
+    </LineIds>
+    <LineIds Name="HardwareControl.InitHardware">
+      <LineId Id="61" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="10" Count="2" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="1" />
+    </LineIds>
+    <LineIds Name="HardwareControl.LoadConfigDone.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareControl.LoadConfigDone.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

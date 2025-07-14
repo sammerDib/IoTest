@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LaserBase" Id="{c5bc4fb2-2b01-480f-a0fe-01264f28b56a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT LaserBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}	
+	_family : DeviceFamily;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_laserConfig : DeviceConfiguration;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="DeviceID" Id="{6a7f319d-17fc-4921-92c7-304c515b8418}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{cee97da2-36f1-43c2-9ea4-531df3a00e84}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4e7a1184-631d-4b8e-b549-03609fbd4df2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{0bebef37-aac3-4176-9317-4fa592bcbde9}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{7d88df11-65a0-4b9f-9248-89207ed8226d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f0916c8c-215f-41c6-9818-1a789bd6b13f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="GetInterlockStatus" Id="{f39e805d-c69a-4a4c-b062-44a2b433cf86}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT GetInterlockStatus 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{324bb144-2c14-4489-a92f-3b0f1c962321}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{bfc52385-d343-48cf-be00-93a8daf5ca4b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{db3bd38c-3494-48ea-a27d-42314e8824da}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="PowerOff" Id="{9593aedd-dcaa-487e-af79-88d78b8509f7}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT PowerOff
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOn" Id="{e5c2506d-efa7-4153-8c58-5ffd70314b7c}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT PowerOn
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadPower" Id="{1f5a33c0-da1a-4dd7-98c7-c14455db8601}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT ReadPower 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetPower" Id="{9c1220b2-e20d-45d9-adf4-94f08793949c}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT SetPower
+VAR_INPUT
+	Execute : BOOL;
+	Power : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="LaserBase">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.GetInterlockStatus">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.PowerOff">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.PowerOn">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.ReadPower">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LaserBase.SetPower">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

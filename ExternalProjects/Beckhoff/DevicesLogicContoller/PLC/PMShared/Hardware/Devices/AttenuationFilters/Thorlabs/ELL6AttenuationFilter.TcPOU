@@ -1,0 +1,571 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ELL6AttenuationFilter" Id="{407b81d1-2637-442c-b15c-9de0053ddbbb}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK ELL6AttenuationFilter EXTENDS AttenuationFilterBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : ELL6AttenuationFilterConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CR_LF);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CR_LF) := _serialCom;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	PositionMsg : STRING(255);
+	IdMsg : STRING(255);
+	CustomMsg : STRING(255);
+	StateMsg : TExecutionState;
+	
+	{region 'Commands'}	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_homePosition 		: BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveAbsPosition    : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_jogBackwardPosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_jogForwardPosition  : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;			 
+		 
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpMessage : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_length : INT;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_findSuffix : INT;
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	_calibrateStartAngle : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_calibrateEndAngle : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_angleSteps : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_numberAverages : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemCalibrateScheduler : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemPos : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseCalibration : TON;
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	PowerMsg : STRING;
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isOpen : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_isWriteClose : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	ValuesCalibrate : ARRAY [0..1000] OF LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_counter : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	PowerSum : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	PowerAverage : LREAL;
+		 
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lastSetPositionToPulses : DWORD;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	posToMM : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	pos : UINT; 
+	
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN				
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.RxBufferSliderAttenuation, 
+		 	      	  RxBuffer:= HardwareGlobalVariables.RxBufferSliderAttenuation);
+	END_IF	
+				  
+	// Init device
+	InitDevice(); 				  
+				  
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN		
+		CASE _deliverMessages OF			
+			EFeedbackMsgAttenuationELL6.PositionMsg :				
+				tmpMessage := DELETE(_refSerialCom.LastReceivedString, 3, 1);
+				_length := LEN(tmpMessage);
+				_findSuffix := FIND(tmpMessage, Const.CR_LF);
+				message := DELETE(tmpMessage, 4, _findSuffix);
+				
+				posToMM := DWORD_TO_STRING(STRING_TO_DWORD(CONCAT('16#', message)));
+				pos := STRING_TO_UINT(posToMM) / (Const.ELL6_TRAVEL / (Const.ELL6_NUMBER_POS-1));
+				
+				PositionMsg := UINT_TO_STRING(pos);			    			
+			EFeedbackMsgAttenuationELL6.IdMsg :
+				IdMsg := _refSerialCom.LastReceivedString;
+			EFeedbackMsgAttenuationELL6.CustomMsg :
+				CustomMsg := _refSerialCom.LastReceivedString;	
+		END_CASE
+	ELSE
+		CASE _deliverMessages OF			
+			EFeedbackMsgAttenuationELL6.StateMsg :
+				StateMsg := State;				
+		END_CASE
+	END_IF										   	
+	
+	HomePosition(_homePosition);	
+	MoveAbsPosition(_moveAbsPosition, _pos);
+	JogBackwardPosition(_jogBackwardPosition);				
+	JogForwardPosition(_jogForwardPosition);
+	CustomCommand(_customCmd, _cmd);	
+	RaisePropertiesChanged(_raiseProperties);
+	
+	IF (NOT _homePosition AND NOT _moveAbsPosition AND NOT _jogBackwardPosition AND NOT _jogForwardPosition 
+		AND NOT _customCmd AND NOT _raiseProperties) THEN
+		//MessageScheduler();
+	END_IF
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{608ae6d9-9963-4a07-90d4-ebadc29ae13b}" />
+    <Method Name="ConfigureSerialCom" Id="{af62079f-4d55-42b8-9cfc-a2f41ec141cd}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+ 
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{f45965d7-1e97-4336-9482-d978225fdd27}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Custom : ').
+								Append(Cmd).ToString());
+	_deliverMessages := EFeedbackMsgAttenuationELL6.CustomMsg;									
+	_serialCom.Send(Cmd);
+	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{983f28c0-e38e-484e-b312-49188d844a0d}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : ELL6AttenuationFilterConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._attenuationFilterConfig.Name := Config.Name;
+	SUPER^._attenuationFilterConfig.DeviceID := Config.DeviceID;
+	SUPER^._attenuationFilterConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._attenuationFilterConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.AttenuationFilter;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{2115d5f6-919a-4c27-8ba5-24ff7050da4e}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the model number and firmware version **)
+METHOD GetIdentifier
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '0i1';
+END_VAR
+	]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgAttenuationELL6.IdMsg;	
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPosition" Id="{f1d9b600-844a-4231-ad1b-65ef1376e8bc}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Position Query **)
+METHOD PROTECTED GetPosition
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '0po';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgAttenuationELL6.PositionMsg;	
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HomePosition" Id="{d5accc22-b73c-44ef-8603-1ecfae02381f}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD HomePosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '0ho1';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Home position : ').ToString());
+	_serialCom.Send(cmd);
+	
+	_homePosition := FALSE;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{06754a08-ad39-4f18-b6e7-9de8ab239930}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{4653ef89-26f3-404a-b1c5-201334f26488}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{57064640-c739-4101-bdda-57bfec8c1e13}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{32edc837-c930-4f49-828e-823dda64ef0d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());	
+	_initDevice := TRUE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogBackwardPosition" Id="{00feba6d-a4c9-44f3-ade2-50ef0c9c7c58}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED JogBackwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '0bw';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Jog backward position : ').ToString());
+	_serialCom.Send(cmd);
+	
+	_jogBackwardPosition := FALSE;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogForwardPosition" Id="{4cce8308-0f6d-4466-96f8-245623924fb5}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED JogForwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '0fw';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Jog forward position : ').ToString());
+	_serialCom.Send(cmd);
+	
+	_jogForwardPosition := FALSE;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{9e74ea08-c685-4983-bc54-553e1ffdd604}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+	
+	GetPosition();
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{58d7b6d5-5951-46dc-b050-89362a060a3a}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED MoveAbsPosition 
+VAR_INPUT
+	Execute : BOOL;
+	Position : LREAL;
+END_VAR
+VAR
+	posToWord : DWORD;
+	posInHexa : STRING;	
+
+	positionInHex : STRING;
+	cmd : STRING := '0ma';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	IF Position >= 0 AND Position < Const.ELL6_NUMBER_POS THEN			
+		_pos := Position;	
+		_logger.Information(_message.Reset().
+									Append(_config.Name).
+									Append(' - Move absolute position : ').Append(TO_STRING(_pos)).ToString());
+			
+		posToWord := LREAL_TO_DWORD(Position * (Const.ELL6_TRAVEL / (Const.ELL6_NUMBER_POS-1)));	
+		posInHexa := DWORD_TO_HEXSTR(posToWord, 8, FALSE);
+			
+		_serialCom.Send(CONCAT(cmd, posInHexa));
+	END_IF
+	_moveAbsPosition := FALSE;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{54eea407-d0b1-443c-83c3-97c7daf76cfd}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	IF THIS^.Status <> TExecutionState.Ready THEN	
+		_raiseProperties := FALSE;
+		RETURN;
+	END_IF	
+
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  StateMsg := TExecutionState.Unknown;
+				PositionMsg := ' ';
+				IdMsg := ' ';
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;
+			
+			10:  GetIdentifier();
+				_itemRaisedProperties := 11;
+				
+			11: _deliverMessages := EFeedbackMsgAttenuationELL9.StateMsg;
+				_itemRaisedProperties := 12;
+				
+			12:  GetPosition();
+				_itemRaisedProperties := 13;
+			
+			13:  _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Attenuation RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ELL6AttenuationFilter">
+      <LineId Id="1128" Count="19" />
+      <LineId Id="1149" Count="0" />
+      <LineId Id="1509" Count="0" />
+      <LineId Id="1504" Count="0" />
+      <LineId Id="1503" Count="0" />
+      <LineId Id="1396" Count="0" />
+      <LineId Id="1150" Count="2" />
+      <LineId Id="1172" Count="0" />
+      <LineId Id="1154" Count="0" />
+      <LineId Id="1175" Count="2" />
+      <LineId Id="1181" Count="0" />
+      <LineId Id="1174" Count="0" />
+      <LineId Id="1155" Count="3" />
+      <LineId Id="1160" Count="10" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.ConfigureSerialCom">
+      <LineId Id="6" Count="27" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.CustomCommand">
+      <LineId Id="12" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.FB_init">
+      <LineId Id="8" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.GetIdentifier">
+      <LineId Id="5" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.GetPosition">
+      <LineId Id="5" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.HomePosition">
+      <LineId Id="34" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.JogBackwardPosition">
+      <LineId Id="8" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.JogForwardPosition">
+      <LineId Id="12" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.MessageScheduler">
+      <LineId Id="6" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="19" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.MoveAbsPosition">
+      <LineId Id="15" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="107" Count="3" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="119" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL6AttenuationFilter.RaisePropertiesChanged">
+      <LineId Id="27" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="28" Count="6" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="35" Count="7" />
+      <LineId Id="72" Count="2" />
+      <LineId Id="43" Count="13" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

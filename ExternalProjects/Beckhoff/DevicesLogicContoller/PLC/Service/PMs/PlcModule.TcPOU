@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PlcModule" Id="{e656c0a6-c130-4501-b961-8ea7d216ad9a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PlcModule
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+		
+	AmsNetIdMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_timerRestartAmsNetId : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_restartAmsNetId : BOOL := TRUE;
+	{attribute 'OPC.UA.DA' := '0'}
+	FbGetAmsNetId : FB_GetLocalAmsNetId;
+	{attribute 'OPC.UA.DA' := '0'}
+	FbRestart : TC_Restart;
+	{attribute 'OPC.UA.DA' := '0'}
+	FbReboot : NT_Reboot;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execRestart : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execReboot : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_stateCmd : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_amsNetId : T_AmsNetId;			
+	{attribute 'OPC.UA.DA' := '0'}	
+	_amsNetIdWasRead : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_amsNetIdBadReading : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execAmsNetId : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedPropertiesBase : INT;	
+	
+	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesBase : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorBase : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT _amsNetIdWasRead THEN
+	GetAmsNetId();
+END_IF
+
+IF _amsNetIdWasRead AND NOT _amsNetIdBadReading THEN
+	PlcRestart(_execRestart);
+	PlcReboot(_execReboot);
+END_IF
+
+RaisePropertiesChangedBase(_raisePropertiesBase);]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{ba523c6c-9eb4-447a-8680-8584f4e53bbe}" />
+    <Method Name="GetAmsNetId" Id="{a98ce634-ff2c-41af-9c1d-66be56c4e02e}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetAmsNetId
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE _stateCmd OF
+	0:  FbGetAmsNetId(bExecute := TRUE, tTimeOut := T#2S);
+		_stateCmd := 1;
+		
+	1:	IF(NOT FbGetAmsNetId.bBusy) THEN
+			_amsNetId := FbGetAmsNetId.AddrString;			
+			 _logger.Information(_message.Reset().Append('AmsNetId=').Append(_amsNetId).ToString());
+			FbGetAmsNetId.bExecute := FALSE;				
+			_stateCmd := 100;
+		END_IF		
+		IF FbGetAmsNetId.bError THEN				
+			_stateCmd := 10;
+		END_IF													 
+
+		// Issue restarts again GetAmsNetId
+		_timerRestartAmsNetId(IN := _restartAmsNetId, PT := T#5S);
+		IF _timerRestartAmsNetId.Q THEN
+			_restartAmsNetId := FALSE;
+			_stateCmd := 0;
+		END_IF
+		
+	10: _logger.Error(_message.Reset().Append('AmsNetId errorId=').Append(UDINT_TO_STRING(FbGetAmsNetId.nErrId)).ToString());
+		_amsNetIdBadReading := TRUE;
+		_stateCmd := 100;	
+		 
+	100: _amsNetIdWasRead := TRUE;		 
+		 _stateCmd := 0;		
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PlcReboot" Id="{3b8360ed-17ad-4670-b607-e6e7dec545bd}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED PlcReboot
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_execReboot := TRUE;
+	
+	FbReboot();	
+	CASE _stateCmd OF												
+		0:  _logger.Information(_message.Reset().Append('Reboot').ToString());
+			_stateCmd := 1;
+		
+		1:  FbReboot(NETID := _amsNetId, START := TRUE, TMOUT := T#2S, DELAY := 0);
+			_stateCmd := 2;
+ 
+		2: IF(NOT FbReboot.Busy) THEN
+				FbReboot.START := FALSE;				
+				_stateCmd := 100;
+			END_IF		        
+			IF FbReboot.ERR THEN				
+				_stateCmd := 10;
+			END_IF	
+	
+		10: _logger.Error(_message.Reset().Append('Reboot errorId=').
+										   Append(UDINT_TO_STRING(FbReboot.ERRID)).ToString());	
+			_stateCmd := 100;
+			 
+		100: _execReboot := FALSE;
+			 _stateCmd := 0;		
+	END_CASE
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PlcRestart" Id="{802849c5-271c-4844-92b8-a9bd0b9a6fb3}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED PlcRestart
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_execRestart := TRUE;
+	
+	FbRestart();	
+	CASE _stateCmd OF												
+		0:  _logger.Information(_message.Reset().Append('Restart').ToString());
+			_stateCmd := 1;
+		
+		1:  FbRestart(NETID := _amsNetId, RESTART := TRUE, TMOUT := T#2S);
+			_stateCmd := 2;
+	 
+		2: IF(NOT FbRestart.Busy) THEN
+				FbRestart.RESTART := FALSE;				
+				_stateCmd := 100;
+			END_IF		        
+			IF FbRestart.ERR THEN				
+				_stateCmd := 10;
+			END_IF	
+	
+		10: _logger.Error(_message.Reset().Append('Restart errorId=').
+			  							   Append(UDINT_TO_STRING(FbRestart.ERRID)).ToString());	
+			_stateCmd := 100;
+			 
+		100: _execRestart := FALSE;
+			 _stateCmd := 0;		
+	END_CASE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChangedBase" Id="{6d0e58a8-5f06-4ca1-beb9-8183da769407}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChangedBase
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesBase := TRUE;	
+	
+	IF _pulseGeneratorBase.Q THEN
+		_pulseGeneratorBase(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedPropertiesBase OF		
+			0: AmsNetIdMsg := ' ';
+				_itemRaisedPropertiesBase := 1;
+			
+			1:  AmsNetIdMsg := TO_STRING(_amsNetId);	   
+				_itemRaisedPropertiesBase := 10;
+				
+			10: 
+				_logger.Information(_message.Reset().Append('PLC module - RaisePropertiesChangedBase').ToString());
+				_raisePropertiesBase := FALSE;
+				_itemRaisedPropertiesBase := 0;
+		
+		END_CASE
+	
+	ELSE
+		_pulseGeneratorBase(IN := TRUE, PT := T#100MS);	
+	END_IF
+		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PlcModule">
+      <LineId Id="180" Count="7" />
+      <LineId Id="650" Count="1" />
+    </LineIds>
+    <LineIds Name="PlcModule.GetAmsNetId">
+      <LineId Id="6" Count="1" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="17" Count="5" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PlcModule.PlcReboot">
+      <LineId Id="29" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="7" Count="21" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+    <LineIds Name="PlcModule.PlcRestart">
+      <LineId Id="7" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="9" Count="22" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PlcModule.RaisePropertiesChangedBase">
+      <LineId Id="31" Count="8" />
+      <LineId Id="57" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="48" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

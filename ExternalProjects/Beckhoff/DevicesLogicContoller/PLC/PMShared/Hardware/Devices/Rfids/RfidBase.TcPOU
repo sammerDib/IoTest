@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="RfidBase" Id="{f40d3132-c9e2-485d-8c31-12b3909d48ec}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT RfidBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}	
+	_family : DeviceFamily;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_rfidConfig : DeviceConfiguration;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="DeviceID" Id="{dcfa8958-a0f7-4510-99eb-002410140fbc}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{ba14c7cd-e621-484f-b0a9-72f19ed86f27}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{7ee509bc-7fef-4498-a5a1-5940042facc8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{e80fa4e3-aa4b-4783-8115-2e4829821ca4}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{f40ecc90-8244-43b4-95c3-b74108ca1dfa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{eddefffc-f1f0-4563-9f30-7e251f75b51b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Name" Id="{26f75eb9-4ea3-4c9e-a57e-38d1725f6b4b}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{e632df79-8426-42ce-acb7-2ec467fbed95}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{7e5a312a-bcf2-48d0-8f86-199c263d0fdb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="RfidBase">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="RfidBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="RfidBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="RfidBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="RfidBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="RfidBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="RfidBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

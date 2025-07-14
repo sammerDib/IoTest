@@ -1,0 +1,622 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ChamberBase" Id="{fb75d943-5c54-4f31-871f-76b380309cb1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT ChamberBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+	IoChamberBase : IoChamberBase;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}
+	_family : DeviceFamily := DeviceFamily.Chamber;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_chamberConfig : DeviceConfiguration;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	InputIsInMaintenanceMode AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	InputIsInRunMode AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	InputArmNotExtended	AT %I* : BOOL;		
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lifeTimeCount : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_notifyIsAlive : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseIsAliveGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorBase : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGeneratorBase : TON;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemSchedulerBase : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecSchedulerBase : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedPropertiesBase : INT;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessagesBase : INT;
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	_armNotExtendedCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesBase : BOOL;	 
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_extendsArm : BOOL;
+	
+	StateMsg : STRING(255);
+	IsAliveMsg : STRING(255);
+	IsInMaintenanceMsg : STRING(255);
+	ArmNotExtendedMsg : STRING(255);
+	EfemSlitDoorOpenPositionMsg : STRING(255);
+	IsReadyToLoadUnloadMsg : STRING(255);	
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_slitDoorPosition : ESlitDoorPosition;
+	{attribute 'OPC.UA.DA' := '0'}
+	_slitDoorOpenPosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_slitDoorClosePosition : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	ioMessage : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_stageIsInLoadingPosition : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Check if it's still alive	
+IF _notifyIsAlive THEN
+	IsAliveMsg := TO_STRING(_lifeTimeCount);
+	_notifyIsAlive := FALSE;
+END_IF
+
+IF HardwareGlobalVariables.ChamberState <> State THEN
+	HardwareGlobalVariables.ChamberState := State;
+	StateMsg := ANY_TO_STRING(State);		
+END_IF
+
+
+CASE _deliverMessagesBase OF		
+	EFeedbackMsgChamberBase.IsInMaintenanceMsg :		
+		IsInMaintenanceMsg := ioMessage;	
+			
+	EFeedbackMsgChamberBase.ArmNotExtendedMsg :				
+		ArmNotExtendedMsg := ioMessage;	
+
+	EFeedbackMsgChamberBase.EfemSlitDoorOpenPositionMsg :		
+		EfemSlitDoorOpenPositionMsg := ioMessage;	
+			
+	EFeedbackMsgChamberBase.IsReadyToLoadUnloadMsg :				
+		IsReadyToLoadUnloadMsg := ioMessage;	
+		
+END_CASE
+
+RaisePropertiesChangedBase(_raisePropertiesBase);
+
+IF NOT _armNotExtendedCmd AND NOT _raisePropertiesBase THEN
+	MessageSchedulerBase();	
+END_IF
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{87dbbb78-d556-4bee-9f17-98438344acd5}" />
+    <Method Name="ArmExtendEnabled" Id="{527959d9-7c3e-4f1b-a463-15fbb46976ea}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED ArmExtendEnabled 
+VAR_INPUT
+	Execute : BOOL;
+	ExtendsArm : BOOL;
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	(*_armNotExtendedCmd := TRUE;	
+	
+	_extendsArm := ExtendsArm;
+
+	IF _execPulseGeneratorBase.Q THEN
+		_execPulseGeneratorBase(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecSchedulerBase OF
+			0:  OutputArmExtendEnabled := _extendsArm;
+			
+				_logger.Information(_message.Reset().Append('ArmExtendEnabled : ').Append(TO_STRING(_extendsArm)).ToString());			   					
+				_itemExecSchedulerBase := 1;
+			
+			1:  _armNotExtendedCmd := FALSE;	
+				_itemExecSchedulerBase := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGeneratorBase(IN := TRUE, PT := T#50MS);	
+	END_IF*)
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="DeviceID" Id="{00424e6b-0a76-40f0-a94a-76a014c72092}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{22831275-1cce-4662-b96f-09e9a2427fee}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5e0d27fd-e715-48c3-964f-6adcd311c3fa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{638f86d8-8e91-4299-a80b-5f082a0532b4}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{fc70de96-6c14-49c9-82d1-69b7019e858e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{abb4cf80-0a3a-4a3a-be06-43e676907630}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="GetArmNotExtended" Id="{267eb2b5-fbe1-436b-8d75-0c88f9cfc35f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetArmNotExtended
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessagesBase := EFeedbackMsgChamberBase.ArmNotExtendedMsg;
+ioMessage := ANY_TO_STRING(NOT InputArmNotExtended);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsAlive" Id="{e672f27a-afc0-43a6-863b-abe4dc0b496d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED IsAlive
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_notifyIsAlive := TRUE;
+
+IF _lifeTimeCount < 5 THEN
+	_lifeTimeCount := _lifeTimeCount + 1;
+ELSE
+	_lifeTimeCount := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsInMaintenance" Id="{b36b95b2-6900-47ee-b8a2-310a4b643a5d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD IsInMaintenance 
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessagesBase := EFeedbackMsgChamberBase.IsInMaintenanceMsg;
+
+IF InputIsInMaintenanceMode AND NOT InputIsInRunMode THEN
+	ioMessage := TO_STRING(TRUE);
+ELSIF InputIsInMaintenanceMode AND InputIsInRunMode THEN
+ioMessage := TO_STRING(FALSE);
+ELSE
+	ioMessage := TO_STRING(FALSE);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsReadyToLoadUnload" Id="{9119baf5-8db6-4866-8457-a413aa4fb030}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD IsReadyToLoadUnload
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessagesBase := EFeedbackMsgChamberBase.IsReadyToLoadUnloadMsg;
+
+// Conditions for authorising the arm to enter the chamber
+IF IoChamberBase.InputEfemSlitDoorOpen AND StageIsInLoadingPosition THEN	
+	IoChamberBase.OutputIsReadyToLoadUnload := TRUE;
+ELSE
+	IoChamberBase.OutputIsReadyToLoadUnload := FALSE;
+END_IF
+
+ioMessage := ANY_TO_STRING(IoChamberBase.OutputIsReadyToLoadUnload);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageSchedulerBase" Id="{5a6545ee-559c-4456-ac8d-8b6269c847ed}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageSchedulerBase
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGeneratorBase.Q THEN
+	_pulseGeneratorBase(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemSchedulerBase OF			
+		0:  _deliverMessagesBase := EFeedbackMsgChamberBase.IsInMaintenanceMsg;
+			ioMessage := ' ';
+			_itemSchedulerBase := 1;
+			
+		1:	IsInMaintenance(); 
+			_itemSchedulerBase := 2;
+
+		2:  _deliverMessagesBase := EFeedbackMsgChamberBase.ArmNotExtendedMsg;
+			ioMessage := ' ';
+			_itemSchedulerBase := 3;
+			
+		3:	GetArmNotExtended(); 
+			_itemSchedulerBase := 4;	
+			
+		4:  _deliverMessagesBase := EFeedbackMsgChamberBase.EfemSlitDoorOpenPositionMsg; 
+			ioMessage := ' ';		
+			_itemSchedulerBase := 5;
+			
+		5:	ReadEfemSlitDoorPosition(); 
+			_itemSchedulerBase := 6;	
+			
+		6:	_deliverMessagesBase := EFeedbackMsgChamberBase.IsReadyToLoadUnloadMsg;
+			ioMessage := ' ';
+		   _itemSchedulerBase := 7;
+		   
+		7:	IsReadyToLoadUnload(); 
+			_itemSchedulerBase := 0;	
+		
+	END_CASE
+ELSE
+	_pulseGeneratorBase(IN := TRUE, PT := T#50MS);		
+END_IF
+
+
+IF _pulseIsAliveGenerator.Q THEN
+	_pulseIsAliveGenerator(IN := FALSE, PT := T#10MS);
+		
+	IsAlive();	
+ELSE
+	_pulseIsAliveGenerator(IN := TRUE, PT := T#1000MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveSlitDoorPosition" Id="{ee0dafd3-440f-43c1-85f1-91448019e241}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ABSTRACT MoveSlitDoorPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{f0414c56-d676-4440-b6cc-8e0550ec35a4}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{a4b151ec-ebb5-4bca-bad5-38b703610f76}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{020571c0-1270-4f7b-84ee-f41cf3c87513}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="RaisePropertiesChangedBase" Id="{8268f1b3-d357-4a2e-a702-a6e496723a17}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChangedBase
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesBase := TRUE;	
+	
+	IF _pulseGeneratorBase.Q THEN
+		_pulseGeneratorBase(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedPropertiesBase OF		
+			0: IsInMaintenanceMsg := ' ';
+				_itemRaisedPropertiesBase := 1;
+			
+			1: ArmNotExtendedMsg := ' ';		   
+				_itemRaisedPropertiesBase := 10;
+				
+			10: 
+				_logger.Information(_message.Reset().
+								    Append(_chamberConfig.Name).
+								    Append(' - RaisePropertiesChangedBase').ToString());
+				_raisePropertiesBase := FALSE;
+				_itemRaisedPropertiesBase := 0;
+		
+		END_CASE
+	
+	ELSE
+		_pulseGeneratorBase(IN := TRUE, PT := T#50MS);	
+	END_IF
+		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadEfemSlitDoorPosition" Id="{86634d83-e723-4261-89f2-6fff79ac95d0}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadEfemSlitDoorPosition
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessagesBase := EFeedbackMsgChamberBase.EfemSlitDoorOpenPositionMsg;
+
+ioMessage := ANY_TO_STRING(IoChamberBase.InputEfemSlitDoorOpen);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorPosition" Id="{aea0058d-e4a6-4853-8d42-b50dbb531c7d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ABSTRACT ReadSlitDoorPosition
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="SlitDoorClosePosition" Id="{4979245c-5e35-45bc-a877-f4c7c89f9513}">
+      <Declaration><![CDATA[PROPERTY PUBLIC SlitDoorClosePosition : BOOL]]></Declaration>
+      <Get Name="Get" Id="{6382749c-9f87-4008-a645-c60d466bf462}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SlitDoorClosePosition := _slitDoorClosePosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{eaf6d173-7aa2-4025-99c2-56eea569524c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_slitDoorClosePosition := SlitDoorClosePosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SlitDoorOpenPosition" Id="{fd8a629d-4672-4f0f-b941-baf4260892d8}">
+      <Declaration><![CDATA[PROPERTY PUBLIC SlitDoorOpenPosition : BOOL]]></Declaration>
+      <Get Name="Get" Id="{47c1b292-545c-4ad2-92bc-ca6c7dc7b5b6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SlitDoorOpenPosition := _slitDoorOpenPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d4e67467-3076-4b9f-aecd-86c2e174ded1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_slitDoorOpenPosition := SlitDoorOpenPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SlitDoorPosition" Id="{8852f7f4-18df-4547-8f8e-31cc39cd4fb5}">
+      <Declaration><![CDATA[PROPERTY PUBLIC SlitDoorPosition : ESlitDoorPosition]]></Declaration>
+      <Get Name="Get" Id="{229f2151-13aa-4f0a-a694-8277d758a5ce}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SlitDoorPosition := _slitDoorPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3711938b-1f0d-4fea-9852-b428991e0861}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_slitDoorPosition := SlitDoorPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="StageIsInLoadingPosition" Id="{0c875471-5161-43d0-8184-2f8d9347d8d4}" FolderPath="Commands\">
+      <Declaration><![CDATA[PROPERTY PUBLIC StageIsInLoadingPosition : bool]]></Declaration>
+      <Get Name="Get" Id="{4c0e5e2c-cb8d-4eba-a3c9-a3ec32fa92b4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StageIsInLoadingPosition := _stageIsInLoadingPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{aafdccf8-691a-4d71-9e38-446a9d7f1403}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stageIsInLoadingPosition := StageIsInLoadingPosition;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="ChamberBase">
+      <LineId Id="175" Count="9" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="185" Count="2" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="547" Count="0" />
+      <LineId Id="552" Count="3" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="192" Count="3" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="28" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.ArmExtendEnabled">
+      <LineId Id="20" Count="8" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="33" Count="8" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.GetArmNotExtended">
+      <LineId Id="10" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.IsAlive">
+      <LineId Id="12" Count="1" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.IsInMaintenance">
+      <LineId Id="5" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.IsReadyToLoadUnload">
+      <LineId Id="6" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.MessageSchedulerBase">
+      <LineId Id="179" Count="3" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="210" Count="2" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="217" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="227" Count="2" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="230" Count="2" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="194" Count="2" />
+      <LineId Id="176" Count="2" />
+      <LineId Id="151" Count="1" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="170" Count="1" />
+      <LineId Id="149" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.MoveSlitDoorPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.RaisePropertiesChangedBase">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.ReadEfemSlitDoorPosition">
+      <LineId Id="6" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.ReadSlitDoorPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.SlitDoorClosePosition.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.SlitDoorClosePosition.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.SlitDoorOpenPosition.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.SlitDoorOpenPosition.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.SlitDoorPosition.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.SlitDoorPosition.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.StageIsInLoadingPosition.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChamberBase.StageIsInLoadingPosition.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

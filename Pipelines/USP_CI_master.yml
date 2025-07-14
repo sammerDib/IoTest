@@ -1,0 +1,81 @@
+name: USP_CI_master$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    
+jobs:
+  - job: USP_CI_master
+    displayName: "[USP - CI] Branch master"
+
+    cancelTimeoutInMinutes: 2
+
+    continueOnError: false
+    condition: and(or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'BatchedCI')), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+    pool: Azure Pipelines
+      
+    variables:
+      solution: "**/*.sln"
+      buildPlatform: "x64"
+      buildConfiguration: "Release"
+    steps:
+      - checkout: self
+        lfs: true
+
+      - script: |
+          git lfs fetch 
+          git lfs pull
+        displayName : git-lfs
+
+      - task: NuGetToolInstaller@1
+
+      - task: NuGetAuthenticate@1
+        timeoutInMinutes: 1 # minutes
+        displayName: "NuGet authenticate"
+
+      - task: NuGetCommand@2
+        displayName: "NuGet restore"
+        timeoutInMinutes: 10 # minutes
+        inputs:
+          feedsToUse: config
+          nugetConfigPath: ./nuget.config
+          restoreSolution: "$(solution)"
+
+      - task: VSBuild@1
+        displayName: "Compile master"
+        inputs:
+          solution: "$(solution)"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+
+      - task: VSTest@2
+        displayName: "Run unit tests"
+        inputs:
+          testSelector: "testAssemblies"
+          testFiltercriteria: "TestCategory!=RequiresHardware"
+          testAssemblyVer2: |
+            **\*Test.dll
+            **\*Tests.dll
+            !**\*WrapperTests.dll
+            !**\*NativeTests.dll
+            !**\*Proxy.Test.dll
+            !**\*EME*Proxy.Test.dll
+            !**\*TestAdapter*.dll
+            !**\obj\**
+            !**\*DataAccess.Service.Test.dll
+            !**\*LIGHTSPEED.Service.Test.dll
+            !**\*PSD.Service.Test.dll
+          platform: "$(buildPlatform)"
+          runInParallel: false
+          runTestsInIsolation: true
+          configuration: "$(buildConfiguration)"
+          rerunFailedTests: true
+          # needs optional component of Devops
+          # codeCoverageEnabled: true

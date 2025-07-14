@@ -1,0 +1,630 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="BisL405Rfid" Id="{599d9bc3-2b7e-4237-8464-17a38a6b82eb}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK BisL405Rfid EXTENDS RfidBase
+VAR_INPUT
+	IoBisL405Rfid : IoBisL405Rfid;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : BisL405RfidConfig;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	DataCarrierMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecReadTag : INT; //COUNTER
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecReadTagWAIT : INT; //COUNTER
+	
+	{region ' CONFIGURE read BEHAVIOUR TEST options'}
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_iReadTagTestRereadN : INT := 0; //3; number of time to re-read tag //CONFIGURE TEST //TEST ONLY
+
+	{endregion}
+
+	{region ' CONFIGURE read BEHAVIOUR options'}
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_iReadStepMax : INT := 40; //max ticks/steps when tag detected //CONFIGURE 
+	{attribute 'OPC.UA.DA' := '0'}
+	_iReadStepMaxWait : INT := 10; //max ticks/steps when tag NOT detected //CONFIGURE 
+	{attribute 'OPC.UA.DA' := '0'}
+	_iReadTagBadFormatRereadN : INT := 3; //number of time to re-read tag (if 'TagBadFormat') //CONFIGURE 
+
+	{endregion}
+
+	{region 'control ACTIONS for signal input/output'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_iDoReset : INT := 3;// 1=do it, >1 = COUNTDOWN //CONFIGURE restart at start of read
+	{attribute 'OPC.UA.DA' := '0'}
+	_iToggleAddressCountAfterReset : INT := 1; //3;// 1=do it, >1 = COUNTDOWN //CONFIGURE ---------------------------------------
+	{attribute 'OPC.UA.DA' := '0'}
+	_iToggleAddressCountAfterToggle : INT := 3;// 1=do it, >1 = COUNTDOWN //CONFIGURE -------------------------------------------
+	{attribute 'OPC.UA.DA' := '0'}
+	_iToggleAddress : INT := 0;// 1=do it, >1 = COUNTDOWN //CONFIGURE or set after 'Reset'/'Toggle'
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_iReadTagRetry : INT := 0; //COUNT
+	{attribute 'OPC.UA.DA' := '0'}
+	_iReadDone : INT := 0; //COUNT
+	{attribute 'OPC.UA.DA' := '0'}
+	ToggleReset : BOOL;// := FALSE;//action flag
+	{attribute 'OPC.UA.DA' := '0'}
+	_uBitFlagWaitOn : UINT;// bit values 1=wait next 't' on, 2=wait 'S' on, 
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_bPrevStrobe : BOOL;//save flag
+	{attribute 'OPC.UA.DA' := '0'}
+	_bLatchStrobeChanged : BOOL;//detect & latch
+	{attribute 'OPC.UA.DA' := '0'}
+	_bLatchADRToggled : BOOL := FALSE;//detect & latch
+	
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;	
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_readTagCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	
+	{endregion}	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_sMsgBuild : STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Init device
+InitDevice(); 				  				 
+
+// Deliver messages
+CASE _deliverMessages OF			
+	EFeedbackMsgBisL405.DataCarrierMsg :
+		IF DataCarrierMsg <> message THEN
+			DataCarrierMsg := message;	
+		END_IF				
+END_CASE							   							   	
+	
+ReadTag(_readTagCmd);
+RaisePropertiesChanged(_raiseProperties);
+
+IF NOT _raiseProperties THEN
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{41c89463-3c67-4b0a-92cb-2fcc6b5cf0f9}" />
+    <Method Name="FB_init" Id="{5d8497bf-029e-4315-846c-ab5a8feeb0b5}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : BisL405RfidConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._rfidConfig.Name := Config.Name;
+	SUPER^._rfidConfig.DeviceID := Config.DeviceID;
+	SUPER^._rfidConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._rfidConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Rfid;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDataRead" Id="{a82fe3b3-d799-49c4-9208-5cde3b462474}">
+      <Declaration><![CDATA[METHOD InitDataRead : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//:	_sDBMsg:= '';//TEST ONLY
+message := ' '; //clear result
+_sMsgBuild := ' '; //clear result build
+_itemExecReadTag := 0;//Reset read data step count
+_itemExecReadTagWAIT := 0;//Reset read data step count
+_iDoReset := 1;//do restart before read
+_iToggleAddress:= 0;//INIT: //OFF
+_uBitFlagWaitOn := 0;//INIT: 'DoReset' will set to 1 to wait for 't' signal (tag present)
+_bLatchStrobeChanged:=TRUE; //INIT: bStrobeChange TRUE, set true for 1st 'ToggleAddress'
+_bLatchADRToggled:=FALSE; //INIT: clear]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{0ce29ce9-fbb5-4034-a4b3-5204a22829c7}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - init device').ToString());		
+								
+	_initDevice := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{782fc52d-cea6-4b96-a2b1-38f9bff738e3}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0:	
+			_itemScheduler := 10;
+			
+		10 : 
+			_itemScheduler := 0;											
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{ac414578-9eb7-4e19-be44-77d0bd39fb2e}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raiseProperties := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0:  _readTagCmd := TRUE;
+				_itemRaisedProperties := 10;
+				
+			10: _logger.Information(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;
+				_itemRaisedProperties := 0;
+		
+		END_CASE
+	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadTag" Id="{2b4a314b-424c-461d-9778-e638abf38d38}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ReadTag
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	CombinedByte: BYTE; 
+	CombinedByte1: BYTE;
+
+	bStrobeChange : BOOL;//detect
+	//
+	bLatchStrobeChanged : BOOL;//detect & latch, temp local copy...
+	lRand:LREAL; //EC//20240715
+	
+	bTagValid : BOOL;
+	
+	lenghtMsg : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_readTagCmd := TRUE;
+	
+	_deliverMessages := EFeedbackMsgBisL405.DataCarrierMsg;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#100MS);
+			
+		CASE _itemExecScheduler OF
+			0:  //init for read
+				_logger.Information(_message.Reset().Append(_config.Name).Append(' - ReadTag').ToString());
+				_itemExecScheduler := 1;
+				InitDataRead();
+				SignalClear_ADR_and_RESTART();//clear at START
+			
+			1:  //reset reader & read tag data, byte by byte
+				IF IoBisL405Rfid.Strobe <> _bPrevStrobe THEN
+					bStrobeChange:=TRUE;
+				ELSE
+					bStrobeChange:=FALSE;
+				END_IF
+				_bPrevStrobe:= IoBisL405Rfid.Strobe;
+				IF bStrobeChange THEN
+					_bLatchStrobeChanged:=TRUE;//reset by 'ToggleAddress' ('OUTPUT a OFF'/'OUTPUT a ON')
+				END_IF
+
+				bLatchStrobeChanged:= _bLatchStrobeChanged; //need a copy that won't be reset (by 'ToggleAddress')
+					
+				CombinedByte := SignalsGet_DataByte();
+				CombinedByte1:= CombinedByte;
+				IF IoBisL405Rfid.TagPresent AND IoBisL405Rfid.Strobe THEN
+					CombinedByte1:= CombinedByte1+1;
+				END_IF
+				
+				IF NOT Toggle_RESTART() THEN //restart if neened (at start of reading)
+					IF IoBisL405Rfid.TagPresent THEN
+						_uBitFlagWaitOn:= _uBitFlagWaitOn AND (NOT 1);//clear bit
+					END_IF
+					IF IoBisL405Rfid.Strobe THEN
+						_uBitFlagWaitOn:= _uBitFlagWaitOn AND (NOT 2);//clear bit
+					END_IF
+					IF _uBitFlagWaitOn = 0 THEN
+						Toggle_ADR();
+					ELSE
+						_itemExecReadTagWAIT := _itemExecReadTagWAIT+1;//COUNT step WAIT
+					END_IF
+				END_IF
+				_itemExecReadTag := _itemExecReadTag+1;//COUNT step
+				//------------------------------------------------------------------------*
+				//CONCATENATE any read charcter to RESULT STRING...
+				//------------------------------------------------------------------------*								
+				IF IoBisL405Rfid.TagPresent AND bLatchStrobeChanged AND bStrobeChange THEN
+					IF (CombinedByte > 0) THEN
+						_sMsgBuild := CONCAT(_sMsgBuild, BYTE_TO_HEXSTR(CombinedByte,2,FALSE)); //<-- ADD another BYTE to read TAG DATA
+					ELSE
+						IF _bLatchADRToggled THEN
+							_itemExecScheduler := 2;//STOP read tag DATA
+						END_IF
+					END_IF
+				END_IF
+																
+				IF _itemExecReadTag >= _iReadStepMax THEN //limit
+					_itemExecScheduler := 2;//STOP read tag DATA
+				END_IF
+				IF _itemExecReadTagWAIT >= _iReadStepMaxWait THEN //limit
+					_itemExecScheduler := 2;//STOP read tag DATA
+				END_IF
+				
+			2:  lenghtMsg := Len(_sMsgBuild);
+				IF lenghtMsg = 1  THEN
+					_sMsgBuild := 'Tag not present';					
+				END_IF
+				_itemExecScheduler := 10;//STOP read tag DATA
+				
+			10:  //end read, return any data
+				_readTagCmd := FALSE;	
+				_itemExecScheduler := 0;		
+				SignalClear_ADR_and_RESTART();//clear at END
+				//VALIDATE TAG DATA...
+				bTagValid:= TRUE;
+				IF (_sMsgBuild <> ' ') THEN
+					_iReadDone := _iReadDone+1;
+				END_IF
+				IF LEN(_sMsgBuild) <> 7 THEN
+					bTagValid:= FALSE; //7 chars expected
+				END_IF
+				//ADD any other validation criteria here...
+				message := _sMsgBuild; 
+				
+				_logger.Information(_message.Reset().Append(_config.Name).Append(': ').Append(message).ToString());
+				
+				//TagBadFormat retry
+				IF (NOT bTagValid) AND (_iReadTagBadFormatRereadN > 0) THEN
+					IF _iReadTagBadFormatRereadN > _iReadTagRetry THEN
+						_readTagCmd := TRUE;//retry...
+						_iReadTagRetry:=_iReadTagRetry+1;
+					END_IF
+				END_IF
+				//TEST retry //TEST ONLY
+				IF _iReadTagTestRereadN > 0 THEN
+					IF _iReadTagTestRereadN > _iReadTagRetry THEN
+						_readTagCmd := TRUE;//retry...
+						_iReadTagRetry:=_iReadTagRetry+1;
+					END_IF
+				END_IF
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+ELSE
+	_iReadTagRetry:= 0;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SignalClear_ADR_and_RESTART" Id="{1cd51e57-bf9d-4f9c-a8ce-8d895b345f0a}">
+      <Declaration><![CDATA[METHOD SignalClear_ADR_and_RESTART : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//clear at START and END of reading
+IoBisL405Rfid.Restart:= FALSE;
+IoBisL405Rfid.Address:= FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SignalGet_ADR" Id="{1cf24ee9-6826-44d6-9032-68f103701b7f}">
+      <Declaration><![CDATA[METHOD SignalGet_ADR : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//NB: Signals 'Restart' and 'Address' are inverted!
+SignalGet_ADR:= IoBisL405Rfid.Restart;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SignalGet_RESTART" Id="{147c08f4-4f2a-4f67-9a8b-9cf91ecf1ecc}">
+      <Declaration><![CDATA[METHOD SignalGet_RESTART : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//NB: Signals 'Restart' and 'Address' are inverted!
+SignalGet_RESTART:= IoBisL405Rfid.Address;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SignalSet_ADR" Id="{3997cd3f-27eb-4c9f-b0ff-56b4e493be60}">
+      <Declaration><![CDATA[METHOD SignalSet_ADR : BOOL
+VAR_INPUT
+	bADRIn : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//NB: Signals 'Restart' and 'Address' are inverted!
+IoBisL405Rfid.Restart:= bADRIn;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SignalSet_RESTART" Id="{1a657866-a208-44c8-b36d-5663223a8c53}">
+      <Declaration><![CDATA[METHOD SignalSet_RESTART : BOOL
+VAR_INPUT
+	bRESTARTIn : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//NB: Signals 'Restart' and 'Address' are inverted!
+IoBisL405Rfid.Address:= bRESTARTIn;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SignalsGet_DataByte" Id="{ac5d68f1-34d3-4e3e-a445-baea2412792a}">
+      <Declaration><![CDATA[METHOD SignalsGet_DataByte : BYTE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SignalsGet_DataByte :=	BOOL_TO_BYTE(IoBisL405Rfid.DataOutput0) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput1) * 2) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput2) * 4) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput3) * 8) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput4) * 16) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput5) * 32) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput6) * 64) +
+						(BOOL_TO_BYTE(IoBisL405Rfid.DataOutput7) * 128);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Toggle_ADR" Id="{ee0489a7-3b49-4ef5-b86b-bbff1bb6ebc8}">
+      <Declaration><![CDATA[METHOD Toggle_ADR : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Toggle_ADR:= FALSE;
+IF _iToggleAddress = 1 THEN
+	Toggle_ADR:= TRUE;
+	IF _bLatchStrobeChanged THEN //only toggle 'ADR' AFTER STR signal change recieved
+		_bLatchStrobeChanged:= FALSE; //Clear
+		_bLatchADRToggled:=TRUE; //EC//20240710 AAA Smells redundant
+		IF SignalGet_ADR() THEN
+			SignalSet_ADR(FALSE);
+		ELSE
+			SignalSet_ADR(TRUE);
+		END_IF
+		_iToggleAddress:= 1;//(continue toggling)
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Toggle_RESTART" Id="{989d099a-5ca8-43f0-8def-f7da589b888e}">
+      <Declaration><![CDATA[METHOD Toggle_RESTART : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Toggle_RESTART:= FALSE;
+IF _iDoReset = 1 THEN
+	Toggle_RESTART:= TRUE;
+	IF SignalGet_RESTART() THEN
+		SignalSet_RESTART(FALSE);
+		_iDoReset:= 0; //DONE
+		_iToggleAddress:= 1;//after restart, ask for data bits
+	ELSE
+		SignalSet_RESTART(TRUE);
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="BisL405Rfid">
+      <LineId Id="11" Count="4" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="272" Count="2" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.FB_init">
+      <LineId Id="9" Count="18" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.InitDataRead">
+      <LineId Id="6" Count="4" />
+      <LineId Id="12" Count="4" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.InitDevice">
+      <LineId Id="42" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.MessageScheduler">
+      <LineId Id="6" Count="3" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.ReadTag">
+      <LineId Id="3172" Count="5" />
+      <LineId Id="3179" Count="3" />
+      <LineId Id="3487" Count="0" />
+      <LineId Id="3183" Count="0" />
+      <LineId Id="3199" Count="0" />
+      <LineId Id="3224" Count="0" />
+      <LineId Id="3227" Count="1" />
+      <LineId Id="3245" Count="10" />
+      <LineId Id="3258" Count="0" />
+      <LineId Id="3269" Count="5" />
+      <LineId Id="3420" Count="0" />
+      <LineId Id="3279" Count="1" />
+      <LineId Id="3282" Count="2" />
+      <LineId Id="3286" Count="1" />
+      <LineId Id="3416" Count="0" />
+      <LineId Id="3290" Count="0" />
+      <LineId Id="3292" Count="6" />
+      <LineId Id="3471" Count="0" />
+      <LineId Id="3301" Count="0" />
+      <LineId Id="3418" Count="0" />
+      <LineId Id="3320" Count="1" />
+      <LineId Id="3323" Count="4" />
+      <LineId Id="3334" Count="1" />
+      <LineId Id="3337" Count="2" />
+      <LineId Id="3341" Count="1" />
+      <LineId Id="3482" Count="0" />
+      <LineId Id="3486" Count="0" />
+      <LineId Id="3479" Count="1" />
+      <LineId Id="3476" Count="0" />
+      <LineId Id="3483" Count="0" />
+      <LineId Id="3343" Count="3" />
+      <LineId Id="3350" Count="8" />
+      <LineId Id="3368" Count="0" />
+      <LineId Id="3443" Count="0" />
+      <LineId Id="3451" Count="0" />
+      <LineId Id="3436" Count="0" />
+      <LineId Id="3383" Count="15" />
+      <LineId Id="3400" Count="3" />
+      <LineId Id="636" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.SignalClear_ADR_and_RESTART">
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.SignalGet_ADR">
+      <LineId Id="9" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.SignalGet_RESTART">
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.SignalSet_ADR">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.SignalSet_RESTART">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.SignalsGet_DataByte">
+      <LineId Id="6" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.Toggle_ADR">
+      <LineId Id="33" Count="0" />
+      <LineId Id="6" Count="4" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="BisL405Rfid.Toggle_RESTART">
+      <LineId Id="28" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

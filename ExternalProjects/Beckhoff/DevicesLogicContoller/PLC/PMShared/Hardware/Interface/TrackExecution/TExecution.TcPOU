@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="TExecution" Id="{c232843f-2ff3-4ae3-84e6-98da0146b076}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TExecution IMPLEMENTS IExecution 
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '1'}
+	State : TExecutionState := TExecutionState.Unknown;
+	{attribute 'OPC.UA.DA' := '0'}
+    _done : BOOL;       
+	{attribute 'OPC.UA.DA' := '0'}
+    _error : BOOL;      
+	{attribute 'OPC.UA.DA' := '0'}
+	_warning : BOOL;    
+	{attribute 'OPC.UA.DA' := '0'}
+    _aborted : BOOL;    
+	{attribute 'OPC.UA.DA' := '0'}
+    _errorId : UDINT;   
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Aborted" Id="{63541121-7ea3-43b2-9ae4-cbf326229b7c}">
+      <Declaration><![CDATA[PROPERTY Aborted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{95435308-f8a9-4b0f-95a7-ec8ac4d06f37}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Aborted := _aborted;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8b9942ad-18e0-4465-98ac-3ccad9137aed}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_aborted := Aborted;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Busy" Id="{a3f02e88-03be-4951-a37c-c9d808c3ee62}">
+      <Declaration><![CDATA[PROPERTY Busy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{bceb8f9b-b9ee-4a8e-882e-76cd043ea681}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Busy := State = TExecutionState.Busy;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c6c03b95-8b42-4736-9ce3-9836c5ca9915}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Done" Id="{09d28897-2204-4f66-a4a3-b9063439c371}">
+      <Declaration><![CDATA[PROPERTY Done : BOOL]]></Declaration>
+      <Get Name="Get" Id="{97769fc5-971f-4cbe-81a7-7467e40db7c8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Done := _done;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{76d0680b-e3ed-429b-9cd5-e9cda76fb027}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_done := Done;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Error" Id="{02de8373-4279-4f3a-8fac-086f215450b4}">
+      <Declaration><![CDATA[PROPERTY Error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{807c373f-05a3-4ad7-a428-9387dbad42b7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := _error;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f6e59a86-6b55-4a7f-9a73-69d38964f84c}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_error := Error;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="ErrorId" Id="{26a5bb13-b25d-440e-95e8-2ce3ff8fb464}">
+      <Declaration><![CDATA[PROPERTY ErrorId : UDINT]]></Declaration>
+      <Get Name="Get" Id="{17ec13f1-8b01-4021-bfc0-bb1a1a91d1f2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorId := _errorId;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c2e2bed9-b8ff-47b4-a142-ef4431d6fbec}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_errorId := ErrorId;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Ready" Id="{bf2a027e-dcb8-4505-a0e4-2adde474bd26}">
+      <Declaration><![CDATA[PROPERTY Ready : BOOL;
+]]></Declaration>
+      <Get Name="Get" Id="{070109f7-939a-43ba-aeba-d4844ab81208}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Ready := State = TExecutionState.Ready;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{471c697d-888e-4b80-8690-c5c818286aa4}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SetAborted" Id="{10747d03-e24d-41e7-9827-e00e9d1be62c}">
+      <Declaration><![CDATA[METHOD SetAborted
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_aborted := TRUE;
+State := TExecutionState.Ready;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetBusy" Id="{1dae19c1-6c16-43c0-b1a9-04eaeae3319e}">
+      <Declaration><![CDATA[METHOD SetBusy
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF State = TExecutionState.Starting THEN
+    State := TExecutionState.Busy;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetDone" Id="{63e34279-45bb-4d75-ae9f-096e5adac110}">
+      <Declaration><![CDATA[METHOD SetDone 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_done := TRUE;
+State := TExecutionState.Ready;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetError" Id="{21085a73-cb46-40d6-92f7-fea024288e0b}">
+      <Declaration><![CDATA[METHOD SetError
+VAR_INPUT
+	ErrorId : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_error := TRUE;
+_errorId := ErrorId;
+State := TExecutionState.Error;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetReady" Id="{77cd0482-f8ed-431c-8a95-4405ea835cf0}">
+      <Declaration><![CDATA[METHOD SetReady
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Clear results
+_done := FALSE;
+_error := FALSE;
+_errorId := 0;
+_aborted := FALSE;
+
+State := TExecutionState.Ready;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetWarning" Id="{ac5d607e-0cc8-40c7-93f3-c283687c2812}">
+      <Declaration><![CDATA[METHOD SetWarning
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_warning := TRUE;
+State := TExecutionState.Ready;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{f2e1fefe-a947-4e6e-b485-10f29c05c92b}">
+      <Declaration><![CDATA[METHOD Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF State = TExecutionState.Ready OR 
+    State = TExecutionState.Unknown THEN
+    // Acq results
+    _done := FALSE;
+    _error := FALSE;
+    _errorId := 0;
+    _aborted := FALSE;
+ 
+    State := TExecutionState.Starting;
+ 
+    Start := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Starting" Id="{28851dbe-824c-4e36-807b-5f37db759fa2}">
+      <Declaration><![CDATA[PROPERTY Starting : BOOL]]></Declaration>
+      <Get Name="Get" Id="{89b3cac5-cec5-498e-bebe-43c703b8a74d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Starting := State = TExecutionState.Starting ;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{aaa40f74-2661-4c48-8595-6bca47f72bd8}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Status" Id="{82a80d98-c72b-4a22-ae32-f52f84505555}">
+      <Declaration><![CDATA[PROPERTY Status : TExecutionState]]></Declaration>
+      <Get Name="Get" Id="{df009eef-510b-492f-a59f-414253a85df9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Status := State;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{16782c7c-5389-45d1-a065-c864880c5fc6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[State := Status;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Warning" Id="{ccc41633-9723-4790-bed6-ffa5e79fc332}">
+      <Declaration><![CDATA[PROPERTY Warning : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e811a603-305b-43a0-a4fb-0e29e56d27e8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Warning := _warning;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0766741c-8ba5-4139-a5c0-a04c08cbf85a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_warning := Warning;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="TExecution">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Aborted.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Aborted.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Busy.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Busy.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Done.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Done.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Error.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Error.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.ErrorId.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.ErrorId.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Ready.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Ready.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.SetAborted">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.SetBusy">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.SetDone">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.SetError">
+      <LineId Id="7" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.SetReady">
+      <LineId Id="14" Count="0" />
+      <LineId Id="6" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.SetWarning">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Start">
+      <LineId Id="6" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="7" Count="5" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Starting.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Starting.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Status.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Status.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Warning.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TExecution.Warning.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,74 @@
+name: USP_CI_AllBranchesExceptDevelopAndmaster$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+jobs:
+  - job: USP_CI_AllBranchesExceptDevelopAndmaster
+    displayName: "[USP - CI] All branches except “Develop” and “master”"
+    timeoutInMinutes: 90
+    cancelTimeoutInMinutes: 2
+
+    continueOnError: false
+
+    pool: Default
+
+    variables:
+      solution: "**/*.sln;!**/*Install.sln"
+      buildPlatform: "x64"
+      buildConfiguration: "Release"
+    steps:
+      - checkout: self
+        lfs: true
+
+      - script: |
+          git lfs fetch 
+          git lfs pull
+        displayName : git-lfs
+
+      - task: NuGetToolInstaller@1
+
+      - task: NuGetAuthenticate@1
+        timeoutInMinutes: 1 # minutes
+        displayName: "NuGet authenticate"
+
+      - task: NuGetCommand@2
+        displayName: "NuGet restore"
+        timeoutInMinutes: 10 # minutes
+        inputs:
+          feedsToUse: config
+          nugetConfigPath: ./nuget.config
+          restoreSolution: "$(solution)"
+
+      - task: VSBuild@1
+        displayName: "Compile AllBranchesExceptDevelopAndmaster"
+        inputs:
+          solution: "$(solution)"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+
+      - task: VSTest@2
+        displayName: "Run unit tests"
+        inputs:
+          testSelector: "testAssemblies"
+          testFiltercriteria: "TestCategory!=RequiresHardware&TestCategory!=RequiresMIL"
+          testAssemblyVer2: |
+            **\*Test.dll
+            **\*Tests.dll
+            !**\*WrapperTests.dll
+            !**\*NativeTests.dll
+            !**\*Proxy.Test.dll
+            !**\*EME*Proxy.Test.dll
+            !**\*TestAdapter*.dll
+            !**\obj\**
+            !**\*DataAccess.Service.Test.dll
+            !**\*LIGHTSPEED.Service.Test.dll
+            !**\*PSD.Service.Test.dll
+          platform: "$(buildPlatform)"
+          runInParallel: false
+          runTestsInIsolation: true
+          configuration: "$(buildConfiguration)"
+          rerunFailedTests: true
+          # needs optional component of Devops
+          # codeCoverageEnabled: true

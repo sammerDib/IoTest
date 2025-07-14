@@ -1,0 +1,1574 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PM101OpticalPowermeter" Id="{4dcd117d-0739-419c-bdf4-555194aa3028}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK PM101OpticalPowermeter EXTENDS OpticalPowermeterBase
+VAR_INPUT
+	{attribute 'OPC.UA.DA' := '0'}
+	Conf : PM101OpticalPowermeterConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	PolarisationConfig : PolarisationConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	RFactorSettings : RFactorSettings;
+	{attribute 'OPC.UA.DA' := '0'}
+	ResponsivityConfig : ResponsivityConfig;	
+	{attribute 'OPC.UA.DA' := '0'}	
+	SerialCom  : SerialCom(Prefix :='', Suffix := Const.LINE_FEED); 
+	{attribute 'OPC.UA.DA' := '0'}
+	RefSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.LINE_FEED) := SerialCom; 
+	{attribute 'OPC.UA.DA' := '0'}
+	PolarResult : EPolar;	 
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	IoControlPM101 : IoControlPM101;	
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+		
+	PowerMsg : STRING(255);
+	CurrentMsg : STRING(255);		
+	IdentifierMsg : STRING(255);
+	ResponsivityMsg : STRING(255) := 'Undefined';
+	DarkOffsetMsg : STRING(255);
+	DarkAdjustStateMsg : STRING(255);
+	CustomMsg : STRING(255);	
+	SensorTypeMsg : STRING(255);			
+	WavelengthMsg : STRING(255);				
+	(* Not necessary *)
+	BeamDiameterMsg : STRING(255);
+	SensorAttenuationMsg : STRING(255);			
+	MaxPowerMsg : STRING(255);
+	MinPowerMsg : STRING(255);
+	WavelengthRangeMsg : STRING(255);	
+	CalibMsg : STRING(255);
+	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_flow : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerRawAbs : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerCal_mW : LREAL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerRaw_mW : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_current_mA : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_darkAdjustState : STRING(255);
+	{attribute 'OPC.UA.DA' := '0'}	
+	_darkOffset_mW : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_responsivity_mW_mA : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_rfactor : LREAL := -1;
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}		 
+	_abortCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_customCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_setBeamDiameter : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_setWavelength : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	 _rangeAuto : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	  
+	_setSensorAttenuation : BOOL;
+	{attribute 'OPC.UA.DA' := '0'} 		
+	_setSensorType : BOOL;	 	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_rangeVariation : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_startDarkAdjust : BOOL;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cancelDarkAdjust : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_setResponsivity : BOOL; 
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_monitoringMessages : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdRange : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdRangesVariation : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdBeamDiameter : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdWavelength : UINT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdSensorAttenuation : UINT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdSensorType : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setpoint : LREAL := 0;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemSchedulerResponsivity : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorMsg : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorCmd : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorCustom : TON;		
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_length : INT;
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	_illumFlow : STRING := ' ';
+	{attribute 'OPC.UA.DA' := '0'}
+	_delimeter : STRING := ';';
+	{attribute 'OPC.UA.DA' := '0'}
+	_firstConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_secondConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_thirdConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fourthConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fifthConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_sixthConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_seventhConcat : STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF _illumFlow = ' ' THEN	
+	IF (Conf.DeviceID = TO_STRING(EPowerIlluminationFlow.HS)) THEN
+		_flow := TO_STRING(EPowerIlluminationFlow.HS);
+	ELSE
+		_flow := TO_STRING(EPowerIlluminationFlow.HT);
+	END_IF	
+		
+	_illumFlow := CONCAT(_flow, _delimeter);
+END_IF		
+
+
+// Deliver messages
+IF RefSerialCom.IsReceived OR Conf.IsSimulated THEN					
+	IF NOT Conf.IsSimulated THEN
+		_length := LEN(RefSerialCom.LastReceivedString);
+		message := DELETE(RefSerialCom.LastReceivedString, 2, _length);
+	END_IF
+		
+	IF _monitoringMessages THEN
+		CASE _deliverMessages OF			
+			EFeedbackMsgPM101.PowerMsg :
+				
+				IF PolarResult = EPolar.S_Polar THEN
+					_rfactor := RFactorSettings.RFactor_S;
+				ELSIF PolarResult = EPolar.P_Polar THEN
+					_rfactor := RFactorSettings.RFactor_P;
+				END_IF			
+				
+				_powerRawAbs := ABS(STRING_TO_LREAL(message));
+				IF  _powerRawAbs > 0 THEN						
+					_powerRaw_mW := _powerRawAbs * 1000;
+					_powerCal_mW := _powerRawAbs * 1000 / _rfactor;
+					
+					_firstConcat := CONCAT(_illumFlow, TO_STRING(_powerRaw_mW));	
+					_secondConcat := CONCAT(_firstConcat, _delimeter);	
+					_thirdConcat := CONCAT(_secondConcat, TO_STRING(_powerCal_mW));
+					_fourthConcat := CONCAT(_thirdConcat, _delimeter);
+					
+					PowerMsg :=  CONCAT(_fourthConcat, TO_STRING(_rfactor));
+				END_IF
+			EFeedbackMsgPM101.CurrentMsg :				
+				_current_mA := STRING_TO_LREAL(message) * 1000;		
+				CurrentMsg := CONCAT(_illumFlow, TO_STRING(_current_mA));	
+		END_CASE
+	ELSE
+		CASE _deliverMessages OF
+			EFeedbackMsgPM101.IdentifierMsg :				   		
+				IdentifierMsg := CONCAT(_illumFlow, message);
+				_logger.Information(_message.Reset().Append('IdentifierMsg: ').Append(IdentifierMsg).ToString());													
+			EFeedbackMsgPM101.ResponsivityMsg :			
+				_responsivity_mW_mA := (STRING_TO_LREAL(message) * 1E3);		
+				ResponsivityMsg := CONCAT(_illumFlow, TO_STRING(_responsivity_mW_mA));	
+				_logger.Information(_message.Reset().Append('ResponsivityMsg: ').Append(ResponsivityMsg).ToString());						
+				message := ' ';	
+				
+			EFeedbackMsgPM101.DarkOffsetMsg :						
+				_darkOffset_mW := (STRING_TO_LREAL(message) * 1E12); 			
+				DarkOffsetMsg := CONCAT(_illumFlow, TO_STRING(_darkOffset_mW));	
+				_logger.Information(_message.Reset().Append('DarkOffsetMsg: ').Append(DarkOffsetMsg).ToString());	
+			EFeedbackMsgPM101.DarkAdjustStateMsg :				
+				DarkAdjustStateMsg := CONCAT(_illumFlow, message);			
+				_logger.Information(_message.Reset().Append('DarkAdjustStateMsg: ').Append(DarkAdjustStateMsg).ToString());	
+									
+			EFeedbackMsgPM101.CustomMsg :		    	
+				CustomMsg := CONCAT(_illumFlow, message);	
+				_logger.Information(_message.Reset().Append('CustomMsg: ').Append(CustomMsg).ToString());
+				
+				
+			EFeedbackMsgPM101.SensorTypeMsg :				
+				SensorTypeMsg := CONCAT(_illumFlow, message);					
+			EFeedbackMsgPM101.WavelengthMsg :			
+				WavelengthMsg := CONCAT(_illumFlow, message);
+			EFeedbackMsgPM101.BeamDiameterMsg :			
+				BeamDiameterMsg := CONCAT(_illumFlow, message);			
+			EFeedbackMsgPM101.SensorAttenuationMsg :			
+				SensorAttenuationMsg := CONCAT(_illumFlow, message);	
+			EFeedbackMsgPM101.WavelengthRangeMsg :
+				WavelengthRangeMsg := CONCAT(_illumFlow, message);	
+			EFeedbackMsgPM101.MaxPowerMsg :
+				MaxPowerMsg := CONCAT(_illumFlow, message);
+			EFeedbackMsgPM101.MinPowerMsg :
+				MinPowerMsg := CONCAT(_illumFlow, message);	
+		END_CASE
+	END_IF							
+	
+ELSE
+	CASE _deliverMessages OF
+		EFeedbackMsgPM101.CalibMsg :				
+			_fifthConcat := CONCAT(_illumFlow, LREAL_TO_FMTSTR(RFactorSettings.RFactor_S, 10, TRUE));	
+			_sixthConcat := CONCAT(_fifthConcat, _delimeter);
+			_seventhConcat := CONCAT(_sixthConcat, LREAL_TO_FMTSTR(RFactorSettings.RFactor_P, 10, TRUE));	
+		
+			CalibMsg := _seventhConcat;
+	END_CASE	
+END_IF
+
+// Commands
+EnableAutoRange(_rangeAuto, STRING_TO_BOOL(_cmdRange));
+RangesVariation(_rangeVariation, _cmdRangesVariation);
+StartDarkAdjust(_startDarkAdjust);
+CancelDarkAdjust(_cancelDarkAdjust);
+Abort(_abortCmd);
+RaisePropertiesChanged(_raiseProperties);
+CustomCommand(_customCmd, _cmd);
+
+// For init sensor
+SetResponsivity(_setResponsivity, _setpoint);
+SetBeamDiameter(_setBeamDiameter, _cmdBeamDiameter);
+SetWavelength(_setWavelength, _cmdWavelength);
+SetSensorAttenuation(_setSensorAttenuation, _cmdSensorAttenuation);
+SetSensorType(_setSensorType, _cmdSensorType);
+
+// Monitoring some values 
+IF _monitoringMessages THEN
+	MessageScheduler();
+END_IF
+
+(*
+IF (NOT _setBeamDiameter AND NOT _setWavelength AND NOT _rangeAuto AND NOT _setSensorAttenuation
+    AND NOT _setSensorType AND NOT _setResponsivity AND NOT _customCmd AND NOT _raiseProperties 
+	AND NOT _rangeVariation AND NOT _startDarkAdjust AND NOT _cancelDarkAdjust AND NOT _abortCmd) THEN
+	MessageScheduler();
+END_IF	
+*)
+
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{cddfa01f-4c02-4bc4-be63-246761a6f594}">
+      <Folder Name="InitSensor" Id="{6c0464fe-082e-4f43-bb17-3dfbf6b7c3bc}" />
+    </Folder>
+    <Method Name="Abort" Id="{baf29c71-8f5f-4351-80ad-9bce6dfb9150}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[METHOD Abort : BOOL;
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR_OUTPUT
+	Stop : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'ABORt';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Abort command').ToString());																
+	SerialCom.Send(Cmd);	
+	_abortCmd := FALSE;
+	
+	//ABORT := TRUE;		 
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CancelDarkAdjust" Id="{bf5b6cbb-a34f-487a-a0c5-69e7be5ef1a3}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD CancelDarkAdjust
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:CORRection:COLLect:ZERO:ABORt';	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Cancel dark adjust').ToString());
+	
+	//Abort(_abortCmd);
+	SerialCom.Send(cmd);
+	_cancelDarkAdjust := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{4ef4841f-3ea9-48cc-abc5-b056a854e18c}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Custom command:').
+								Append(Cmd).ToString());
+	
+	_deliverMessages := EFeedbackMsgPM101.CustomMsg;																								
+	SerialCom.Send(Cmd);	
+	_customCmd := FALSE;
+END_IF
+
+(*
+IF Execute THEN
+	IF _pulseGeneratorCustom.Q THEN
+		_pulseGeneratorCustom(IN := FALSE);									
+		_customCmd := FALSE;
+	ELSE	
+		_pulseGeneratorCustom(IN := Execute, PT := T#100MS);										
+	END_IF	
+END_IF	
+*)
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnableAutoRange" Id="{802ddb88-299c-4343-87c3-8e15004ea084}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Switches the auto-ranging function on and off **)
+METHOD EnableAutoRange
+VAR_INPUT
+	Execute : BOOL;
+	Activate : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'Sense:Power:Dc:Range:AUTO ';
+	autorRange : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Switches the auto-ranging: ').
+								Append(TO_STRING(Activate)).ToString());
+	
+	IF Activate THEN
+		autorRange := 'Sense:Power:Dc:Range:AUTO ON';
+	ELSE
+		autorRange := 'Sense:Power:Dc:Range:AUTO OFF';
+	END_IF
+					
+	SerialCom.Send(CONCAT(cmd, TO_STRING(Activate)));	
+	_rangeAuto := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetBeamDiameter" Id="{3cc42f05-04bf-4261-a25d-c043caa5032c}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[METHOD GetBeamDiameter
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:Correction:beamdiameter? ';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_logger.Information(_message.Reset().Append('GetBeamDiameter').ToString());
+_deliverMessages := EFeedbackMsgPM101.BeamDiameterMsg;
+
+IF NOT Conf.IsSimulated THEN
+	SerialCom.Send(cmd);
+ELSE
+	message := '5';
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetCalibConfig" Id="{3007e719-d679-495d-be02-3b60144592f2}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Read the unit’s identification string **)
+METHOD GetCalibConfig
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.CalibMsg;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDarkAdjustState" Id="{15ebc46f-1729-40c3-bdd8-c8afe7d60578}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetDarkAdjustState
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:Correction:COLLect:ZERO:STATe?';	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.DarkAdjustStateMsg;					
+
+IF NOT Conf.IsSimulated THEN
+	SerialCom.Send(cmd);
+ELSE
+	message := 'Simu_ok';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDarkOffset" Id="{81ed1478-e1a0-4e6b-bd04-6909a7211f6f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetDarkOffset
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:CORRection:COLLect:ZERO:MAGNitude?';	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.DarkOffsetMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{68c4a598-3452-4132-b02a-257e911b4cac}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Read the unit’s identification string **)
+METHOD GetIdentifier
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'System:Sensor:IDN?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.IdentifierMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMaxPower" Id="{9d95a859-4f18-4c06-848b-632904a25e53}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Get max measure power **)
+METHOD GetMaxPower
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Measure:Scalar:POWer? MAXimum';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.MaxPowerMsg;					
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMinPower" Id="{117179f1-6eb8-43cd-88d7-1fe18612343a}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Get in measure power **)
+METHOD GetMinPower
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Measure:Scalar:POWer? MINimum';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.MinPowerMsg;	
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetResponsivity" Id="{f9a0b2c1-344f-428e-b2d4-bde993eb1f8b}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[METHOD GetResponsivity
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:Correction:power:pdiode:response?';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.ResponsivityMsg;
+
+IF Conf.IsSimulated THEN
+	message := LREAL_TO_STRING(0.05);
+ELSE
+	SerialCom.Send(cmd);	
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSensorAttenuation" Id="{96cff94f-9c96-4205-a522-86f8790f6622}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[(** Get the beam diameter in mm **)
+METHOD GetSensorAttenuation
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:Correction:BEAMdiameter? ';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//_logger.Information(_message.Reset().Append('GetSensorAttenuation').ToString());
+_deliverMessages := EFeedbackMsgPM101.SensorAttenuationMsg;
+
+IF NOT Conf.IsSimulated THEN
+	SerialCom.Send(cmd);
+ELSE
+	message := INT_TO_STRING(2);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSensorType" Id="{5df6a9f0-43a7-4cd0-8e46-8764b1880a57}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[METHOD GetSensorType
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Input:Adapter:TYPE?';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//_logger.Information(_message.Reset().Append('GetSensorType').ToString());
+_deliverMessages := EFeedbackMsgPM101.SensorTypeMsg;
+
+IF Conf.IsSimulated THEN
+	message := 'SIMU_PHOTODIODE';	
+ELSE
+	SerialCom.Send(cmd);
+END_IF
+
+
+
+(*IF _pulseGeneratorCmd.Q THEN
+	_pulseGeneratorCmd(IN := FALSE, PT := T#10MS);	
+								
+	SerialCom.Send(cmd);
+ELSE
+	_deliverMessages := EFeedbackMsgPM101.SensorTypeMsg;
+	_pulseGeneratorCmd(IN := TRUE, PT := T#100MS);										
+END_IF	*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWavelength" Id="{43ab54ba-0634-4dad-ab15-8069e0333683}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[(** Get wavelength **)
+METHOD GetWavelength
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:CORR:WAVE?';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.WavelengthMsg;
+
+IF Conf.IsSimulated THEN
+	message := INT_TO_STRING(473);
+ELSE	
+	SerialCom.Send(cmd);
+END_IF	
+
+
+(*IF _pulseGeneratorCmd.Q THEN
+	_pulseGeneratorCmd(IN := FALSE, PT := T#10MS);	
+								
+	SerialCom.Send(cmd);
+ELSE
+	_deliverMessages := EFeedbackMsgPM101.WavelengthMsg;
+	_pulseGeneratorCmd(IN := TRUE, PT := T#100MS);										
+END_IF*)	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWavelengthRange" Id="{e0d27ead-5d62-4aad-ac6a-76f9e6420188}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[(** Get wavelength range **)
+METHOD GetWavelengthRange
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:Power:Dc:Range:UPPer? MINimum ';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.WavelengthRangeMsg;
+SerialCom.Send(cmd);	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{4210648b-e6ad-4969-b05b-f225c7405f66}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF		   
+		0:	ReadPower();	
+			_itemScheduler := 1;
+			
+		1: ReadCurrent();			
+		   _itemScheduler := 0;
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#50MS);	
+END_IF
+
+
+(*CASE _itemScheduler OF
+	0:  _pulseGeneratorMsg(IN := TRUE, PT := T#10MS); // 50MS + 10MS de temps de cycle = 60 MS 
+		IF _pulseGeneratorMsg.Q THEN
+			_pulseGeneratorMsg(IN := FALSE);			
+			
+			ReadPower();			
+			_itemScheduler := 1;
+		END_IF 
+
+	1:  _pulseGeneratorMsg(IN := TRUE, PT := T#100MS); // 50MS + 10MS de temps de cycle = 60 MS 
+		IF _pulseGeneratorMsg.Q THEN
+			_pulseGeneratorMsg(IN := FALSE);			
+			
+			ReadCurrent();			
+			_itemScheduler := 0;
+		END_IF  												
+END_CASE
+*)
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{086d9816-4b7e-4558-b4bd-7ea1a9b1a258}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_monitoringMessages := FALSE;
+	_raiseProperties := TRUE;
+	
+	CASE _itemRaisedProperties OF		
+		0: IdentifierMsg := ' ';
+		   ResponsivityMsg := ' ';
+		   CustomMsg := ' ';
+		   WavelengthMsg := ' ';
+		   BeamDiameterMsg := ' ';
+		   WavelengthRangeMsg := ' ';				   	 
+  		   SensorTypeMsg := ' ';
+		   CalibMsg := ' ';
+		   _itemRaisedProperties := 10;																																								
+			
+		10: GetCalibConfig();
+			_itemRaisedProperties := 50;	
+
+		11:  _logger.Information(_message.Reset().Append(Conf.Name).Append(' RaisedProperties- Get responsivity').ToString());
+			GetResponsivity();
+			_itemRaisedProperties := 12;
+			
+		12: IF message = ' ' THEN
+			  _itemRaisedProperties := 50;
+			END_IF	
+			
+		(* Not necessary *)
+		(*
+		10: GetIdentifier();
+			_itemRaisedProperties := 11;
+			
+		11: GetSensorType();
+			_itemRaisedProperties := 12;
+		
+		12: GetWavelength();
+			_itemRaisedProperties := 13;	
+    
+		12: GetBeamDiameter();
+			_itemRaisedProperties := 16;
+	
+		13: GetWavelengthRange();
+			_itemRaisedProperties := 16;
+	
+		14:  GetMaxPower();
+			_itemRaisedProperties := 15;
+			
+		15: GetMinPower();
+			_itemRaisedProperties := 16;
+			
+		17: GetSensorAttenuation();
+			_itemRaisedProperties := 19;*)
+			
+		50: 
+			_logger.Information(_message.Reset().
+							    Append(Conf.Name).
+							    Append(' - RaisePropertiesChanged').ToString());
+			_raiseProperties := FALSE;				
+			_itemRaisedProperties := 0;
+	
+			_monitoringMessages := TRUE;								
+	END_CASE
+END_IF
+
+(*IF Execute THEN	
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE);
+	
+		CASE _itemRaisedProperties OF		
+			0: IdentifierMsg := ' ';
+			   ResponsivityMsg := ' ';
+			   CustomMsg := ' ';
+			   WavelengthMsg := ' ';
+			   BeamDiameterMsg := ' ';
+			   WavelengthRangeMsg := ' ';				   	 
+  			   SensorTypeMsg := ' ';
+			   CalibMsg := ' ';
+			   _itemRaisedProperties := 10;																																								
+				
+			10: GetCalibConfig();
+				_itemRaisedProperties := 11;							
+		
+			11:  _pulseGeneratorMsg(IN := TRUE, PT := T#90MS); // 40MS + 10MS de temps de cycle = 50 MS 
+				IF _pulseGeneratorMsg.Q THEN
+					_pulseGeneratorMsg(IN := FALSE);
+								
+					GetResponsivity();							
+					_itemScheduler := 50;
+				END_IF
+				
+			(* Not necessary *)
+			(*
+			10: GetIdentifier();
+				_itemRaisedProperties := 11;
+				
+			11: GetSensorType();
+				_itemRaisedProperties := 12;
+			
+			12: GetWavelength();
+				_itemRaisedProperties := 13;	
+
+			12: GetBeamDiameter();
+				_itemRaisedProperties := 16;
+	
+			13: GetWavelengthRange();
+				_itemRaisedProperties := 16;
+	
+			14:  GetMaxPower();
+				_itemRaisedProperties := 15;
+				
+			15: GetMinPower();
+				_itemRaisedProperties := 16;
+				
+			17: GetSensorAttenuation();
+				_itemRaisedProperties := 19;*)
+				
+			50: 
+				_logger.Information(_message.Reset().
+								    Append(Conf.Name).
+								    Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RangesVariation" Id="{10eb5eff-068b-4ac9-928d-b007fc62a87f}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RangesVariation
+VAR_INPUT
+	Execute : BOOL;
+	RangeValue : STRING;
+END_VAR
+VAR
+	cmd : STRING := 'Sense:Power:Dc:Range:UPPer ';
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Set the range').ToString());
+	
+	Abort(_abortCmd);
+	SerialCom.Send(CONCAT(cmd, TO_STRING(RangeValue)));	
+	_rangeVariation := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadCurrent" Id="{ef118c95-0f52-4486-bdb0-8b677cfcb27d}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Read measure current **)
+METHOD ReadCurrent
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Measure:Scalar:CURRent?';	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.CurrentMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadPower" Id="{e458ad71-949b-4a56-a4ad-73f5777b7336}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Read measure power **)
+METHOD ReadPower	
+VAR_INPUT
+END_VAR
+VAR	
+	cmd : STRING := 'Measure:Scalar:POWer?';	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPM101.PowerMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetBeamDiameter" Id="{fb3fc148-7a04-46a5-ad16-e5e942d9646e}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Sets the beam diameter in mm **)
+METHOD SetBeamDiameter
+VAR_INPUT
+	Execute : BOOL;
+	BeamDiameterValue : UINT;
+END_VAR
+VAR
+	cmd : STRING := 'Sense:Correction:beamdiameter ';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute AND _pulseGeneratorCmd.Q THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Sets the beam diameter').ToString());
+	
+	SerialCom.Send(CONCAT(cmd, TO_STRING(BeamDiameterValue)));		
+END_IF
+
+IF Execute THEN
+	IF _pulseGeneratorCmd.Q THEN
+		_pulseGeneratorCmd(IN := FALSE, PT := T#10MS);									
+		_setBeamDiameter := FALSE;
+	ELSE
+		_pulseGeneratorCmd(IN := Execute, PT := T#100MS);										
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetResponsivity" Id="{0bb45cd1-f1a6-43ec-8360-f256a55cf866}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Sets the responsivity mA/W **)
+METHOD SetResponsivity
+VAR_INPUT
+	Execute : BOOL;
+	ResponsivityValue : LREAL;
+END_VAR
+VAR
+	cmd : STRING := 'SENSe:CORRection:POWer:PDIode ';
+	setpoint : LREAL;	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN			
+	_monitoringMessages := FALSE;		
+	_setResponsivity := TRUE;	
+	_setpoint := ResponsivityValue;	
+	
+	CASE _itemExecScheduler OF
+		0: _logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Set the responsivity: ').
+								Append(TO_STRING(_setpoint)).ToString());	
+			
+			_abortCmd := TRUE;
+			_itemExecScheduler := 1;			
+			
+		1:	IF NOT _abortCmd THEN
+				_itemExecScheduler := 2;	
+			END_IF						
+						
+  	   	2:	_logger.Information(_message.Reset().Append(Conf.Name).Append(' - Send setpoint').ToString());
+			setpoint := _setpoint / 1000;
+			SerialCom.Send(CONCAT(cmd, TO_STRING(setpoint)));										
+			_itemExecScheduler := 3;				         					
+			 	
+		3:  _logger.Information(_message.Reset().Append(Conf.Name).Append(' - Get responsivity').ToString());
+			GetResponsivity();
+			_itemExecScheduler := 10;		 						
+
+		4:  IF message = ' ' THEN
+				_itemExecScheduler := 10;
+			END_IF				
+
+		10: _logger.Information(_message.Reset().Append(Conf.Name).Append(' - Done responsivity').ToString());
+			_setpoint := 0;
+			_setResponsivity := FALSE;	
+			_itemExecScheduler := 0;	
+
+			_monitoringMessages := TRUE;								
+	END_CASE	
+END_IF
+
+
+(*1: _execPulseGenerator(IN := TRUE, PT := T#50MS);
+			IF _execPulseGenerator.Q THEN
+				_execPulseGenerator(IN := FALSE);
+				_logger.Information(_message.Reset().Append(Conf.Name).Append(' - GetResponsivity').ToString());
+
+				GetResponsivity();
+				_itemExecScheduler := 2;		
+			END_IF
+		*)	
+
+(*
+IF Execute THEN	
+	_setResponsivity := TRUE;	
+	_setpoint := ResponsivityValue;	
+	
+	CASE _itemExecScheduler OF
+		0: _logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Set the responsivity: ').
+								Append(TO_STRING(_setpoint)).ToString());	
+
+			setpoint := _setpoint / 1000;
+			SerialCom.Send(CONCAT(cmd, TO_STRING(setpoint)));										
+			_itemExecScheduler := 1;				
+        
+		1:	_execPulseGenerator(IN := TRUE, PT := wait1);
+			IF _execPulseGenerator.Q THEN
+				_execPulseGenerator(IN := FALSE);
+				_logger.Information(_message.Reset().Append(Conf.Name).Append(' - Wait Set Responsivity: ').ToString());								    				
+				_itemExecScheduler := 2;
+			END_IF
+					
+			GetResponsivity();
+			_itemExecScheduler := 3;
+		
+		3:  _execPulseGenerator(IN := TRUE, PT := wait2);
+			IF _execPulseGenerator.Q THEN
+				_execPulseGenerator(IN := FALSE);
+				
+				_logger.Information(_message.Reset().Append('Wait Get Responsivity').ToString());				
+				_itemExecScheduler := 10;
+			END_IF						
+			
+		10:  _setpoint := 0;
+			_setResponsivity := FALSE;	
+			_itemExecScheduler := 0;		
+							
+	END_CASE	
+END_IF
+*)
+
+(*
+IF Execute THEN	
+	_setResponsivity := TRUE;	
+
+	_setpoint := ResponsivityValue;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+									Append(Conf.Name).
+									Append(' - Set the responsivity: ').
+									Append(TO_STRING(_setpoint)).ToString());
+				
+				SerialCom.Send(CONCAT(cmd, TO_STRING(_setpoint / 1000)));
+				_itemExecScheduler := 1;				
+
+			1:  _itemExecScheduler := 2;
+
+			2:  _itemExecScheduler := 3;
+			
+			3:  _itemExecScheduler := 4;
+			
+			4:  _itemExecScheduler := 5;			
+	
+			5:  GetResponsivity();
+				_itemExecScheduler := 10;
+				
+			10:  _setpoint := 0;
+				_setResponsivity := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#50MS);	
+	END_IF
+END_IF*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSensorAttenuation" Id="{72b3c1ea-6dc7-4cc0-981f-01d26e9e3522}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Sets a user attenuation factor in dB **)
+METHOD SetSensorAttenuation
+VAR_INPUT
+	Execute : BOOL;
+	AttenuationValue : UINT;
+END_VAR
+VAR
+	cmd : STRING := 'Sense:Correction:Loss:Input:MAGNitude ';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute AND _pulseGeneratorCmd.Q THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Sets a user attenuation factor').ToString());
+	
+	SerialCom.Send(CONCAT(cmd, TO_STRING(AttenuationValue)));		
+END_IF
+
+IF Execute THEN
+	IF _pulseGeneratorCmd.Q THEN
+		_pulseGeneratorCmd(IN := FALSE, PT := T#10MS);									
+		_setSensorAttenuation := FALSE;
+	ELSE
+		_pulseGeneratorCmd(IN := Execute, PT := T#100MS);										
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSensorType" Id="{0b17e476-d70a-4100-91e4-019126be896e}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Sets default sensor adapter type **)
+METHOD SetSensorType
+VAR_INPUT
+	Execute : BOOL;
+	SensorTypeValue : STRING;
+END_VAR
+VAR
+	cmd : STRING := 'Input:Adapter:TYPE ';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute AND _pulseGeneratorCmd.Q THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Sets default sensor adapter type').ToString());
+	
+	SerialCom.Send(CONCAT(cmd, SensorTypeValue));		
+END_IF
+
+IF Execute THEN
+	IF _pulseGeneratorCmd.Q THEN
+		_pulseGeneratorCmd(IN := FALSE, PT := T#10MS);									
+		_setSensorType := FALSE;
+	ELSE
+		_pulseGeneratorCmd(IN := Execute, PT := T#100MS);										
+	END_IF	
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetWavelength" Id="{3a8b787b-d538-4715-828d-e294ac890941}" FolderPath="Commands\InitSensor\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Sets the operation wavelength in nm **)
+METHOD SetWavelength
+VAR_INPUT
+	Execute : BOOL;
+	WavelengthValue : UINT;
+END_VAR
+VAR
+	cmd : STRING := 'Sense:Correction:WAVelength ';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute AND _pulseGeneratorCmd.Q THEN
+	_logger.Information(_message.Reset().
+								Append(Conf.Name).
+								Append(' - Sets the operation wavelength').ToString());
+	
+	SerialCom.Send(CONCAT(cmd, TO_STRING(WavelengthValue)));		
+END_IF
+
+IF Execute THEN
+	IF _pulseGeneratorCmd.Q THEN
+		_pulseGeneratorCmd(IN := FALSE, PT := T#10MS);									
+		_setWavelength := FALSE;
+	ELSE
+		_pulseGeneratorCmd(IN := Execute, PT := T#100MS);										
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SlowMessageScheduler" Id="{2474d26f-035c-4fc0-a5c5-ab134c274efe}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD SlowMessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGeneratorMsg.Q THEN
+	_pulseGeneratorMsg(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF
+		0:	ReadPower();
+			_itemScheduler := 2;						
+	
+		1: GetResponsivity();
+			_itemScheduler := 0;			
+			
+		2 : GetDarkAdjustState();
+			_itemScheduler := 3;		
+	
+		3 : GetDarkOffset();
+			_itemScheduler := 0;
+
+		4:  ReadCurrent();
+			_itemScheduler := 0;			
+		
+	END_CASE
+ELSE
+	_pulseGeneratorMsg(IN := TRUE, PT := T#50MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StartDarkAdjust" Id="{bd3a1f78-e606-4d1d-8532-7ff6cd0fab9d}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Start dark adjust **)
+METHOD StartDarkAdjust
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+	cmd : STRING := 'Sense:CORRection:COLLect:ZERO:INITiate';	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_startDarkAdjust := TRUE;	
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+									Append(Conf.Name).
+									Append(' - Start dark adjust').ToString());
+				
+				_darkOffset_mW := 0;
+				SerialCom.Send(cmd);
+				_itemExecScheduler := 1;				
+				
+			1:  GetDarkOffset();
+				_itemExecScheduler := 2;
+				
+			2:  IF _darkOffset_mW = 0 THEN
+					_logger.Information(_message.Reset().
+									Append(Conf.Name).
+									Append(' - Retry start dark adjust').ToString());
+					_itemExecScheduler := 0;
+				ELSE
+					_itemExecScheduler := 10;
+				END_IF
+				
+			10: _startDarkAdjust := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#80MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PM101OpticalPowermeter">
+      <LineId Id="3782" Count="0" />
+      <LineId Id="3788" Count="0" />
+      <LineId Id="3783" Count="4" />
+      <LineId Id="3780" Count="0" />
+      <LineId Id="3789" Count="0" />
+      <LineId Id="3139" Count="0" />
+      <LineId Id="4215" Count="0" />
+      <LineId Id="4227" Count="6" />
+      <LineId Id="4332" Count="0" />
+      <LineId Id="4337" Count="21" />
+      <LineId Id="4692" Count="0" />
+      <LineId Id="4333" Count="0" />
+      <LineId Id="4359" Count="0" />
+      <LineId Id="4335" Count="1" />
+      <LineId Id="4362" Count="6" />
+      <LineId Id="4370" Count="0" />
+      <LineId Id="4544" Count="0" />
+      <LineId Id="4371" Count="26" />
+      <LineId Id="4360" Count="0" />
+      <LineId Id="4334" Count="0" />
+      <LineId Id="4547" Count="0" />
+      <LineId Id="4294" Count="7" />
+      <LineId Id="4303" Count="0" />
+      <LineId Id="4216" Count="0" />
+      <LineId Id="4311" Count="14" />
+      <LineId Id="4221" Count="0" />
+      <LineId Id="4327" Count="3" />
+      <LineId Id="4326" Count="0" />
+      <LineId Id="4214" Count="0" />
+      <LineId Id="3155" Count="8" />
+      <LineId Id="226" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.Abort">
+      <LineId Id="7" Count="5" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.CancelDarkAdjust">
+      <LineId Id="12" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.CustomCommand">
+      <LineId Id="6" Count="3" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="47" Count="5" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.EnableAutoRange">
+      <LineId Id="13" Count="3" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetBeamDiameter">
+      <LineId Id="51" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="42" Count="2" />
+      <LineId Id="41" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetCalibConfig">
+      <LineId Id="63" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetDarkAdjustState">
+      <LineId Id="8" Count="0" />
+      <LineId Id="14" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetDarkOffset">
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetIdentifier">
+      <LineId Id="63" Count="0" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetMaxPower">
+      <LineId Id="38" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetMinPower">
+      <LineId Id="31" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetResponsivity">
+      <LineId Id="41" Count="1" />
+      <LineId Id="19" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetSensorAttenuation">
+      <LineId Id="58" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="46" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetSensorType">
+      <LineId Id="61" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="50" Count="4" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="49" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetWavelength">
+      <LineId Id="31" Count="0" />
+      <LineId Id="39" Count="3" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="52" Count="8" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.GetWavelengthRange">
+      <LineId Id="5" Count="0" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.MessageScheduler">
+      <LineId Id="144" Count="2" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="149" Count="2" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="112" Count="2" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="131" Count="6" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="95" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.RaisePropertiesChanged">
+      <LineId Id="334" Count="0" />
+      <LineId Id="352" Count="0" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="279" Count="12" />
+      <LineId Id="364" Count="2" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="369" Count="1" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="301" Count="32" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="276" Count="1" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="148" Count="7" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="156" Count="3" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="264" Count="2" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="251" Count="2" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="236" Count="1" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="218" Count="8" />
+      <LineId Id="215" Count="1" />
+      <LineId Id="227" Count="2" />
+      <LineId Id="191" Count="10" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="274" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.RangesVariation">
+      <LineId Id="14" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.ReadCurrent">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.ReadPower">
+      <LineId Id="93" Count="1" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.SetBeamDiameter">
+      <LineId Id="12" Count="4" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="39" Count="5" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="46" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.SetResponsivity">
+      <LineId Id="621" Count="0" />
+      <LineId Id="742" Count="0" />
+      <LineId Id="622" Count="7" />
+      <LineId Id="728" Count="0" />
+      <LineId Id="746" Count="0" />
+      <LineId Id="744" Count="0" />
+      <LineId Id="752" Count="0" />
+      <LineId Id="748" Count="0" />
+      <LineId Id="750" Count="1" />
+      <LineId Id="745" Count="0" />
+      <LineId Id="631" Count="0" />
+      <LineId Id="754" Count="0" />
+      <LineId Id="632" Count="1" />
+      <LineId Id="715" Count="0" />
+      <LineId Id="722" Count="0" />
+      <LineId Id="753" Count="0" />
+      <LineId Id="723" Count="0" />
+      <LineId Id="701" Count="0" />
+      <LineId Id="726" Count="1" />
+      <LineId Id="721" Count="0" />
+      <LineId Id="709" Count="0" />
+      <LineId Id="653" Count="0" />
+      <LineId Id="698" Count="0" />
+      <LineId Id="654" Count="1" />
+      <LineId Id="694" Count="0" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="657" Count="0" />
+      <LineId Id="581" Count="0" />
+      <LineId Id="732" Count="9" />
+      <LineId Id="582" Count="0" />
+      <LineId Id="670" Count="0" />
+      <LineId Id="583" Count="0" />
+      <LineId Id="462" Count="1" />
+      <LineId Id="465" Count="1" />
+      <LineId Id="501" Count="4" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="508" Count="1" />
+      <LineId Id="512" Count="0" />
+      <LineId Id="527" Count="0" />
+      <LineId Id="544" Count="0" />
+      <LineId Id="577" Count="0" />
+      <LineId Id="545" Count="0" />
+      <LineId Id="543" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="540" Count="1" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="542" Count="0" />
+      <LineId Id="516" Count="0" />
+      <LineId Id="520" Count="4" />
+      <LineId Id="498" Count="0" />
+      <LineId Id="458" Count="3" />
+      <LineId Id="366" Count="8" />
+      <LineId Id="391" Count="2" />
+      <LineId Id="377" Count="1" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="425" Count="0" />
+      <LineId Id="442" Count="1" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="446" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="426" Count="1" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="385" Count="5" />
+      <LineId Id="341" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.SetSensorAttenuation">
+      <LineId Id="15" Count="4" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="44" Count="5" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.SetSensorType">
+      <LineId Id="15" Count="4" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="34" Count="5" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.SetWavelength">
+      <LineId Id="15" Count="4" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="44" Count="5" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.SlowMessageScheduler">
+      <LineId Id="6" Count="3" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PM101OpticalPowermeter.StartDarkAdjust">
+      <LineId Id="31" Count="1" />
+      <LineId Id="35" Count="7" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="45" Count="5" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="53" Count="5" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

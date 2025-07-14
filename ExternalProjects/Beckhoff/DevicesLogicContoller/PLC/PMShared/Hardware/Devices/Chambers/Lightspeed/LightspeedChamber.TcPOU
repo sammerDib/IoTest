@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LightspeedChamber" Id="{7ff6493c-add0-491a-9f43-8bd5fbf67492}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK LightspeedChamber EXTENDS ChamberBase
+VAR_INPUT
+	IoLightspeed : IoLightspeed;	
+	IoSafetyLS : IoSafetyLS;
+END_VAR
+VAR_OUTPUT
+	MppcActivate : BOOL;
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : LightspeedChamberConfig;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorInit : TON;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[MppcActivate := IoLightspeed.OutputMppcActivate;
+
+// Init device
+InitDevice(); ]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{251073a4-7a66-4518-af59-05416b798691}" />
+    <Method Name="FB_init" Id="{93f57cf8-52ea-4dbb-91f8-5905b0c1e185}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : LightspeedChamberConfig;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;	
+
+	SUPER^._chamberConfig.Name := Config.Name;
+	SUPER^._chamberConfig.DeviceID := Config.DeviceID;
+	SUPER^._chamberConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._chamberConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Chamber;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{ecd734fe-ccb4-44d0-a69f-af8966f318b1}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	IF _pulseGeneratorInit.Q THEN
+		_pulseGeneratorInit(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemInit OF
+			0:  _itemInit := 1;
+				
+			1: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - CoolingFans started').ToString());		
+								
+				IoLightspeed.OutputCoolingFanFrontPanel := TRUE;
+				IoLightspeed.OutputCoolingFanBackPanel := TRUE;
+				_initDevice := TRUE;
+				_itemInit := 0;
+		END_CASE
+	ELSE
+		_pulseGeneratorInit(IN := TRUE, PT := Const.ACTIVE_TIME_COOLING_FAN);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveSlitDoorPosition" Id="{4b857c95-e373-4ecf-9dbb-168ca7b2be4f}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD MoveSlitDoorPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Move slit door position : ').Append(TO_STRING(Position)).ToString());		
+
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorPosition" Id="{34ae610f-f04b-409a-b450-c1fc13e31e1b}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorPosition 
+VAR_INPUT
+END_VAR
+VAR
+	open : BOOL;
+	close : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="LightspeedChamber">
+      <LineId Id="32" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="54" Count="0" />
+    </LineIds>
+    <LineIds Name="LightspeedChamber.FB_init">
+      <LineId Id="53" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="69" Count="7" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="66" Count="0" />
+    </LineIds>
+    <LineIds Name="LightspeedChamber.InitDevice">
+      <LineId Id="7" Count="4" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="19" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LightspeedChamber.MoveSlitDoorPosition">
+      <LineId Id="26" Count="1" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LightspeedChamber.ReadSlitDoorPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

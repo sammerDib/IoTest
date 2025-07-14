@@ -1,0 +1,361 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Sh10pilShutter" Id="{38ecd2b8-a49e-4667-b446-b434800fc359}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK Sh10pilShutter EXTENDS ShutterBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Sh10pilShutterConfig;		
+	{attribute 'OPC.UA.DA' := '0'}
+	IoSh10pilShutter : IoSh10pilShutter;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	ShutterIrisPositionMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_open : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_close : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+			
+	{endregion}		
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemOpen : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemClose : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseOpen : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseClose : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseTimeout : TON;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Init device
+InitDevice();
+
+CASE _deliverMessages OF			
+	EFeedbackMsgSh10pil.ShutterIrisPositionMsg :	
+		ShutterIrisPositionMsg := message;	
+END_CASE
+		
+// Commands		
+ManualOpen(_open);
+ManualClose(_close);
+RaisePropertiesChanged(_raiseProperties);
+
+IF (NOT _open AND NOT _close AND NOT _raiseProperties) THEN
+	_deliverMessages := 0;
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{784605ba-45c7-45f0-a28b-57422efcb1aa}" />
+    <Method Name="FB_init" Id="{14423b6a-7575-4fca-aa98-5094170539ad}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Sh10pilShutterConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._shutterConfig.Name := Config.Name;
+	SUPER^._shutterConfig.DeviceID := Config.DeviceID;
+	SUPER^._shutterConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._shutterConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Shutter;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{8a864f3b-4dae-414c-8cfe-8cb22c59f992}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());
+	
+	THIS^.SetDone();
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ManualClose" Id="{d64b9230-4ec8-4e0e-be01-d7c4a304df93}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED ManualClose
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_close := TRUE;
+	
+	CASE _itemClose OF
+		0: _logger.Information(_message.Reset().
+							Append(_config.Name).
+							Append(' - Close').ToString());
+							
+			_itemClose := 1;
+							
+		1: //Wait until the shutter is opened 
+			IF IoSh10pilShutter.InputMagneticSwitch1 AND NOT IoSh10pilShutter.InputMagneticSwitch2 THEN
+				_itemClose := 2;
+			ELSE 
+				// Raised timer 
+				IF _pulseTimeout.Q THEN
+					_pulseTimeout(IN := FALSE);
+					
+					_itemClose := 2;
+				ELSE
+					_pulseTimeout(IN := TRUE, PT := T#100MS);	
+				END_IF	
+			END_IF 
+			
+		2: IF _pulseOpen.Q THEN
+				_pulseOpen(IN := FALSE);
+				
+				IoSh10pilShutter.OutputSwitchContactClosure := FALSE;
+				_close := FALSE;
+				_itemClose := 0;
+			ELSE
+				_pulseOpen(IN := TRUE, PT := T#10MS);	
+			END_IF		
+							
+	END_CASE
+
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ManualOpen" Id="{1066cd26-cc42-48ca-96ef-2f5008eb325c}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED ManualOpen
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_open := TRUE;
+	
+	CASE _itemOpen OF
+		0: _logger.Information(_message.Reset().
+							Append(_config.Name).
+							Append(' - Open').ToString());
+							
+			_itemOpen := 1;
+							
+		1: //Wait until the shutter is closed 
+			IF NOT IoSh10pilShutter.InputMagneticSwitch1 AND IoSh10pilShutter.InputMagneticSwitch2 THEN
+				_itemOpen := 2;
+			ELSE
+				// Raised timer 
+				IF _pulseTimeout.Q THEN
+					_pulseTimeout(IN := FALSE);
+					
+					_itemOpen := 2;
+				ELSE
+					_pulseTimeout(IN := TRUE, PT := T#100MS);	
+				END_IF	
+			END_IF 
+			
+		2: IF _pulseOpen.Q THEN
+				_pulseOpen(IN := FALSE);
+				
+				IoSh10pilShutter.OutputSwitchContactClosure := TRUE;
+				_open := FALSE;
+				_itemOpen := 0;
+			ELSE
+				_pulseOpen(IN := TRUE, PT := T#400MS);	
+			END_IF		
+							
+	END_CASE
+	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{b6a4bfb0-e437-4676-9ba5-04c6dc6ed13f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+	
+	ShutterIrisPosition();
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{12cf85a0-0b5e-4c9f-96ad-d065b959afd8}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raiseProperties := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0: ShutterIrisPositionMsg := ' ';
+				_itemRaisedProperties := 1;
+			
+			1: ShutterIrisPosition();		   
+				_itemRaisedProperties := 10;
+				
+			10: 
+				_logger.Information(_message.Reset().
+								    Append(_config.Name).
+								    Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;
+				_itemRaisedProperties := 0;
+		
+		END_CASE
+	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#200MS);	
+	END_IF
+		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ShutterIrisPosition" Id="{f9d6e180-b842-4b68-9a95-e17a0d6fef6f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ShutterIrisPosition 
+VAR_INPUT
+END_VAR
+VAR 
+	close : STRING := 'CLOSE';
+	open : STRING := 'OPEN';
+	error : STRING := 'ERROR';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgEd12dss.ShutterIrisPositionMsg;
+
+IF IoSh10pilShutter.InputMagneticSwitch1 AND NOT IoSh10pilShutter.InputMagneticSwitch2 THEN
+	message := open; 		
+ELSIF NOT IoSh10pilShutter.InputMagneticSwitch1 AND IoSh10pilShutter.InputMagneticSwitch2 THEN
+	message := close; 
+ELSIF IoSh10pilShutter.InputMagneticSwitch1 AND IoSh10pilShutter.InputMagneticSwitch2 THEN
+	message := error; 
+END_IF 
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Sh10pilShutter">
+      <LineId Id="128" Count="4" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="94" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.FB_init">
+      <LineId Id="9" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.ManualClose">
+      <LineId Id="52" Count="13" />
+      <LineId Id="86" Count="6" />
+      <LineId Id="66" Count="14" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.ManualOpen">
+      <LineId Id="75" Count="13" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="114" Count="3" />
+      <LineId Id="89" Count="11" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.MessageScheduler">
+      <LineId Id="51" Count="5" />
+      <LineId Id="49" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="5" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sh10pilShutter.ShutterIrisPosition">
+      <LineId Id="22" Count="1" />
+      <LineId Id="32" Count="5" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LsBkgrdLsSerialCom" Id="{6c01a632-fa48-42a1-9afe-d9e39229f4f6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM LsBkgrdLsSerialCom
+VAR_INPUT
+	Config : LightspeedConfig;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// AttenuationFilterConfigs
+IF Config.AttenuationFilterConfigs.FW212CAttenuationFilterConfig.IsEnabled OR 
+   Config.AttenuationFilterConfigs.ELL14kAttenuationFilterConfig.IsEnabled OR
+   Config.AttenuationFilterConfigs.ELL9AttenuationFilterConfig.IsEnabled THEN
+	BkgrdSerialAttenuation();	
+END_IF
+
+// SliderAttenuationFilterConfigs
+IF Config.SliderAttenuationFilterConfigs.ELL6SliderFilterConfig.IsEnabled THEN
+	BkgrdSerialSliderAttenuation();	
+END_IF
+
+// RotatingSwitchConfigs
+IF Config.RotatingSwitchConfigs.ELL18RotatingSwitchConfig.IsEnabled THEN
+	BkgrdSerialRotatingSwitch();	
+END_IF
+
+// PolarisationFilterConfigs
+IF Config.PolarisationFilterConfigs.FW212CPolarisationFilterConfig.IsEnabled OR 
+   Config.PolarisationFilterConfigs.ELL14KPolarisationFilterConfig.IsEnabled THEN
+	BkgrdSerialPolarisation();		
+END_IF
+
+// LaserConfigs
+IF Config.LaserConfigs.SMD12LaserConfig.IsEnabled OR 
+	Config.LaserConfigs.Sapphire488LaserConfig.IsEnabled THEN
+	BkgrdSerialLaser();
+END_IF
+
+// FiberSwitchConfigs
+IF Config.FiberSwitchConfigs.EOLFiberSwitchConfig.IsEnabled THEN
+	BkgrdSerialFiberSwitch();
+END_IF
+
+// OpticalPowermeterConfigs
+IF Config.OpticalPowermeterConfigs.PM101OpticalPowermeterConfigHs.IsEnabled THEN
+	BkgrdSerialOpticalPowermeterHs();	
+END_IF
+IF Config.OpticalPowermeterConfigs.PM101OpticalPowermeterConfigHt.IsEnabled THEN
+	BkgrdSerialOpticalPowermeterHt();	
+END_IF
+
+// MppcConfigs
+IF Config.MppcConfigs.C13336MppcConfigWide.IsEnabled THEN
+	BkgrdSerialMppcWide();
+END_IF
+IF Config.MppcConfigs.C13336MppcConfigNarrow.IsEnabled THEN
+	BkgrdSerialMppcNarrow();
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="LsBkgrdLsSerialCom">
+      <LineId Id="122" Count="2" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="173" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="179" Count="2" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="127" Count="7" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="137" Count="20" />
+      <LineId Id="113" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

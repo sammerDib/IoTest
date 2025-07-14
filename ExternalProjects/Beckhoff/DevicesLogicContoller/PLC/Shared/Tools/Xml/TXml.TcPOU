@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="TXml" Id="{8ed1d49a-ee13-479c-b8cf-ad238d58e526}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TXml EXTENDS TExecution
+VAR_INPUT
+	FilePath : T_MaxString;
+	XPath 	 : T_MaxString;
+	AddHeaderNodeXml : PVOID;
+	SizeOfHeaderNodeXml : UDINT;
+END_VAR
+VAR_OUTPUT	
+END_VAR
+VAR
+	{attribute 'hide'}		  
+	{attribute 'OPC.UA.DA' := '0'}
+	_xmlSrvRead : FB_XmlSrvRead;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_deserialisationOperation : TExecution;	
+	{attribute 'OPC.UA.DA' := '0'}
+	item : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Deserialize(_deserialisationOperation.Starting);
+
+IF _xmlSrvRead.bBusy THEN
+    _deserialisationOperation.SetBusy();
+END_IF
+
+IF _xmlSrvRead.bError THEN
+	_deserialisationOperation.SetError(ErrorId := _xmlSrvRead.nErrId);
+		
+	_logger.Error(_message.Reset().Append('Xml deserialization - ErrorId : ').
+			 			   		   Append(UDINT_TO_STRING(_xmlSrvRead.nErrId)).ToString());
+END_IF 
+
+IF _deserialisationOperation.Busy THEN
+    IF NOT _xmlSrvRead.bBusy THEN        
+        IF THIS^.Aborted THEN
+            _deserialisationOperation.SetAborted();
+			_logger.Information(_message.Reset().Append('Xml deserialization aborted').ToString());
+        ELSE
+            _deserialisationOperation.SetDone(); 
+			_logger.Debug(_message.Reset().Append('Xml deserialization done').ToString());
+        END_IF
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Property Name="DeserialisationOperation" Id="{b89debbd-8683-487c-a555-8b5b730c00d8}">
+      <Declaration><![CDATA[PROPERTY DeserialisationOperation : IExecution]]></Declaration>
+      <Get Name="Get" Id="{3f64bf07-c8f2-4dcf-a39d-df45e934e828}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeserialisationOperation := _deserialisationOperation;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Deserialize" Id="{534256e8-5203-4668-ad42-05cb4e102d28}">
+      <Declaration><![CDATA[METHOD Deserialize
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE item OF
+0:
+	IF Execute THEN
+		THIS^.State := TExecutionState.Busy;
+		_logger.Debug(_message.Reset().Append('Xml deserialization busy').ToString());
+		item := item + 1;
+	END_IF
+1:	
+	_xmlSrvRead(
+	  pSymAddr	:= AddHeaderNodeXml,
+	  cbSymSize	:= SizeOfHeaderNodeXml, 
+	  sFilePath	:= FilePath,
+	  sXPath	:= XPath,
+	  bExecute	:= TRUE
+	);	
+	item := item + 1;	
+		
+2:  
+	_xmlSrvRead(bExecute:= FALSE);
+	IF NOT _xmlSrvRead.bBusy AND NOT _xmlSrvRead.bError THEN		
+		THIS^.State := TExecutionState.Ready;
+		item := 0;
+	END_IF	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="TXml">
+      <LineId Id="106" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="130" Count="2" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="69" Count="0" />
+    </LineIds>
+    <LineIds Name="TXml.DeserialisationOperation.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TXml.Deserialize">
+      <LineId Id="6" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="7" Count="12" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

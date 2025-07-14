@@ -1,0 +1,29 @@
+name: USP_Manual_PushExternalNugetPackageToExternalNugetPackageArtifacts$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+jobs:
+  - job: USP_Manual_PushExternalNugetPackageToExternalNugetPackageArtifacts
+    displayName: "[USP - Manual] Push external Nuget Package to “ExternalNugetPackage” artifacts."
+
+    cancelTimeoutInMinutes: 2
+
+    continueOnError: true
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+    pool: Default 
+
+    steps:
+    - task: NuGetAuthenticate@1
+      displayName: 'NuGet authenticate'
+      inputs:
+        forceReinstallCredentialProvider: true
+        
+    - task: NuGetCommand@2
+      displayName: 'Push package to USP_ExternalNugetPackage'
+      inputs:
+        command: push
+        packagesToPush: './Shared/Packages/*.nupkg'
+        publishVstsFeed: 'UnityControl/USP_ExternalNugetPackage'
+        allowPackageConflicts: true

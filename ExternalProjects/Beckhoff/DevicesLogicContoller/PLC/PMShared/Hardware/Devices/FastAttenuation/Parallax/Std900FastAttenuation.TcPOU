@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Std900FastAttenuation" Id="{a15326b2-c781-4242-993c-f6942d46b2cc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Std900FastAttenuation EXTENDS FastAttenuationBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Std900FastAttenuationConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	IoStd900 : IoStd900;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	PositionMsg : STRING(255);
+	
+	{region 'Commands'}	
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveAbsPosition	 : BOOL;
+		 
+	{endregion}
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;		
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Init device
+InitDevice(); 	
+			  
+// Deliver messages
+CASE _deliverMessages OF	
+		EFeedbackMsgStd900.PositionMsg :
+		PositionMsg := REAL_TO_STRING(GetPosition());			
+END_CASE
+	
+_deliverMessages := 0;
+
+// Commands
+MoveAbsPosition(_moveAbsPosition, _pos); 
+
+IF NOT _moveAbsPosition THEN
+	MessageScheduler();
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{6a7244d8-f986-48ab-8098-59846062eedd}" />
+    <Method Name="FB_init" Id="{70e7abd4-c246-4c8b-8cb5-0fd9b6f29999}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Std900FastAttenuationConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._fastAttenuationConfig.Name := Config.Name;
+	SUPER^._fastAttenuationConfig.DeviceID := Config.DeviceID;
+	SUPER^._fastAttenuationConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._fastAttenuationConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.FastAttenuation;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPosition" Id="{12ab734f-68bb-415f-ac8c-26f62606f20e}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetPosition : REAL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgStd900.PositionMsg;
+
+GetPosition := ((IoStd900.OutputPwm - Const.STD900_LOW_LIMIT) * Const.STD900_MAX_ANGLE) / (Const.STD900_HIGHT_LIMIT - Const.STD900_LOW_LIMIT);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{b765d30f-351d-44d4-83de-9f71dc2f304c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());
+							
+	THIS^.Status := TExecutionState.Ready;
+	
+	IF IoStd900.OutputPwm = 0 THEN
+		MoveAbsPosition(TRUE, 0);
+	END_IF
+	GetPosition();
+	
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{e123a467-c63b-4caf-b194-33f910ef3674}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0:	GetPosition();
+			_itemScheduler := 1;	
+		
+		1 : 
+			_itemScheduler := 0;											
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{abf85d58-59a8-4f6a-85f6-e0f76a6a9aea}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED MoveAbsPosition 
+VAR_INPUT
+	Execute : BOOL;
+	AnglePosition : LREAL;
+END_VAR
+VAR
+	pulseLength : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Move absolute position : ').Append(TO_STRING(AnglePosition)).ToString());
+	
+	_moveAbsPosition := FALSE;
+	
+	IF AnglePosition >= Const.STD900_MIN_ANGLE AND AnglePosition <= Const.STD900_MAX_ANGLE THEN
+		
+		IF AnglePosition = Const.STD900_MIN_ANGLE THEN
+			pulseLength := Const.STD900_LOW_LIMIT;		
+		ELSE
+			pulseLength := (Const.STD900_HIGHT_LIMIT - Const.STD900_LOW_LIMIT) / (Const.STD900_MAX_ANGLE / AnglePosition) + Const.STD900_LOW_LIMIT;
+		END_IF
+		
+		_logger.Information(_message.Reset().
+								Append('Pulse length : ').Append(TO_STRING(pulseLength)).
+								Append(' µs').ToString());
+		
+		IoStd900.OutputPwm := LREAL_TO_UINT(pulseLength);
+		IoStd900.OutputPeriodPwm := Const.STD900_INTERVAL + LREAL_TO_UINT(pulseLength);
+	
+	END_IF
+	
+	_itemScheduler := 0;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{13543100-5dfa-4566-8a34-8a160d04283e}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	PositionMsg := ' ';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Std900FastAttenuation">
+      <LineId Id="37" Count="3" />
+      <LineId Id="185" Count="4" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="180" Count="3" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Std900FastAttenuation.FB_init">
+      <LineId Id="9" Count="14" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Std900FastAttenuation.GetPosition">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Std900FastAttenuation.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Std900FastAttenuation.MessageScheduler">
+      <LineId Id="6" Count="3" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Std900FastAttenuation.MoveAbsPosition">
+      <LineId Id="15" Count="5" />
+      <LineId Id="49" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Std900FastAttenuation.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

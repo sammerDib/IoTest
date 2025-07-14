@@ -1,0 +1,657 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ELL14KPolarisationFilter" Id="{6cbdfbd0-8c79-46d2-8919-89316bf8f43c}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK ELL14KPolarisationFilter EXTENDS PolarisationFilterBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : ELL14KPolarisationFilterConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_hsPolarisationConfig : PolarisationConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_htPolarisationConfig : PolarisationConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CR_LF);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CR_LF) := _serialCom;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	PositionMsg : STRING(255);
+	IdMsg : STRING(255);
+	CalibMsg : STRING(255);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_homePosition 		: BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveAbsPosition	: BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveRelPosition	: BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_jogBackwardPosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_jogForwardPosition  : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	 		 
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_polarResult : EPolar;
+ 	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpMessage : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_length : INT;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_findSuffix : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_roundPosition : STRING; 
+	{attribute 'OPC.UA.DA' := '0'}
+	hsS_temp : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	hsP_temp : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	htS_temp : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	htP_temp : STRING;
+	
+	_delimeter : STRING := ';';
+	{attribute 'OPC.UA.DA' := '0'}
+	_firstConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_secondConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_thirdConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fourthConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fithConcat : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_sixthConcat : STRING;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferPolarisation, 
+		 	          RxBuffer:= HardwareGlobalVariables.RxBufferPolarisation);
+	END_IF	
+				  
+	// Init device
+	InitDevice(); 				  
+				  
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN
+		CASE _deliverMessages OF			
+			EFeedbackMsgPolarisationELL14K.PositionMsg :
+				tmpMessage := DELETE(_refSerialCom.LastReceivedString, 3, 1);
+				_length := LEN(tmpMessage);
+				_findSuffix := FIND(tmpMessage, Const.CR_LF);
+				message := DELETE(tmpMessage, 4, _findSuffix);
+				
+				PositionMsg := ConvertPulsesToDegrees(message);
+				
+				_roundPosition := LREAL_TO_FMTSTR(STRING_TO_LREAL(PositionMsg), 1, TRUE);	
+				hsS_temp := LREAL_TO_FMTSTR(_hsPolarisationConfig.PolarAngle_S, 1, FALSE); 
+				hsP_temp := LREAL_TO_FMTSTR(_hsPolarisationConfig.PolarAngle_P, 1, FALSE);
+				htS_temp := LREAL_TO_FMTSTR(_htPolarisationConfig.PolarAngle_S, 1, FALSE); 
+				htP_temp := LREAL_TO_FMTSTR(_htPolarisationConfig.PolarAngle_P, 1, FALSE);
+				IF (_roundPosition = hsS_temp OR _roundPosition = htS_temp) THEN
+					PolarResult := EPolar.S_Polar;
+				ELSIF (_roundPosition = hsP_temp OR _roundPosition = htP_temp) THEN
+					PolarResult := EPolar.P_Polar;		
+				END_IF
+								
+				_logger.Information(_message.Reset().Append('ELL14KPolarisationFilter position: ').Append(PositionMsg).ToString());
+				
+			EFeedbackMsgPolarisationELL14K.IdMsg :
+				IdMsg := _refSerialCom.LastReceivedString;							
+			EFeedbackMsgPolarisationELL14K.CustomMsg :
+				CustomMsg := _refSerialCom.LastReceivedString;						
+		END_CASE
+	ELSE
+		CASE _deliverMessages OF
+			EFeedbackMsgPolarisationELL14K.CalibMsg :
+				_firstConcat := CONCAT(LREAL_TO_FMTSTR(_hsPolarisationConfig.PolarAngle_S, 1, FALSE), _delimeter);	
+				_secondConcat := CONCAT(_firstConcat, LREAL_TO_FMTSTR(_hsPolarisationConfig.PolarAngle_P, 1, FALSE));	
+				_thirdConcat := CONCAT(_secondConcat, _delimeter);
+				_fourthConcat := CONCAT(_thirdConcat, LREAL_TO_FMTSTR(_htPolarisationConfig.PolarAngle_S, 1, FALSE));
+				_fithConcat := CONCAT(_fourthConcat, _delimeter);				
+				_sixthConcat := CONCAT(_fithConcat, LREAL_TO_FMTSTR(_htPolarisationConfig.PolarAngle_P, 1, FALSE));
+			
+				CalibMsg := _sixthConcat;
+				_deliverMessages := EFeedbackMsgPolarisationELL14K.PositionMsg;
+		END_CASE			
+	END_IF							   	
+
+
+	HomePosition(_homePosition);	
+	MoveAbsPosition(_moveAbsPosition, _pos);
+	MoveRelPosition(_moveRelPosition, _pos);	
+	JogBackwardPosition(_jogBackwardPosition);				
+	JogForwardPosition(_jogForwardPosition);
+	CustomCommand(_customCmd, _cmd);		
+	RaisePropertiesChanged(_raiseProperties);		
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{e1d7b255-14b1-4589-83bb-05da00e2f8b7}" />
+    <Method Name="ConfigureSerialCom" Id="{12e3a5ac-9e80-4cf8-96f7-339785854662}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+ 
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConvertDegreesToPulses" Id="{ef7e9afd-97d7-489c-af7f-eb946d23dc3b}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ConvertDegreesToPulses : STRING
+VAR_INPUT
+	AnglePosition : LREAL;
+END_VAR
+VAR
+	NumberPulses : DWORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[NumberPulses := LREAL_TO_DWORD(AnglePosition * Const.PULSES_PER_DEG);	
+ConvertDegreesToPulses := DWORD_TO_HEXSTR(NumberPulses, 8, FALSE );]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConvertPulsesToDegrees" Id="{569e0006-ee37-499d-abae-0390730c434c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ConvertPulsesToDegrees : STRING
+VAR_INPUT
+	Pulses : STRING;
+END_VAR
+VAR
+	pulsesInHex : STRING; 
+	pulsesToDint : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pulsesInHex := CONCAT('16#', Pulses);
+pulsesToDint := STRING_TO_DINT(pulsesInHex);
+ConvertPulsesToDegrees := LREAL_TO_FMTSTR(ABS(DINT_TO_LREAL(pulsesToDint) / Const.PULSES_PER_DEG), 4, TRUE);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{0e5761c5-ca5e-46ce-88e9-723a37b5fb4d}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Custom : ').
+								Append(Cmd).ToString());
+	_deliverMessages := EFeedbackMsgPolarisationELL14K.CustomMsg;									
+	_serialCom.Send(Cmd);
+	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{2e90d5c3-00be-44ad-9f29-48d08d372d0b}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : ELL14KPolarisationFilterConfig;
+	HsPolarisationConfig : PolarisationConfig;
+	HtPolarisationConfig : PolarisationConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	_hsPolarisationConfig := HsPolarisationConfig;
+	_htPolarisationConfig := HtPolarisationConfig;
+	
+	SUPER^._polarisationFilterConfig.Name := Config.Name;
+	SUPER^._polarisationFilterConfig.DeviceID := Config.DeviceID;
+	SUPER^._polarisationFilterConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._polarisationFilterConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.PolarisationFilter;
+	
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF		]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetCalibConfig" Id="{c78bc2ca-4d0c-4d3f-bc01-7b827324abde}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetCalibConfig
+VAR_INPUT
+END_VAR
+VAR
+	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationELL14K.CalibMsg;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{54576645-3141-4354-8020-bc62637ccf25}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the model number and firmware version **)
+METHOD GetIdentifier
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '0i1';
+END_VAR
+	]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationELL14K.IdMsg;	
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPosition" Id="{d3f35cc9-94a0-4c75-8c68-90f057bdc9c4}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetPosition
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '0gp';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPolarisationELL14K.PositionMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HomePosition" Id="{36a37c72-e5f0-424d-9906-2e1de847a5c0}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD HomePosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '0ho1';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Home position : ').ToString());
+	
+	PolarResult := EPolar.Unknown;
+	
+	_serialCom.Send(cmd);	
+	_homePosition := FALSE;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{f3f39650-b743-4f63-bb85-83699b7f83fb}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{23a2484d-8bb1-4b36-8f94-dcc0eff59bc7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4038268d-fef1-41f8-8384-71b1aa39b2c9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{46ade1d8-38a0-4954-8566-7a736dd9d59e}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());	
+	_initDevice := TRUE;
+	//_raiseProperties := TRUE;
+	
+	GetPosition();	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogBackwardPosition" Id="{03130069-30c5-451f-af47-4958d8d27efe}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED JogBackwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '0bw';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Jog backward position : ').ToString());
+	_serialCom.Send(cmd);
+	
+	_jogBackwardPosition := FALSE;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogForwardPosition" Id="{f3d5937a-cf0a-47a9-9a82-a126ab3ca426}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED JogForwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '0fw';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Jog forward position : ').ToString());
+	_serialCom.Send(cmd);
+	
+	_jogForwardPosition := FALSE;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{353b36cf-1ac9-4cf2-85d1-e7cc997eb0a4}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED MoveAbsPosition 
+VAR_INPUT
+	Execute : BOOL;
+	Position : LREAL;
+END_VAR
+VAR
+	cmd : STRING := '0ma';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_pos := Position;	
+
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Move absolute position : ').Append(TO_STRING(_pos)).ToString());
+		
+	PolarResult := EPolar.Unknown;					
+								
+	_serialCom.Send(CONCAT(cmd, ConvertDegreesToPulses(_pos)));
+	_moveAbsPosition := FALSE;	
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveRelPosition" Id="{57cecf23-2449-4db0-bce8-97f6d53b02d4}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED MoveRelPosition 
+VAR_INPUT
+	Execute : BOOL;
+	AnglePosition : LREAL;
+END_VAR
+VAR
+	cmd : STRING := '0mr';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_pos := AnglePosition;	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Move relative position : ').Append(TO_STRING(_pos)).ToString());
+	
+	PolarResult := EPolar.Unknown;
+	
+	_serialCom.Send(CONCAT(cmd, ConvertDegreesToPulses(_pos)));	
+	_moveRelPosition := FALSE;
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="PolarResult" Id="{f805792a-4dbf-45e4-ad01-cef5c517d031}">
+      <Declaration><![CDATA[PROPERTY PUBLIC PolarResult : EPolar]]></Declaration>
+      <Get Name="Get" Id="{c171f609-b0d1-48ee-844c-7e91509f0604}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PolarResult := _polarResult;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{153a618d-fe89-4b4c-b21c-a17a2edd0139}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_polarResult := PolarResult;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="RaisePropertiesChanged" Id="{ed8cc966-2302-4e42-8232-83eb507816c4}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	IF THIS^.Status <> TExecutionState.Ready THEN	
+		_raiseProperties := FALSE;
+		RETURN;
+	END_IF
+	
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  PositionMsg := ' ';
+				IdMsg := ' ';
+				CalibMsg := ' ';
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;
+			
+			10:  GetIdentifier();
+				_itemRaisedProperties := 11;
+				
+			11:  GetPosition();
+				_itemRaisedProperties := 12;
+				
+			12: GetCalibConfig();
+				_itemRaisedProperties := 20;
+			
+			20:  _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Polarisation RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ELL14KPolarisationFilter">
+      <LineId Id="737" Count="30" />
+      <LineId Id="772" Count="2" />
+      <LineId Id="1017" Count="1" />
+      <LineId Id="775" Count="4" />
+      <LineId Id="883" Count="1" />
+      <LineId Id="887" Count="0" />
+      <LineId Id="889" Count="2" />
+      <LineId Id="904" Count="0" />
+      <LineId Id="913" Count="0" />
+      <LineId Id="905" Count="0" />
+      <LineId Id="893" Count="0" />
+      <LineId Id="885" Count="0" />
+      <LineId Id="915" Count="0" />
+      <LineId Id="886" Count="0" />
+      <LineId Id="780" Count="9" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.ConfigureSerialCom">
+      <LineId Id="6" Count="27" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.ConvertDegreesToPulses">
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.ConvertPulsesToDegrees">
+      <LineId Id="12" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.CustomCommand">
+      <LineId Id="12" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.FB_init">
+      <LineId Id="9" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="11" Count="12" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.GetCalibConfig">
+      <LineId Id="37" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.GetIdentifier">
+      <LineId Id="32" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.GetPosition">
+      <LineId Id="37" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.HomePosition">
+      <LineId Id="60" Count="5" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.JogBackwardPosition">
+      <LineId Id="11" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.JogForwardPosition">
+      <LineId Id="13" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.MoveAbsPosition">
+      <LineId Id="103" Count="10" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.MoveRelPosition">
+      <LineId Id="59" Count="9" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.PolarResult.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.PolarResult.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ELL14KPolarisationFilter.RaisePropertiesChanged">
+      <LineId Id="27" Count="0" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="28" Count="7" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="36" Count="8" />
+      <LineId Id="71" Count="2" />
+      <LineId Id="45" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

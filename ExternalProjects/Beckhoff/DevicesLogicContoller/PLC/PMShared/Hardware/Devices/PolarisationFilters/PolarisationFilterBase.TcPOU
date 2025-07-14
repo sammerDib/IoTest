@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="PolarisationFilterBase" Id="{068f2ca3-fcd9-4644-b52e-278c2c90b1af}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT PolarisationFilterBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;					
+	{attribute 'OPC.UA.DA' := '0'}
+	_family : DeviceFamily;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_polarisationFilterConfig : DeviceConfiguration;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="DeviceID" Id="{af91a433-4663-45bc-8e3a-c7138b85094d}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{58de6ac1-b8cb-426d-9277-42ce2005d2fc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b35b31cc-e767-407d-86f0-5140dca65838}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{8987b731-bee2-4c15-96ce-36df74ea4fe3}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{4425f55c-ecf4-4cac-9721-7eb5ac08ce15}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{7cb07c35-b3f0-4d7c-b738-9ae9eb22bdcf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="GetPosition" Id="{79894dfb-bac7-4fbf-ba7c-d93121d51e98}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT GetPosition 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogBackwardPosition" Id="{43a934b4-4492-4cdc-b2e9-46b7080013bc}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT JogBackwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JogForwardPosition" Id="{815c4111-de0d-464e-912a-13649f254091}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT JogForwardPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsPosition" Id="{39178ee9-b62c-45f8-86ff-0ed6f705d3d5}">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT MoveAbsPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{c1040452-b13a-463e-afb1-31374684dd5a}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{abe9bbbb-0b29-454d-afd0-fbec79026c8d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{13b23b6d-9ea2-4ad0-8c0a-e4622287719f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="PolarisationFilterBase">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.GetPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.JogBackwardPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.JogForwardPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.MoveAbsPosition">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PolarisationFilterBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

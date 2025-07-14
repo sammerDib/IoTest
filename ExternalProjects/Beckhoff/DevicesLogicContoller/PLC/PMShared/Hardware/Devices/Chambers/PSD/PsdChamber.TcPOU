@@ -1,0 +1,597 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PsdChamber" Id="{5cb78e1f-1a67-4eed-b24c-c353ece2e6da}" SpecialFunc="None">
+    <Declaration><![CDATA[ {attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK PsdChamber EXTENDS ChamberBase
+VAR_INPUT
+	IoChamberPsd : IoChamberPsd;	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : PsdChamberConfig;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	
+	{region 'Commands'}	
+		 	
+	{attribute 'OPC.UA.DA' := '0'}
+	_enableCamera : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveSlitDoorPositionCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveCdaPneumaticValveCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;	 
+			
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	InterlockPanelsMsg : STRING(255);	
+	SlitDoorPositionMsg : STRING(255);	
+	SlitDoorOpenPositionMsg : STRING(255);
+	SlitDoorClosePositionMsg : STRING(255);
+	CdaValveIsOpenMsg : STRING(255);
+	RefreshingMsg : STRING(255);
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_openCdaValve : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cdaValveIsOpen : BOOL;
+	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcat1 : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcat2 : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatName : STRING; 
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatDescription : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatInterlockID : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInterlock : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_interlockCount : UINT;
+		
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+ 
+// Init device
+InitDevice(); 
+
+// Deliver messages
+CASE _deliverMessages OF	
+	EFeedbackMsgPsdChamber.InterlockPanelsMsg :
+		InterlockPanelsMsg := message;	
+	EFeedbackMsgPsdChamber.SlitDoorPositionMsg :
+		SlitDoorPositionMsg := TO_STRING(SlitDoorPosition);
+	EFeedbackMsgPsdChamber.SlitDoorOpenPositionMsg :
+		SlitDoorOpenPositionMsg := TO_STRING(SlitDoorOpenPosition);
+	EFeedbackMsgPsdChamber.SlitDoorClosePositionMsg :
+		SlitDoorClosePositionMsg := TO_STRING(SlitDoorClosePosition);
+	EFeedbackMsgPsdChamber.CdaValveIsOpenMsg :
+		CdaValveIsOpenMsg := TO_STRING(_cdaValveIsOpen);	
+END_CASE
+
+// Commands
+MoveSlitDoorPosition(_moveSlitDoorPositionCmd, _pos); 
+MoveCdaPneumaticValve(_moveCdaPneumaticValveCmd, _openCdaValve); 
+RaisePropertiesChanged(_raisePropertiesCmd);
+
+IF NOT _moveSlitDoorPositionCmd AND NOT _raisePropertiesCmd THEN	
+	MessageScheduler();
+END_IF	
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{446636a9-e1bf-41a2-beda-5f71ee3f8bbe}" />
+    <Property Name="CdaValveIsOpen" Id="{fbc715b0-8664-4d4b-a96c-4aeb352ceedd}" FolderPath="Commands\">
+      <Declaration><![CDATA[PROPERTY CdaValveIsOpen : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1fb41dee-8162-494f-b169-40ee8f0fcd2b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CdaValveIsOpen := _cdaValveIsOpen;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b9fa4638-3401-46bd-8111-5363d90470b8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_cdaValveIsOpen := CdaValveIsOpen;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{19c0411c-4163-4a09-896a-4fc7f328f179}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PsdChamberConfig;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._chamberConfig.Name := Config.Name;
+	SUPER^._chamberConfig.DeviceID := Config.DeviceID;
+	SUPER^._chamberConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._chamberConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Chamber;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{77f938ff-dece-4e7c-a91b-89fd1a1b8513}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+VAR	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - init device').ToString());		
+								
+	IF IoChamberPsd.OutputCdaPneumaticValve = FALSE THEN
+		_logger.Information(_message.Reset().Append('Start pneumatic valve').ToString());								
+		IoChamberPsd.OutputCdaPneumaticValve := TRUE;
+	END_IF
+	
+	_initDevice := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{b363294c-b909-46ca-a08f-67a2fb547bf6}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0: SlitDoorPositionMsg := ' ';		   
+		   CdaValveIsOpenMsg := ' ';
+		   _itemScheduler := 1;
+		   
+		1: ReadInterlock();
+		   _itemScheduler := 2;
+		   
+		2:  ReadSlitDoorPosition();
+			_itemScheduler := 3;
+
+		3:  ReadSlitDoorOpenPosition();
+			_itemScheduler := 4;
+
+		4:  ReadSlitDoorClosePosition();
+			_itemScheduler := 5;		
+					
+		5:  IsReadyToLoadUnload();
+			_itemScheduler := 6;	
+		
+		6:  ReadCdaValvePosition();
+			_itemScheduler := 0;					
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#50MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveCdaPneumaticValve" Id="{83961ea3-238a-48de-90d5-24ef42374b79}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD MoveCdaPneumaticValve
+VAR_INPUT
+	Execute : BOOL;
+	OpenValve : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Move CDA pneumatic valve : ').Append(TO_STRING(openValve)).ToString());
+		
+	IF OpenValve THEN
+		IoChamberPsd.OutputCdaPneumaticValve := TRUE;
+	ELSE
+		IoChamberPsd.OutputCdaPneumaticValve := FALSE;	
+	END_IF			
+	
+	_openCdaValve := FALSE;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveSlitDoorPosition" Id="{9467c568-9014-4226-9d21-944c103d853b}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD MoveSlitDoorPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Move slit door position : ').Append(TO_STRING(Position)).ToString());
+	
+	_moveSlitDoorPositionCmd := FALSE;
+	
+	IF Position = ESlitDoorPosition.Open THEN
+		IoChamberPsd.OutputOpenSlitDoor := TRUE;
+		IoChamberPsd.OutputCloseSlitDoor := FALSE;
+	ELSIF Position = ESlitDoorPosition.Close THEN
+		IoChamberPsd.OutputOpenSlitDoor := FALSE;
+		IoChamberPsd.OutputCloseSlitDoor := TRUE;
+	ELSE
+		_logger.Error(_message.Reset().Append(_config.Name).Append(' - unknown position : ').Append(TO_STRING(Position)).ToString());
+	END_IF
+			
+	_itemScheduler := 0;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{83701a8c-91db-4288-a78c-d25d8d620e09}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesCmd := TRUE;	
+		
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0: 	SUPER^._raisePropertiesBase := TRUE;	
+				RefreshingMsg := TO_STRING(TRUE);
+				SlitDoorPositionMsg := TO_STRING(ESlitDoorPosition.Unknown);				   
+				_itemRaisedProperties := 1;
+			
+			1:  SlitDoorOpenPositionMsg := ' ';
+				_itemRaisedProperties := 2;
+				
+			2:	SlitDoorClosePositionMsg := ' ';
+				_itemRaisedProperties := 3;
+				
+			3:  CdaValveIsOpenMsg := ' ';	   
+				_itemRaisedProperties := 4;
+				
+			4:  ReadInterlock();
+				_itemRaisedProperties := 5;
+				
+			5:  ReadInterlock();
+				_itemRaisedProperties := 6;
+				
+			6:  ReadInterlock();
+				_itemRaisedProperties := 7;
+				
+			7:  ReadInterlock();
+				_itemRaisedProperties := 8;
+				
+			8:  ReadInterlock();
+				_itemRaisedProperties := 9;
+				
+			9:  ReadInterlock();
+				_itemRaisedProperties := 10;						
+				
+			10: RefreshingMsg := TO_STRING(FALSE);
+				_itemRaisedProperties := 20;
+				
+			20: _logger.Information(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raisePropertiesCmd := FALSE;
+				_itemRaisedProperties := 0;
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadCdaValvePosition" Id="{e818dd7c-bee3-4da3-ae75-6cc8ead65710}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadCdaValvePosition 
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChamber.CdaValveIsOpenMsg;
+
+
+IF IoChamberPsd.OutputCdaPneumaticValve THEN
+	CdaValveIsOpen := TRUE;
+ELSE
+	CdaValveIsOpen := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadInterlock" Id="{37993eea-98d8-4d0e-b584-e5891f3e239d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadInterlock 
+VAR_INPUT
+END_VAR
+VAR
+	statePanel : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChamber.InterlockPanelsMsg;
+
+IF _interlockCount < Const.PSD_NUMBER_INTERLOCK_PANELS THEN
+	_interlockCount := _interlockCount + 1;
+ELSE
+	_interlockCount := 0;
+END_IF
+
+tmpConcatName := CONCAT(_config.Interlock[_interlockCount].Name, ';');
+tmpConcatDescription := CONCAT(_config.Interlock[_interlockCount].Description, ';');
+tmpConcatInterlockID := CONCAT(UINT_TO_STRING(_config.Interlock[_interlockCount].InterlockID), ';');
+
+tmpConcat1 := CONCAT(tmpConcatName, tmpConcatDescription);
+tmpConcat2 := CONCAT(tmpConcat1, tmpConcatInterlockID);
+
+IF _config.Interlock[_interlockCount].State THEN
+	statePanel := 'Closed';
+ELSE
+	statePanel := 'Open';
+END_IF
+
+message := CONCAT(tmpConcat2, statePanel);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorClosePosition" Id="{5473a5f3-41d4-4dc8-9db3-035535aff6f4}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorClosePosition 
+VAR_INPUT
+END_VAR
+VAR
+	open : BOOL;
+	close : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChamber.SlitDoorClosePositionMsg;
+SlitDoorClosePosition := IoChamberPsd.InputCloseSlitDoor;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorOpenPosition" Id="{55623f1f-95a6-4e5e-a4ab-86cb74e27085}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorOpenPosition 
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChamber.SlitDoorOpenPositionMsg;
+SlitDoorOpenPosition := IoChamberPsd.InputOpenSlitDoor;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorPosition" Id="{d0053aee-5cad-4557-8192-2b2532ce0e65}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorPosition 
+VAR_INPUT
+END_VAR
+VAR
+	open : BOOL;
+	close : BOOL;
+	efemOpen : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChamber.SlitDoorPositionMsg;
+
+open := IoChamberPsd.InputOpenSlitDoor;
+close := IoChamberPsd.InputCloseSlitDoor;
+efemOpen := IoChamberBase.InputEfemSlitDoorOpen;
+
+IF open AND NOT close AND efemOpen THEN
+	SlitDoorPosition := ESlitDoorPosition.Open;	
+ELSIF close AND NOT open AND NOT efemOpen THEN
+	SlitDoorPosition := ESlitDoorPosition.Close;
+ELSIF close AND open THEN
+	SlitDoorPosition := ESlitDoorPosition.Error;	
+ELSE
+	SlitDoorPosition := ESlitDoorPosition.Unknown;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PsdChamber">
+      <LineId Id="111" Count="1" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="367" Count="1" />
+      <LineId Id="365" Count="1" />
+      <LineId Id="512" Count="3" />
+      <LineId Id="438" Count="1" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="106" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="53" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.CdaValveIsOpen.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.CdaValveIsOpen.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.FB_init">
+      <LineId Id="40" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="45" Count="10" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.InitDevice">
+      <LineId Id="42" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.MessageScheduler">
+      <LineId Id="97" Count="2" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="199" Count="1" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="105" Count="3" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.MoveCdaPneumaticValve">
+      <LineId Id="26" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.MoveSlitDoorPosition">
+      <LineId Id="26" Count="16" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="122" Count="17" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.ReadCdaValvePosition">
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="3" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.ReadInterlock">
+      <LineId Id="6" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.ReadSlitDoorClosePosition">
+      <LineId Id="9" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.ReadSlitDoorOpenPosition">
+      <LineId Id="9" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.ReadSlitDoorPosition">
+      <LineId Id="9" Count="3" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

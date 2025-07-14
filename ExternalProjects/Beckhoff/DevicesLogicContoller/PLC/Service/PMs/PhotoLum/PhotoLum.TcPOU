@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PhotoLum" Id="{dd23bdaa-3ab1-4618-abd0-3f24c0862f03}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PhotoLum EXTENDS PlcModule
+VAR_INPUT
+	Safety : Safety;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	PhotoLumConfig : PhotoLumConfig;
+		
+	(* Chamber *)
+	Chamber : PhotoLumChamber(Config := PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig);
+			
+	(* Chuck *)
+	Chuck : PhotoLumChuck(Config := PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig);
+	
+	(* Axes *)
+	Ps10Axis : Ps10Axis(Config := PhotoLumConfig.AxesConfigs.Ps10OwisAxisConfig); 
+		
+	(* Lights *)
+	EvosensLight : EvosensLight(Config := PhotoLumConfig.LightConfigs.EvosensLightConfig);
+	ArduinoLight : ArduinoLight(Config := PhotoLumConfig.LightConfigs.ArduinoLightConfig);
+	
+	(* DistanceSensorConfigs *) 
+	MicroEpsilonDistanceSensor : MicroEpsilonDistanceSensor(Config := PhotoLumConfig.DistanceSensorConfigs.MicroEpsilonDistanceSensorConfig);
+	
+	//{attribute 'OPC.UA.DA' := '0'}
+	//EfemInterlockArmExtendedEnable AT %Q* : BOOL;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+SUPER^();
+
+IF PhotoLumConfig.SafetyIsEnabled THEN
+	Safety();
+END_IF
+
+IF PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.IsEnabled THEN
+	Chamber();	
+END_IF
+
+IF PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.IsEnabled THEN
+	Chuck();		
+END_IF
+
+IF PhotoLumConfig.AxesConfigs.Ps10OwisAxisConfig.IsEnabled THEN
+	Ps10Axis();	
+END_IF
+
+(* Lights *)
+IF PhotoLumConfig.LightConfigs.EvosensLightConfig.IsEnabled THEN
+	EvosensLight();
+	IF EvosensLight.InitConfigSerialCom THEN
+		;
+	END_IF
+ELSIF PhotoLumConfig.LightConfigs.ArduinoLightConfig.IsEnabled THEN
+	ArduinoLight();
+	IF ArduinoLight.InitConfigSerialCom THEN
+		;
+	END_IF
+END_IF
+
+IF PhotoLumConfig.DistanceSensorConfigs.MicroEpsilonDistanceSensorConfig.IsEnabled THEN
+	MicroEpsilonDistanceSensor();	
+END_IF
+
+
+// Conditions for authorising the arm to enter the chamber
+//
+// Attention : bien mettre le loading position en fonction du diametre wafer
+// Pour l'instant bloquer l'info à transmettre au robot
+IF Chamber.SlitDoorPosition = ESlitDoorPosition.Open (*AND 
+   Chamber.IsInLoadingPosition = TRUE *) THEN	
+	//EfemInterlockArmExtendedEnable := TRUE;
+ELSE
+	//EfemInterlockArmExtendedEnable := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{db17d3ed-57f9-4542-a5a2-59aa5ac2d1fc}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PhotoLumConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PhotoLumConfig := Config;
+PhotoLumBkgrdSerialCom(Config := PhotoLumConfig);
+
+IF Config.IsEnabled THEN
+	_logger.Information('Photolum devices initialization starting...');
+END_IF	
+
+(* Chamber *)
+IF Config.ChamberConfigs.PhotoLumChamberConfig.IsEnabled THEN
+	Chamber.FB_init(FALSE, FALSE, Config := Config.ChamberConfigs.PhotoLumChamberConfig);	
+END_IF
+
+// Chuck
+IF Config.ChuckConfigs.PhotoLumChuckConfig.IsEnabled THEN
+	Chuck.FB_init(FALSE, FALSE, Config := Config.ChuckConfigs.PhotoLumChuckConfig);	
+END_IF 
+
+// Axis
+IF Config.AxesConfigs.Ps10OwisAxisConfig.IsEnabled THEN
+	Ps10Axis.FB_init(FALSE, FALSE, Config := Config.AxesConfigs.Ps10OwisAxisConfig);	
+END_IF
+
+(* LightConfigs *) 
+IF Config.LightConfigs.EvosensLightConfig.IsEnabled THEN
+	EvosensLight.FB_init(FALSE, FALSE, Config := Config.LightConfigs.EvosensLightConfig);
+ELSIF Config.LightConfigs.ArduinoLightConfig.IsEnabled THEN
+	ArduinoLight.FB_init(FALSE, FALSE, Config := Config.LightConfigs.ArduinoLightConfig);	
+END_IF
+
+(* DistanceSensorConfigs *) 
+IF Config.DistanceSensorConfigs.MicroEpsilonDistanceSensorConfig.IsEnabled THEN
+	MicroEpsilonDistanceSensor.FB_init(FALSE, FALSE, Config := Config.DistanceSensorConfigs.MicroEpsilonDistanceSensorConfig);	
+END_IF
+
+IF Config.IsEnabled THEN
+	_logger.Information('PhotoLum devices initialization ended...');
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PhotoLum">
+      <LineId Id="1928" Count="0" />
+      <LineId Id="1927" Count="0" />
+      <LineId Id="2230" Count="0" />
+      <LineId Id="2232" Count="1" />
+      <LineId Id="2231" Count="0" />
+      <LineId Id="365" Count="1" />
+      <LineId Id="2110" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="2261" Count="2" />
+      <LineId Id="1418" Count="0" />
+      <LineId Id="2264" Count="0" />
+      <LineId Id="2362" Count="1" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="2130" Count="1" />
+      <LineId Id="2137" Count="4" />
+      <LineId Id="2163" Count="3" />
+      <LineId Id="2162" Count="0" />
+      <LineId Id="1929" Count="0" />
+      <LineId Id="2295" Count="0" />
+      <LineId Id="2298" Count="1" />
+      <LineId Id="2296" Count="1" />
+      <LineId Id="2196" Count="1" />
+      <LineId Id="2203" Count="2" />
+      <LineId Id="2198" Count="0" />
+      <LineId Id="2394" Count="0" />
+      <LineId Id="2200" Count="2" />
+      <LineId Id="2195" Count="0" />
+      <LineId Id="2194" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLum.FB_init">
+      <LineId Id="342" Count="16" />
+      <LineId Id="384" Count="2" />
+      <LineId Id="362" Count="15" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PhotoLumChamber" Id="{50f08ae1-454c-45a7-9405-3d74b783e25e}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK PhotoLumChamber EXTENDS ChamberBase
+VAR_INPUT
+	IoChamberPhotoLum : IoChamberPhotoLum;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : PhotoLumChamberConfig;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	
+	{region 'Commands'}	
+		 	
+	{attribute 'OPC.UA.DA' := '0'}
+	_enableCamera : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_moveSlitDoorPositionCmd	 : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;	 
+			
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	InterlockPanelsMsg : STRING(255);
+	SlitDoorPositionMsg : STRING(255);
+	SlitDoorOpenPositionMsg : STRING(255);
+	SlitDoorClosePositionMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pos : INT;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcat1 : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcat2 : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatName : STRING; 
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatDescription : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	tmpConcatInterlockID : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInterlock : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_interlockCount : UINT;			
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+// Init device
+InitDevice(); 
+
+// Deliver messages
+CASE _deliverMessages OF	
+	EFeedbackMsgPhotoLumChamber.InterlockPanelsMsg :
+		InterlockPanelsMsg := message;	
+	EFeedbackMsgPhotoLumChamber.SlitDoorPositionMsg :
+		SlitDoorPositionMsg := TO_STRING(SlitDoorPosition);		
+	EFeedbackMsgPhotoLumChamber.SlitDoorOpenPositionMsg :
+		SlitDoorOpenPositionMsg := TO_STRING(SlitDoorOpenPosition);	
+	EFeedbackMsgPhotoLumChamber.SlitDoorClosePositionMsg :
+		SlitDoorClosePositionMsg := TO_STRING(SlitDoorClosePosition);		
+END_CASE
+
+// Commands
+MoveSlitDoorPosition(_moveSlitDoorPositionCmd, _pos); 
+RaisePropertiesChanged(_raisePropertiesCmd);
+
+IF NOT _moveSlitDoorPositionCmd AND NOT _raisePropertiesCmd THEN	
+	MessageScheduler();
+END_IF	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{98986a00-5521-4856-953b-50097e90aa42}" />
+    <Method Name="FB_init" Id="{07ddbfcf-e42d-47c0-b42a-69d4f2f4abee}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PhotoLumChamberConfig;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;	
+
+	SUPER^._chamberConfig.Name := Config.Name;
+	SUPER^._chamberConfig.DeviceID := Config.DeviceID;
+	SUPER^._chamberConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._chamberConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Chamber;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{47ccf362-cff8-4605-b81d-bdf4b6fe9599}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - init device').ToString());		
+							
+	_initDevice := TRUE;
+	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{f40e75a0-b5f6-4cd1-99da-a1cd39ddcdc6}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0: SlitDoorPositionMsg := ' ';
+		   _itemScheduler := 1;
+		   
+		1: ReadInterlock();
+		   _itemScheduler := 2;
+	
+		2:  ReadSlitDoorPosition();
+			_itemScheduler := 3;
+
+		3:  ReadSlitDoorOpenPosition();
+			_itemScheduler := 4;
+
+		4:  ReadSlitDoorClosePosition();
+			_itemScheduler := 0;					
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#50MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveSlitDoorPosition" Id="{2adb4c20-3cad-4872-8478-a1e267ea3098}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD MoveSlitDoorPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Move slit door position : ').Append(TO_STRING(Position)).ToString());
+	
+	_moveSlitDoorPositionCmd := FALSE;
+		
+	IF Position = ESlitDoorPosition.Open THEN
+		IoChamberPhotoLum.OutputOpenSlitDoor := TRUE;
+		IoChamberPhotoLum.OutputCloseSlitDoor := FALSE;
+	ELSIF Position = ESlitDoorPosition.Close THEN
+		IoChamberPhotoLum.OutputOpenSlitDoor := FALSE;
+		IoChamberPhotoLum.OutputCloseSlitDoor := TRUE;
+		
+		//IsInLoadingPosition := FALSE;
+	ELSE
+		_logger.Error(_message.Reset().Append(_config.Name).Append(' - unknown position : ').Append(TO_STRING(Position)).ToString());
+		
+		//IsInLoadingPosition := FALSE;
+	END_IF
+				
+	_itemScheduler := 0;
+END_IF	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{daf67c55-7929-45d5-b907-80dc69801af5}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesCmd := TRUE;	
+		
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0: 	SUPER^._raisePropertiesBase := TRUE;		   
+				_itemRaisedProperties := 10;
+				
+			10: _logger.Information(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raisePropertiesCmd := FALSE;
+				_itemRaisedProperties := 0;
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#50MS);	
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadInterlock" Id="{11398588-9f18-4476-a7dd-e69fe8066d70}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadInterlock 
+VAR_INPUT
+END_VAR
+VAR
+	statePanel : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChamber.InterlockPanelsMsg;
+
+IF _interlockCount < Const.PHOTOLUM_NUMBER_INTERLOCK_PANELS - 1 THEN
+	_interlockCount := _interlockCount + 1;
+ELSE
+	_interlockCount := 0;
+END_IF
+
+tmpConcatName := CONCAT(_config.Interlock[_interlockCount].Name, ';');
+tmpConcatDescription := CONCAT(_config.Interlock[_interlockCount].Description, ';');
+tmpConcatInterlockID := CONCAT(UINT_TO_STRING(_config.Interlock[_interlockCount].InterlockID), ';');
+
+tmpConcat1 := CONCAT(tmpConcatName, tmpConcatDescription);
+tmpConcat2 := CONCAT(tmpConcat1, tmpConcatInterlockID);
+
+IF _config.Interlock[_interlockCount].State THEN
+	statePanel := 'Closed';
+ELSE
+	statePanel := 'Opened';
+END_IF
+
+message := CONCAT(tmpConcat2, statePanel);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorClosePosition" Id="{b3f9a4a8-9a30-4200-8666-50f17637f3b4}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorClosePosition
+VAR_INPUT
+END_VAR
+VAR
+	open : BOOL;
+	close : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPhotoLumChamber.SlitDoorClosePositionMsg;
+SlitDoorClosePosition := IoChamberPhotoLum.InputCloseSlitDoor;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorOpenPosition" Id="{94d18b75-d3bc-4952-a8a4-b30cbadf5c64}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorOpenPosition
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPhotoLumChamber.SlitDoorOpenPositionMsg;
+SlitDoorOpenPosition := IoChamberPhotoLum.InputOpenSlitDoor;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadSlitDoorPosition" Id="{8e56b65e-fe0b-49c8-ae52-ad1e8ef617f2}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadSlitDoorPosition
+VAR_INPUT
+END_VAR
+VAR
+	open : BOOL;
+	close : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPhotoLumChamber.SlitDoorPositionMsg;
+
+open := IoChamberPhotoLum.InputOpenSlitDoor;
+close := IoChamberPhotoLum.InputCloseSlitDoor;
+
+IF open AND NOT close THEN
+	IoChamberPhotoLum.EfemInterlockSlitDoor := TRUE;	
+	IoChamberPhotoLum.EfemInterlockArmExtendedEnable := TRUE;	
+	SlitDoorPosition := ESlitDoorPosition.Open;	
+ELSIF close AND NOT open THEN
+	IoChamberPhotoLum.EfemInterlockSlitDoor := FALSE;
+	IoChamberPhotoLum.EfemInterlockArmExtendedEnable := FALSE;
+	SlitDoorPosition := ESlitDoorPosition.Close;
+ELSIF close AND open THEN
+	IoChamberPhotoLum.EfemInterlockSlitDoor := FALSE;
+	IoChamberPhotoLum.EfemInterlockArmExtendedEnable := FALSE;
+	SlitDoorPosition := ESlitDoorPosition.Error;	
+ELSE
+	IoChamberPhotoLum.EfemInterlockSlitDoor := FALSE;
+	IoChamberPhotoLum.EfemInterlockArmExtendedEnable := FALSE;
+	SlitDoorPosition := ESlitDoorPosition.Unknown;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PhotoLumChamber">
+      <LineId Id="355" Count="18" />
+      <LineId Id="375" Count="3" />
+      <LineId Id="123" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.FB_init">
+      <LineId Id="53" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="69" Count="7" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="66" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.InitDevice">
+      <LineId Id="42" Count="0" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.MessageScheduler">
+      <LineId Id="97" Count="2" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="200" Count="11" />
+      <LineId Id="105" Count="3" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.MoveSlitDoorPosition">
+      <LineId Id="57" Count="10" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.ReadInterlock">
+      <LineId Id="6" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.ReadSlitDoorClosePosition">
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.ReadSlitDoorOpenPosition">
+      <LineId Id="6" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChamber.ReadSlitDoorPosition">
+      <LineId Id="33" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="46" Count="2" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Astrofan612Ffu" Id="{867d5264-4d2f-43b1-beed-3971bef33333}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK Astrofan612Ffu EXTENDS FfuBase
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_master : ModbusRtuMasterV2_KL6x22B;
+	{attribute 'OPC.UA.DA' := '0'}
+	_modbusErrorId : MODBUS_ERRORS;
+	{attribute 'OPC.UA.DA' := '0'}
+	Quantity : WORD := 1;
+	{attribute 'OPC.UA.DA' := '0'}
+	Id : BYTE := 1;
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Astrofan612FfuConfig;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	StateMsg : STRING(255);
+	IsAliveMsg : STRING(255);
+	CurrentSpeedMsg : STRING(255);
+	TemperatureMsg : STRING(255);
+	WarningRaisedMsg : STRING(255) := BOOL_TO_STRING(FALSE);
+	AlarmRaisedMsg : STRING(255) := BOOL_TO_STRING(FALSE);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOff : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	 
+	{endregion}		
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseTimeout : TON;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseIsAliveGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseLoop : TON;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_itemSubScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemSubRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemFanSpeed : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_lifeTimeCount : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_notifyIsAlive : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_readData : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_readHoldingData : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_writeData : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdReadInput : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdReadHolding : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmdWriteSingleRegister : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_addressInput : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_addressHolding : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_addressWrite : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_currentSpeedPercent : UINT;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_temperature : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_maxSpeed : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setSpeedCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fanMaxSpeedCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fanActualSpeedCmd : BOOL;
+    {attribute 'OPC.UA.DA' := '0'}
+	_setSpeedPercent : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_doneScheduler : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_doneRaised : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_pressure AT %I* : UINT;
+	{attribute 'OPC.UA.DA' := '0'}		
+	_alarmRaised : EventRaised;
+	{attribute 'OPC.UA.DA' := '0'}			
+	_warningRaised : EventRaised;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ReadInputRegister();
+ReadHoldingRegister();
+WriteSingleRegister();
+
+// Init device
+InitDevice();
+
+// Check if it's still alive
+IF _notifyIsAlive THEN
+	IsAliveMsg := TO_STRING(_lifeTimeCount);
+	_notifyIsAlive := FALSE;
+END_IF
+
+CASE _deliverMessages OF
+	EFeedbackMsgAstrofan612.StateMsg :
+		;
+	EFeedbackMsgAstrofan612.StatusMsg :
+		;
+	EFeedbackMsgAstrofan612.CurrentSpeedMsg :
+		CurrentSpeedMsg := TO_STRING(_currentSpeedPercent);
+	EFeedbackMsgAstrofan612.TemperatureMsg :
+		TemperatureMsg := TO_STRING(_temperature);
+	EFeedbackMsgAstrofan612.WarningRaisedMsg :
+		;
+	EFeedbackMsgAstrofan612.AlarmRaisedMsg :
+		;
+	EFeedbackMsgAstrofan612.CustomMsg :
+		;
+END_CASE
+
+SetSpeed(_setSpeedCmd, _setSpeedPercent);
+RaisePropertiesChanged(_raisePropertiesCmd);
+CustomCommand(_customCmd, _cmd);
+
+
+IF _config.Loop.IsEnabled THEN
+	LoopFanSpeed();
+	WarningRaised();
+	AlarmRaised();	
+END_IF
+
+
+IF (NOT _setSpeedCmd AND NOT _customCmd AND NOT _raisePropertiesCmd) THEN
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{62875577-a73c-4e8f-9206-108404f9d2a3}">
+      <Folder Name="Loop" Id="{e6abd395-410b-42f2-a775-88728483aeec}" />
+    </Folder>
+    <Method Name="AlarmRaised" Id="{7ca2041e-a660-4a17-9bc0-5b04227999e7}" FolderPath="Commands\Loop\">
+      <Declaration><![CDATA[METHOD AlarmRaised
+VAR
+	alarmRaised : STRING := 'ALARM';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_AlarmRaised(DeviceName := THIS^._name,
+				EventRaisedMsg := alarmRaised,
+				EventTimerSetCriteria := _currentSpeedPercent > _config.Loop.FfuLoopAlarm.ThresholdPercent, 
+				EventTimerSeconds := _config.Loop.FfuLoopAlarm.TimerSeconds,
+				EventMsg => );
+				
+IF 	_AlarmRaised.EventMsg = alarmRaised THEN
+	AlarmRaisedMsg := BOOL_TO_STRING(TRUE);
+ELSE
+	AlarmRaisedMsg := BOOL_TO_STRING(FALSE);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{2212ff4a-2ad8-41dd-a29f-7cde624ab776}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*IF Execute THEN
+	_logger.Information(_message.Reset(). Append(_config.Name).Append(' - Custom command : '). Append(Cmd).ToString());	
+	
+	_deliverMessages := EFeedbackMsgAstrofan612.CustomMsg;														
+	
+	_customCmd := FALSE;
+END_IF*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{8a17f619-c58d-4332-9e0e-b04d7ad49ff7}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Astrofan612FfuConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._ffuConfig.Name := Config.Name;
+	SUPER^._ffuConfig.DeviceID := Config.DeviceID;
+	SUPER^._ffuConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._ffuConfig.LogLevel := Config.LogLevel;
+
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Ffu;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFanActualSpeed" Id="{96c90a33-1351-407b-a5d4-7e8bdc75104c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetFanActualSpeed 
+VAR
+	AddressActualSpeed : STRING := '16#D010';	
+	currentSpeedReal : UINT;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemSubScheduler OF
+		0 :	_cmdReadInput := TRUE;
+			_addressInput:= AddressActualSpeed;	
+			_itemSubScheduler := 1;
+		
+		1 : _deliverMessages := EFeedbackMsgAstrofan612.CurrentSpeedMsg;
+			_currentSpeedPercent := REAL_TO_UINT (( _readData * 100.00) / 65536);
+			_cmdReadInput := FALSE;
+			_itemSubScheduler := 0;
+			_doneScheduler := TRUE;
+	END_CASE	
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#500MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFanMaxSpeed" Id="{dbfda791-3f05-4ab0-aa2b-cced93278bb7}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetFanMaxSpeed 
+VAR
+	AddressMaxSpeed : STRING := '16#D119';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemSubRaisedProperties OF
+			0 :	_cmdReadHolding := TRUE;
+				_addressHolding := AddressMaxSpeed;
+				_itemSubRaisedProperties := 1;
+			
+			1 : _maxSpeed := _readHoldingData;
+				_cmdReadHolding := FALSE;
+				_itemSubRaisedProperties := 0;		
+	
+				_doneRaised := TRUE;					
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#500MS);		
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFanTemperature" Id="{20ea1ca1-ae79-4a6a-806f-6447733cb9e9}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetFanTemperature 
+VAR
+	AddressTemperature : STRING := '16#D015';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemSubScheduler OF
+		0 :	_cmdReadInput := TRUE;
+			_addressInput := AddressTemperature;
+			_itemSubScheduler := 1;
+		
+		1 : _deliverMessages := EFeedbackMsgAstrofan612.TemperatureMsg;
+			_temperature := _readData;
+			_cmdReadInput := FALSE;
+			_itemSubScheduler := 0;
+			
+			_doneScheduler:= TRUE ;			
+	END_CASE	
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#500MS);		
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{bdfe47a2-4b9f-412b-9407-158ea9c83db6}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset(). Append(_config.Name). Append(' - Init device').ToString());
+	
+	THIS^.SetDone();
+	
+	_setSpeedPercent := 50;
+	_setSpeedCmd := TRUE;
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsAlive" Id="{947c3a0c-77ab-4e9e-bd01-64e8d1beb974}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED IsAlive
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_notifyIsAlive := TRUE;
+
+IF _lifeTimeCount < 5 THEN
+	_lifeTimeCount := _lifeTimeCount + 1;
+ELSE
+	_lifeTimeCount := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LoopFanSpeed" Id="{98f4846b-b5ae-4881-889f-18198b4fc1dd}" FolderPath="Commands\Loop\">
+      <Declaration><![CDATA[METHOD LoopFanSpeed 
+VAR_INPUT
+END_VAR
+VAR
+	differentialPressure : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseLoop.Q THEN
+	_pulseLoop(IN := FALSE, PT := T#10MS);
+	
+	differentialPressure := (_pressure * 10)/32767;
+	
+	IF differentialPressure <=  _config.Loop.FfuPressureMinimumValuePa THEN
+		_setSpeedPercent := TO_UINT(LIMIT (_config.Loop.FfuLoopSetSpeedLowerLimitPercent, (_setSpeedPercent + 10), 
+								_config.Loop.FfuLoopSetSpeedHigherLimitPercent));
+		_setSpeedCmd := TRUE;
+	ELSIF differentialPressure >= _config.Loop.FfuPressureMaximumValuePa THEN
+		_setSpeedPercent := TO_UINT(LIMIT (_config.Loop.FfuLoopSetSpeedLowerLimitPercent, ABS(_setSpeedPercent - 10), 
+								_config.Loop.FfuLoopSetSpeedHigherLimitPercent));
+		_setSpeedCmd := TRUE;
+	ELSE
+		_SetSpeedPercent := _config.Loop.FfuLoopStandardSetSpeed;
+		_setSpeedCmd := TRUE;
+	END_IF
+ELSE
+	_pulseLoop(IN := TRUE, PT := TO_TIME(_config.Loop.FfuLoopPressureTimerSeconds*1000));
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{2917bcab-6a75-43cd-9622-b744f2a8c2f3}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE _itemScheduler OF		
+	0:	GetFanTemperature();	
+		IF _doneScheduler THEN 
+            _itemScheduler := 1;
+		END_IF		
+		
+	1: GetFanActualSpeed();
+	    IF _doneScheduler THEN 
+            _itemScheduler := 0;
+		END_IF	
+	
+END_CASE
+
+_doneScheduler := FALSE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{9b7df134-6875-41e1-ab94-33264713c54f}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF execute THEN
+	_raisePropertiesCmd := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _itemRaisedProperties OF
+			0:  _deliverMessages := EFeedbackMsgAstrofan612.CurrentSpeedMsg;
+				_currentSpeedPercent := 0;	
+				_itemRaisedProperties := 1;
+						
+			1:	_deliverMessages := EFeedbackMsgAstrofan612.TemperatureMsg;
+				_temperature := 0;	
+				_itemRaisedProperties := 10;							
+			
+			10: _raisePropertiesCmd := FALSE;				
+				_itemRaisedProperties := 0;		
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#50MS);	
+	END_IF
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadHoldingRegister" Id="{0d495016-3dd8-432f-b302-e1d3b20d14c0}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadHoldingRegister]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_master.ReadRegs (
+	UnitID:= Id,
+	Quantity:= Quantity,
+	MBAddr:= STRING_TO_WORD(_addressHolding),
+	cbLength:= SIZEOF(_readHoldingData),  
+	pMemoryAddr:= ADR(_readHoldingData),  
+	AuxQuantity:= ,     
+	AuxMBAddr:= , 
+	AuxcbLength:= , 
+	pAuxMemoryAddr:= , 
+	Execute:= _cmdReadHolding,
+	Timeout:= T#1S,
+	BUSY=> , 
+	Error=> ,
+	ErrorId=> _modbusErrorId, 
+	cbRead=> );
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadInputRegister" Id="{0fc53d98-57ed-4f4a-8b09-845a1e6a7a60}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadInputRegister 
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_master.ReadInputRegs(
+	UnitID:= Id,        
+	Quantity:= Quantity,
+	MBAddr:= STRING_TO_WORD(_addressInput),   
+	cbLength:= SIZEOF(_readData),  
+	pMemoryAddr:= ADR(_readData),  
+	AuxQuantity:= ,     
+	AuxMBAddr:= , 
+	AuxcbLength:= , 
+	pAuxMemoryAddr:= , 
+	Execute:= _cmdReadInput,
+	Timeout:= T#1S,
+	BUSY=> , 
+	Error=> , 
+	ErrorId=> _modbusErrorId, 
+	cbRead=> );
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSpeed" Id="{e0cd7ec7-ff3c-4327-9159-4440b6605f25}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetSpeed 
+VAR_INPUT
+	execute : BOOL;
+	speedPercent : UINT;
+END_VAR
+VAR
+	addressSetSpeed : STRING := '16#D001' ;
+	setSpeed: UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setSpeedCmd := TRUE;	
+	_setSpeedPercent := SpeedPercent;
+
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: 	
+				_cmdReadInput := FALSE;
+				_cmdReadHolding := FALSE;	
+				_cmdWriteSingleRegister := FALSE;				
+				_itemExecScheduler := 1;
+				
+			1:	IF _config.SpeedMatrix.Enable THEN
+					setSpeed := ScaleSpeed(iSpeed := _setSpeedPercent, SpeedMatrix := _config.SpeedMatrix.FfuMatrix);
+				ELSE
+					setSpeed := _setSpeedPercent;
+				END_IF
+				_writeData := ((setSpeed * 65535) / 100);
+				
+				 _addressWrite := AddressSetSpeed;
+				 _cmdWriteSingleRegister := TRUE;
+				 _itemExecScheduler := 10;				
+											
+			10:  _cmdWriteSingleRegister := FALSE;
+				_itemExecScheduler := 11;
+			
+			11:	GetFanActualSpeed();
+				// TODO :  intégrer une tempo pour sortir de là, en cas de problème. Pour éviter la boucle infinie
+				IF _doneScheduler  THEN
+					_itemExecScheduler := 50;
+					_doneScheduler := FALSE;
+				END_IF
+				
+			50:  _cmdReadInput := FALSE;				
+				_setSpeedCmd := FALSE;	
+				_itemExecScheduler := 0;										
+		END_CASE						
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#200MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WarningRaised" Id="{5e051e40-f272-49e5-8e73-52efab264dfa}" FolderPath="Commands\Loop\">
+      <Declaration><![CDATA[METHOD WarningRaised 
+VAR
+	warningRaised : STRING := 'Warning';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_warningRaised(DeviceName := THIS^._name,
+				EventRaisedMsg := warningRaised,
+				EventTimerSetCriteria := _currentSpeedPercent > _config.Loop.FfuLoopWarning.ThresholdPercent, 
+				EventTimerSeconds := _config.Loop.FfuLoopWarning.TimerSeconds,
+				EventMsg => );
+
+
+
+IF 	_warningRaised.EventMsg = warningRaised THEN
+	WarningRaisedMsg :=  BOOL_TO_STRING(TRUE);
+ELSE
+	WarningRaisedMsg :=  BOOL_TO_STRING(FALSE);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteSingleRegister" Id="{b51a0600-4661-4364-a573-7c291143f212}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD WriteSingleRegister ]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_master.WriteSingleRegister (
+	UnitID:= Id,        
+	Quantity:= Quantity,
+	MBAddr:= STRING_TO_WORD(_addressWrite),   
+	cbLength:= SIZEOF(_writeData),  
+	pMemoryAddr:= ADR(_writeData),  
+	AuxQuantity:= ,     
+	AuxMBAddr:= , 
+	AuxcbLength:= , 
+	pAuxMemoryAddr:= , 
+	Execute:= _cmdWriteSingleRegister,
+	Timeout:= T#1S,
+	BUSY=> , 
+	Error=> , 
+	ErrorId=> _modbusErrorId, 
+	cbRead=> );
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Astrofan612Ffu">
+      <LineId Id="2361" Count="31" />
+      <LineId Id="2516" Count="1" />
+      <LineId Id="2393" Count="0" />
+      <LineId Id="2396" Count="1" />
+      <LineId Id="2632" Count="0" />
+      <LineId Id="2398" Count="0" />
+      <LineId Id="2400" Count="4" />
+      <LineId Id="1880" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.AlarmRaised">
+      <LineId Id="97" Count="2" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="108" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.CustomCommand">
+      <LineId Id="13" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.FB_init">
+      <LineId Id="9" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="12" Count="11" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.GetFanActualSpeed">
+      <LineId Id="111" Count="8" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="127" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.GetFanMaxSpeed">
+      <LineId Id="42" Count="13" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="64" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.GetFanTemperature">
+      <LineId Id="40" Count="8" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="49" Count="3" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="56" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.InitDevice">
+      <LineId Id="6" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.IsAlive">
+      <LineId Id="12" Count="1" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.LoopFanSpeed">
+      <LineId Id="219" Count="18" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.MessageScheduler">
+      <LineId Id="110" Count="0" />
+      <LineId Id="122" Count="3" />
+      <LineId Id="127" Count="3" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="117" Count="2" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="60" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.RaisePropertiesChanged">
+      <LineId Id="94" Count="2" />
+      <LineId Id="127" Count="1" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="138" Count="1" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="119" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.ReadHoldingRegister">
+      <LineId Id="26" Count="15" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.ReadInputRegister">
+      <LineId Id="6" Count="14" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="24" Count="1" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.SetSpeed">
+      <LineId Id="375" Count="41" />
+      <LineId Id="130" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.WarningRaised">
+      <LineId Id="67" Count="2" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="2" />
+      <LineId Id="80" Count="0" />
+    </LineIds>
+    <LineIds Name="Astrofan612Ffu.WriteSingleRegister">
+      <LineId Id="6" Count="14" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="UnitySC.PM.ANA.Client.Modules.Calibration.CalibrationsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:UnitySC.PM.ANA.Client.Modules.Calibration"
+             xmlns:markupextensions="clr-namespace:UnitySC.PM.ANA.Client.Controls.MarkupExtensions;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:cameraView="clr-namespace:UnitySC.PM.ANA.Client.Controls.Camera;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:stagemovecontrol="clr-namespace:UnitySC.PM.ANA.Client.Controls.StageMoveControl;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:wizardControl="clr-namespace:UnitySC.Shared.UI.Controls.WizardNavigationControl;assembly=UnitySC.Shared.UI"
+             xmlns:headers="clr-namespace:UnitySC.PM.ANA.Client.Controls.Headers;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:controls="clr-namespace:UnitySC.PM.ANA.Client.Controls;assembly=UnitySC.PM.ANA.Client.Controls"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             mc:Ignorable="d"
+            d:DesignHeight="1450" d:DesignWidth="1200"
+            xmlns:converters="clr-namespace:UnitySC.Shared.UI.Converters;assembly=UnitySC.Shared.UI">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <!-- New Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Styles/UnityStylesNew.xaml" />
+                <!-- Ana Styles -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Controls;component/Themes/UnityStylesAna.xaml" />
+                <!-- Wizard Style -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.Shared.UI;component/Controls/WizardNavigationControl/WizardNavigationControl.xaml" />
+                <!-- Datatemplate Style -->
+                <ResourceDictionary Source="pack://application:,,,/UnitySC.PM.ANA.Client.Modules.Calibration;component/DataTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource PanelBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!-- Menu -->
+        <Border CornerRadius="4" BorderThickness="2" BorderBrush="{StaticResource MainHeaderBackground}" >
+            <wizardControl:WizardNavigationControl ItemsSource="{Binding NavigationManager.AllPages}"  Margin="10,5" VerticalAlignment="Center" SelectedItem="{Binding NavigationManager.CurrentPage, Mode=TwoWay}" />
+        </Border>
+        <!-- Content -->
+        <Border Grid.Row="1">
+            <ContentPresenter Content="{Binding NavigationManager.CurrentPage}" />
+        </Border>
+        
+        
+    </Grid>
+</UserControl>

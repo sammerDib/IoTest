@@ -1,0 +1,932 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+name: USP_Release$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger: none
+
+pool: Default
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+  pathToProjectDirectory: $(Build.SourcesDirectory)
+  build: $(Build.BuildId)
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  customArchiveName: USPv$(major).$(minor).$(patch).$(build)-Build$(currentDate)
+  assemblyversion: $(major).$(minor).$(patch).$(build)
+
+stages:
+#This code allows for committing with the modification of assembly versions.
+  # - stage: Change_project_version 
+  #   jobs:
+  #     - job: Change_project_version
+  #       displayName: "Change project version"
+  #       cancelTimeoutInMinutes: 2
+  #       continueOnError: true
+
+  #       steps: 
+  #         - checkout: self      
+  #           persistCredentials: true
+  #           lfs: true
+          
+  #         - task: PowerShell@2
+  #           displayName: 'Set App Version'
+  #           inputs:
+  #               targetType: inline
+  #               script: |
+  #                   $projectDirectory = "$(pathToProjectDirectory)"
+  #                   $newVersion = "${env:MAJOR}.${env:MINOR}.${env:PATCH}.$(build)"
+  #                    Get-ChildItem -Path $pathToProjectDirectory -Filter AssemblyInfo.cs -Recurse |
+  #                        Where-Object { $_.FullName -match '\\(Dataflow|DataAccess|UTO|Result|PM\\ANALYSE)\\' } |
+  #                        ForEach-Object {
+  #                            $content = Get-Content -Path $_.FullName -Raw
+  #                            $content = $content -replace '\[assembly: AssemblyVersion\("[^"]*"\)\]', "[assembly: AssemblyVersion(`"$newVersion`")]"
+  #                            #$content = $content -replace '\[assembly: AssemblyFileVersion\("[^"]*"\)\]', "[assembly: AssemblyFileVersion(`"$newVersion`")]"
+  #                            Set-Content -Path $_.FullName -Value $content
+  #                            Write-Host "Update version $($_.FullName)"
+  #                        }
+
+  #                   git commit -a -m"[skip ci] Release ${env:PROJECTTAGNAME} $newVersion "
+  #                   $branchSource = "$(Build.SourceBranch)"
+  #                   $branchSourcePath = $branchSource -replace "refs/heads/", ""
+
+  #                   git push origin HEAD:$branchSourcePath
+
+  - stage: DataAccess_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: DataAccess_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\DataAccess'
+          ReleaseDataAccessPath: '$(System.DefaultWorkingDirectory)'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile DataAccess"
+            inputs:
+              solution: '$(SolutionPath)\DataAccess.sln'
+              platform: "$(buildPlatform)"
+              configuration: "$(buildConfiguration)"
+              maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy DataAccess exe"
+            inputs:
+               SourceFolder: '$(SolutionPath)\Service\UnitySC.DataAccess.Service.Host\bin\$(buildPlatform)\$(buildConfiguration)'
+               Contents: |
+                 **/*.exe
+                 **/*.dll
+                 **/*.config
+                 Stickers/**
+               TargetFolder: '$(ReleaseDataAccessPath)\Temp\Bin\DataAccess'
+               OverWrite: true
+               preserveTimestamp: true
+               ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy DataAccess config"
+            inputs:
+               SourceFolder: '$(SolutionPath)\Service\UnitySC.DataAccess.Service.Host\bin\$(buildPlatform)\$(buildConfiguration)'
+               Contents: 'DataAccessConfiguration.xml'
+               TargetFolder: '$(ReleaseDataAccessPath)\Temp\Config\DataAccess'
+               OverWrite: true
+               preserveTimestamp: true
+               ignoreMakeDirErrors: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(ReleaseDataAccessPath)\Temp'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: Dataflow_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: Dataflow_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\Dataflow'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile Dataflow"
+            inputs:
+             solution: '$(SolutionPath)\UnitySC.Dataflow.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy DataFlow Config"
+            inputs:
+               SourceFolder: '$(SolutionPath)\Service\UnitySC.Dataflow.Service.Host\bin\$(toolID)'
+               Contents: Configuration/**
+               TargetFolder: '$(TempReleasePath)\Config\Dataflow'
+               OverWrite: true
+               preserveTimestamp: true
+               ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy DataFlow Binaries"
+            inputs:
+               SourceFolder: '$(SolutionPath)\Service\UnitySC.Dataflow.Service.Host\bin\$(buildPlatform)\$(buildConfiguration)'
+               Contents: |
+                 **/*.exe
+                 **/*.dll
+                 **/*.config
+               TargetFolder: '$(TempReleasePath)\Bin\Dataflow'
+               OverWrite: true
+               preserveTimestamp: true
+               ignoreMakeDirErrors: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: ResultViewer_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: ResultViewer_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\Result\UnitySC.Result'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile ResultViewer"
+            inputs:
+             solution: '$(SolutionPath)\UnitySC.Result.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+        
+          - task: CopyFiles@2
+            displayName: "Copy Result viewer 3da Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\UnitySC.Result.3DaViewer\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\ResultViewer'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+        
+          - task: CopyFiles@2
+            displayName: "Copy Result viewer Standalone client Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\UnitySC.Result.StandaloneClient\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+                Settings/**
+              TargetFolder: '$(TempReleasePath)\Bin\ResultViewer'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy Result viewer client Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\UnitySC.Result.Client\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+                Stickers/**
+              TargetFolder: '$(TempReleasePath)\Bin\ResultViewer'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: Launcher_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: Launcher_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\Shared\Launcher'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile Launcher"
+            inputs:
+             solution: '$(SolutionPath)\Launcher.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy Launcher Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\AppLauncher\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\AppLauncher'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy Launcher Config"
+            inputs:
+              SourceFolder: '$(SolutionPath)\AppLauncher\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Config\AppLauncher'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: Analyse_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: Analyse_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\PM\ANALYSE'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile Analyse"
+            inputs:
+             solution: '$(SolutionPath)\ANALYSE.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy analyse service binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\Service\UnitySC.PM.ANA.Service.Host\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\Analyse\Service'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: copyfiles@2
+            displayName: "Copy analyse client binaries"
+            inputs:
+              sourcefolder: '$(SolutionPath)\Client\UnitySC.PM.ANA.Client\bin\$(buildPlatform)\$(buildConfiguration)'
+              contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              targetfolder: '$(TempReleasePath)\Bin\Analyse\Client'
+              overwrite: true
+              preservetimestamp: true
+              ignoremakedirerrors: true
+              
+          - task: CopyFiles@2
+            displayName: "Copy ANALYSE DataCollectionConverters Binaries"
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)\PM\ANALYSE\DataCollectionConverters\Samsung\UnitySC.DataCollectionConverter.ANA.SG\bin\x64\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Temp\Bin\Dataflow\DataCollectionConverters'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy Configuration Files Client'
+            inputs:
+              SourceFolder: '$(SolutionPath)\Client\UnitySC.PM.ANA.Client\bin\$(toolID)'
+              Contents: |
+                **/*
+              targetfolder: '$(TempReleasePath)\Config\Analyse\Client'
+              OverWrite: true
+              PreserveTimestamp: true
+              FlattenFolders: false
+              CleanTargetFolder: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy Configuration Files Service'
+            inputs:
+              SourceFolder: '$(SolutionPath)\Service\UnitySC.PM.ANA.Service.Host\bin\$(toolID)'
+              Contents: |
+                **/*
+              targetfolder: '$(TempReleasePath)\Config\Analyse\Server'
+              OverWrite: true
+              PreserveTimestamp: true
+              FlattenFolders: false
+              CleanTargetFolder: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: Emera_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: Emera_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\PM\EMERA'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile Emera"
+            inputs:
+             solution: '$(SolutionPath)\EMERA.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy EMERA service Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\Service\UnitySC.PM.EME.Service.Host\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\Emera\Service'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy EMERA client Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\Client\UnitySC.PM.EME.Client\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\Emera\Client'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy Configuration Files Client'
+            inputs:
+              SourceFolder: '$(SolutionPath)\Client\UnitySC.PM.EME.Client\bin\$(toolID)'
+              Contents: |
+                **/*
+              targetfolder: '$(TempReleasePath)\Config\Emera\Client'
+              OverWrite: true
+              PreserveTimestamp: true
+              FlattenFolders: false
+              CleanTargetFolder: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy Configuration Files Service'
+            inputs:
+              SourceFolder: '$(SolutionPath)\Service\UnitySC.PM.EME.Service.Host\bin\$(toolID)'
+              Contents: |
+                **/*
+              targetfolder: '$(TempReleasePath)\Config\Emera\Server'
+              OverWrite: true
+              PreserveTimestamp: true
+              FlattenFolders: false
+              CleanTargetFolder: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: Demeter_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: Demeter_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\PM\DEMETER'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile DEMETER_FocusQuality"
+            inputs:
+             solution: '$(SolutionPath)\FocusQuality\FocusQuality.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: VSBuild@1
+            displayName: "Compile DEMETER"
+            inputs:
+             solution: '$(SolutionPath)\DEMETER.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy DEMETER service Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\Service\UnitySC.PM.DMT.Service.Host\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\Demeter\Service'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy DEMETER client Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\Client\UnitySC.PM.DMT.Client\bin\$(buildPlatform)\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+              TargetFolder: '$(TempReleasePath)\Bin\Demeter\Client'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+          
+          - task: CopyFiles@2
+            displayName: "Copy DEMETER DataCollectionConverters Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\PM\DEMETER\DataCollectionConverters\Soitec\UnitySC.DataCollectionConverter.DMT.SC\bin\x64\$(buildConfiguration)'
+            Contents: |
+              **/*.exe
+              **/*.dll
+              **/*.config
+            TargetFolder: '$(TempReleasePath)\Temp\Bin\Dataflow\DataCollectionConverters'
+            OverWrite: true
+            preserveTimestamp: true
+            ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy Configuration Files Client'
+            inputs:
+#TODO use tool id????
+              SourceFolder: '$(SolutionPath)\Client\UnitySC.PM.DMT.Client\bin\$(toolID)'
+              Contents: |
+                **/*
+              targetfolder: '$(TempReleasePath)\Config\Demeter\Client'
+              OverWrite: true
+              PreserveTimestamp: true
+              FlattenFolders: false
+              CleanTargetFolder: true
+
+          - task: CopyFiles@2
+            displayName: 'Copy Configuration Files Service'
+            inputs:
+              SourceFolder: '$(SolutionPath)\Service\UnitySC.PM.DMT.Service.Host\bin\$(toolID)'
+              Contents: |
+                **/*
+              targetfolder: '$(TempReleasePath)\Config\Demeter\Server'
+              OverWrite: true
+              PreserveTimestamp: true
+              FlattenFolders: false
+              CleanTargetFolder: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+              
+  - stage: AdC_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: AdC_Compile_And_Copy
+        variables:
+          SolutionPath: '$(System.DefaultWorkingDirectory)\PP\AdC'
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: true
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile AdC"
+            inputs:
+             solution: '$(SolutionPath)\AdC.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy AdC service Binaries"
+            inputs:
+              SourceFolder: '$(SolutionPath)\Output\$(buildConfiguration)'
+              Contents: |
+                **/*.exe
+                **/*.dll
+                **/*.config
+                **/*.xml
+              TargetFolder: '$(TempReleasePath)\Bin\AdC'
+              OverWrite: true
+              preserveTimestamp: true
+              ignoreMakeDirErrors: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+
+  - stage: UTO_Compile_And_Copy
+#    dependsOn: Change_project_version
+    jobs:
+      - job: UTO_Compile_And_Copy
+        variables:
+          TempReleasePath: '$(System.DefaultWorkingDirectory)\Temp'
+
+        steps:
+          - task: NuGetToolInstaller@1
+
+          - task: NuGetAuthenticate@1
+            timeoutInMinutes: 1 # minutes
+            displayName: "NuGet authenticate"
+
+          - task: NuGetCommand@2
+            displayName: "NuGet restore"
+            timeoutInMinutes: 10 # minutes
+            inputs:
+              feedsToUse: config
+              nugetConfigPath: ./nuget.config
+              restoreSolution: "$(solution)"
+              verbosityRestore: 'Detailed'
+
+          - task: Assembly-Info-NetFramework@3
+            inputs:
+              Path: '$(System.DefaultWorkingDirectory)'
+              FileNames: '**\AssemblyInfo.cs'
+              InsertAttributes: false
+              FileEncoding: 'auto'
+              WriteBOM: false
+              VersionNumber: '$(assemblyversion)'
+              #FileVersionNumber: '$(assemblyversion)'
+              InformationalVersion: '$(assemblyversion)'
+              LogLevel: 'verbose'
+              FailOnWarning: false
+              DisableTelemetry: false
+
+          - task: VSBuild@1
+            displayName: "Compile UTO"
+            inputs:
+             solution: '$(System.DefaultWorkingDirectory)\UTO\UnitySC.UTO.Controller.sln'
+             platform: "$(buildPlatform)"
+             configuration: "$(buildConfiguration)"
+             maximumCpuCount: true
+
+          - task: CopyFiles@2
+            displayName: "Copy UTO Binaries"
+            inputs:
+               SourceFolder: '$(System.DefaultWorkingDirectory)\UTO\artifacts\Release\build\apps\UnitySC.UTO.Controller'
+               Contents: |
+                 **/*.exe
+                 **/*.dll
+                 **/*.config
+                 **/*.dylib
+                 Stickers/**
+                 x64/**
+               TargetFolder: '$(TempReleasePath)\Bin\UTO'
+               OverWrite: true
+               preserveTimestamp: true
+               ignoreMakeDirErrors: true
+
+          - task: CopyFiles@2
+            displayName: "Copy UTO Config"
+            inputs:
+               SourceFolder: '$(System.DefaultWorkingDirectory)\UTO\artifacts\$(buildConfiguration)\build\apps\UnitySC.UTO.Controller\Configuration'
+               Contents: |
+                 ## Please confirm if the folder with toolID 4MET2229, containing ClientConfiguration.xml, is needed.
+                 Configuration/**
+                 Devices/**
+                 Equipments/**
+               TargetFolder: '$(TempReleasePath)\Config\UTO'
+               OverWrite: true
+               preserveTimestamp: true
+               ignoreMakeDirErrors: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Store artifact'
+            inputs:
+              PathtoPublish: '$(TempReleasePath)'
+              ArtifactName: 'Release'
+              publishLocation: Container
+
+  - stage: Archive_and_publish_artifacts 
+    dependsOn: 
+        - DataAccess_Compile_And_Copy
+        - Dataflow_Compile_And_Copy
+        - ResultViewer_Compile_And_Copy
+        - Launcher_Compile_And_Copy
+        - Analyse_Compile_And_Copy
+        - Emera_Compile_And_Copy
+        - Demeter_Compile_And_Copy
+        - AdC_Compile_And_Copy
+        - UTO_Compile_And_Copy
+
+    jobs:
+      - job: Archive_and_publish_artifacts
+        steps:
+           - task: DownloadPipelineArtifact@2
+             inputs:
+                artifact: 
+                path: '$(System.DefaultWorkingDirectory)\Release'
+
+           - task: ArchiveFiles@2
+             displayName: 'Create archive'
+             inputs:
+                rootFolderOrFile: '$(System.DefaultWorkingDirectory)\Release'
+                includeRootFolder: false 
+                archiveFile: '$(System.DefaultWorkingDirectory)/$(customArchiveName).zip'
+
+           - task: PublishBuildArtifacts@1
+             displayName: 'Store artifact'
+             inputs:
+               PathtoPublish: '$(System.DefaultWorkingDirectory)/$(customArchiveName).zip'
+               ArtifactName: 'Release'
+               publishLocation: Container
+          
+  - stage: TAG 
+    dependsOn: Archive_and_publish_artifacts
+    jobs:
+      - job: TAG 
+        steps:
+           # Required to be able to produce the tag
+           - checkout: self      
+             persistCredentials: true
+           - task: PowerShell@2
+             displayName: "Add tag"
+             inputs:
+               targetType: 'inline'
+               script: |
+                 $isOfficialRelease = "${env:ISOFFICIALRELEASE}"
+                 $tagPrefix = "${env:PROJECTTAGNAME}/Release/"
+                
+                 if ($isOfficialRelease -eq "true") 
+                   {
+                     $tag = "${tagPrefix}Official/v.$(assemblyversion)_$(build.buildNumber)"
+                   } else 
+                   {
+                     $tag = "${tagPrefix}Internal/v.$(assemblyversion)_$(build.buildNumber)"
+                   }
+
+                 Write-Host $tag
+                 Write-Host "tag message: ${env:TAGMESSAGE}"
+
+                 git tag -a $tag -m "${env:TAGMESSAGE}"
+                 git push origin $tag
+

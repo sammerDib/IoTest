@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="NstBkgrdLsSerialCom" Id="{b1cfc9e4-3d08-4cd4-9bde-220900b9077a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM NstBkgrdLsSerialCom
+VAR_INPUT
+	Config : NstConfig;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// AttenuationFilterConfigs
+IF Config.AttenuationFilterConfigs.FW212CAttenuationFilterConfig.IsEnabled OR 
+   Config.AttenuationFilterConfigs.ELL14kAttenuationFilterConfig.IsEnabled OR 
+   Config.AttenuationFilterConfigs.ELL9AttenuationFilterConfig.IsEnabled THEN
+	BkgrdSerialAttenuation();	
+END_IF
+
+// LaserConfigs
+IF Config.LaserConfigs.SMD12LaserConfig.IsEnabled OR 
+   Config.LaserConfigs.Piano450LaserConfig.IsEnabled THEN
+	BkgrdSerialLaser();
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="NstBkgrdLsSerialCom">
+      <LineId Id="122" Count="2" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="133" Count="2" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="113" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

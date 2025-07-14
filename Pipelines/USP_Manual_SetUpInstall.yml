@@ -1,0 +1,233 @@
+name: USP_Manual_SetUpInstall$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+
+jobs:
+  - job: USP_Manual_SetUpInstall
+    displayName: "[USP - Manual] Set Up Installer"
+    condition: eq(variables['Build.Reason'], 'Manual')
+    timeoutInMinutes: 90
+    cancelTimeoutInMinutes: 2
+
+    continueOnError: false
+
+    pool: Default
+
+    variables:
+      solution: "**/*.sln;!**/*Install.sln"
+      buildPlatform: "x64"
+      buildConfiguration: "Release"
+      devCmd: 'C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.com'
+      disableToolPath: 'C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild'
+      genScript : 'Install\Resources\USP-CISetUpSolutionMaker.exe'
+  
+    steps:
+           
+      - task: NuGetToolInstaller@1
+
+      - task: NuGetAuthenticate@1
+        timeoutInMinutes: 1 # minutes
+        displayName: "NuGet authenticate"
+        inputs:
+          forceReinstallCredentialProvider: true
+
+      - task: NuGetCommand@2
+        displayName: "NuGet restore"
+        timeoutInMinutes: 10 # minutes
+        inputs:
+          feedsToUse: config
+          nugetConfigPath: ./nuget.config
+          restoreSolution: "$(solution)"
+
+      - task: BatchScript@1
+        displayName: Enable .vdproj Builds
+        inputs:
+          filename: '"$(disableToolPath)\DisableOutOfProcBuild.exe"'
+          workingFolder: "$(disableToolPath)"
+
+      - task: VSBuild@1
+        displayName: "Compile DataAccess"
+        inputs:
+          solution: "**/DataAccess.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+                    
+      - task: CmdLine@2
+        displayName: Generate DataAccess_Install
+        inputs:
+         script: '"$(System.DefaultWorkingDirectory)\$(genScript)" $(System.DefaultWorkingDirectory)\DataAccess\DataAccess.sln $(System.DefaultWorkingDirectory)\Install\SetupDataAccess\SetupDataAccess.vdproj'
+      
+      - task: CmdLine@2
+        displayName: Build DataAccess Installer
+        inputs:
+          script: '"$(devCmd)" $(System.DefaultWorkingDirectory)\DataAccess\DataAccess_Install.sln /Build "Release"'
+
+      - task: CopyFiles@2
+        displayName: "Copy DataAccess Setup"
+        inputs:
+           SourceFolder: '$(Build.SourcesDirectory)\Install\SetupDataAccess\$(buildConfiguration)\'
+           Contents: '**'
+           TargetFolder: '$(build.artifactstagingdirectory)\$(Build.BuildNumber)\SetupDataAccess'
+           OverWrite: true
+           preserveTimestamp: true
+           retryCount: '5'
+           delayBetweenRetries: '5000'
+           ignoreMakeDirErrors: true
+              
+      - task: VSBuild@1
+        displayName: "Compile Results"
+        inputs:
+          solution: "**/UnitySC.Result.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+          
+      - task: CmdLine@2
+        displayName: Generate Results_Install
+        inputs:
+         script: '"$(System.DefaultWorkingDirectory)\$(genScript)" $(System.DefaultWorkingDirectory)\Result\UnitySC.Result\UnitySC.Result.sln $(System.DefaultWorkingDirectory)\Install\SetupViewerResult\SetupViewerResult.vdproj'
+
+      - task: CmdLine@2
+        displayName: Build Result Viewer Installer
+        inputs:
+           script: '"$(devCmd)" $(System.DefaultWorkingDirectory)\Result\UnitySC.Result\UnitySC.Result_Install.sln /Build "Release"'
+
+      - task: CopyFiles@2
+        displayName: "Copy Result Viewer Setup"
+        inputs:
+           SourceFolder: '$(Build.SourcesDirectory)\Install\SetupViewerResult\$(buildConfiguration)\'
+           Contents: '**'
+           TargetFolder: '$(build.artifactstagingdirectory)\$(Build.BuildNumber)\SetupViewerResult'
+           OverWrite: true
+           preserveTimestamp: true
+           retryCount: '5'
+           delayBetweenRetries: '5000'
+           ignoreMakeDirErrors: true
+            
+      - task: VSBuild@1
+        displayName: "Compile ANALYSE"
+        inputs:
+          solution: "**/ANALYSE.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+
+      - task: CmdLine@2
+        displayName: Generate ANALYSE_Install
+        inputs:
+         script: '"$(System.DefaultWorkingDirectory)\$(genScript)" $(System.DefaultWorkingDirectory)\PM\ANALYSE\ANALYSE.sln $(System.DefaultWorkingDirectory)\Install\SetupPMAnalyse\SetupPMAnalyse.vdproj'
+
+      - task: CmdLine@2
+        displayName: Build ANALYSE Installer
+        inputs:
+           script: '"$(devCmd)" $(System.DefaultWorkingDirectory)\PM\ANALYSE\ANALYSE_Install.sln /Build "Release"'
+
+      - task: CopyFiles@2
+        displayName: "Copy ANALYSE Setup"
+        inputs:
+           SourceFolder: '$(Build.SourcesDirectory)\Install\SetupPMAnalyse\$(buildConfiguration)\'
+           Contents: '**'
+           TargetFolder: '$(build.artifactstagingdirectory)\$(Build.BuildNumber)\SetupPMAnalyse'
+           OverWrite: true
+           preserveTimestamp: true
+           retryCount: '5'
+           delayBetweenRetries: '5000'
+           ignoreMakeDirErrors: true
+           
+      - task: VSBuild@1
+        displayName: "Compile Dataflow"
+        inputs:
+          solution: "**/UnitySC.Dataflow.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+                    
+      - task: CmdLine@2
+        displayName: Generate Dataflow_Install
+        inputs:
+         script: '"$(System.DefaultWorkingDirectory)\$(genScript)" $(System.DefaultWorkingDirectory)\Dataflow\UnitySC.Dataflow.sln $(System.DefaultWorkingDirectory)\Install\SetupDataflow\SetupDataflow.vdproj'
+      
+      - task: CmdLine@2
+        displayName: Build Dataflow Installer
+        inputs:
+          script: '"$(devCmd)" $(System.DefaultWorkingDirectory)\Dataflow\UnitySC.Dataflow_Install.sln /Build "Release"'
+
+      - task: CopyFiles@2
+        displayName: "Copy Dataflow Setup"
+        inputs:
+           SourceFolder: '$(Build.SourcesDirectory)\Install\SetupDataflow\$(buildConfiguration)\'
+           Contents: '**'
+           TargetFolder: '$(build.artifactstagingdirectory)\$(Build.BuildNumber)\SetupDataflow'
+           OverWrite: true
+           preserveTimestamp: true
+           retryCount: '5'
+           delayBetweenRetries: '5000'
+           ignoreMakeDirErrors: true
+
+      - task: VSBuild@1
+        displayName: "Compile Launcher"
+        inputs:
+          solution: "**/Launcher.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+                    
+      - task: CmdLine@2
+        displayName: Generate Launcher_Install
+        inputs:
+         script: '"$(System.DefaultWorkingDirectory)\$(genScript)" $(System.DefaultWorkingDirectory)\Shared\Launcher\Launcher.sln $(System.DefaultWorkingDirectory)\Install\SetupLauncher\SetupLauncher.vdproj'
+      
+      - task: CmdLine@2
+        displayName: Build Launcher Installer
+        inputs:
+          script: '"$(devCmd)" $(System.DefaultWorkingDirectory)\Shared\Launcher\Launcher_Install.sln /Build "Release"'
+
+      - task: CopyFiles@2
+        displayName: "Copy Launcher Setup"
+        inputs:
+           SourceFolder: '$(Build.SourcesDirectory)\Install\SetupLauncher\$(buildConfiguration)\'
+           Contents: '**'
+           TargetFolder: '$(build.artifactstagingdirectory)\$(Build.BuildNumber)\SetupLauncher'
+           OverWrite: true
+           preserveTimestamp: true
+           retryCount: '5'
+           delayBetweenRetries: '5000'
+           ignoreMakeDirErrors: true              
+
+      - task: VSBuild@1
+        displayName: "Compile UTO"
+        inputs:
+          solution: "**/UnitySC.UTO.Controller.sln;!**/*Install.sln"
+          platform: "$(buildPlatform)"
+          configuration: "$(buildConfiguration)"
+          maximumCpuCount: true
+                    
+      - task: CmdLine@2
+        displayName: Generate UTO_Install
+        inputs:
+         script: '"$(System.DefaultWorkingDirectory)\$(genScript)" $(System.DefaultWorkingDirectory)\UTO\UnitySC.UTO.Controller.sln $(System.DefaultWorkingDirectory)\Install\SetupUTO\SetupUTO.vdproj'
+      
+      - task: CmdLine@2
+        displayName: Build UTO Installer
+        inputs:
+          script: '"$(devCmd)" $(System.DefaultWorkingDirectory)\UTO\UnitySC.UTO.Controller_Install.sln /Build "Release"'
+
+      - task: CopyFiles@2
+        displayName: "Copy UTO Setup"
+        inputs:
+           SourceFolder: '$(Build.SourcesDirectory)\Install\SetupUTO\$(buildConfiguration)\'
+           Contents: '**'
+           TargetFolder: '$(build.artifactstagingdirectory)\$(Build.BuildNumber)\SetupUTO'
+           OverWrite: true
+           preserveTimestamp: true
+           retryCount: '5'
+           delayBetweenRetries: '5000'
+           ignoreMakeDirErrors: true
+           
+      #- task: DeleteFiles@1
+      #  inputs:
+      #    SourceFolder: '$(Build.ArtifactStagingDirectory)/DataAccess'
+      #    Contents: '**'
+      #    RemoveSourceFolder: true

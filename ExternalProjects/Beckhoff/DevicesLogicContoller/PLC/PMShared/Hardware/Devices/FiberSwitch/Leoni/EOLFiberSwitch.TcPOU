@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="EOLFiberSwitch" Id="{a5fcb835-b7dd-479d-b9af-027408d5b636}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK EOLFiberSwitch EXTENDS FiberSwitchBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : EOLFiberSwitchConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN) := _serialCom;	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	IdMsg : STRING(255);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{endregion}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_length : INT;
+		 
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSE
+	_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferFiberSwitch, 
+		 	      RxBuffer:= HardwareGlobalVariables.RxBufferFiberSwitch);	
+				  
+	// Init device
+	InitDevice(); 				  				 
+
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN
+		_length := LEN(_refSerialCom.LastReceivedString);
+		message := DELETE(_refSerialCom.LastReceivedString, 2, _length);
+	
+		CASE _deliverMessages OF			
+			EFeedbackMsgEol.IdMsg :
+				IdMsg := message;
+			EFeedbackMsgEol.CustomMsg :
+				CustomMsg := message;						
+		END_CASE
+		
+		_deliverMessages := 0;
+	END_IF					   	
+END_IF
+
+IF InitConfigSerialCom THEN	
+	MessageScheduler();
+END_IF	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{5a694859-51ba-4da0-b5fb-7fed03cd80a9}" />
+    <Method Name="ConfigureSerialCom" Id="{dc47ccbc-c643-4ca9-b5de-f01945161ae9}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CurrentPosition" Id="{bf911a84-bad6-41de-a06e-682c415f0ba4}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Response of the current switch position **)
+METHOD PROTECTED CurrentPosition
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'ch?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - CurrentPosition').ToString());
+	_serialCom.Send(cmd);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{f0885f78-8ea9-46da-864b-ba31455aebee}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : EOLFiberSwitchConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._fiberSwitchConfig.Name := Config.Name;
+	SUPER^._fiberSwitchConfig.DeviceID := Config.DeviceID;
+	SUPER^._fiberSwitchConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._fiberSwitchConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.FiberSwitch;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FirmwareVersion" Id="{f10de62b-9dce-4885-9f6b-33131a9d5e98}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Response of the firmware version number **)
+METHOD FirmwareVersion
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'firmware?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - FirmwareVersion').ToString());
+	_serialCom.Send(cmd);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{e8912d7e-cb24-438d-aec3-c60a2c0ab956}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ab911eff-3c6a-46e2-b9ce-c78298af5d97}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f8558041-492e-4dd1-a45b-64d290ed766e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{493b9a57-b681-4cb7-9c46-6f7df09b887f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Init device').ToString());
+
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{bfceca37-1a65-41f0-9324-cde1617a270e}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF
+		0:  
+			_itemScheduler := 0;					
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#50MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{af1fdd44-878e-4e4c-a3a2-a8f62c8dc957}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	IdMsg := ' ';
+	CustomMsg := ' ';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSwitchPosition" Id="{4ac21571-f44f-4f3d-b3b3-1e73071c909a}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Sets the switch position **)
+METHOD PROTECTED SetSwitchPosition
+VAR_INPUT
+	Execute : BOOL;
+	Position : UINT;
+END_VAR
+VAR
+	cmd : STRING := 'ch';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - SetSwitchPosition : ').Append(TO_STRING(Position)).ToString());
+	_serialCom.Send(CONCAT(cmd, TO_STRING(Position)));
+	
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SwitchType" Id="{34848854-5769-413f-8381-0dfe327f6ce0}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Response of the switch type **)
+METHOD SwitchType
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'type?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - SwitchType').ToString());
+	_serialCom.Send(cmd);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="EOLFiberSwitch">
+      <LineId Id="10" Count="5" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="167" Count="15" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.ConfigureSerialCom">
+      <LineId Id="6" Count="10" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.CurrentPosition">
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.FirmwareVersion">
+      <LineId Id="31" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.InitDevice">
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.MessageScheduler">
+      <LineId Id="13" Count="3" />
+      <LineId Id="29" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.RaisePropertiesChanged">
+      <LineId Id="15" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.SetSwitchPosition">
+      <LineId Id="14" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+    <LineIds Name="EOLFiberSwitch.SwitchType">
+      <LineId Id="27" Count="0" />
+      <LineId Id="10" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,791 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="SMD12Laser" Id="{4b45ed14-31d2-436e-8651-858a9a78ca6d}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK SMD12Laser EXTENDS LaserBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : SMD12LaserConfig;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN) := _serialCom;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	PowerMsg : STRING(255);
+	InterlockStatusMsg : STRING(255);
+	LaserTemperatureMsg : STRING(255);
+	PsuTemperatureMsg : STRING(255);
+	IdMsg : STRING(255);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOff : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPowerCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	 
+	_setCurrentCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			 
+	_controlModeCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	
+	{endregion}			
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_setpoint : LREAL := 0;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_length : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_mode : EControlModeSmd12;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferLaser, 
+		 	      	  RxBuffer:= HardwareGlobalVariables.RxBufferLaser);
+	END_IF				  
+	
+	// Init device
+	InitDevice(); 				  				 
+
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN				 	
+		CASE _deliverMessages OF			
+			EFeedbackMsgSMD12.PowerMsg :		
+				message := DELETE(_refSerialCom.LastReceivedString, 3, 0);
+				_length := LEN(message);		
+				PowerMsg := DELETE(message, 4, _length-2);		
+			EFeedbackMsgSMD12.InterlockStatusMsg :
+				message := DELETE(_refSerialCom.LastReceivedString, 2, 0);
+				_length := LEN(message);	
+				InterlockStatusMsg := DELETE(message, 2, _length);
+			EFeedbackMsgSMD12.LaserTemperatureMsg :
+				message := DELETE(_refSerialCom.LastReceivedString, 3, 0);
+				_length := LEN(message);		
+				LaserTemperatureMsg := DELETE(message, 3, _length-1);
+			EFeedbackMsgSMD12.PsuTemperatureMsg :
+				message := DELETE(_refSerialCom.LastReceivedString, 3, 0);
+				_length := LEN(message);		
+				PsuTemperatureMsg := DELETE(message, 3, _length-1);
+			EFeedbackMsgSMD12.IdMsg :
+				message := DELETE(_refSerialCom.LastReceivedString, 3, 0);
+				_length := LEN(message);		
+				IdMsg := DELETE(message, 2, _length);
+			EFeedbackMsgSMD12.CustomMsg :
+				message := DELETE(_refSerialCom.LastReceivedString, 2, 0);
+				_length := LEN(message);		
+				CustomMsg := DELETE(message, 3, _length);
+		END_CASE		
+	END_IF								   							   	
+	
+	PowerOn(_powerOn);
+	PowerOff(_powerOff);	
+	ControlMode(_controlModeCmd, _mode); 
+	SetPower(_setPowerCmd, _setpoint);
+	SetCurrent(_setCurrentCmd, _setpoint);
+	CustomCommand(_customCmd, _cmd);
+	RaisePropertiesChanged(_raiseProperties);
+	
+	IF (NOT _powerOn AND NOT _powerOff AND NOT _controlModeCmd AND NOT _setPowerCmd AND NOT _setCurrentCmd 
+		AND NOT _customCmd AND NOT _raiseProperties) THEN
+		MessageScheduler();
+	END_IF
+END_IF	
+	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{056f3a4a-18a0-467e-b21c-7a0255766352}" />
+    <Method Name="ConfigureSerialCom" Id="{8b1843aa-c87a-4d1c-9386-827003933305}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ControlMode" Id="{d3e4a2bf-fa00-471f-aca8-3b50bb484acf}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ControlMode
+VAR_INPUT
+	Execute : BOOL;
+	Mode : EControlModeSmd12;
+END_VAR
+VAR
+	currentModecmd : STRING := 'CONTROL=CURRENT';
+	powerModecmd : STRING := 'CONTROL=POWER';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - ControlMode : ').Append(TO_STRING(Mode)).ToString());
+	
+	IF MODE = EControlModeSmd12.CurrentMode THEN
+		_serialCom.Send(currentModecmd);
+	ELSIF MODE = EControlModeSmd12.PowerMode THEN
+		_serialCom.Send(powerModecmd);
+	END_IF
+	
+	_controlModeCmd := FALSE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{039a902d-e3ca-4b7f-951a-abb3ee942a7b}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Custom command : ').
+								Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgSMD12.CustomMsg;														
+	_serialCom.Send(Cmd);	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{cbb79af1-1d2b-4fec-92f1-c3e6ce585787}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : SMD12LaserConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._laserConfig.Name := Config.Name;
+	SUPER^._laserConfig.DeviceID := Config.DeviceID;
+	SUPER^._laserConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._laserConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Laser;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{cf79904f-889f-4780-9287-359763403405}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetIdentifier
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'VERSION?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSMD12.IdMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetInterlockStatus" Id="{dec461e8-0f4a-4e11-b603-838811f1d595}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the status of the Interlock **)
+METHOD PROTECTED GetInterlockStatus 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'STATUS?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSMD12.InterlockStatusMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetLaserTemperature" Id="{52dc647d-acc8-4408-968d-6cb291126910}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the temperature of the laser head in degrees centigrade **)
+METHOD GetLaserTemperature 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'LASTEMP?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSMD12.LaserTemperatureMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPsuTemperature" Id="{78334755-13e2-49f1-baab-a88e8cbffa28}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the temperature of the PSU in degrees centigrade **)
+METHOD GetPsuTemperature
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'PSUTEMP?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSMD12.PsuTemperatureMsg;
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTimers" Id="{0ef565e3-4368-4be1-9307-4710510c9613}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Returns the timers of the laser and PSU:
+		PSU Time=#######.#     Total time the system has been powered
+		Laser Enabled Time=#######.#     Total time the diodes have been powered
+		Laser OperationTime=#######.#    Total time the diodes have been powered >1 A  
+**)
+METHOD GetTimers : HoursStruct
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'TIMERS?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - GetTimers').ToString());
+	_serialCom.Send(cmd);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{1406f92c-e457-4086-b3d6-db3565c5ad04}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{cbdceecc-6fca-4465-8f1e-08e20e7d1491}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{109c7010-cb84-4343-a8a1-a88cda9ad12d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{ceb26d8c-9420-4c62-a9f6-194080fb5271}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - InitDevice').ToString());	
+	_raiseProperties:= TRUE;	
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{2d1c2773-ad4e-4b40-8e28-c1635a01a148}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF		
+		0:	ReadPower();
+			_itemScheduler := 1;				
+	
+		1:  GetLaserTemperature();
+			_itemScheduler := 2;	
+		
+		2:  GetPsuTemperature();
+			_itemScheduler := 0;		
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOff" Id="{eed22627-758f-4014-a1f7-48e62a328670}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Disables the laser, regardless of the interlock status **)
+METHOD PROTECTED PowerOff
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'OFF';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOff := TRUE;	
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - PowerOff').ToString());
+				_serialCom.Send(cmd);
+				_itemExecScheduler := 1;
+			
+			1:  GetInterlockStatus();
+				_itemExecScheduler := 2;
+				
+			2:  _powerOff := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOn" Id="{08f35d8a-74e3-4ff0-8b18-033a9908dff1}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(* Enables the laser subject to Interlock and Enable Switch status *)
+METHOD PROTECTED PowerOn
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'ON';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOn := TRUE;	
+
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - PowerOn').ToString());
+				_serialCom.Send(cmd);
+				_itemExecScheduler := 1;
+			
+			1:  GetInterlockStatus();
+				_itemExecScheduler := 2;
+				
+			2:  _powerOn := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{a55b0900-2808-42e5-800f-128fb5cc1c27}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  InterlockStatusMsg := ' ';
+				IdMsg := ' ';
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;
+			
+			10:  GetIdentifier();
+				_itemRaisedProperties := 11;
+				
+			11:  GetInterlockStatus();
+				_itemRaisedProperties := 12;
+			
+			12:  _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadPower" Id="{92243c55-ce4d-41bb-9998-d7b7430689dc}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the power of the laser **)
+METHOD PROTECTED ReadPower 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := 'POWER?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSMD12.PowerMsg;	
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetCurrent" Id="{dd89207a-5784-46e7-88db-953dc37bb1ae}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetCurrent 
+VAR_INPUT
+	Execute : BOOL;
+	Current : LREAL;
+END_VAR
+VAR
+	cmd : STRING := 'CURRENT=';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setCurrentCmd := TRUE;	
+	
+	_setpoint := Current;
+
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - SetCurrent : ').Append(TO_STRING(_setpoint)).ToString());
+				_serialCom.Send(CONCAT(cmd, TO_STRING(_setpoint)));
+				_itemExecScheduler := 1;
+			
+			1:  _setCurrentCmd := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetPower" Id="{6b7440c1-db4e-435c-bd24-b9b59c37c714}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** This sets the output power of the laser 
+For example, to set a power of 2800 mW, send the string POWER=2800, followed by striking the RETURN key
+**)
+METHOD PROTECTED SetPower 
+VAR_INPUT
+	Execute : BOOL;
+	Power : LREAL;
+END_VAR
+VAR
+	cmd : STRING := 'POWER=';
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setPowerCmd := TRUE;	
+
+	_setpoint := Power;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - SetPower : ').Append(TO_STRING(_setpoint)).ToString());
+				_serialCom.Send(CONCAT(cmd, TO_STRING(_setpoint)));
+				_itemExecScheduler := 1;
+			
+			1:  ReadPower();
+				_itemExecScheduler := 2;
+				
+			2:  _setPowerCmd := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="SMD12Laser">
+      <LineId Id="199" Count="2" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="202" Count="2" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="205" Count="6" />
+      <LineId Id="308" Count="1" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="312" Count="1" />
+      <LineId Id="215" Count="1" />
+      <LineId Id="318" Count="1" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="322" Count="1" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="327" Count="1" />
+      <LineId Id="326" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="331" Count="1" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.ConfigureSerialCom">
+      <LineId Id="6" Count="8" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.ControlMode">
+      <LineId Id="13" Count="3" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.CustomCommand">
+      <LineId Id="13" Count="3" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.GetIdentifier">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.GetInterlockStatus">
+      <LineId Id="45" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.GetLaserTemperature">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.GetPsuTemperature">
+      <LineId Id="45" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.GetTimers">
+      <LineId Id="30" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.InitDevice">
+      <LineId Id="6" Count="3" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.MessageScheduler">
+      <LineId Id="97" Count="3" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="101" Count="7" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.PowerOff">
+      <LineId Id="52" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="54" Count="9" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="64" Count="7" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.PowerOn">
+      <LineId Id="81" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="61" Count="3" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="66" Count="3" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="2" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="75" Count="2" />
+      <LineId Id="62" Count="3" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="67" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.ReadPower">
+      <LineId Id="73" Count="1" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.SetCurrent">
+      <LineId Id="38" Count="1" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="40" Count="18" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="SMD12Laser.SetPower">
+      <LineId Id="115" Count="1" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="118" Count="3" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="124" Count="3" />
+      <LineId Id="138" Count="2" />
+      <LineId Id="128" Count="7" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

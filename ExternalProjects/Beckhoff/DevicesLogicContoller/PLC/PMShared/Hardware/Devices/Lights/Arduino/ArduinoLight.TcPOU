@@ -1,0 +1,1058 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ArduinoLight" Id="{41131ff7-9fb0-4ea7-b4b5-61dc0d90618d}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK ArduinoLight EXTENDS LightBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : ArduinoLightConfig;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_suffix : STRING := Const.CR_LF;
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := _suffix);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := _suffix) := _serialCom;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+		
+	StatusMsg : STRING(255);
+	SwitchOnMsg : STRING(255);
+	PowerMsg : STRING(255);
+	IntensityMsg : STRING(255);	
+	TemperatureMsg : STRING(255);
+	LightSourcesMsg : STRING(255);
+	TimeLightSourceMsg  : STRING(255);
+	CustomMsg : STRING(255);
+		
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_setSwitchOnCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_getSwitchOnCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPowerCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_getPowerCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setIntensityCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_getIntensityCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_getTimeLightSourceCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_getLightSourcesCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lightId : STRING; 
+	{attribute 'OPC.UA.DA' := '0'}
+	_switchOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPower : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setIntensity : LREAL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;	
+		 
+	{endregion}			
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_lightSources : ARRAY [0..Const.PHOTOLUM_NUMBER_LIGHT_SOURCE] OF STRING(255);  
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInitScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initPulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_execPulseGenerator : TON;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	lastMessage : STRING;	
+	{attribute 'OPC.UA.DA' := '0'}
+	sSubStr4 : STRING(4) := '';			
+	{attribute 'OPC.UA.DA' := '0'}
+	stringLength : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_numberOfElements : DINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_indexNumberOfElements : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN
+	SUPER^();	
+
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferLight, 
+		 	      	  RxBuffer:= HardwareGlobalVariables.RxBufferLight);
+	END_IF				  
+	
+	// Init device
+	InitDevice();		  				 
+	
+	IF StateMsg <> ANY_TO_STRING(State) THEN
+		StateMsg := ANY_TO_STRING(State);
+	END_IF
+	
+	// Deliver messages
+	IF _refSerialCom.IsReceived THEN	
+		lastMessage := _refSerialCom.LastReceivedString;			
+		stringLength := LEN(lastMessage);
+		
+		IF stringLength > 2 THEN
+			message := LEFT(lastMessage, stringLength - 2);
+		ELSE
+			message := ' ';
+		END_IF; 	
+			
+		CASE _deliverMessages OF			
+			EFeedbackMsgArduinoLight.SwitchOnMsg :
+				SwitchOnMsg := message;	
+			EFeedbackMsgArduinoLight.PowerMsg :
+				PowerMsg := message;	
+			EFeedbackMsgArduinoLight.IntensityMsg :
+				IntensityMsg := message;	
+			EFeedbackMsgArduinoLight.TemperatureMsg :
+				TemperatureMsg := message;	
+			EFeedbackMsgArduinoLight.LightSourcesMsg :
+				LightSourcesMsg := message;			
+				_logger.Information(_message.Reset().Append('LightSourcesMsg: ').Append(LightSourcesMsg).ToString());	
+			EFeedbackMsgArduinoLight.TimeLightSourceMsg :
+				TimeLightSourceMsg := message;	
+			EFeedbackMsgArduinoLight.CustomMsg :
+				CustomMsg := message;	
+		END_CASE
+		
+		_deliverMessages := 0;
+	END_IF								   							   	
+		
+	SetSwitchOn(_setSwitchOnCmd, _lightId, _switchOn); 
+	GetSwitchOn(_getSwitchOnCmd, _lightId);
+	SetPower(_setPowerCmd, _lightId, _setPower);
+	GetPower(_getPowerCmd, _lightId);
+	SetIntensity(_setIntensityCmd, _lightId, _setIntensity);
+	GetIntensity(_getIntensityCmd, _lightId);
+	GetTimeLightSource(_getTimeLightSourceCmd, _lightId);
+	GetLightSources(_getLightSourcesCmd);
+	CustomCommand(_customCmd, _cmd);
+	RaisePropertiesChanged(_raisePropertiesCmd, _lightId);
+	
+	IF _initDevice AND NOT _setSwitchOnCmd AND NOT _getSwitchOnCmd AND NOT _setPowerCmd AND NOT _getPowerCmd AND NOT _setIntensityCmd AND NOT _getIntensityCmd
+	   AND NOT _getTimeLightSourceCmd AND NOT _getLightSourcesCmd AND NOT _customCmd AND NOT _raisePropertiesCmd THEN
+		MessageScheduler();
+	END_IF
+END_IF	
+	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{175611c0-1c97-4f96-9d9e-23c8a9dc165b}" />
+    <Method Name="ConfigureSerialCom" Id="{a6d1b958-3d6c-4736-904e-410ef01c391a}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{a874ab95-6445-4e1e-9fcb-6a865b85d7bd}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Custom command : ').Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgArduinoLight.CustomMsg;														
+	_serialCom.Send(Cmd);	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{607a0c2f-c498-421f-a197-39698ae4d3aa}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : ArduinoLightConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._lightConfig.Name := Config.Name;
+	SUPER^._lightConfig.DeviceID := Config.DeviceID;
+	SUPER^._lightConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._lightConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Light;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIntensity" Id="{895d119c-2d50-4d8d-9a46-7c78b10f3326}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD GetIntensity
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+END_VAR
+VAR
+	cmd : STRING := '*amps ';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_deliverMessages := EFeedbackMsgArduinoLight.IntensityMsg;
+	_lightId := LightId;
+	_serialCom.Send(CONCAT(cmd, TO_STRING(_lightId)));
+	
+	_getIntensityCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetLightSources" Id="{be18b0b2-340b-437e-ace2-b68eeaecd6bf}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetLightSources
+VAR_INPUT
+	Execute: BOOL;
+END_VAR
+VAR
+	cmd : STRING := '*list';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - GetLightSources').ToString());
+	_deliverMessages := EFeedbackMsgArduinoLight.LightSourcesMsg;
+	_serialCom.Send(cmd);	
+	
+	_getLightSourcesCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPower" Id="{de1d776a-f167-4907-8088-a5a90ac0d59d}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD GetPower
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+END_VAR
+VAR
+	cmd : STRING := '*power ';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_deliverMessages := EFeedbackMsgArduinoLight.PowerMsg;
+	_lightId := LightId;
+	_serialCom.Send(CONCAT(cmd, TO_STRING(_lightId)));
+	
+	 _getPowerCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSwitchOn" Id="{47b2e75a-687b-4be0-bfbb-d974608c9f4e}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD GetSwitchOn
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+END_VAR
+VAR
+	cmd : STRING := '*swit ';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_deliverMessages := EFeedbackMsgArduinoLight.SwitchOnMsg;
+	_lightId := LightId;
+	_serialCom.Send(CONCAT(cmd, TO_STRING(_lightId)));
+				
+	_getSwitchOnCmd := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTemperature" Id="{e1145ce5-e7b6-4fee-862e-5735b5e0188d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetTemperature
+VAR_INPUT
+	LightId : STRING;
+END_VAR
+VAR
+	cmd : STRING := '*temp ';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgArduinoLight.TemperatureMsg;
+_lightId := LightId;
+_serialCom.Send(CONCAT(cmd, _lightId));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTimeLightSource" Id="{a07dd3a1-aa20-47ef-91f8-276328c4a28c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetTimeLightSource
+VAR_INPUT
+	Execute: BOOL;
+	LightId : STRING;
+END_VAR
+VAR
+	cmd : STRING := '*time ';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_lightId := LightId;
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - GetTimeLightSource - ').Append(TO_STRING(_lightId)).ToString());
+	_deliverMessages := EFeedbackMsgArduinoLight.TimeLightSourceMsg;
+	_serialCom.Send(CONCAT(cmd, _lightId));	
+	
+	_getTimeLightSourceCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{c9ed0883-576d-4619-9db9-425e052b5c8e}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{bd3383a6-9bec-41f8-a2ab-436b3ebf1e55}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{279f8fb8-20b9-4936-a59d-19adfb60b9e7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{f5b8243b-1b57-4903-9f91-10352f04fca5}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+VAR
+	numElements : INT := 0;
+    commaPos : INT;
+    tempStr : STRING; 
+	Separator : STRING := ',';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	IF _initPulseGenerator.Q THEN
+		_initPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemInitScheduler OF					
+			0:	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Init device').ToString());
+				//_getLightSourcesCmd := TRUE;
+				_itemInitScheduler := 50;
+			
+			1:	IF LightSourcesMsg <> '' THEN				
+					tempStr := LightSourcesMsg;
+					WHILE (LEN(tempStr) > 0) DO
+						commaPos := FIND(tempStr, Separator);
+						IF commaPos > 0 THEN
+							_lightSources[numElements] := LEFT(tempStr, commaPos - 1);						
+							tempStr := RIGHT(tempStr, LEN(tempStr) - commaPos);
+						ELSE
+							_lightSources[numElements] := tempStr;
+							tempStr := ''; 
+						END_IF
+						_logger.Information(_message.Reset().Append(_config.Name).Append(' - ').Append(TO_STRING(numElements)).Append(': ').Append(_lightSources[numElements]).ToString());
+						numElements := numElements + 1;						
+					END_WHILE
+														
+					IF (numElements - 1) <> 0 THEN
+						_numberOfElements := numElements;
+						//_itemInitScheduler := 10; GVA
+						_itemInitScheduler := 50;
+					ELSE
+						_itemInitScheduler := 40;	
+					END_IF				
+					
+					_deliverMessages := -1;
+				END_IF
+			
+			10: IF (_indexNumberOfElements >= 0) AND (_indexNumberOfElements < _numberOfElements) THEN
+					tempStr := CONCAT(_lightSources[_indexNumberOfElements], ' 0');
+					_serialCom.Send(CONCAT('*power ', tempStr));				
+					_logger.Information(_message.Reset().Append(_config.Name).Append(' - ').Append(_lightSources[_indexNumberOfElements]).Append(' - Power: 0').ToString());	
+					_indexNumberOfElements := _indexNumberOfElements + 1;
+					
+				ELSE
+					_indexNumberOfElements := 0;
+					_itemInitScheduler := 11;					
+				END_IF	
+			
+			11: IF (_indexNumberOfElements >= 0) AND (_indexNumberOfElements < _numberOfElements) THEN
+					tempStr := CONCAT(_lightSources[_indexNumberOfElements], ' 1');
+					_serialCom.Send(CONCAT('*swit ', tempStr));
+					_logger.Information(_message.Reset().Append(_config.Name).Append(' - ').Append(_lightSources[_indexNumberOfElements]).Append(' - Switch ON').ToString());
+					_indexNumberOfElements := _indexNumberOfElements + 1;					
+				ELSE
+					_indexNumberOfElements := 0;
+					_itemInitScheduler := 50;
+				END_IF	
+
+			41: _logger.Error(_message.Reset().Append(_config.Name).Append(' - numElements is empty: ').ToString());
+				_itemInitScheduler := 50;	
+		
+			50: _initDevice := TRUE;
+				_itemInitScheduler := 0;	
+				_logger.Information(_message.Reset().Append(_config.Name).Append(' - Init device done').ToString());	
+		END_CASE
+	ELSE
+		_initPulseGenerator(IN := TRUE, PT := T#100MS);		
+	END_IF	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{ef7c515f-263a-4832-88bd-bd96336c6a50}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF					
+		0:	IF _lightID <> '' THEN
+				//GetTemperature(_lightID);
+			END_IF
+				
+			_itemScheduler := 0;		
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);		
+END_IF
+
+
+IF _pulseIsAliveGenerator.Q THEN
+	_pulseIsAliveGenerator(IN := FALSE, PT := T#10MS);
+		
+	IsAlive();	
+ELSE
+	_pulseIsAliveGenerator(IN := TRUE, PT := T#1000MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{8027495e-3aad-4491-8af4-b8f2b2267389}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+END_VAR
+VAR
+	numElements : INT := 0;
+    commaPos : INT;
+    tempStr : STRING; 
+	Separator : STRING := ',';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_raisePropertiesCmd := TRUE;
+	_lightId := LightId;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  SwitchOnMsg := ' ';
+				PowerMsg := ' ';		
+				IntensityMsg := ' ';
+				LightSourcesMsg := ' ';		
+				TimeLightSourceMsg := ' ';		
+				_itemRaisedProperties := 1;					
+
+			1:  IF _lightId <> '' THEN
+					_itemRaisedProperties := 10;	
+				ELSE
+					_itemRaisedProperties := 40;	
+				END_IF
+				
+			10: _getSwitchOnCmd := TRUE;													
+				_itemRaisedProperties := 11;
+				
+			11: IF SwitchOnMsg <> ' ' THEN
+					_itemRaisedProperties := 12;
+				END_IF	
+				
+			12: _getPowerCmd := TRUE;													
+				_itemRaisedProperties := 13;
+				
+			13: IF PowerMsg <> ' ' THEN
+					_itemRaisedProperties := 14;
+				END_IF
+				
+			14: _getIntensityCmd := TRUE;													
+				_itemRaisedProperties := 15;
+				
+			15: IF IntensityMsg <> ' ' THEN
+					_itemRaisedProperties := 16;
+				END_IF
+			
+			16: _getTimeLightSourceCmd := TRUE;													
+				_itemRaisedProperties := 17;
+				
+			17: IF TimeLightSourceMsg <> ' ' THEN
+					_itemRaisedProperties := 50;
+				END_IF
+			
+			40: _logger.Error(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged - LightId is empty').ToString());
+				_itemRaisedProperties := 50;
+			
+			50:  _logger.Information(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raisePropertiesCmd := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#50MS);	
+	END_IF
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetIntensity" Id="{8796987f-ba95-4a7b-ad40-343105ec6729}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetIntensity
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+	Intensity : LREAL;
+END_VAR
+VAR
+	cmd : STRING := '*amps ';
+	tmpConcatLightIdIntensity : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setIntensityCmd := TRUE;
+	_lightId := LightId;
+	_setIntensity := Intensity; 
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0:  IF _lightId <> '' THEN
+					_itemExecScheduler := 10;	
+				ELSE
+					_itemExecScheduler := 40;	
+				END_IF
+				
+				_deliverMessages := -1;
+
+			10: _lightId := LightId;
+				tmpConcatLightIdIntensity := CONCAT(CONCAT(_lightId, ' '), TO_STRING(Intensity));
+
+				_logger.Information(_message.Reset().Append(_config.Name).Append(' - ').Append(_lightId).Append(' - SetIntensity : ').Append(TO_STRING(_lightId)).Append(' - ').Append(TO_STRING(Intensity)).ToString());
+				_serialCom.Send(CONCAT(cmd, TO_STRING(tmpConcatLightIdIntensity)));
+				_itemExecScheduler := 11;
+			
+			11:  _getIntensityCmd := TRUE;
+				_itemExecScheduler := 50;
+			
+			40: _logger.Error(_message.Reset().Append(_config.Name).Append(' - SetIntensity - LightId is empty').ToString());
+				_itemExecScheduler := 50;
+		
+			50:  _setIntensityCmd := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetPower" Id="{ad6db274-b958-4481-b7b4-94e8f4463dac}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetPower
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+	Power : LREAL;
+END_VAR
+VAR
+	cmd : STRING := '*power ';
+	tmpConcatLightIdPower : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setPowerCmd := TRUE;	
+	_lightId := LightId;
+	_setPower := Power;	
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0:  IF _lightId <> '' THEN
+					_itemExecScheduler := 10;	
+				ELSE
+					_itemExecScheduler := 40;	
+				END_IF
+				
+				_deliverMessages := -1;
+
+			10: _lightId := LightId;
+				tmpConcatLightIdPower := CONCAT(CONCAT(_lightId, ' '), TO_STRING(Power));
+
+				_logger.Information(_message.Reset().Append(_config.Name).Append(' - ').Append(_lightId).Append(' - SetPower : ').Append(TO_STRING(Power)).ToString());
+				_serialCom.Send(CONCAT(cmd, TO_STRING(tmpConcatLightIdPower)));
+				_itemExecScheduler := 11;
+			
+			11:  _getPowerCmd := TRUE;
+				_itemExecScheduler := 50;
+			
+			40: _logger.Error(_message.Reset().Append(_config.Name).Append(' - SetPower - LightId is empty').ToString());
+				_itemExecScheduler := 50;
+	
+			50:  _setPowerCmd := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSwitchOn" Id="{6bea85ae-da1b-4487-81c2-75ee0d05e520}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD SetSwitchOn
+VAR_INPUT
+	Execute : BOOL;	
+	LightId : STRING;
+	SwitchOn : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '*swit ';
+	tmpConcatLightIdSwitchOn : STRING;
+	tmp : STRING;
+	switchOnValue : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setSwitchOnCmd := TRUE;	
+	_switchOn := SwitchOn; 
+	_lightId := LightId;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0:  IF _lightId <> '' THEN
+					_itemExecScheduler := 10;	
+				ELSE
+					_itemExecScheduler := 40;	
+				END_IF
+				
+				_deliverMessages := -1;
+
+			10:	_lightId := LightId;				
+			
+				IF _switchOn THEN
+					switchOnValue := '1';
+				ELSE
+					switchOnValue := '0';
+				END_IF
+				tmpConcatLightIdSwitchOn := CONCAT(CONCAT(_lightId, ' '), TO_STRING(switchOnValue));
+				
+				_logger.Information(_message.Reset().Append(_config.Name).Append(' - ').Append(_lightId).Append(' - SwitchOn : ').Append(TO_STRING(switchOnValue)).ToString());
+				tmp := CONCAT(cmd, TO_STRING(tmpConcatLightIdSwitchOn));
+				_serialCom.Send(tmp);
+				_itemExecScheduler := 11;
+			
+			11:  _getSwitchOnCmd := TRUE;
+				_itemExecScheduler := 50;
+				
+			40: _logger.Error(_message.Reset().Append(_config.Name).Append(' - SwitchOn - LightId is empty').ToString());
+				_itemExecScheduler := 50;
+				
+			50:  _setSwitchOnCmd := FALSE;	
+				_switchOn := FALSE;
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#200MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ArduinoLight">
+      <LineId Id="199" Count="2" />
+      <LineId Id="1639" Count="1" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="202" Count="2" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="2044" Count="0" />
+      <LineId Id="1405" Count="0" />
+      <LineId Id="1792" Count="0" />
+      <LineId Id="1796" Count="0" />
+      <LineId Id="1795" Count="0" />
+      <LineId Id="1793" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="1783" Count="0" />
+      <LineId Id="1929" Count="5" />
+      <LineId Id="1928" Count="0" />
+      <LineId Id="1926" Count="0" />
+      <LineId Id="1124" Count="0" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="1760" Count="0" />
+      <LineId Id="1762" Count="0" />
+      <LineId Id="1761" Count="0" />
+      <LineId Id="1764" Count="0" />
+      <LineId Id="1763" Count="0" />
+      <LineId Id="1766" Count="0" />
+      <LineId Id="1765" Count="0" />
+      <LineId Id="1768" Count="0" />
+      <LineId Id="1896" Count="0" />
+      <LineId Id="2041" Count="0" />
+      <LineId Id="1770" Count="0" />
+      <LineId Id="1769" Count="0" />
+      <LineId Id="1772" Count="0" />
+      <LineId Id="1771" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="2039" Count="1" />
+      <LineId Id="808" Count="0" />
+      <LineId Id="1713" Count="0" />
+      <LineId Id="1720" Count="0" />
+      <LineId Id="1785" Count="0" />
+      <LineId Id="1717" Count="0" />
+      <LineId Id="1777" Count="0" />
+      <LineId Id="1718" Count="0" />
+      <LineId Id="1773" Count="0" />
+      <LineId Id="1789" Count="0" />
+      <LineId Id="1782" Count="0" />
+      <LineId Id="1707" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="1774" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.ConfigureSerialCom">
+      <LineId Id="6" Count="8" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.CustomCommand">
+      <LineId Id="13" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.GetIntensity">
+      <LineId Id="15" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.GetLightSources">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.GetPower">
+      <LineId Id="48" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.GetSwitchOn">
+      <LineId Id="48" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.GetTemperature">
+      <LineId Id="10" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.GetTimeLightSource">
+      <LineId Id="12" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.InitDevice">
+      <LineId Id="124" Count="0" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="44" Count="8" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="53" Count="3" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.MessageScheduler">
+      <LineId Id="97" Count="2" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="105" Count="3" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="150" Count="2" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="170" Count="1" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="182" Count="4" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="177" Count="4" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="168" Count="3" />
+      <LineId Id="191" Count="4" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="197" Count="4" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="67" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.SetIntensity">
+      <LineId Id="16" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="21" Count="3" />
+      <LineId Id="75" Count="4" />
+      <LineId Id="84" Count="1" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="28" Count="5" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="34" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.SetPower">
+      <LineId Id="42" Count="1" />
+      <LineId Id="84" Count="1" />
+      <LineId Id="48" Count="4" />
+      <LineId Id="98" Count="4" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="55" Count="5" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="61" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArduinoLight.SetSwitchOn">
+      <LineId Id="23" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="124" Count="3" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="36" Count="5" />
+      <LineId Id="128" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="43" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

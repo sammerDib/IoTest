@@ -1,0 +1,101 @@
+name: USP_Manual_PushAlgoSharedCppNugetPackageToAlgos$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  BuildPlatform: "x64"
+  BuildConfiguration: "Release"
+  
+jobs:
+  - job: USP_Manual_PushAlgoSharedCppNugetPackageToAlgos
+    displayName: "[USP - Manual] Push SharedCpp Package to “Algos” artifact."   
+    condition: eq(variables['Build.Reason'], 'Manual')
+
+    pool:
+      name: Default
+      demands:
+          - msbuild
+          - visualstudio
+          - vstest
+
+    steps:
+        - checkout: self
+          lfs: true
+
+        - script: |
+           git lfs fetch 
+           git lfs pull
+          displayName : git-lfs
+          
+        - task: NuGetAuthenticate@1
+          timeoutInMinutes: 1 # minutes
+          displayName: 'NuGet authenticate'
+          inputs:
+            forceReinstallCredentialProvider: true
+          
+        - task: NuGetToolInstaller@0
+          displayName: 'Use NuGet 6.0.0'
+          inputs:
+            versionSpec: 6.0.0
+
+        - task: NuGetCommand@2
+          displayName: 'NuGet restore'      
+          timeoutInMinutes: 10 # minutes
+          inputs:
+            feedsToUse: config
+            nugetConfigPath: ./nuget.config
+            restoreSolution: ./Shared/UnitySC.Shared.Algos/SharedCpp/SharedCpp.sln
+
+        - task: VSBuild@1
+          displayName: 'Build ALGOS SHARED CPP solution no OpenMP'
+          inputs:
+            solution: ./Shared/UnitySC.Shared.Algos/SharedCpp/SharedCpp.sln
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'           
+            maximumCpuCount: true
+            msbuildArgs: '/p:UseOpenMP="false"'
+
+        - task: VSTest@2
+          displayName: 'Run Unit Test Shared CPP Native'
+          inputs:
+            testAssemblyVer2: |
+             **\$(BuildPlatform)\$(BuildConfiguration)\SharedCpp.NativeTests.dll
+             !**\obj\**
+            testRunTitle: 'Test Shared cpp Native'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'  
+            rerunFailedTests: true
+
+        - task: VSTest@2
+          displayName: 'Run Unit Test Shared CPP Wrapper'
+          inputs:
+            testAssemblyVer2: |
+             **\$(BuildPlatform)\$(BuildConfiguration)\SharedCpp.WrapperTests.dll
+             !**\obj\**
+            testRunTitle: 'Test Shared cpp Wrapper'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
+            rerunFailedTests: true
+
+        - task: VSBuild@1
+          displayName: 'Build ALGOS SHARED CPP solution with OpenMP'
+          inputs:
+            solution: './Shared/UnitySC.Shared.Algos/SharedCpp/SharedCpp.sln'
+            platform: '$(BuildPlatform)'
+            configuration: '$(BuildConfiguration)'
+            maximumCpuCount: true
+            clean: true
+
+        - task: NuGetCommand@2
+          displayName: 'NuGet pack'
+          inputs:
+            command: pack
+            packagesToPack: ./Shared/UnitySC.Shared.Algos/SharedCpp/UnitySC.Shared.Algos.CppWrapper/UnitySC.Shared.Algos.CppWrapper.nuspec
+            buildProperties: 'Plateforme=x64'
+
+        - task: NuGetCommand@2
+          displayName: 'NuGet push'
+          inputs:
+            command: push
+            publishVstsFeed: 'UnityControl/USP_AlgosNugetPackage'
+            allowPackageConflicts: false
+

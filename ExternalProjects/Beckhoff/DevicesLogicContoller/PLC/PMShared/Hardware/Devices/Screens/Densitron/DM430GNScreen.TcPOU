@@ -1,0 +1,1041 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="DM430GNScreen" Id="{1efafd7c-6e57-405e-b7ab-9e6993ebebb7}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK DM430GNScreen EXTENDS ScreenBase
+VAR_INPUT	
+	{attribute 'OPC.UA.DA' := '0'}
+	Conf : DM430GNScreenConfig;		
+	{attribute 'OPC.UA.DA' := '0'}
+	SerialCom  : SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}
+	RefSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN) := SerialCom;	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	StateMsg : STRING(255);
+	StatusMsg : STRING(255);
+	IsAliveMsg : STRING(255);
+	PowerStateMsg : STRING(255);
+	BacklightMsg : STRING(255);
+	BrightnessMsg : STRING(255);
+	ContrastMsg : STRING(255);
+	FanAutoMsg : STRING(255);
+	FanStepMsg : STRING(255);
+	FanRpmMsg : STRING(255);
+	TemperatureMsg : STRING(255);	
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOff : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_backlight : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_brightness : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_contrast : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_defaultValue : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fanStep : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_sharpness : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fanAuto : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_fanAutoOnCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	 
+	_restoreParameters : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_screenOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setBacklight : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setBrightness : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setContrast : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setFanStep : EDisplayControlStep;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_setSharpness : EDisplayControlStep;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_ioRelayActivated : BOOL; 
+				   
+	{attribute 'OPC.UA.DA' := '0'}
+	_screenSide : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_side : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_delimeter : STRING := ';';
+		 
+	{endregion}		
+
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseTimeout : TON;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRestoreParameters : INT;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseIsAliveGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_execItemScheduler : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lifeTimeCount : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_notifyIsAlive : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF SerialCom.ErrorSendId <> COMERROR_NOERROR THEN
+	RETURN;
+END_IF 
+
+// Check if it's still alive	
+IF _notifyIsAlive THEN
+	IsAliveMsg := TO_STRING(_lifeTimeCount);
+	_notifyIsAlive := FALSE;
+END_IF
+
+// Deliver messages
+IF RefSerialCom.IsReceived THEN
+	IF (Conf.DeviceID = TO_STRING(EScreenSide.Front)) THEN
+		_screenSide := TO_STRING(EScreenSide.Front);
+	ELSE
+		_screenSide := TO_STRING(EScreenSide.Back);
+	END_IF
+	
+	_side := CONCAT(_screenSide, _delimeter);
+	message := RefSerialCom.LastReceivedString;
+	
+	CASE _deliverMessages OF		
+		EFeedbackMsgDM430GN.StateMsg :
+			;			
+		EFeedbackMsgDM430GN.StatusMsg :
+			;			
+		EFeedbackMsgDM430GN.PowerStateMsg :
+			PowerStateMsg := CONCAT(_side, ExtractMessage(message));		
+		EFeedbackMsgDM430GN.BacklightMsg :
+			BacklightMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.BrightnessMsg :
+			BrightnessMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.ContrastMsg :
+			ContrastMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.FanAutoMsg :
+			FanAutoMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.FanStepMsg :
+			FanStepMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.FanRpmMsg :
+			FanRpmMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.TemperatureMsg :
+			TemperatureMsg := CONCAT(_side, ExtractMessage(message));
+		EFeedbackMsgDM430GN.CustomMsg :
+			CustomMsg := CONCAT(_side, ExtractMessage(message));
+	END_CASE	
+END_IF						   							   		
+	
+PowerOn(_powerOn);
+PowerOff(_powerOff);
+SetBacklight(_backlight, _setBacklight);
+SetBrightness(_brightness, _setBrightness);
+SetContrast(_contrast, _setContrast);
+SetDefaultValue(_defaultValue);
+SetFanStep(_fanStep, _setFanStep);
+SetSharpness(_sharpness, _setSharpness);
+FanAutoOn(_fanAuto, _fanAutoOnCmd);
+CustomCommand(_customCmd, _cmd);
+RaisePropertiesChanged(_raiseProperties);	
+RestoreParameters(_restoreParameters, _screenOn, _setBacklight, _setBrightness, _setContrast, _setSharpness);
+
+IF (NOT _powerOn AND NOT _powerOff AND NOT _backlight AND NOT _brightness AND NOT _contrast AND NOT _defaultValue
+ 	AND NOT _fanStep AND NOT _sharpness AND NOT _fanAuto AND NOT _customCmd AND NOT _raiseProperties AND NOT _restoreParameters) THEN	
+	MessageScheduler();	
+END_IF
+]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{04d6d19f-efa1-4928-b796-9d175432c680}" />
+    <Method Name="ConvertDecString" Id="{0ba13484-5ef5-408f-b431-652a4d552b31}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PRIVATE ConvertDecString : STRING
+VAR_INPUT
+	Cmd : STRING;
+	Value : BYTE;
+END_VAR
+VAR
+	tmp : STRING; 	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+tmp := BYTE_TO_STRING(Value);
+IF LEN(tmp) = 1 THEN
+	tmp := BYTE_TO_DECSTR(Value, 3);
+ELSIF LEN(tmp) = 2 THEN
+	tmp := BYTE_TO_DECSTR(Value, 3);				
+END_IF
+
+ConvertDecString := CONCAT(cmd, tmp);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{50a66a37-59db-4a62-92ac-4e4476e313d0}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(Conf.Name).Append(' - Custom command : ').Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgDM430GN.CustomMsg;	
+	
+	SerialCom.Send(Cmd);
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ExtractMessage" Id="{e70e723a-cc90-4c77-a269-1256efe7af1a}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PRIVATE ExtractMessage : STRING
+VAR_INPUT
+	Data : STRING;
+END_VAR
+VAR
+	separator : STRING(3) := ' = ';
+	split : ARRAY[0..1] OF STRING(255);
+	resultSplit : BOOL;	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+resultSplit := FindAndSplit(pSeparator := ADR(separator), pSrcString := ADR(RefSerialCom.LastReceivedString), 
+                            pLeftString := ADR(split[0]), nLeftSize := SIZEOF(split[0]), 
+                            pRightString := ADR(split[1]), nRightSize := SIZEOF(split[1]),
+                            bSearchFromRight := FALSE );
+IF resultSplit THEN
+	ExtractMessage := DELETE(split[1], 1, LEN(split[1]));
+ELSE	
+	ExtractMessage := DELETE(RefSerialCom.LastReceivedString, 1, LEN(RefSerialCom.LastReceivedString));
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FanAutoOn" Id="{d52c5f05-897e-463e-a92d-1fd577290c58}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED FanAutoOn
+VAR_INPUT
+	Execute : BOOL;
+	AutoOn : BOOL; //0: OFF, 1: ON
+END_VAR
+VAR
+	fanAuto : STRING;
+	cmd : STRING := '000FA';
+	mode : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_fanAuto:= TRUE;	
+	
+	CASE _itemScheduler OF
+		0:  IF AutoOn THEN
+				fanAuto := 'N'; // N
+				mode := 'ON';
+			ELSE
+				fanAuto := 'F'; // F
+				mode := 'OFF';
+			END_IF	
+	
+			_logger.Information(_message.Reset().Append(Conf.Name).Append(' - FanAutoOn: ').Append(mode).ToString());			
+			SerialCom.Send(CONCAT(cmd, fanAuto)); 			
+			_itemScheduler := 1;
+		
+		1:  GetFanAuto();				
+			_fanAuto := FALSE;	
+			_itemScheduler := 0;							
+	END_CASE
+	
+	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetBacklight" Id="{ceb5dec3-1caf-4d14-a4c6-b538fe70c7cc}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetBacklight 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GKV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.BacklightMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetBrightness" Id="{b1359720-c859-45c2-8c81-6ea3fedec051}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetBrightness 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GBV'; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.BrightnessMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetContrast" Id="{7a7fb471-52f6-4805-aea9-0abf2869cec0}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetContrast 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GCV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.ContrastMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFanAuto" Id="{1ec249dd-f439-4f55-9765-8e420847589c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetFanAuto 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GFA'; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.FanAutoMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFanRpm" Id="{61b41902-774e-4207-94eb-8ccebe406cc1}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetFanRpm 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GFR';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.FanRpmMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetFanStep" Id="{c3b8a0c5-3b6b-4d74-a82f-134551093022}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetFanStep 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GFV'; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.FanStepMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPowerState" Id="{9e867e0b-dbf8-4a33-9b9a-18e32a9b0805}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetPowerState 
+VAR_INPUT
+END_VAR
+VAR 
+	cmd : STRING := '000GPV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.PowerStateMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTemperature" Id="{d5e68b54-aa2d-42f1-b9fa-cea6bed3e4f5}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED GetTemperature 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '000GTV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgDM430GN.TemperatureMsg;
+SerialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{3f278f63-6e59-42c9-916b-26bb60ef81e6}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	_logger.Information(_message.Reset(). Append(Conf.Name). Append(' - Init device').ToString());
+	
+	THIS^.SetDone();
+	_initDevice := TRUE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsAlive" Id="{e2226972-b58f-4498-a6e6-069ee74aa938}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED IsAlive
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_notifyIsAlive := TRUE;
+
+IF _lifeTimeCount < 5 THEN
+	_lifeTimeCount := _lifeTimeCount + 1;
+ELSE
+	_lifeTimeCount := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{9668e1e9-7436-4b83-ab89-7c00977efb93}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+	
+	CASE _itemScheduler OF					
+		0:	GetTemperature(); 
+			_itemScheduler := 1;
+
+		1:	GetPowerState(); 
+			_itemScheduler := 0;	
+
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#2000MS);		
+END_IF
+
+
+
+IF _pulseIsAliveGenerator.Q THEN
+	_pulseIsAliveGenerator(IN := FALSE, PT := T#10MS);
+		
+	IsAlive();	
+ELSE
+	_pulseIsAliveGenerator(IN := TRUE, PT := T#1000MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOff" Id="{fed59a47-f4dc-45c4-998f-44f1620e7201}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED PowerOff
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := '000KPF'; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().Append(Conf.Name).Append(' - PowerOff').ToString());
+	SerialCom.Send(cmd);
+	
+	_powerOff := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOn" Id="{2ef830cc-5549-4deb-8939-e656dc8e535c}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED PowerOn
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR 
+	cmd : STRING := '000KPN';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOn := TRUE;	
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _execItemScheduler OF
+			0: _logger.Information(_message.Reset().Append(Conf.Name).Append(' - PowerOn').ToString());
+				SerialCom.Send(cmd);
+				
+				_execItemScheduler := 1;
+			
+			1:  GetPowerState();
+				_execItemScheduler := 2;
+	
+			2:	_powerOn := FALSE;
+				_execItemScheduler := 0;							
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#400MS);	
+	END_IF		
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{29a1f7e3-64eb-43f2-ba99-87db86dd2c0b}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raiseProperties := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0:  StateMsg := ' ';
+				StatusMsg := ' ';
+				BacklightMsg := ' ';
+				BrightnessMsg := ' ';
+				ContrastMsg := ' ';
+				FanAutoMsg := ' ';				
+				FanStepMsg := ' ';
+				FanRpmMsg := ' ';				
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;											
+			
+			10 : GetBacklight();
+				 _itemRaisedProperties := 11;
+				 
+			11 : GetBrightness();
+				 _itemRaisedProperties := 12;
+				 
+			12 : GetContrast();
+				 _itemRaisedProperties := 13;
+				 
+			13 : GetFanAuto();
+				 _itemRaisedProperties := 14;
+				
+			14 : GetFanRpm();
+				_itemRaisedProperties := 15;
+				
+			15:  GetFanStep();
+				_itemRaisedProperties := 16;				
+							
+			16:  _logger.Information(_message.Reset().Append(Conf.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+		END_CASE
+	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#200MS);	
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RestoreParameters" Id="{3a07e5e2-bc66-470a-bc04-9cb28e6aa349}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RestoreParameters	
+VAR_INPUT
+	Execute : BOOL;
+	ScreenOn : BOOL; 
+	BacklightValue : UINT;
+	BrightnessValue : UINT;
+	ContrastValue : UINT;
+	SharpnessValue : EDisplayControlStep;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_restoreParameters := TRUE;	
+	
+	CASE _itemRestoreParameters OF		
+		0:  _logger.Information(_message.Reset().Append(Conf.Name).Append(' - Start RestoreParameters').ToString());
+			_itemRestoreParameters := 10;	
+	
+		10:  _powerOn := TRUE;
+			IF NOT _powerOn THEN
+				_itemRestoreParameters := 11;
+			END_IF																		
+		
+		11 : _backlight := TRUE;
+			_setBacklight := BacklightValue;
+			
+			IF NOT _backlight THEN
+				_itemRestoreParameters := 12;
+			END_IF
+			 
+		12 : _brightness := TRUE;
+			_setBrightness := BrightnessValue;
+    
+			IF NOT _brightness THEN
+				_itemRestoreParameters := 13;
+			END_IF
+			 
+		13 : _contrast := TRUE;
+			_setContrast := ContrastValue;
+    
+			IF NOT _contrast THEN
+				_itemRestoreParameters := 14;
+			END_IF
+			 
+		14 : _sharpness := TRUE;
+			_setSharpness := SharpnessValue;
+    
+			IF NOT _sharpness THEN
+				_itemRestoreParameters := 20;
+			END_IF													
+						
+		20:  _logger.Information(_message.Reset().Append(Conf.Name).Append(' - Finish RestoreParameters').ToString());
+			_restoreParameters := FALSE;				
+			_itemRestoreParameters := 0;
+	END_CASE		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetBacklight" Id="{f35ff9c1-aa47-4805-a521-0a41395cffe1}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetBacklight
+VAR_INPUT
+	Execute : BOOL;
+	Value : UINT;
+END_VAR
+VAR	
+	cmd : STRING := '000SKV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_backlight := TRUE;	
+	_setBacklight := Value;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _execItemScheduler OF
+			0:  IF _setBacklight >= 0 OR _setBacklight <= 100 THEN
+					_logger.Information(_message.Reset().Append(Conf.Name).Append(' - SetBacklight: ').Append(TO_STRING(_setBacklight)).ToString());																	
+					SerialCom.Send(ConvertDecString(cmd, UINT_TO_BYTE(_setBacklight)));					
+				ELSE
+					_logger.Error(_message.Reset().Append(Conf.Name).Append(' - SetBacklight - Out of range : ').Append(TO_STRING(_setBacklight)).ToString());				
+				END_IF
+				
+				_execItemScheduler := 1;
+			
+			1:  GetBacklight();
+				_execItemScheduler := 2;
+	
+			2:	_backlight := FALSE;	
+				_execItemScheduler := 0;							
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#400MS);	
+	END_IF										
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetBrightness" Id="{8339c2f5-b796-4b01-bffd-c8ed5ef24463}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetBrightness
+VAR_INPUT
+	Execute : BOOL;
+	Value : UINT;
+END_VAR
+VAR
+	cmd : STRING := '000SBV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_brightness := TRUE;
+	
+	_setBrightness := Value;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _execItemScheduler OF
+			0:  IF _setBrightness >= 0 OR _setBrightness <= 100 THEN
+					_logger.Information(_message.Reset().Append(Conf.Name).Append(' - SetBrightness: ').Append(TO_STRING(_setBrightness)).ToString());									
+					SerialCom.Send(ConvertDecString(cmd, UINT_TO_BYTE(_setBrightness)));					
+				ELSE
+					_logger.Error(_message.Reset().Append(Conf.Name).Append(' - SetBrightness - Out of range : ').Append(TO_STRING(_setBrightness)).ToString());
+				END_IF
+				
+				_execItemScheduler := 1;
+			
+			1:  GetBrightness();
+				_execItemScheduler := 2;
+				
+			2:	_brightness := FALSE;	
+				_execItemScheduler := 0;							
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#400MS);	
+	END_IF										
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetContrast" Id="{338f1f9d-ed82-42f1-8298-84aaa5919912}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetContrast
+VAR_INPUT
+	Execute : BOOL;
+	Value : UINT;
+END_VAR
+VAR
+	cmd : STRING := '000SCV';
+	tmp : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_contrast := TRUE;
+	_setContrast := Value;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _execItemScheduler OF
+			0:  IF _setContrast >= 0 OR _setContrast <= 100 THEN
+					_logger.Information(_message.Reset().Append(Conf.Name).Append(' - SetContrast: ').Append(TO_STRING(_setContrast)).ToString());													
+					SerialCom.Send(ConvertDecString(cmd, UINT_TO_BYTE(_setContrast)));					
+				ELSE
+					_logger.Error(_message.Reset().Append(Conf.Name).Append(' - SetContrast - Out of range : ').Append(TO_STRING(_setContrast)).ToString());
+				END_IF
+				
+				_execItemScheduler := 1;
+			
+			1:  GetContrast();	
+				_execItemScheduler := 2;
+			
+			2:	_contrast := FALSE;	
+				_execItemScheduler := 0;							
+		END_CASE	
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#400MS);	
+	END_IF								
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetDefaultValue" Id="{76ba4df7-e0fc-48d8-90c3-3bbf9aa5ead5}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetDefaultValue
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR	
+	cmd : STRING := '000DFT'; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_logger.Information(_message.Reset().Append(Conf.Name).Append(' - SetDefaultValue').ToString());	
+	SerialCom.Send(cmd);	
+	
+	_defaultValue := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetFanStep" Id="{9ff0c31b-6151-443f-94ae-760f20ff3b2a}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetFanStep
+VAR_INPUT
+	Execute : BOOL;
+	Value : EDisplayControlStep;
+END_VAR
+VAR
+	cmd : STRING := '000SFV00';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_fanStep := TRUE;
+	_setFanStep := Value;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _execItemScheduler OF
+			0: _logger.Information(_message.Reset().Append(Conf.Name).Append(' - SetFanStep: ').Append(TO_STRING(_setFanStep)).ToString());			
+				SerialCom.Send(CONCAT(cmd, TO_STRING(_setFanStep)));				
+				_execItemScheduler := 1;
+			
+			1:  GetFanStep();	
+				_execItemScheduler := 2;
+			
+			2:	_fanStep := FALSE;	
+				_execItemScheduler := 0;							
+		END_CASE	
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#400MS);	
+	END_IF						
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSharpness" Id="{d5f4a7fb-e0c0-4b25-922c-7b68d19be048}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SetSharpness
+VAR_INPUT
+	Execute : BOOL;
+	Value : EDisplayControlStep;
+END_VAR
+VAR
+	cmd : STRING := '000SSV00';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_sharpness := TRUE;
+	_setSharpness := Value;
+ 
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+		CASE _execItemScheduler OF
+			0: _logger.Information(_message.Reset().Append(Conf.Name).Append(' - SetSharpness: ').Append(TO_STRING(_setSharpness)).ToString());
+				SerialCom.Send(CONCAT(cmd, TO_STRING(_setSharpness)));				
+				_execItemScheduler := 1;
+			
+			1:  _sharpness := FALSE;
+				_execItemScheduler := 0;												
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#400MS);	
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="DM430GNScreen">
+      <LineId Id="474" Count="8" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="484" Count="6" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="492" Count="1" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="494" Count="36" />
+      <LineId Id="742" Count="0" />
+      <LineId Id="531" Count="4" />
+      <LineId Id="70" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.ConvertDecString">
+      <LineId Id="10" Count="6" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.CustomCommand">
+      <LineId Id="13" Count="1" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.ExtractMessage">
+      <LineId Id="7" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.FanAutoOn">
+      <LineId Id="17" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="113" Count="1" />
+      <LineId Id="126" Count="8" />
+      <LineId Id="116" Count="5" />
+      <LineId Id="109" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetBacklight">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetBrightness">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetContrast">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetFanAuto">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetFanRpm">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetFanStep">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetPowerState">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.GetTemperature">
+      <LineId Id="86" Count="0" />
+      <LineId Id="84" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.InitDevice">
+      <LineId Id="6" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.IsAlive">
+      <LineId Id="8" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.MessageScheduler">
+      <LineId Id="6" Count="2" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="12" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.PowerOff">
+      <LineId Id="52" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.PowerOn">
+      <LineId Id="81" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="115" Count="3" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="121" Count="9" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.RaisePropertiesChanged">
+      <LineId Id="10" Count="6" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="35" Count="3" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="39" Count="20" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="26" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.RestoreParameters">
+      <LineId Id="19" Count="2" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="65" Count="35" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.SetBacklight">
+      <LineId Id="106" Count="1" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="195" Count="1" />
+      <LineId Id="155" Count="2" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="166" Count="1" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="168" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="104" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.SetBrightness">
+      <LineId Id="82" Count="2" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="141" Count="1" />
+      <LineId Id="115" Count="3" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="146" Count="1" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="144" Count="1" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="80" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.SetContrast">
+      <LineId Id="101" Count="2" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="145" Count="2" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="99" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.SetDefaultValue">
+      <LineId Id="47" Count="1" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.SetFanStep">
+      <LineId Id="47" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="115" Count="2" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreen.SetSharpness">
+      <LineId Id="47" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="80" Count="5" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

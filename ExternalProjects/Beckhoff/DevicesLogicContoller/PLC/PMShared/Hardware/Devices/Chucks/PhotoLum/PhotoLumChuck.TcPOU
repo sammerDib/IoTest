@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PhotoLumChuck" Id="{4a95dd5a-ee7c-4712-abd8-2388e2a4165b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PhotoLumChuck EXTENDS ChuckBase
+VAR_INPUT
+	IoChuck : IoChuckPhotoLum;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : PhotoLumChuckConfig;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	WaferPresenceMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;
+	
+	{region 'Commands'}
+		
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_clampWaferCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_releaseWaferCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raisePropertiesCmd : BOOL;
+			
+	{endregion}	
+		
+	{attribute 'OPC.UA.DA' := '0'}	
+	_size : LREAL;	
+		 
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_waferPresenceSensorCounter : UINT;			
+	
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+// Init device
+InitDevice(); 
+
+// Deliver messages
+CASE _deliverMessages OF		
+	EFeedbackMsgPhotoLumChuck.WaferPresenceMsg :
+		WaferPresenceMsg := message;		
+END_CASE
+	
+_deliverMessages := 0;
+
+// Commands	
+ClampWafer(_clampWaferCmd, _size);
+ReleaseWafer(_releaseWaferCmd, _size);
+RaisePropertiesChanged(_raisePropertiesCmd);
+
+IF (NOT _raisePropertiesCmd) THEN
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{a97a6e70-5f2e-4ff9-9af5-ee69a5038400}" />
+    <Method Name="ClampWafer" Id="{3e46cccb-4e8e-4d04-b108-54a6a8830e24}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ClampWafer
+VAR_INPUT
+	Execute : BOOL;
+	Value : LREAL;
+END_VAR
+VAR 
+	size : EWaferSize := EWaferSize.Unknown;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - Clamp wafer: ').Append(TO_STRING(Value)).ToString());
+
+	CASE LREAL_TO_INT(Value) OF
+		EWaferSize._100mm : 
+			IoChuck.OutputVaccum100mm := TRUE;
+			IoChuck.OutputVaccum150mm := FALSE; 
+			IoChuck.OutputVaccum200mm := FALSE;			
+			size := EWaferSize._100mm;
+			
+		EWaferSize._150mm :
+			IoChuck.OutputVaccum100mm := FALSE;
+			IoChuck.OutputVaccum150mm := TRUE; 
+			IoChuck.OutputVaccum200mm := FALSE;
+			size := EWaferSize._150mm;
+			
+		EWaferSize._200mm :
+			IoChuck.OutputVaccum100mm := FALSE;
+			IoChuck.OutputVaccum150mm := FALSE; 
+			IoChuck.OutputVaccum200mm := TRUE;
+			size := EWaferSize._200mm;
+			
+		EWaferSize.Unknown:		
+			size := EWaferSize.Unknown;
+			_logger.Warning(_message.Reset().Append(_config.Name).Append(' - Unknown size ').ToString());
+	ELSE 
+		_logger.Warning(_message.Reset().Append(_config.Name).Append(' - This size: ').Append(TO_STRING(Value)).Append(' does not exist').ToString());
+	END_CASE
+	
+	WaferSize := size;
+	
+	_clampWaferCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{c6c17ee1-7725-4610-be5f-46a553ac8095}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PhotoLumChuckConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._chuckConfig.Name := Config.Name;
+	SUPER^._chuckConfig.DeviceID := Config.DeviceID;
+	SUPER^._chuckConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._chuckConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Chuck;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{e851f87d-d091-4527-a40f-c2bee8cd0dc7}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - init device').ToString());		
+								
+	_initDevice := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{e0d7da2c-466c-4a66-bee4-bfcec3f15fc0}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF	
+		0:	WaferPresenceMsg := ' ';
+			_itemScheduler := 1;
+	
+		1:	ReadWaferPresence();
+			_itemScheduler := 0;		
+									
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#100MS);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{30b5bf2f-d4af-4fcf-82bf-553fd8f4f061}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN		
+	_raisePropertiesCmd := TRUE;	
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+		CASE _itemRaisedProperties OF		
+			0: _itemRaisedProperties := 10;
+				
+			10: _logger.Information(_message.Reset().Append(_config.Name).Append(' - RaisePropertiesChanged').ToString());
+				_raisePropertiesCmd := FALSE;
+				_itemRaisedProperties := 0;		
+		END_CASE	
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#100MS);	
+	END_IF		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadWaferPresence" Id="{f9626d81-8d28-4763-81a1-924a18920772}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ReadWaferPresence
+VAR_INPUT
+END_VAR
+VAR	
+	waferPresence : STRING;
+	diameter : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPsdChuck.WaferPresenceMsg;
+
+IF _waferPresenceSensorCounter < Const.PHOTOLUM_NUMBER_WAFER_PRESENCE_SENSORS - 1 THEN
+	_waferPresenceSensorCounter := _waferPresenceSensorCounter + 1;
+ELSE
+	_waferPresenceSensorCounter := 0;
+END_IF
+
+diameter := TO_STRING(_config.WaferPresenceSensor[_waferPresenceSensorCounter].Diameter);
+
+IF _config.WaferPresenceSensor[_waferPresenceSensorCounter].InputWaferPresence AND 
+   _config.WaferPresenceSensor[_waferPresenceSensorCounter].Diameter = TO_UINT(_waferSize) THEN
+	waferPresence := INT_TO_STRING(EMaterialPresence.Present);
+ELSE
+	waferPresence := INT_TO_STRING(EMaterialPresence.NotPresent);		
+END_IF
+
+message := CONCAT(CONCAT(diameter, ';'), waferPresence);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReleaseWafer" Id="{b19b51df-5643-43e4-a0aa-4c532361b6ea}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ReleaseWafer
+VAR_INPUT
+	Execute : BOOL;
+	Value : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().Append(_config.Name).Append(' - release wafer: ').Append(TO_STRING(Value)).ToString());
+
+	IF Value = EWaferSize._100mm THEN
+		IoChuck.OutputVaccum100mm := FALSE;
+	ELSIF Value = EWaferSize._150mm THEN		
+		IoChuck.OutputVaccum150mm := FALSE; 		
+	ELSIF Value = EWaferSize._200mm THEN
+		IoChuck.OutputVaccum200mm := FALSE;
+	ELSIF Value = EWaferSize.Unknown THEN
+		_logger.Warning(_message.Reset().Append(_config.Name).Append(' - Unknown size ').ToString());
+	ELSE 
+		_logger.Warning(_message.Reset().Append(_config.Name).Append(' - This size: ').Append(TO_STRING(Value)).Append(' does not exist').ToString());
+	END_IF
+
+	WaferSize := EWaferSize.Unknown;
+	
+	_releaseWaferCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PhotoLumChuck">
+      <LineId Id="361" Count="19" />
+      <LineId Id="35" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.ClampWafer">
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.FB_init">
+      <LineId Id="9" Count="18" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.InitDevice">
+      <LineId Id="42" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.MessageScheduler">
+      <LineId Id="6" Count="3" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.ReadWaferPresence">
+      <LineId Id="23" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+    <LineIds Name="PhotoLumChuck.ReleaseWafer">
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="65" Count="4" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

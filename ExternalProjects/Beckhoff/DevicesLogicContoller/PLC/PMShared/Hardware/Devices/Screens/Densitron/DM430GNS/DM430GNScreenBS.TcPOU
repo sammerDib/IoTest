@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="DM430GNScreenBS" Id="{1e026e90-1045-4794-b235-55dd9dfff41a}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK DM430GNScreenBS EXTENDS DM430GNScreen
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : DM430GNScreenConfig;
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_serialCom  : SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := Const.CARRIAGE_RETURN) := _serialCom;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorInit : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF _config.IsSimulated THEN
+	SUPER^(Conf := _config, SerialCom := _serialCom, RefSerialCom := _refSerialCom);
+ELSE
+	IF NOT InitConfigSerialCom THEN
+		ConfigureSerialCom();
+	ELSIF THIS^.Status = TExecutionState.Ready THEN
+		IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+			_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferDM430GNScreenBS, 
+						  RxBuffer:= HardwareGlobalVariables.RxBufferDM430GNScreenBS);
+		END_IF						  			
+					
+		SUPER^(Conf := _config, SerialCom := _serialCom, RefSerialCom := _refSerialCom);
+
+		// Init device
+		InitDevice(); 			
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{3f1b55c2-abaa-40dc-bd27-bfa647658e3a}" />
+    <Method Name="ConfigureSerialCom" Id="{20f2cdd0-2db6-4250-a5be-5192c13b089a}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+
+VAR
+	Status: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{08e07ba6-e423-42da-81f1-a34fb3d286e3}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : DM430GNScreenConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._screenConfig.Name := Config.Name;
+	SUPER^._screenConfig.DeviceID := Config.DeviceID;
+	SUPER^._screenConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._screenConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Screen;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{bac5fbcf-5f22-419b-87d4-edaf6dd853db}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{6a575ada-b5aa-425a-b585-b547f016e136}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{32ca8433-654d-4bdd-bbb0-118a9813edfc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{0ecd66c1-be11-452b-9090-0e58992f6a8c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+VAR	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN		
+	IF _pulseGeneratorInit.Q THEN
+		_pulseGeneratorInit(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemInit OF
+			0:  _logger.Information(_message.Reset().Append(_config.Name).Append(' - Start to on').ToString());		
+				_itemInit := 1;
+							
+			1:  _initDevice := TRUE;
+				_itemInit := 0;
+		END_CASE
+	ELSE
+		_pulseGeneratorInit(IN := TRUE, PT := T#500MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="DM430GNScreenBS">
+      <LineId Id="10" Count="15" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreenBS.ConfigureSerialCom">
+      <LineId Id="6" Count="10" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="56" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreenBS.FB_init">
+      <LineId Id="9" Count="14" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreenBS.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreenBS.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="DM430GNScreenBS.InitDevice">
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="43" Count="4" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="59" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

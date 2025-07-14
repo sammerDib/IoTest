@@ -1,0 +1,541 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Nst" Id="{a4e18f2a-a8d8-4fb5-b6e6-56cf5ae43176}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Nst EXTENDS PlcModule
+VAR_INPUT
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	NstConfig : NstConfig;
+		
+	(* AttenuationFilterConfigs *) 
+	FW212CAttenuationFilter : FW212CAttenuationFilter(Config := NstConfig.AttenuationFilterConfigs.FW212CAttenuationFilterConfig);
+	ELL14KAttenuationFilter : ELL14KAttenuationFilter(Config := NstConfig.AttenuationFilterConfigs.ELL14kAttenuationFilterConfig);
+	ELL9AttenuationFilter : ELL9AttenuationFilter(Config := NstConfig.AttenuationFilterConfigs.ELL9AttenuationFilterConfig);
+	
+	(* LaserConfigs *) 
+	SMD12Laser : SMD12Laser(Config := NstConfig.LaserConfigs.SMD12LaserConfig);
+	Piano450Laser : Piano450Laser(Config := NstConfig.LaserConfigs.Piano450LaserConfig);
+	
+	(* ShutterConfigs *)
+	Ed12dssShutter : Ed12dssShutter(Config := NstConfig.ShutterConfigs.Ed12dssShutterConfig);
+	Sh10pilShutter : Sh10pilShutter(Config := NstConfig.ShutterConfigs.Sh10pilShutterConfig);
+	
+	(* FastAttenuationConfigs *)
+	Std900FastAttenuation : Std900FastAttenuation(Config := NstConfig.FastAttenuationConfigs.Std900FastAttenuationConfig);
+	
+	(* Ffu *)
+	Ffu : Astrofan612Ffu(Config := NstConfig.FfuConfigs.Astrofan612FfuConfig);
+
+	
+	(* IonizerConfigs *)
+	SJH108Ionizer : SJH108Ionizer(Config := NstConfig.IonizerConfigs.SJH108IonizerConfig);
+	
+	SmokeDetectedMsg : STRING(255);
+	SmokeDetectorFaultMsg : STRING(255);
+	VacuumDetectorMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execStartTrigger : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execSmokeDetectorResetAlarm : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_stateTrigCmd : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_stateSmokeCmd : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_stateSmokeResetAlarmCmd : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPeriod_ms : LREAL := 100;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	timerDelayOn : LTON;
+	{attribute 'OPC.UA.DA' := '0'}
+	timerDelayOff: LTON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	pulseFlag : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}	
+	trigOff : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	OutputTriggerPlc	AT %Q* : BOOL;
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	InputSmokeDetector_NoFault AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	InputSmokeDetector_Fault AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	InputSmokeDetector_Fire1 AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	InputSmokeDetector_Action AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	InputVacuumIsReady AT %I* : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	OutputSmokeDetector_ResetAlarm AT %Q* : BOOL;
+		
+	{attribute 'OPC.UA.DA' := '0'}
+	risingEdge : R_TRIG;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	pulseGeneratorSmokeDetector : TP;
+	{attribute 'OPC.UA.DA' := '0'}
+	waitSmokeDetected : TP;
+	{attribute 'OPC.UA.DA' := '0'}
+	smokeDetected : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	elapsedTime : STRING;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	sensorDetectorFault : BOOL;	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR			
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+(* Attenuation *)
+IF NstConfig.AttenuationFilterConfigs.FW212CAttenuationFilterConfig.IsEnabled THEN		
+	FW212CAttenuationFilter();
+	IF FW212CAttenuationFilter.InitConfigSerialCom THEN
+		;
+	END_IF
+ELSIF NstConfig.AttenuationFilterConfigs.ELL14KAttenuationFilterConfig.IsEnabled THEN		
+	ELL14KAttenuationFilter();
+	IF ELL14KAttenuationFilter.InitConfigSerialCom THEN
+		;
+	END_IF	
+ELSIF NstConfig.AttenuationFilterConfigs.ELL9AttenuationFilterConfig.IsEnabled THEN		
+	ELL9AttenuationFilter();
+	IF ELL9AttenuationFilter.InitConfigSerialCom THEN
+		;
+	END_IF	
+END_IF
+
+(* Laser *)
+IF NstConfig.LaserConfigs.SMD12LaserConfig.IsEnabled THEN
+	SMD12Laser();
+	IF SMD12Laser.InitConfigSerialCom THEN
+		;
+	END_IF
+ELSIF NstConfig.LaserConfigs.Piano450LaserConfig.IsEnabled THEN
+	Piano450Laser();
+	IF Piano450Laser.InitConfigSerialCom THEN
+		;
+	END_IF
+END_IF
+
+(* Shutter *)
+IF NstConfig.ShutterConfigs.Ed12dssShutterConfig.IsEnabled THEN
+	Ed12dssShutter();	
+ELSIF NstConfig.ShutterConfigs.SH10PILShutterConfig.IsEnabled THEN
+	Sh10pilShutter();
+END_IF
+
+(* Fast attenuation *)
+IF NstConfig.FastAttenuationConfigs.Std900FastAttenuationConfig.IsEnabled THEN
+	Std900FastAttenuation();	
+END_IF
+
+(*FFU*)
+IF NstConfig.FfuConfigs.Astrofan612FfuConfig.IsEnabled THEN
+	Ffu();
+END_IF
+
+(* Ionizer *)
+IF NstConfig.IonizerConfigs.SJH108IonizerConfig.IsEnabled THEN
+	SJH108Ionizer();
+END_IF
+
+TriggerOutEmitSignal(_execStartTrigger, _setPeriod_ms);
+SmokeDetectorResetAlarm(_execSmokeDetectorResetAlarm);
+
+CASE _deliverMessages OF
+	EFeedbackMsgPlc.SmokeDetectedMsg:
+		SmokeDetectedMsg := message;
+	EFeedbackMsgPlc.SmokeDetectorFaultMsg:
+		SmokeDetectorFaultMsg := message;			
+	EFeedbackMsgPlc.VacuumDetectorMsg:
+		VacuumDetectorMsg := message;
+END_CASE
+
+IF (NOT _execStartTrigger) THEN
+	MessageScheduler();
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{fa2948fb-a1c5-4040-8cce-e8a079154dab}" />
+    <Method Name="FB_init" Id="{3fd86c21-4d38-4ca5-96b6-0f3554517e9b}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : NstConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[NstConfig := Config;
+NstBkgrdLsSerialCom(Config := NstConfig);
+
+IF Config.IsEnabled THEN
+	_logger.Information('NST devices initialization starting...');
+END_IF	
+
+(* AttenuationFilterConfigs *)
+IF Config.AttenuationFilterConfigs.FW212CAttenuationFilterConfig.IsEnabled THEN
+	FW212CAttenuationFilter.FB_init(FALSE, FALSE, Config := Config.AttenuationFilterConfigs.FW212CAttenuationFilterConfig);	
+ELSIF Config.AttenuationFilterConfigs.ELL14kAttenuationFilterConfig.IsEnabled THEN
+	ELL14KAttenuationFilter.FB_init(FALSE, FALSE, Config := Config.AttenuationFilterConfigs.ELL14kAttenuationFilterConfig);
+ELSIF Config.AttenuationFilterConfigs.ELL9AttenuationFilterConfig.IsEnabled THEN
+	ELL9AttenuationFilter.FB_init(FALSE, FALSE, Config := Config.AttenuationFilterConfigs.ELL9AttenuationFilterConfig);	
+END_IF
+
+(* LaserConfigs *) 
+IF Config.LaserConfigs.SMD12LaserConfig.IsEnabled THEN
+	SMD12Laser.FB_init(FALSE, FALSE, Config := Config.LaserConfigs.SMD12LaserConfig);
+ELSIF Config.LaserConfigs.Piano450LaserConfig.IsEnabled THEN
+	Piano450Laser.FB_init(FALSE, FALSE, Config := Config.LaserConfigs.Piano450LaserConfig);	
+END_IF
+
+(* ShutterConfigs *) 
+IF Config.ShutterConfigs.Ed12dssShutterConfig.IsEnabled THEN
+	Ed12dssShutter.FB_init(FALSE, FALSE, Config := Config.ShutterConfigs.Ed12dssShutterConfig);	
+ELSIF Config.ShutterConfigs.Sh10pilShutterConfig.IsEnabled THEN
+	Sh10pilShutter.FB_init(FALSE, FALSE, Config := Config.ShutterConfigs.Sh10pilShutterConfig);		
+END_IF
+
+(* FastAttenuationConigs *)
+IF Config.FastAttenuationConfigs.Std900FastAttenuationConfig.IsEnabled THEN
+	Std900FastAttenuation.FB_init(FALSE, FALSE, Config := Config.FastAttenuationConfigs.Std900FastAttenuationConfig);	
+END_IF
+
+(* IonizerConfig *)
+IF Config.IonizerConfigs.SJH108IonizerConfig.IsEnabled THEN
+	SJH108Ionizer.FB_init(FALSE, FALSE, Config := Config.IonizerConfigs.SJH108IonizerConfig);	
+END_IF
+
+(* Ffu *) 
+IF Config.FfuConfigs.Astrofan612FfuConfig.IsEnabled THEN
+	Ffu.FB_init(FALSE, FALSE, Config := Config.FfuConfigs.Astrofan612FfuConfig);	
+END_IF
+
+IF Config.IsEnabled THEN
+	_logger.Information('NST devices initialization ended...');
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{5583a4fc-0b67-46c2-ab33-d0e1b2e5138c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF		
+		0:	SmokeDetector();
+			_itemScheduler := 1;
+			
+		1: VacuumDetector();
+			_itemScheduler := 0;
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#1S);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SmokeDetector" Id="{0795a541-a0f1-4f8d-9768-e024a0a75f7c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED SmokeDetector 
+VAR
+	engagesEMO : INT := 10;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPlc.SmokeDetectedMsg;
+
+IF InputSmokeDetector_Fire1 OR InputSmokeDetector_Action THEN
+	CASE _stateSmokeCmd OF	
+		0: _logger.Information(_message.Reset().
+								Append('Smoke detected').ToString());
+			smokeDetected := TRUE;
+			_stateSmokeCmd := 1;
+	END_CASE
+END_IF
+
+IF _stateSmokeCmd = 1 THEN		
+	waitSmokeDetected(IN := smokeDetected, PT := T#30S);			
+	IF waitSmokeDetected.Q THEN
+		IF OutputSmokeDetector_ResetAlarm THEN
+			IF smokeDetected THEN
+				_logger.Information(_message.Reset().Append('Stop smoke detected').ToString());	
+			END_IF									
+			smokeDetected := FALSE;	
+		END_IF
+	ELSE
+		IF smokeDetected AND _stateSmokeCmd <> engagesEMO THEN	
+			_logger.Warning(_message.Reset().Append('Time limit has expired. Safety PLC must restart machine').ToString());			
+		END_IF		
+		_stateSmokeCmd := engagesEMO;
+	END_IF												
+	
+	// Reset waitSmokeDetected
+	IF NOT smokeDetected AND NOT waitSmokeDetected.Q THEN
+		_stateSmokeCmd := 0;
+		InputSmokeDetector_Fire1 := FALSE;
+		InputSmokeDetector_Action := FALSE;
+	END_IF
+	
+ELSE
+	smokeDetected := FALSE;
+END_IF
+
+IF _stateSmokeCmd <> engagesEMO THEN	
+	message := BOOL_TO_STRING(smokeDetected);	
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SmokeDetectorFault" Id="{91af0774-8db2-4ed1-8d4f-a2a5fd191d44}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED SmokeDetectorFault
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPlc.SmokeDetectorFaultMsg;
+
+IF InputSmokeDetector_Fault THEN
+	sensorDetectorFault := TRUE;
+ELSE
+	sensorDetectorFault := FALSE;
+END_IF
+
+IF sensorDetectorFault THEN
+	sensorDetectorFault := FALSE;
+	message := 'Fault'; 	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SmokeDetectorResetAlarm" Id="{919de9b1-9759-45f7-bc49-ff8db37d3cdc}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED SmokeDetectorResetAlarm : BOOL;
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	smokeDetectorResetAlarmTrig : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_execSmokeDetectorResetAlarm := TRUE;
+
+	CASE _stateSmokeResetAlarmCmd OF	
+		0:  _logger.Information(_message.Reset().
+								Append('Smoke detector alarm reset triggered').ToString());
+			
+			smokeDetectorResetAlarmTrig := TRUE;
+			_stateSmokeResetAlarmCmd := 1;	 
+	END_CASE
+			
+	pulseGeneratorSmokeDetector(In := smokeDetectorResetAlarmTrig, PT := T#3S);					
+	smokeDetectorResetAlarmTrig := pulseGeneratorSmokeDetector.Q; 	
+	
+	IF NOT pulseGeneratorSmokeDetector.Q AND pulseGeneratorSmokeDetector.ET = T#0S THEN		
+		OutputSmokeDetector_ResetAlarm := FALSE;
+		
+		_execSmokeDetectorResetAlarm := FALSE;
+		_stateSmokeResetAlarmCmd := 0;
+	END_IF						
+	
+	OutputSmokeDetector_ResetAlarm := smokeDetectorResetAlarmTrig;
+	SmokeDetectorResetAlarm := smokeDetectorResetAlarmTrig;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TriggerOutEmitSignal" Id="{18cc7191-82ec-41d8-a235-00abfa6043fa}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD PROTECTED TriggerOutEmitSignal
+VAR_INPUT
+	Execute : BOOL;
+	PulseDuration_ms : LREAL;	
+END_VAR
+VAR
+	duration_ms : LTIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF Execute THEN
+	_execStartTrigger := TRUE;
+	_setPeriod_ms := PulseDuration_ms;
+	
+	CASE _stateTrigCmd OF		
+		0:	OutputTriggerPlc := _execStartTrigger AND NOT trigOff;	
+			_stateTrigCmd := 1;	
+					
+		1:	IF trigOff = TRUE THEN
+				OutputTriggerPlc := FALSE;
+				_stateTrigCmd := 2;						
+			END_IF
+			
+			timerDelayOff(IN := OutputTriggerPlc, PT := LREAL_TO_LTIME(_setPeriod_ms * 1E+6));
+			trigOff := timerDelayOff.Q;	
+								
+		2:	_execStartTrigger := FALSE;	
+			_stateTrigCmd := 0;
+	END_CASE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="VacuumDetector" Id="{cb568bd7-fbe3-430f-abb7-c3b538df8e6f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD VacuumDetector : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgPlc.VacuumDetectorMsg;
+
+IF InputVacuumIsReady THEN
+	VacuumDetector := TRUE;
+ELSE
+	VacuumDetector := FALSE;
+END_IF
+
+message := BOOL_TO_STRING(VacuumDetector);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Nst">
+      <LineId Id="1835" Count="43" />
+      <LineId Id="1884" Count="2" />
+      <LineId Id="1891" Count="21" />
+      <LineId Id="1527" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.FB_init">
+      <LineId Id="168" Count="25" />
+      <LineId Id="209" Count="1" />
+      <LineId Id="194" Count="5" />
+      <LineId Id="218" Count="3" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="234" Count="2" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="200" Count="2" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.MessageScheduler">
+      <LineId Id="48" Count="4" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="58" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.SmokeDetector">
+      <LineId Id="122" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="101" Count="2" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.SmokeDetectorFault">
+      <LineId Id="22" Count="1" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.SmokeDetectorResetAlarm">
+      <LineId Id="7" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="68" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.TriggerOutEmitSignal">
+      <LineId Id="74" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="248" Count="1" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="226" Count="1" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="238" Count="1" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="Nst.VacuumDetector">
+      <LineId Id="26" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

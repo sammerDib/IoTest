@@ -1,0 +1,2441 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.42" TcVersionFixed="true">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom" AutoDeleteType="true">EL6inData22B</Name>
+			<Comment><![CDATA[ This data type is corresponding to the
+   KL-6xxx data structure used in the
+   TwinCAT SystemManager
+   (KL-6xxx version using 5 data bytes / 
+    non-alternative (standard) output ) 
+]]></Comment>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>Status</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>D</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>22</Elements>
+				</ArrayInfo>
+				<BitSize>176</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom" AutoDeleteType="true">EL6outData22B</Name>
+			<Comment><![CDATA[ This data type is corresponding to the
+   KL-6xxx data structure used in the
+   TwinCAT SystemManager
+   (KL-6xxx version using 5 data bytes / 
+    non-alternative (standard) output ) 
+]]></Comment>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>Ctrl</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>D</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>22</Elements>
+				</ArrayInfo>
+				<BitSize>176</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{F852D9F7-9DB9-AE77-EE6D-D9BA52CDE308}" Namespace="Tc2_ModbusRTU" AutoDeleteType="true">MB_KL6inData22B</Name>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>Status</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>D</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>22</Elements>
+				</ArrayInfo>
+				<BitSize>176</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>hide</Name>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{E4C24E72-EF65-C814-8E17-663F53275EE3}" Namespace="Tc2_ModbusRTU" AutoDeleteType="true">MB_KL6outData22B</Name>
+			<BitSize>192</BitSize>
+			<SubItem>
+				<Name>Ctrl</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>D</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>22</Elements>
+				</ArrayInfo>
+				<BitSize>176</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>hide</Name>
+				</Property>
+			</Properties>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000001}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..0] OF BIT</Name>
+			<BitSize>1</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>1</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
+			<BitSize>4</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>4</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{E42D3C45-128B-4D37-99F5-8F77FAD8B06B}" PersistentType="true">EventLoggerPlc</Name>
+			<DisplayName TxtId=""><![CDATA[EventLoggerPlcDisplay]]></DisplayName>
+			<EventId>
+				<Name Id="0">PlcEventVerbose</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="1">PlcEventDebug</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">PlcEventInformation</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">PlcEventWarning</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">PlcEventError</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">PlcEventFatal</Name>
+				<DisplayName TxtId=""><![CDATA[{0}]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{D79414EB-A507-4650-8306-0120FBF07632}"/>
+				<Hide GUID="{6D964E3D-995D-4FB6-9F5D-E763CA8B7C7E}"/>
+				<Hide GUID="{DEE04B50-0300-4037-9ECC-00A79215BD21}"/>
+				<Hide GUID="{89E35A80-7415-49F9-89C3-30B66D102C52}"/>
+			</Hides>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000c00000c0ffffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c080808000bfffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c080808080808080808000bfff00bfff00bfff00bfff00bfffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c080808000bfffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c080808000bfffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c080808080808080808000bfff00bfff00bfff00bfff00bfff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080808080808080c0c0c0c0c0c080808000bfffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0bbc2bbc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0bac2ba0bfc0bc0c0c0c0c0c0c0c0c0808080ff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ff</ImageData>
+		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ff000000000000ff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ff000000000000ff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ff00bfffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c080808000bfff00bfff00bfff00bfff00bfffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ff00bfffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+	</ImageDatas>
+	<Project ProjectGUID="{4961C386-EDBD-4752-BCB0-8A42CC84B438}" TargetNetId="5.108.191.186.1.1" Target64Bit="true" ShowHideConfigurations="#x347">
+		<System>
+			<Settings MaxCpus="4" NonWinCpus="2">
+				<Cpu/>
+				<Cpu CpuId="1"/>
+				<Cpu CpuId="2"/>
+				<Cpu CpuId="3"/>
+				<IoIdleTask Affinity="#x00000008"/>
+			</Settings>
+			<Licenses>
+				<Target BkhfOrder="00431781">
+					<ManualSelect>{BDCC0070-42D5-49AE-ABF1-1D4434813D60}</ManualSelect>
+					<ManualSelect>{2AFA4536-55C8-4554-BE9D-FAF0C7E2EFC3}</ManualSelect>
+				</Target>
+			</Licenses>
+			<Tasks>
+				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" Affinity="#x00000008" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+				<Task Id="4" Priority="2" CycleTime="100000" AmsPort="351" Affinity="#x00000004" AdtTasks="true">
+					<Name>SerialComTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project GUID="{D55DACE3-060A-4015-A3BB-1C1ABE0C96C1}" Name="PLC" PrjFilePath="PLC\PLC.plcproj" TmcFilePath="PLC\PLC.tmc" ReloadTmc="true" AmsPort="851" TargetArchiveSettings="#x0000" FileArchiveSettings="#x0000" CopyTmcToTarget="true" CopyTpyToTarget="false" SymbolicMapping="true">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="PLC\PLC.tmc" TmcHash="{5C83ACC0-B06B-5784-E45E-FFDAEAB93A9B}">
+					<Name>PLC Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>SerialComTask Inputs</Name>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>LsBkgrdLsSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChuckConfigs.PsdChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PhotoLumBkgrdSerialCom.Config.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChuckConfigs.PsdChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PsdBkgrdSerialCom.Config.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialAttenuation.stInAttenuation</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialSliderAttenuation.stInSliderAttenuation</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialRotatingSwitch.stInRotatingSwitch</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialPolarisation.stInPolarisation</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialLaser.stInLaser</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialFiberSwitch.stInFiberSwitch</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialOpticalPowermeterHs.stInThorlabsOpticalPowermeterHs</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialOpticalPowermeterHt.stInThorlabsOpticalPowermeterHt</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialMppcWide.stInMppcWide</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialMppcNarrow.stInMppcNarrow</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialOwisPs10.stInFilterWheel</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialLight.stInLight</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialScreenFS.stInScreenFS</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialScreenBS.stInScreenBS</Name>
+							<Comment><![CDATA[ 	I/O variables for a EL6002 terminal]]></Comment>
+							<Type GUID="{08AF3DC4-091E-9D2E-162D-D348FC75C632}" Namespace="Tc2_SerialCom">EL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChuckConfigs.PsdChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PsdConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.LightspeedConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChuckConfigs.PsdChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.ProcessModulesConfig.PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.LightspeedConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChuckConfigs.PsdChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.PsdConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber._config.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber._config.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber._config.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber._config.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber._config.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chuck._config.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[3].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PsdChamberConfig.Interlock[4].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChamberConfigs.PhotoLumChamberConfig.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChuckConfigs.PsdChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.PhotoLumConfig.ChuckConfigs.PhotoLumChuckConfig.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber._config.Interlock[0].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber._config.Interlock[1].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber._config.Interlock[2].State</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chuck._config.WaferPresenceSensor[0].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chuck._config.WaferPresenceSensor[1].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chuck._config.WaferPresenceSensor[2].InputWaferPresence</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>SerialComTask Outputs</Name>
+						<Var>
+							<Name>BkgrdSerialAttenuation.stOutAttenuation</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialSliderAttenuation.stOutSliderAttenuation</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialRotatingSwitch.stOutRotatingSwitch</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialPolarisation.stOutPolarisation</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialLaser.stOutLaser</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialFiberSwitch.stOutFiberSwitch</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialOpticalPowermeterHs.stOutThorlabsOpticalPowermeterHs</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialOpticalPowermeterHt.stOutThorlabsOpticalPowermeterHt</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialMppcWide.stOutMppcWide</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialMppcNarrow.stOutMppcNarrow</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialOwisPs10.stOutFilterWheel</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialLight.stOutLight</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialScreenFS.stOutScreenFS</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>BkgrdSerialScreenBS.stOutScreenBS</Name>
+							<Type GUID="{F2D2AC72-ED5B-FB82-D333-AFF659CBA42A}" Namespace="Tc2_SerialCom">EL6outData22B</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.InputIsInMaintenanceMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.InputIsInRunMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.InputArmNotExtended</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputIsInMaintenance</Name>
+							<Comment><![CDATA[* Physical inputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputArmNotExtended</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputIsWaferPresence</Name>
+							<Comment><![CDATA[* Physical inputs *
+* ON input : *
+* OFF input :  *
+* Default :  *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputAdvancedUserMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputAirOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputVacuumOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputSafetyDeviceOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputLaserRelayOn</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputMotionRelayOn</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputWaferVacuumOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputLiftPinUp</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputLiftPinDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputPanel1Closed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputPanel2Closed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputPanel3Closed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputFrontCoverClosed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputWaferLoadSafetyDoorClosed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputDoorslitClosed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.InputDoorslitOpened</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoSafetyLS.InputSafetyIsShutterOk</Name>
+							<Comment><![CDATA[* Physical inputs safety *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoSafetyLS.InputSafetyIsExtPanelsInterlockOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoSafetyLS.InputSafetyIsOpticalBoxInterlockOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoSafetyLS.InputSafetyIsLaserContactorOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoSafetyLS.InputSafetyIsMotionContactorOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.ELL14KAttenuationFilter.InputPiezoBW</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.ELL14KAttenuationFilter.InputPiezoFW</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.ELL18RotatingSwitch.InputPiezoBW</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.ELL18RotatingSwitch.InputPiezoFW</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.PM101OpticalPowermeterHs.IoControlPM101.InputGeneral_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.PM101OpticalPowermeterHs.IoControlPM101.InputGeneral_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.PM101OpticalPowermeterHt.IoControlPM101.InputGeneral_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.PM101OpticalPowermeterHt.IoControlPM101.InputGeneral_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.MicroEpsilonDistanceSensor.IoMicroEpsilonDistanceSensor.InputMicroEpsilonDistanceSensor</Name>
+							<Type>REAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.C13336MppcWide.InputMppcWideStateSignal_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.C13336MppcWide.InputMppcWideStateSignal_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.C13336MppcNarrow.InputMppcNarrowStateSignal_1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.C13336MppcNarrow.InputMppcNarrowStateSignal_2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Ed12dssShutter.IoEd12dssShutter.inputShutter1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Ed12dssShutter.IoEd12dssShutter.inputShutter2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Sh10pilShutter.IoSh10pilShutter.InputMagneticSwitch1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Sh10pilShutter.IoSh10pilShutter.InputMagneticSwitch2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupComErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupComStartup</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupFBDeactivate</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupFBErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupFBRun</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupInRun</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupOtherErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupOutErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.IoStageAxis.IoStageStruct.InputLoadingPosition</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.IoStageAxis.IoStageStruct.InputProcessPosition</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.InputIsInMaintenanceMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.InputIsInRunMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.InputArmNotExtended</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.InputOpenSlitDoor</Name>
+							<Comment><![CDATA[* Physical inputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.InputCloseSlitDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Ffu._master.InData</Name>
+							<Type GUID="{F852D9F7-9DB9-AE77-EE6D-D9BA52CDE308}" Namespace="Tc2_ModbusRTU">MB_KL6inData22B</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Ffu._master.WcState</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.TagPresent</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.Strobe</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput0</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput4</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput5</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput6</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.DataOutput7</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.ELL14KAttenuationFilter.InputPiezoBW</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.ELL14KAttenuationFilter.InputPiezoFW</Name>
+							<Type>DINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Ed12dssShutter.IoEd12dssShutter.inputShutter1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Ed12dssShutter.IoEd12dssShutter.inputShutter2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Sh10pilShutter.IoSh10pilShutter.InputMagneticSwitch1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Sh10pilShutter.IoSh10pilShutter.InputMagneticSwitch2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.InputSmokeDetector_NoFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.InputSmokeDetector_Fault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.InputSmokeDetector_Fire1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.InputSmokeDetector_Action</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.InputVacuumIsReady</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupComErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupComStartup</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupFBDeactivate</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupFBErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupFBRun</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupInRun</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupOtherErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupOutErr</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.InputIsInMaintenanceMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.InputIsInRunMode</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.InputArmNotExtended</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.InputOpenSlitDoor</Name>
+							<Comment><![CDATA[* Physical inputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.InputCloseSlitDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.MicroEpsilonDistanceSensor.IoMicroEpsilonDistanceSensor.InputMicroEpsilonDistanceSensor</Name>
+							<Type>REAL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputArmExtendEnabled</Name>
+							<Comment><![CDATA[* Physical outputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputLiftPinUp</Name>
+							<Comment><![CDATA[* Physical outputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputLiftPinDown</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputMotionEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputDoorslitMotorOn</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputDoorslitMotorOpen</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputVacuumOff</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputCdaOff</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputCounterBalanceOn</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputHightThroughput</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputMppcActivate</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputCoolingFanFrontPanel</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputCoolingFanBackPanel</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.PM101OpticalPowermeterHs.IoControlPM101.OutputMeasurementRange</Name>
+							<Comment><![CDATA[* Physical outputs *]]></Comment>
+							<Type>LREAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.PM101OpticalPowermeterHt.IoControlPM101.OutputMeasurementRange</Name>
+							<Comment><![CDATA[* Physical outputs *]]></Comment>
+							<Type>LREAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Ed12dssShutter.IoEd12dssShutter.OutputSwitchContactClosure</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Sh10pilShutter.IoSh10pilShutter.OutputSwitchContactClosure</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Std900FastAttenuation.IoStd900.OutputPwm</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Lightspeed.Std900FastAttenuation.IoStd900.OutputPeriodPwm</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupModuleFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupStartStop</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Safety.GroupErrAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.IoStageAxis.IoStageStruct.OutputLoadingPosition</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.IoStageAxis.IoStageStruct.OutputProcessPosition</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.OutputOpenSlitDoor</Name>
+							<Comment><![CDATA[* Physical outputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.OutputCloseSlitDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.OutputEnableCameraFS</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.OutputEnableCameraBS</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.OutputCdaPneumaticValve</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoChamberPsd.EfemInterlockSlitDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Ffu._master.OutData</Name>
+							<Type GUID="{E4C24E72-EF65-C814-8E17-663F53275EE3}" Namespace="Tc2_ModbusRTU">MB_KL6outData22B</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.Address</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.Rfid.IoBisL405Rfid.Restart</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Psd.EfemInterlockArmExtendedEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Ed12dssShutter.IoEd12dssShutter.OutputSwitchContactClosure</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Sh10pilShutter.IoSh10pilShutter.OutputSwitchContactClosure</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Std900FastAttenuation.IoStd900.OutputPwm</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.Std900FastAttenuation.IoStd900.OutputPeriodPwm</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.OutputTriggerPlc</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.Nst.OutputSmokeDetector_ResetAlarm</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupModuleFault</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupStartStop</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Safety.GroupErrAck</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.OutputOpenSlitDoor</Name>
+							<Comment><![CDATA[* Physical outputs *]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.OutputCloseSlitDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.OutputEnableCamera</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.EfemInterlockSlitDoor</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chamber.IoChamberPhotoLum.EfemInterlockArmExtendedEnable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chuck.IoChuck.OutputVaccum50mm</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chuck.IoChuck.OutputVaccum150mm</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.HardwareControl.HardwareManager.PhotoLum.Chuck.IoChuck.OutputVaccum200mm</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<UnrestoredVarLinks ImportTime="2024-02-22T17:48:25">
+						<OwnerA Name="InputDst" Prefix="TIPC^PLC^PLC Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1819)">
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoPsd.InputIsFfuFanOk" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoPsd.InputIsInMaintenance" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL2819)">
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoPsd.OutputEnableCamera1" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="DIG Outputs^Channel 1^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Psd.Chamber.IoPsd.OutputEnableCamera2" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="DIG Outputs^Channel 2^Output" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2020-06-12T17:37:45">
+						<OwnerA Name="InputDst" Prefix="TIPC^PLC^PLC Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 5 (EK1101)^Term 7 (EL6002)">
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stInQuantumLaser^Status" TypeA="WORD" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM TxPDO-Map Inputs Channel 2^Status" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stInThorlabsAttenuation^Status" TypeA="WORD" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM TxPDO-Map Inputs Channel 1^Status" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 5 (EK1101)^Term 7 (EL6002)">
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^Ctrl" TypeA="WORD" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM RxPDO-Map Outputs Channel 2^Ctrl" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdQuantumLaser.stOutQuantumLaser^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^Ctrl" TypeA="WORD" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM RxPDO-Map Outputs Channel 1^Ctrl" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdThorlabsAttenuation.stOutThorlabsAttenuation^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2020-06-15T23:54:45">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1859)">
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputArmExtendEnabled" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 9^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputDoorslitMotorOn" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputDoorslitMotorOpen" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 14^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputLaserPowerOn" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 15^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputLiftPinDown" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 11^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputLiftPinUp" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 10^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputMotionEnable" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="HardwareGlobalVarialbles.IoLightspeed.OutputVacuumOff" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 16^Output" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2020-09-03T09:04:39">
+						<OwnerA Name="InputDst" Prefix="TIPC^PLC^PLC Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1101)^Term 16 (EL6002) Powermeters">
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 2^Data In 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stInThorlabsOpticalPowermeter^Status" TypeA="WORD" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM TxPDO-Map Inputs Channel 2^Status" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1101)^Term 16 (EL6002) Powermeters">
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^Ctrl" TypeA="WORD" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM RxPDO-Map Outputs Channel 2^Ctrl" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialOpticalPowermeter.stOutThorlabsOpticalPowermeter^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 2^Data Out 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2020-09-11T15:07:40">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1101)^Term 8 (EL2634)">
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputMppcRelayNegPower" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Lightspeed.Chamber.IoLightspeed.OutputMppcRelayPosPower" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2020-09-14T12:03:11">
+						<OwnerA Name="InputDst" Prefix="TIPC^PLC^PLC Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1101)^Term 13 (EL6002) MPPCs">
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM TxPDO-Map Inputs Channel 1^Data In 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stInMppc^Status" TypeA="WORD" InOutA="0" ParentTypeA="EL6inData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM TxPDO-Map Inputs Channel 1^Status" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1101)^Term 13 (EL6002) MPPCs">
+								<Link VarA="BkgrdSerialMppc.stOutMppc^Ctrl" TypeA="WORD" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{18071995-0000-0000-0000-000000000004}" VarB="COM RxPDO-Map Outputs Channel 1^Ctrl" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 0" Size="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 1" Size="8" OffsA="8" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 10" Size="8" OffsA="80" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 11" Size="8" OffsA="88" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 12" Size="8" OffsA="96" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 13" Size="8" OffsA="104" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 14" Size="8" OffsA="112" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 15" Size="8" OffsA="120" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 16" Size="8" OffsA="128" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 17" Size="8" OffsA="136" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 18" Size="8" OffsA="144" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 19" Size="8" OffsA="152" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 2" Size="8" OffsA="16" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 20" Size="8" OffsA="160" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 21" Size="8" OffsA="168" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 3" Size="8" OffsA="24" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 4" Size="8" OffsA="32" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 5" Size="8" OffsA="40" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 6" Size="8" OffsA="48" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 7" Size="8" OffsA="56" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 8" Size="8" OffsA="64" RestoreInfo="ANotFound"/>
+								<Link VarA="BkgrdSerialMppc.stOutMppc^D" TypeA="ARRAY [0..21] OF BYTE" InOutA="1" ParentTypeA="EL6outData22B" GuidA="{57BF80CC-49DE-3A45-148A-756A2BA4B92C}" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 9" Size="8" OffsA="72" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1101)^Term 8 (EL2634)">
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Lightspeed.C13366Mppc.IoC13336Mppc.OutputMppcRelayNegPower" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Lightspeed.C13366Mppc.IoC13336Mppc.OutputMppcRelayPosPower" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2020-10-27T11:03:00">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EK1122) - Electrical rack^Term 4 (EK1101) - Coupler^Term 7 (EL2819) - DO">
+								<Link VarA="MAIN.HardwareControl.HardwareManager.Lightspeed.C13336MppcWide.IoC13336Mppc.OutputMppcRelayPower" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="DIG Outputs^Channel 12^Output" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-08-09T10:21:10">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^PLC^PLC Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 8 (EL2819)">
+								<Link VarA="MAIN.HardwareControl.HardwareManager.PhotoLum.EfemInterlockArmExtendedEnable" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="DIG Outputs^Channel 2^EfemInterlockArmExtendedEnable" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>SerialComTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010040</OTCID>
+							</ManualConfig>
+							<Priority>2</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+						<Context>
+							<Id NeedCalleeCall="true">1</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>20</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
+					<TaskPouOids>
+						<TaskPouOid Prio="2" OTCID="#x08502001"/>
+						<TaskPouOid Prio="20" OTCID="#x08502002"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
+			<PlcAuxTask Affinity="#x00000008"/>
+		</Plc>
+		<Io>
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="5.108.191.186.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+				<Name>Device 1 (EtherCAT)</Name>
+				<AddressInfo>
+					<Ccat>
+						<Address>-264241152</Address>
+						<Offset>131072</Offset>
+						<Size>8192</Size>
+						<BaseAddr>0</BaseAddr>
+						<BusNo>3</BusNo>
+						<SlotNo>0</SlotNo>
+						<VendorId>5612</VendorId>
+						<DeviceId>20480</DeviceId>
+						<Dma>
+							<Address>0</Address>
+							<Offset>4096</Offset>
+							<Size>256</Size>
+							<BaseAddr>2</BaseAddr>
+							<RxChn>0</RxChn>
+							<TxChn>1</TxChn>
+						</Dma>
+						<Identification>
+							<Value>498694182</Value>
+							<Version>1</Version>
+							<Size>256</Size>
+						</Identification>
+					</Ccat>
+				</AddressInfo>
+				<Image Id="1" AddrType="9" ImageType="3">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="1" BoxType="9099">
+					<Name>Term 1 (EK1200)</Name>
+					<ImageId>1000</ImageId>
+					<EtherCAT PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04b02c52" RevisionNo="#x00001388" InfoDataState="false" PortPhys="49" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1200-5000 EtherCAT Power supply (2A E-Bus)" Desc="EK1200" PortABoxInfo="#x00ffffff"/>
+					<Box Id="2" BoxType="9099">
+						<Name>Term 2 (EK1122)</Name>
+						<ImageId>1001</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04622c52" RevisionNo="#x00120000" PortPhys="4883" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1122 2 port EtherCAT junction" Desc="EK1122" PortABoxInfo="#x01000001"/>
+					</Box>
+					<Box Id="3" BoxType="9101" BoxFlags="#x00000020">
+						<Name>Term 3 (EL6002)</Name>
+						<ImageId>1002</ImageId>
+						<EtherCAT SlaveType="7" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x17723052" RevisionNo="#x00130000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6002 Interface 2Ch. (RS232)" Desc="EL6002" PortABoxInfo="#x02000002">
+							<SyncMan>001080002600010001000000400080008000001026010000</SyncMan>
+							<SyncMan>801080002200010002000000400080008000801022010000</SyncMan>
+							<SyncMan>001130002400010003000000000000003000001124010000</SyncMan>
+							<SyncMan>201230002000010004000000000000003000201220010000</SyncMan>
+							<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+							<Fmmu>0000000000000000201200010100000002000000000000000000000000000000</Fmmu>
+							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+							<BootStrapData>0010f400f410f400</BootStrapData>
+							<Pdo Name="COM TxPDO-Map Inputs Channel 1" Index="#x1a00" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a04</ExcludePdo>
+								<Entry Name="Status__Transmit accepted" Index="#x6000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Receive request" Index="#x6000" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Init accepted" Index="#x6000" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Buffer full" Index="#x6000" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Parity error" Index="#x6000" Sub="#x05">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Framing error" Index="#x6000" Sub="#x06">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Overrun error" Index="#x6000" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__">
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__Input length" Index="#x6000" Sub="#x09">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 0" Index="#x6000" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 1" Index="#x6000" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 2" Index="#x6000" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 3" Index="#x6000" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 4" Index="#x6000" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 5" Index="#x6000" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 6" Index="#x6000" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 7" Index="#x6000" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 8" Index="#x6000" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 9" Index="#x6000" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 10" Index="#x6000" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 11" Index="#x6000" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 12" Index="#x6000" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 13" Index="#x6000" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 14" Index="#x6000" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 15" Index="#x6000" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 16" Index="#x6000" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 17" Index="#x6000" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 18" Index="#x6000" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 19" Index="#x6000" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 20" Index="#x6000" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 21" Index="#x6000" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM TxPDO-Map Inputs Channel 2" Index="#x1a01" Flags="#x0010" SyncMan="3">
+								<ExcludePdo>#x1a05</ExcludePdo>
+								<Entry Name="Status__Transmit accepted" Index="#x6010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Receive request" Index="#x6010" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Init accepted" Index="#x6010" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Buffer full" Index="#x6010" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Parity error" Index="#x6010" Sub="#x05">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Framing error" Index="#x6010" Sub="#x06">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__Overrun error" Index="#x6010" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Status__">
+									<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+								</Entry>
+								<Entry Name="Status__Input length" Index="#x6010" Sub="#x09">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 0" Index="#x6010" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 1" Index="#x6010" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 2" Index="#x6010" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 3" Index="#x6010" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 4" Index="#x6010" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 5" Index="#x6010" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 6" Index="#x6010" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 7" Index="#x6010" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 8" Index="#x6010" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 9" Index="#x6010" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 10" Index="#x6010" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 11" Index="#x6010" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 12" Index="#x6010" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 13" Index="#x6010" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 14" Index="#x6010" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 15" Index="#x6010" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 16" Index="#x6010" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 17" Index="#x6010" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 18" Index="#x6010" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 19" Index="#x6010" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 20" Index="#x6010" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 21" Index="#x6010" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM TxPDO-Map Inputs Channel 1" Index="#x1a04" Flags="#x0010">
+								<ExcludePdo>#x1a00</ExcludePdo>
+								<Entry Name="Status" Index="#x6001" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+								<Entry Name="Data In 0" Index="#x6000" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 1" Index="#x6000" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 2" Index="#x6000" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 3" Index="#x6000" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 4" Index="#x6000" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 5" Index="#x6000" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 6" Index="#x6000" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 7" Index="#x6000" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 8" Index="#x6000" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 9" Index="#x6000" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 10" Index="#x6000" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 11" Index="#x6000" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 12" Index="#x6000" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 13" Index="#x6000" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 14" Index="#x6000" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 15" Index="#x6000" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 16" Index="#x6000" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 17" Index="#x6000" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 18" Index="#x6000" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 19" Index="#x6000" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 20" Index="#x6000" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 21" Index="#x6000" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM TxPDO-Map Inputs Channel 2" Index="#x1a05" Flags="#x0010">
+								<ExcludePdo>#x1a01</ExcludePdo>
+								<Entry Name="Status" Index="#x6011" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+								<Entry Name="Data In 0" Index="#x6010" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 1" Index="#x6010" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 2" Index="#x6010" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 3" Index="#x6010" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 4" Index="#x6010" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 5" Index="#x6010" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 6" Index="#x6010" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 7" Index="#x6010" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 8" Index="#x6010" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 9" Index="#x6010" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 10" Index="#x6010" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 11" Index="#x6010" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 12" Index="#x6010" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 13" Index="#x6010" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 14" Index="#x6010" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 15" Index="#x6010" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 16" Index="#x6010" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 17" Index="#x6010" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 18" Index="#x6010" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 19" Index="#x6010" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 20" Index="#x6010" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data In 21" Index="#x6010" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM RxPDO-Map Outputs Channel 1" Index="#x1600" InOut="1" Flags="#x0010" SyncMan="2">
+								<ExcludePdo>#x1604</ExcludePdo>
+								<Entry Name="Ctrl__Transmit request" Index="#x7000" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Receive accepted" Index="#x7000" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Init request" Index="#x7000" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Send continuous" Index="#x7000" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__">
+									<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Output length" Index="#x7000" Sub="#x09">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 0" Index="#x7000" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 1" Index="#x7000" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 2" Index="#x7000" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 3" Index="#x7000" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 4" Index="#x7000" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 5" Index="#x7000" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 6" Index="#x7000" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 7" Index="#x7000" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 8" Index="#x7000" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 9" Index="#x7000" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 10" Index="#x7000" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 11" Index="#x7000" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 12" Index="#x7000" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 13" Index="#x7000" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 14" Index="#x7000" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 15" Index="#x7000" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 16" Index="#x7000" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 17" Index="#x7000" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 18" Index="#x7000" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 19" Index="#x7000" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 20" Index="#x7000" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 21" Index="#x7000" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM RxPDO-Map Outputs Channel 2" Index="#x1601" InOut="1" Flags="#x0010" SyncMan="2">
+								<ExcludePdo>#x1605</ExcludePdo>
+								<Entry Name="Ctrl__Transmit request" Index="#x7010" Sub="#x01">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Receive accepted" Index="#x7010" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Init request" Index="#x7010" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Send continuous" Index="#x7010" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__">
+									<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+								</Entry>
+								<Entry Name="Ctrl__Output length" Index="#x7010" Sub="#x09">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 0" Index="#x7010" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 1" Index="#x7010" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 2" Index="#x7010" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 3" Index="#x7010" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 4" Index="#x7010" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 5" Index="#x7010" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 6" Index="#x7010" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 7" Index="#x7010" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 8" Index="#x7010" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 9" Index="#x7010" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 10" Index="#x7010" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 11" Index="#x7010" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 12" Index="#x7010" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 13" Index="#x7010" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 14" Index="#x7010" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 15" Index="#x7010" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 16" Index="#x7010" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 17" Index="#x7010" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 18" Index="#x7010" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 19" Index="#x7010" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 20" Index="#x7010" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 21" Index="#x7010" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM RxPDO-Map Outputs Channel 1" Index="#x1604" InOut="1" Flags="#x0010">
+								<ExcludePdo>#x1600</ExcludePdo>
+								<Entry Name="Ctrl" Index="#x7001" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+								<Entry Name="Data Out 0" Index="#x7000" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 1" Index="#x7000" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 2" Index="#x7000" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 3" Index="#x7000" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 4" Index="#x7000" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 5" Index="#x7000" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 6" Index="#x7000" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 7" Index="#x7000" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 8" Index="#x7000" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 9" Index="#x7000" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 10" Index="#x7000" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 11" Index="#x7000" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 12" Index="#x7000" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 13" Index="#x7000" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 14" Index="#x7000" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 15" Index="#x7000" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 16" Index="#x7000" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 17" Index="#x7000" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 18" Index="#x7000" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 19" Index="#x7000" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 20" Index="#x7000" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 21" Index="#x7000" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="COM RxPDO-Map Outputs Channel 2" Index="#x1605" InOut="1" Flags="#x0010">
+								<ExcludePdo>#x1601</ExcludePdo>
+								<Entry Name="Ctrl" Index="#x7011" Sub="#x01">
+									<Type>UINT</Type>
+								</Entry>
+								<Entry Name="Data Out 0" Index="#x7010" Sub="#x11">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 1" Index="#x7010" Sub="#x12">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 2" Index="#x7010" Sub="#x13">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 3" Index="#x7010" Sub="#x14">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 4" Index="#x7010" Sub="#x15">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 5" Index="#x7010" Sub="#x16">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 6" Index="#x7010" Sub="#x17">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 7" Index="#x7010" Sub="#x18">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 8" Index="#x7010" Sub="#x19">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 9" Index="#x7010" Sub="#x1a">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 10" Index="#x7010" Sub="#x1b">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 11" Index="#x7010" Sub="#x1c">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 12" Index="#x7010" Sub="#x1d">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 13" Index="#x7010" Sub="#x1e">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 14" Index="#x7010" Sub="#x1f">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 15" Index="#x7010" Sub="#x20">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 16" Index="#x7010" Sub="#x21">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 17" Index="#x7010" Sub="#x22">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 18" Index="#x7010" Sub="#x23">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 19" Index="#x7010" Sub="#x24">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 20" Index="#x7010" Sub="#x25">
+									<Type>USINT</Type>
+								</Entry>
+								<Entry Name="Data Out 21" Index="#x7010" Sub="#x26">
+									<Type>USINT</Type>
+								</Entry>
+							</Pdo>
+							<CoeProfile ProfileNo="39326601"/>
+							<CoeProfile ProfileNo="39326601"/>
+						</EtherCAT>
+					</Box>
+					<Box Id="4" BoxType="9099">
+						<Name>Term 4 (EK1110)</Name>
+						<ImageId>1003</ImageId>
+						<EtherCAT SlaveType="1" PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04562c52" RevisionNo="#x00110000" PortPhys="19" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1110 EtherCAT extension" Desc="EK1110" PortABoxInfo="#x01000003"/>
+					</Box>
+				</Box>
+				<EtherCAT/>
+			</Device>
+		</Io>
+	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^PLC^PLC Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL6002)">
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 0" Size="8" OffsA="16"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 1" Size="8" OffsA="24"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 10" Size="8" OffsA="96"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 11" Size="8" OffsA="104"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 12" Size="8" OffsA="112"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 13" Size="8" OffsA="120"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 14" Size="8" OffsA="128"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 15" Size="8" OffsA="136"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 16" Size="8" OffsA="144"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 17" Size="8" OffsA="152"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 18" Size="8" OffsA="160"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 19" Size="8" OffsA="168"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 2" Size="8" OffsA="32"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 20" Size="8" OffsA="176"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 21" Size="8" OffsA="184"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 3" Size="8" OffsA="40"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 4" Size="8" OffsA="48"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 5" Size="8" OffsA="56"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 6" Size="8" OffsA="64"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 7" Size="8" OffsA="72"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 8" Size="8" OffsA="80"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Data In 9" Size="8" OffsA="88"/>
+				<Link VarA="SerialComTask Inputs^BkgrdSerialOwisPs10.stInFilterWheel" VarB="COM TxPDO-Map Inputs Channel 1^Status"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Ctrl"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 0" Size="8" OffsA="16"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 1" Size="8" OffsA="24"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 10" Size="8" OffsA="96"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 11" Size="8" OffsA="104"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 12" Size="8" OffsA="112"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 13" Size="8" OffsA="120"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 14" Size="8" OffsA="128"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 15" Size="8" OffsA="136"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 16" Size="8" OffsA="144"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 17" Size="8" OffsA="152"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 18" Size="8" OffsA="160"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 19" Size="8" OffsA="168"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 2" Size="8" OffsA="32"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 20" Size="8" OffsA="176"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 21" Size="8" OffsA="184"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 3" Size="8" OffsA="40"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 4" Size="8" OffsA="48"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 5" Size="8" OffsA="56"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 6" Size="8" OffsA="64"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 7" Size="8" OffsA="72"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 8" Size="8" OffsA="80"/>
+				<Link VarA="SerialComTask Outputs^BkgrdSerialOwisPs10.stOutFilterWheel" VarB="COM RxPDO-Map Outputs Channel 1^Data Out 9" Size="8" OffsA="88"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmProject>

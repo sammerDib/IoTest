@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="BkgrdSerialOwisPs10" Id="{d3e71d48-dcd4-439d-9bdf-7d40d0dba0e4}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM BkgrdSerialOwisPs10
+VAR
+	(* background communication with the EL6002 terminal *)
+	serialLineCtrl		: SerialLineControl;
+	serialLineCtrlError	: BOOL;
+	serialLineCtrlErrorID : ComError_t;
+	(* 	I/O variables for a EL6002 terminal*)
+	stInFilterWheel  AT %I*	: EL6inData22B;	
+	stOutFilterWheel AT %Q*	: EL6outData22B;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+The SerialLineControl function block is supposed to be called in every PLC cycle.
+It communicates with the serial line hardware device and transmits or receives data.
+The SerialLineControl can be called in the standard task (e.g.for PcCOM port usage) 
+or in a separate fast task (e.g.for terminal usage) as well.
+A fast separate task will be necessary at high baud rates or with KL6001 terminals 
+which have a small process image (3 or 5 data bytes only)
+*)
+
+(* background communication with the EL6002 terminal *)
+serialLineCtrl(
+	Mode:= SERIALLINEMODE_EL6_22B, 
+	pComIn:= ADR(stInFilterWheel), 
+	pComOut:= ADR(stOutFilterWheel), 
+	SizeComIn:= SIZEOF(stInFilterWheel), 
+	TxBuffer:= HardwareGlobalVariables.TxBufferFilterWheel, 
+	RxBuffer:= HardwareGlobalVariables.RxBufferFilterWheel
+);
+
+IF serialLineCtrl.Error THEN
+	serialLineCtrlError := TRUE;
+	serialLineCtrlErrorID := serialLineCtrl.ErrorID;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="BkgrdSerialOwisPs10">
+      <LineId Id="47" Count="21" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

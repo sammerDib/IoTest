@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="CoeAccess" Id="{b2f2291e-2b74-40f1-b339-95f92541e0bb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CoeAccess EXTENDS TExecution
+VAR_INPUT
+	SerialCommunication : SerialCommunication;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_logger : Logger;	
+	_message : StringBuilder;
+	_coeWrite  : FB_EcCoESdoWrite;
+	_coeOperation : TExecution;
+	
+	_netId     : T_AmsNetId := GlobalConfig.AppConfig.NetIdManagement.FirstPeripheral;
+    _slaveAddr : UINT;
+	_subIndex  : BYTE;
+	_index	   : WORD;
+	_bufferLengh : UDINT;
+		
+	_stateConfig : BYTE := 0;
+	_dataSend : UDINT;
+	
+	item : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SerialCom(_coeOperation.Starting);
+
+IF _coeWrite.bBusy THEN
+    _coeOperation.SetBusy();
+END_IF
+
+IF _coeWrite.bError THEN
+	_coeOperation.SetError(ErrorId := _coeWrite.nErrId);
+		
+	_logger.Error(_message.Reset().Append('CoE access operation - ErrorId : ').
+			 			   		   Append(UDINT_TO_STRING(_coeWrite.nErrId)).ToString());
+END_IF 
+
+IF _coeOperation.Busy THEN
+    IF NOT _coeWrite.bBusy THEN        
+        IF THIS^.Aborted THEN
+            _coeOperation.SetAborted();
+			_logger.Information(_message.Reset().Append('CoE access operation aborted').ToString());
+        ELSIF THIS^.Done THEN             
+			_logger.Debug(_message.Reset().Append('CoE access operation done').ToString());
+        END_IF
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+    <Folder Name="SubIndexValue" Id="{fa5577cc-6a34-4cb5-9c66-d7751c0f83ed}" />
+    <Method Name="BaudrateValue" Id="{12389b3f-c4d2-4283-81fe-20f09e3a3b2f}" FolderPath="SubIndexValue\">
+      <Declaration><![CDATA[METHOD PRIVATE BaudrateValue : UDINT
+VAR_INPUT
+	value : UDINT;
+END_VAR
+VAR
+	concatValue : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+concatValue := Concat('_', TO_STRING(value));
+
+IF TO_STRING(EBaudrate._9600) = concatValue THEN
+	BaudrateValue := ANY_TO_UDINT(EBaudrate._9600);
+ELSIF TO_STRING(EBaudrate._19200) = concatValue THEN
+	BaudrateValue := ANY_TO_UDINT(EBaudrate._19200);
+ELSIF TO_STRING(EBaudrate._38400) = concatValue THEN
+	BaudrateValue := ANY_TO_UDINT(EBaudrate._38400);
+ELSIF TO_STRING(EBaudrate._57600) = concatValue THEN
+	BaudrateValue := ANY_TO_UDINT(EBaudrate._57600);
+ELSIF TO_STRING(EBaudrate._115200) = concatValue THEN
+	BaudrateValue := ANY_TO_UDINT(EBaudrate._115200);	
+ELSE
+	_logger.Error(_message.Reset().
+						Append('Error serial communication - BaudrateValue : ').
+						Append(TO_STRING(value)).ToString());
+END_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="BufferLengh" Id="{3190395b-4fd7-46ad-8a61-1856c806e1d0}">
+      <Declaration><![CDATA[PROPERTY BufferLengh : UDINT]]></Declaration>
+      <Get Name="Get" Id="{3bd70b55-d1e6-4d1e-9711-14faf3ad6843}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BufferLengh := _bufferLengh;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{edd4360f-3d9f-4a5a-87de-aa7df5285eef}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bufferLengh := BufferLengh;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="CoeOperation" Id="{0b901b2e-f65c-4159-a70d-ba1122bbb7b6}">
+      <Declaration><![CDATA[PROPERTY CoeOperation : IExecution]]></Declaration>
+      <Get Name="Get" Id="{02eb6481-75dc-4c72-8337-a1e1c0415153}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CoeOperation := _coeOperation;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="DataFrameValue" Id="{e6b58185-0625-4825-ad5e-e2ee879b97c4}" FolderPath="SubIndexValue\">
+      <Declaration><![CDATA[METHOD PRIVATE DataFrameValue : UDINT
+VAR_INPUT
+	value : STRING;
+END_VAR
+VAR
+	concatValue : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+concatValue := Concat('_', TO_STRING(value));
+
+IF TO_STRING(EDataFrame._8N1) = concatValue THEN
+	DataFrameValue := ANY_TO_UDINT(EDataFrame._8N1);
+ELSIF TO_STRING(EDataFrame._8E1) = concatValue THEN
+	DataFrameValue := ANY_TO_UDINT(EDataFrame._8E1);
+ELSE
+	_logger.Error(_message.Reset().
+						Append('Error serial communication - DataFrameValue : ').
+						Append(value).ToString());	
+END_IF;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Index" Id="{35dc4255-83c2-4fee-baaa-882cfb58232d}">
+      <Declaration><![CDATA[PROPERTY Index : WORD]]></Declaration>
+      <Get Name="Get" Id="{79ff3700-a59a-4d14-a78d-1d51d819e9ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Index := _index;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{bb6f047f-e137-41a9-937e-7cf0559bcc9b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_index := Index;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="NetId" Id="{8081c27d-53c5-4851-a09b-3309e8e2ba25}">
+      <Declaration><![CDATA[PROPERTY NetId : T_AmsNetId]]></Declaration>
+      <Get Name="Get" Id="{5184364f-5fec-4aa6-867e-3638c235e596}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[NetId := _netId;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{defae95d-4d88-4a8f-b7d8-216627e91e4a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_netId := NetId;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SerialCom" Id="{6aa411c8-4c43-4132-a843-24d6699ad4c8}">
+      <Declaration><![CDATA[METHOD SerialCom
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	sIndex : STRING;
+	sSubIndex : STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF item = 0 THEN	
+
+	THIS^.State := TExecutionState.Busy;
+	_coeWrite(bExecute := FALSE);	
+
+	CASE _stateConfig OF
+	0:	
+		// Index
+		IF (SerialCommunication.Port = Const.SERIAL_COM_CHANNEL_1) THEN					
+			sIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.IndexComPort1);						
+		ELSIF (SerialCommunication.Port = Const.SERIAL_COM_CHANNEL_2) THEN
+			sIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.IndexComPort2);			
+		ELSE 
+			_logger.Error('Error com port');
+		END_IF
+		
+		// Convert String_To_hexa -> Word hexa 
+		Index := STRING_TO_WORD(sIndex);
+		_logger.Debug(_message.Reset().Append('Index (Dec): ').Append(TO_STRING(Index)).
+									   Append(' -> ').Append(sIndex).
+									   Append(' (').Append(SerialCommunication.Port).Append(')').ToString());
+			
+		// SlaveAddr						
+		SlaveAddr := SerialCommunication.CanOverEthercat.AdrEthercat;
+		_logger.Debug(_message.Reset().Append('SlaveAddr : ').Append(TO_STRING(SlaveAddr)).ToString());
+				
+		// Baudrate
+		sSubIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.BaudRate.SubIndex);		
+		SubIndex := STRING_TO_BYTE(sSubIndex);		
+		BufferLengh := GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.BaudRate.SizeByte;
+		
+		_dataSend := BaudrateValue(SerialCommunication.BaudRate);
+		_coeWrite.pSrcBuf := ADR(_dataSend);		 
+		
+		_logger.Debug(_message.Reset().Append('CoeBaudrate (Dec) : ').Append(TO_STRING(_dataSend)).
+							           Append(' [SubIndex : ').Append(sSubIndex).Append(']').
+									   Append(' - Send baudrate : ').Append(TO_STRING(SerialCommunication.BaudRate)).ToString());		
+	1:
+		// DataFrame	
+		sSubIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.DataFrame.SubIndex);	
+		SubIndex := STRING_TO_BYTE(sSubIndex);		
+		BufferLengh := GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.DataFrame.SizeByte;
+			
+		_dataSend := DataFrameValue(SerialCommunication.DataFrame);
+		_coeWrite.pSrcBuf := ADR(_dataSend);
+	
+		_logger.Debug(_message.Reset().Append('DataFrame (Dec) : ').Append(TO_STRING(_dataSend)).
+							  		   Append(' [SubIndex : ').Append(sSubIndex).Append(']').
+									   Append(' - Send DataFrame : ').Append(SerialCommunication.DataFrame).ToString());
+	2:
+		// FlowControl RtsCts
+		sSubIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.EnableRtsCts.SubIndex);	
+		SubIndex := STRING_TO_BYTE(sSubIndex);
+		BufferLengh := GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.EnableRtsCts.SizeByte;
+		
+		IF SerialCommunication.FlowControl = SerialFlowControl.RtsCts THEN
+			_dataSend := 1;
+		ELSE
+			_dataSend := 0;		
+		END_IF		
+	
+		_coeWrite.pSrcBuf := ADR(_dataSend);
+		
+		_logger.Debug(_message.Reset().Append('FlowControl RtsCts : ').Append(TO_STRING(UDINT_TO_BIT(_dataSend))).
+									   Append(' [SubIndex : ').Append(sSubIndex).Append(']').
+									   Append(' - Send FlowControl : ').Append(TO_STRING(SerialCommunication.FlowControl)).ToString());
+	3:
+		// FlowControl Tx
+		sSubIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.EnableXonXoffTx.SubIndex);	
+		SubIndex := STRING_TO_BYTE(sSubIndex);
+		BufferLengh := GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.EnableXonXoffTx.SizeByte;
+		
+		IF SerialCommunication.FlowControl = SerialFlowControl.XonXoff THEN
+			_dataSend := 1;
+		ELSE
+			_dataSend := 0;		
+		END_IF		
+	
+		_coeWrite.pSrcBuf := ADR(_dataSend);
+	
+		_logger.Debug(_message.Reset().Append('FlowControl Tx : ').Append(TO_STRING(UDINT_TO_BIT(_dataSend))).
+								       Append(' [SubIndex : ').Append(sSubIndex).Append(']').
+									   Append(' - Send FlowControl : ').Append(TO_STRING(SerialCommunication.FlowControl)).ToString());
+	4:
+		// FlowControl Rx
+		sSubIndex := CONCAT('16#', GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.EnableXonXoffRx.SubIndex);	
+		SubIndex := STRING_TO_BYTE(sSubIndex);
+		BufferLengh := GlobalConfig.AppConfig.CanOverEthercatConfig.CoeSerialComSettings.EnableXonXoffRx.SizeByte; 
+		
+		IF SerialCommunication.FlowControl = SerialFlowControl.XonXoff THEN
+			_dataSend := 1;
+		ELSE
+			_dataSend := 0;		
+		END_IF		
+	
+		_coeWrite.pSrcBuf := ADR(_dataSend);		
+	
+		_logger.Debug(_message.Reset().Append('FlowControl Rx : ').Append(TO_STRING(UDINT_TO_BIT(_dataSend))).
+									   Append(' [SubIndex : ').Append(sSubIndex).Append(']').
+									   Append(' - Send FlowControl : ').Append(TO_STRING(SerialCommunication.FlowControl)).ToString());
+	END_CASE
+END_IF
+
+CASE item OF 	
+0:
+	_coeWrite(
+	sNetId     := NetId,
+	nSlaveAddr := SlaveAddr,
+	nSubIndex  := SubIndex, 
+	nIndex     := Index,    
+	cbBufLen   := BufferLengh,
+	bExecute   := TRUE,
+	tTimeout   := T#1S
+	);	
+	item := item + 1;
+1: 
+    _coeWrite();       
+    IF _coeWrite.bError THEN
+       item := 10;    	  
+    ELSE
+    	IF NOT _coeWrite.bBusy THEN
+			item := 0;    // Done
+			
+			IF _stateConfig = 4 THEN					
+				_coeOperation.SetDone();
+				_stateConfig := 0;
+			ELSE
+				_stateConfig := _stateConfig + 1;
+			END_IF		 			 		 		 		 	 
+		END_IF
+	END_IF		
+10:
+	// Error handling
+	_logger.Error(_message.Reset().
+						Append('Error serial communication - ErrorId : ').
+						Append(TO_STRING(_coeWrite.nErrId)).ToString());
+	
+	_stateConfig := 0;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="SlaveAddr" Id="{c1e95840-d13a-4f14-a3bd-0b9729b9332c}">
+      <Declaration><![CDATA[PROPERTY SlaveAddr : UINT]]></Declaration>
+      <Get Name="Get" Id="{8ee6efae-b23e-442c-8187-473f6f5a4389}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SlaveAddr := _slaveAddr;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a7fd7cba-ebd1-42d1-8264-789b22a3b538}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_slaveAddr := SlaveAddr;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SubIndex" Id="{1f0aa994-6951-4cbf-8365-b2a2ef526d72}">
+      <Declaration><![CDATA[PROPERTY SubIndex : BYTE]]></Declaration>
+      <Get Name="Get" Id="{bb6dd2b1-a37f-49c4-8ccd-a68066912758}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SubIndex := _subIndex;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0d86a636-3c18-48c2-9647-eb440cf1dc21}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_subIndex := SubIndex;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="CoeAccess">
+      <LineId Id="71" Count="18" />
+      <LineId Id="91" Count="2" />
+      <LineId Id="52" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.BaudrateValue">
+      <LineId Id="22" Count="1" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.BufferLengh.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.BufferLengh.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.CoeOperation.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.DataFrameValue">
+      <LineId Id="23" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.Index.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.Index.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.NetId.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.NetId.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.SerialCom">
+      <LineId Id="353" Count="137" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.SlaveAddr.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.SlaveAddr.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.SubIndex.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="CoeAccess.SubIndex.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

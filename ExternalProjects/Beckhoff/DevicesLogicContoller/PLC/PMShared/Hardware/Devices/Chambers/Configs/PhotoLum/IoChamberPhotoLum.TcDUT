@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="IoChamberPhotoLum" Id="{7f787a64-940b-4827-b4e0-8cabc7efce16}">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+TYPE IoChamberPhotoLum :
+STRUCT
+	(** Physical inputs **)					
+	InputOpenSlitDoor	AT %I* : BOOL;
+    InputCloseSlitDoor	AT %I* : BOOL;
+	
+	(** Physical outputs **)	
+	OutputOpenSlitDoor	AT %Q* : BOOL;	
+	OutputCloseSlitDoor	AT %Q* : BOOL;
+
+	OutputEnableCamera AT %Q* : BOOL;
+	
+	EfemInterlockSlitDoor AT %Q* : BOOL;
+	EfemInterlockArmExtendedEnable AT %Q* : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

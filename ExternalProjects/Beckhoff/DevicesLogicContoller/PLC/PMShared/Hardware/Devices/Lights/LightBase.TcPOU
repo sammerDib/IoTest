@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LightBase" Id="{65614fd1-6fc9-46bf-8601-806094071640}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT LightBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}	
+	_family : DeviceFamily;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_lightConfig : DeviceConfiguration;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lifeTimeCount : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_notifyIsAlive : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseIsAliveGenerator : TON;				
+		
+	StateMsg : STRING(255);
+	IsAliveMsg : STRING(255);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Check if it's still alive	
+IF _notifyIsAlive THEN
+	IsAliveMsg := TO_STRING(_lifeTimeCount);
+	_notifyIsAlive := FALSE;
+END_IF
+
+IF HardwareGlobalVariables.LightState <> State THEN
+	HardwareGlobalVariables.LightState := State;
+	StateMsg := ANY_TO_STRING(State);		
+END_IF
+
+MessageSchedulerBase();	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{dd5af989-5b9a-4a4b-a020-56886f985841}" />
+    <Property Name="DeviceID" Id="{6bd756f4-cedc-4988-82dd-c223d8d02ee3}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{f642b7fb-b2de-428a-b05f-2cb86a6d0562}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6ad482d1-1ac9-4159-9124-e7806b9e54f1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{15287f51-1ec6-4cf5-89f5-b89db4d4fdd4}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{3913feb6-e8f5-47d6-8a61-27a49ea81f02}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{178194f5-bea2-4f64-9707-610d9bd5bf16}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="IsAlive" Id="{e02d2bd8-0b7c-47f6-b925-1a7553a685a7}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD IsAlive
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_notifyIsAlive := TRUE;
+
+IF _lifeTimeCount < 5 THEN
+	_lifeTimeCount := _lifeTimeCount + 1;
+ELSE
+	_lifeTimeCount := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageSchedulerBase" Id="{e9563ba8-4fb2-42ea-8662-45c6d04194aa}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageSchedulerBase
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseIsAliveGenerator.Q THEN
+	_pulseIsAliveGenerator(IN := FALSE, PT := T#10MS);
+		
+	IsAlive();	
+ELSE
+	_pulseIsAliveGenerator(IN := TRUE, PT := T#1000MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{e71c8f13-9bc0-42a6-9c5c-4c7a18795d93}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{085a6715-4abc-4cee-abf8-3d27ba383840}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8bea579d-5fd9-427f-906f-cbba143c2f51}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SetIntensity" Id="{f57a947b-6804-42d7-9f21-66a7ec9bb44c}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD ABSTRACT SetIntensity
+VAR_INPUT
+	Execute : BOOL;
+	LightId : STRING;
+	Intensity : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="LightBase">
+      <LineId Id="63" Count="9" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="86" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.IsAlive">
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.MessageSchedulerBase">
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="LightBase.SetIntensity">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

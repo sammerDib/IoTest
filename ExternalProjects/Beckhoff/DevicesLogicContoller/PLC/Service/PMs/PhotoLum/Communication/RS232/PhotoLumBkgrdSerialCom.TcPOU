@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PhotoLumBkgrdSerialCom" Id="{60e560e3-a6b9-4afb-851a-68818bf21bef}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PhotoLumBkgrdSerialCom
+VAR_INPUT
+	Config : PhotoLumConfig;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// AxisConfigs
+IF Config.AxesConfigs.Ps10OwisAxisConfig.IsEnabled THEN
+	BkgrdSerialOwisPs10();	
+END_IF
+
+// LightConfigs
+IF Config.LightConfigs.ArduinoLightConfig.IsEnabled THEN
+	BkgrdSerialLight();
+ELSIF Config.LightConfigs.EvosensLightConfig.IsEnabled THEN
+	BkgrdSerialLight();
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="PhotoLumBkgrdSerialCom">
+      <LineId Id="197" Count="3" />
+      <LineId Id="178" Count="2" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="189" Count="1" />
+      <LineId Id="177" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

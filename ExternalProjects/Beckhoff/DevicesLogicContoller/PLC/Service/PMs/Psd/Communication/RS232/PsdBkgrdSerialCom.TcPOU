@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PsdBkgrdSerialCom" Id="{afb62224-d23e-49ab-a16e-8c18a0a03443}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PsdBkgrdSerialCom
+VAR_INPUT
+	Config : PsdConfig;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// ScreensConfigs
+IF Config.ScreenConfigs.DM430GNScreenConfigFS.IsEnabled THEN
+	BkgrdSerialScreenFS();
+END_IF
+IF Config.ScreenConfigs.DM430GNScreenConfigBS.IsEnabled THEN
+	BkgrdSerialScreenBS();
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="PsdBkgrdSerialCom">
+      <LineId Id="185" Count="5" />
+      <LineId Id="113" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

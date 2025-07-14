@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Psd" Id="{8356f6bd-4ce4-4674-aceb-72daafd0480c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Psd EXTENDS PlcModule
+VAR_INPUT	
+	Safety : Safety;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	PsdConfig : PsdConfig;
+	
+	(* Axes *)
+	IoStageAxis : IoStageAxis(Config := PsdConfig.AxesConfigs.IoStageAxisConfig);
+	
+	(* Chamber *)
+	Chamber : PsdChamber(Config := PsdConfig.ChamberConfigs.PsdChamberConfig);
+	
+	(* Chuck *)
+	Chuck : PsdChuck(Config := PsdConfig.ChuckConfigs.PsdChuckConfig);
+	
+	(* Ffu *)
+	Ffu : Astrofan612Ffu(Config := PsdConfig.FfuConfigs.Astrofan612FfuConfig);
+	
+	(* Screen *)
+	DM430GNScreenFS : DM430GNScreenFS(Config := PsdConfig.ScreenConfigs.DM430GNScreenConfigFS);
+	DM430GNScreenBS : DM430GNScreenBS(Config := PsdConfig.ScreenConfigs.DM430GNScreenConfigBS);
+	
+	(* RFid *)
+	Rfid : BisL405Rfid(Config := PsdConfig.RfidConfigs.BisL405RfidConfig);		
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SUPER^();
+
+IF PsdConfig.SafetyIsEnabled THEN
+	Safety();
+END_IF
+
+IF PsdConfig.AxesConfigs.IoStageAxisConfig.IsEnabled THEN
+	IoStageAxis();	
+END_IF
+
+IF PsdConfig.ChamberConfigs.PsdChamberConfig.IsEnabled THEN
+	Chamber();		
+END_IF
+
+IF PsdConfig.ChuckConfigs.PsdChuckConfig.IsEnabled THEN
+	Chuck();		
+END_IF
+
+IF PsdConfig.FfuConfigs.Astrofan612FfuConfig.IsEnabled THEN
+	Ffu();	
+END_IF
+	
+// Screens
+IF PsdConfig.ScreenConfigs.DM430GNScreenConfigFS.IsEnabled THEN
+	DM430GNScreenFS();
+	IF DM430GNScreenFS.InitConfigSerialCom THEN
+		;
+	END_IF
+END_IF
+
+IF PsdConfig.ScreenConfigs.DM430GNScreenConfigBS.IsEnabled THEN
+	DM430GNScreenBS();
+	IF DM430GNScreenBS.InitConfigSerialCom THEN
+		;
+	END_IF
+END_IF
+
+IF PsdConfig.RfidConfigs.BisL405RfidConfig.IsEnabled THEN
+	Rfid();	
+END_IF
+
+
+IF IoStageAxis.GetPosition() = EStagePosition.Loading THEN
+	Chamber.StageIsInLoadingPosition := TRUE;	
+ELSE
+	Chamber.StageIsInLoadingPosition := FALSE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{30401418-166a-40a2-a514-1027a884cb35}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PsdConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PsdConfig := Config;
+PsdBkgrdSerialCom(Config := PsdConfig);
+
+IF Config.IsEnabled THEN
+	_logger.Information('Psd devices initialization starting...');
+END_IF
+
+// Axis
+IF Config.AxesConfigs.IoStageAxisConfig.IsEnabled THEN
+	IoStageAxis.FB_init(FALSE, FALSE, Config := Config.AxesConfigs.IoStageAxisConfig);	
+END_IF
+
+// Chamber
+IF Config.ChamberConfigs.PsdChamberConfig.IsEnabled THEN
+	Chamber.FB_init(FALSE, FALSE, Config := Config.ChamberConfigs.PsdChamberConfig);	
+END_IF
+
+// Chuck
+IF Config.ChuckConfigs.PsdChuckConfig.IsEnabled THEN
+	Chuck.FB_init(FALSE, FALSE, Config := Config.ChuckConfigs.PsdChuckConfig);	
+END_IF
+
+// FFU
+IF Config.FfuConfigs.Astrofan612FfuConfig.IsEnabled THEN
+	Ffu.FB_init(FALSE, FALSE, Config := Config.FfuConfigs.Astrofan612FfuConfig);	
+END_IF
+
+// Screens
+IF Config.ScreenConfigs.DM430GNScreenConfigFS.IsEnabled THEN
+	DM430GNScreenFS.FB_init(FALSE, FALSE, Config := Config.ScreenConfigs.DM430GNScreenConfigFS);	
+END_IF
+IF Config.ScreenConfigs.DM430GNScreenConfigBS.IsEnabled THEN
+	DM430GNScreenBS.FB_init(FALSE, FALSE, Config := Config.ScreenConfigs.DM430GNScreenConfigBS);	
+END_IF
+
+// RFid
+IF Config.RfidConfigs.BisL405RfidConfig.IsEnabled THEN
+	Rfid.FB_init(FALSE, FALSE, Config := Config.RfidConfigs.BisL405RfidConfig);	
+END_IF
+
+IF Config.IsEnabled THEN
+	_logger.Information('Psd devices initialization ended...');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Psd">
+      <LineId Id="9" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="34" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="56" Count="2" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="86" Count="12" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="300" Count="1" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="341" Count="1" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="345" Count="1" />
+      <LineId Id="339" Count="1" />
+      <LineId Id="229" Count="0" />
+    </LineIds>
+    <LineIds Name="Psd.FB_init">
+      <LineId Id="75" Count="1" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="77" Count="3" />
+      <LineId Id="147" Count="2" />
+      <LineId Id="84" Count="5" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="107" Count="2" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="162" Count="2" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="165" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

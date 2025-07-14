@@ -1,0 +1,166 @@
+name: ANA_Manual_DeliveryAsZip$(Date:yyyyMMdd)$(Rev:.r)
+
+variables:
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  analyse_version: "undefined"
+  system_accesstoken: $(System.AccessToken)
+  
+jobs:
+  - job: ANA_Manual_DeliveryAsZip
+    displayName: "[ANA-Manual] Delivery as zip"
+    cancelTimeoutInMinutes: 2
+    continueOnError: false
+    condition: eq(variables['Build.Reason'], 'Manual')
+    pool:
+      vmImage: 'windows-2019'
+
+    variables:
+      solution: "**/*.sln"
+      buildPlatform: "x64"
+      buildConfiguration: "Release"
+
+    steps: 
+      - checkout: self      
+        persistCredentials: true
+        lfs: true
+      - task: Bash@3
+        displayName: 'Get ANALYSE Version'       
+        inputs:
+          targetType: inline
+          script: | 
+            # Get version as of x.x.x from Client configuration
+            ANALYSE_VERSION=`grep AssemblyInformationalVersion PM/ANALYSE/Client/UnitySC.PM.ANA.Client/Properties/AssemblyInfo.cs | sed 's#.*("\(.....\).*$#\1#'`
+            # Get the current Git commit 6 first characters
+            GIT_HASH=`git rev-parse --short=6 --verify HEAD`
+            # Tie them togeter to obtain the final version as dynamically created in Client DLL
+            ANALYSE_VERSION="${ANALYSE_VERSION}.h-$GIT_HASH"
+            echo ANALYSE V$ANALYSE_VERSION
+            echo "##vso[task.setvariable variable=analyse_version]${ANALYSE_VERSION}"
+
+      # Not work security issus
+      # - task: PowerShell@2
+      #   displayName: 'Add git tag'
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: |
+      #         $Command1 = "##vso[build.addbuildtag] ANARelease"
+      #         write-host "Create a release TAG called ANARelease"
+      #         write-host $Command1
+      #         $Command2 = "##vso[build.addbuildtag] v$env:ANALYSE_VERSION"
+      #         write-host "Create a release TAG called v$env:ANALYSE_VERSION"
+      #         write-host $Command2
+      #         $Command3 = "##vso[build.addbuildtag] $env:GIT_TAG"
+      #         write-host "Create a Build TAG called $env:GIT_TAG"
+      #         write-host $Command3
+
+      # Not work security issus
+      # - task: PowerShell@2
+      #   displayName: 'Add git tag on current branch'
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: |
+      #      $pat = "Bearer $env:SYSTEM_ACCESSTOKEN"
+      #      $MyPat = "wuvldr47xhi7bfde5ejmcq7yacedjewfrhlwb35ndue4o5gopdla"
+      #      $B64Pat = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(“$MyPat”))
+      #      write-host $B64Pat
+      #      git tag Release
+      #      git config --global user.email "buildbot-noreply@unity-sc.com"
+      #      git config --global user.name "UnitySC build bot"
+      #      write-host "Before push"
+      #      git -c http.extraheader="AUTHORIZATION:Basic $B64Pat" push origin Release
+
+      #   env:
+      #     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
+      - task: NuGetToolInstaller@1
+
+      - task: NuGetAuthenticate@0
+        timeoutInMinutes: 1 # minutes
+        displayName: "NuGet authenticate"
+
+      - task: NuGetCommand@2
+        displayName: "NuGet restore"
+        timeoutInMinutes: 15 # minutes
+        inputs:
+          feedsToUse: config
+          nugetConfigPath: ./nuget.config
+          restoreSolution: "$(solution)"      
+
+      - task: MSBuild@1
+        displayName: 'Build Analyse'
+        inputs:
+          solution: '$(System.DefaultWorkingDirectory)/PM/ANALYSE/ANALYSE.sln'
+          platform: '$(BuildPlatform)'
+          configuration: '$(BuildConfiguration)'
+
+      # - task: VSTest@2
+      #   displayName: 'Test Analyse'
+      #   inputs:
+      #     testAssemblyVer2: |
+      #       **\*Test.dll
+      #       !**\*ProxyTest.dll
+      #       !**\*Hardware*.dll
+      #       !**\*TestAdapter*.dll
+      #       !**\obj\**
+      #       !**\*DataAccess.Service.Test.dll
+      #       !**\*LIGHTSPEED.Service.Test.dll
+      #       !**\*PSD.Service.Test.dll
+      #     runInParallel: false
+      #     runTestsInIsolation: true
+      #     platform: '$(BuildPlatform)'
+      #     configuration: '$(BuildConfiguration)'
+      #     diagnosticsEnabled: True
+      #     rerunFailedTests: true
+      #     rerunFailedThreshold: 10
+
+      - task: Bash@3
+        displayName: 'Remove PDB files'       
+        inputs:
+          targetType: inline
+          script: | 
+            echo "Remove all PDB files, if any, prior to zip"
+            time find DataAccess  -type f -name '*.pdb' -exec rm {} \;
+            time find PM/Analyse -type f -name '*.pdb' -exec rm {} \;      
+      - task: CopyFiles@2
+        displayName: 'Add launcher script'
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/PM/ANALYSE/scripts'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/'
+
+      - task: CopyFiles@2
+        displayName: 'Copy ANALYSE server'
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/PM/ANALYSE/Service/UnitySC.PM.ANA.Service.Host/bin/Release'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/ANAServer/Application'
+
+      - task: CopyFiles@2
+        displayName: 'Copy ANALYSE server configuration'
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/PM/ANALYSE/_ServiceConfigurationAndCalibration'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/ANAServer'
+
+      - task: CopyFiles@2
+        displayName: 'Copy ANALYSE Client'
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/PM/ANALYSE/Client/UnitySC.PM.ANA.Client/bin/Release'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/ANAClient/Application'
+
+      - task: CopyFiles@2
+        displayName: 'Copy ANALYSE client configuration'
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/PM/ANALYSE/_ClientConfiguration'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/ANAClient'
+
+      - task: ArchiveFiles@2
+        displayName: 'Create archive'
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/Analyse-$(analyse_version).zip'
+          
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Store artifact'
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Analyse-$(analyse_version).zip'
+          ArtifactName: 'ANALYSE portable release'
+          publishLocation: Container

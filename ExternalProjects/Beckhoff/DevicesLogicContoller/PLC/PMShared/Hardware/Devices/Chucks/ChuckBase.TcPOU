@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ChuckBase" Id="{8a64419b-624a-4206-9ee2-86d1dbd9bb98}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT ChuckBase EXTENDS TExecution IMPLEMENTS IDevice
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_name : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	_deviceID : STRING;				
+	{attribute 'OPC.UA.DA' := '0'}
+	_family : DeviceFamily := DeviceFamily.Chuck;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+	{attribute 'OPC.UA.DA' := '0'}
+	_chuckConfig : DeviceConfiguration;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_lifeTimeCount : UINT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_notifyIsAlive : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseIsAliveGenerator : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGeneratorBase : TON;
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGeneratorBase : TON;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemSchedulerBase : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecSchedulerBase : INT;	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessagesBase : INT;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_chuckInLoadingPositionCmd : BOOL;
+	
+	StateMsg : STRING(255);
+	IsAliveMsg : STRING(255);
+	IsInLoadingPositionMsg : STRING(255);
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_isInLoadingPosition : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_loadingPosition : BOOL;		
+	{attribute 'OPC.UA.DA' := '0'}
+	IsInLoadingPosition AT %Q* : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}	
+	_waferSize : EWaferSize := EWaferSize.Unknown; 
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	ioMessage : STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Check if it's still alive	
+IF _notifyIsAlive THEN
+	IsAliveMsg := TO_STRING(_lifeTimeCount);
+	_notifyIsAlive := FALSE;
+END_IF
+
+IF HardwareGlobalVariables.ChuckState <> State THEN
+	HardwareGlobalVariables.ChuckState := State;
+	StateMsg := ANY_TO_STRING(State);		
+END_IF
+
+CASE _deliverMessagesBase OF		
+	EFeedbackMsgChuckBase.IsInLoadingPositionMsg :	
+		IsInLoadingPositionMsg := ioMessage;		
+END_CASE
+
+ChuckInLoadingPosition(_chuckInLoadingPositionCmd, _loadingPosition);
+
+IF NOT _chuckInLoadingPositionCmd THEN
+	MessageSchedulerBase();	
+END_IF
+	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{f76c5636-5710-4d49-bb60-31627b9311b9}" />
+    <Method Name="ChuckInLoadingPosition" Id="{0f9e48b5-78b3-4b8e-b2c2-f5db3200b82a}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD ChuckInLoadingPosition
+VAR_INPUT
+	Execute : BOOL;
+	LoadingPosition : BOOL;
+END_VAR
+
+VAR
+	_config: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_logger.Information(_message.Reset().Append('ChuckInLoadingPosition: ').Append(TO_STRING(LoadingPosition)).ToString());
+	
+	IsInLoadingPosition := LoadingPosition;
+	_chuckInLoadingPositionCmd := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="DeviceID" Id="{f852fc02-d39a-4bf5-8e6d-4848990d040f}">
+      <Declaration><![CDATA[PROPERTY DeviceID : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{1f3081dc-2999-49d1-81d2-095303c93992}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[DeviceID := _deviceID;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4f026f99-3695-40ad-b692-bb895065fd84}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_deviceID := DeviceID;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Family" Id="{588a7060-a055-4d9a-8114-b9d3b8f3e268}">
+      <Declaration><![CDATA[PROPERTY Family : DeviceFamily
+]]></Declaration>
+      <Get Name="Get" Id="{ed432400-b099-44ec-93bd-26caf073b109}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Family := _family;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{3354990e-5506-4e79-8c76-fd8733e4d4e7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_family := Family;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="IsAlive" Id="{8a33ad11-1200-4056-997b-43110f8c43e1}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD PROTECTED IsAlive
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_notifyIsAlive := TRUE;
+
+IF _lifeTimeCount < 5 THEN
+	_lifeTimeCount := _lifeTimeCount + 1;
+ELSE
+	_lifeTimeCount := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageSchedulerBase" Id="{b29827ac-3f16-4260-9eab-1729f39c013f}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageSchedulerBase
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGeneratorBase.Q THEN
+	_pulseGeneratorBase(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemSchedulerBase OF			
+		0:  _deliverMessagesBase := EFeedbackMsgChuckBase.IsInLoadingPositionMsg;
+			ioMessage := ' ';
+			_itemSchedulerBase := 1;
+			
+		1: _deliverMessagesBase := EFeedbackMsgChuckBase.IsInLoadingPositionMsg;
+			ioMessage := TO_STRING(IsInLoadingPosition);
+			_itemSchedulerBase := 0;
+	END_CASE
+ELSE
+	_pulseGeneratorBase(IN := TRUE, PT := T#100MS);		
+END_IF
+
+
+IF _pulseIsAliveGenerator.Q THEN
+	_pulseIsAliveGenerator(IN := FALSE, PT := T#10MS);
+		
+	IsAlive();	
+ELSE
+	_pulseIsAliveGenerator(IN := TRUE, PT := T#1000MS);		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{0ed3b1a0-7cf5-4488-a675-9d95986087e7}">
+      <Declaration><![CDATA[PROPERTY Name : STRING
+]]></Declaration>
+      <Get Name="Get" Id="{3f4cd8ce-28d9-4f70-ae18-747a667658ba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{227b9f5e-5e5d-4918-87bf-2829008f4401}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="WaferSize" Id="{d5aabc35-9e6b-4965-a694-8bde647fd5d6}">
+      <Declaration><![CDATA[PROPERTY WaferSize : EWaferSize]]></Declaration>
+      <Get Name="Get" Id="{be0aab99-3136-495c-bbff-6bdcbe97f622}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[WaferSize := _waferSize;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{9febcd9e-54ae-4e74-a623-b792d2347273}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_waferSize := WaferSize;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="ChuckBase">
+      <LineId Id="50" Count="8" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="110" Count="2" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="113" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.ChuckInLoadingPosition">
+      <LineId Id="5" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.DeviceID.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.DeviceID.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.Family.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.Family.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.IsAlive">
+      <LineId Id="12" Count="1" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.MessageSchedulerBase">
+      <LineId Id="178" Count="4" />
+      <LineId Id="199" Count="1" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="183" Count="1" />
+      <LineId Id="195" Count="2" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="151" Count="1" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="170" Count="1" />
+      <LineId Id="149" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.Name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.Name.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.WaferSize.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ChuckBase.WaferSize.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

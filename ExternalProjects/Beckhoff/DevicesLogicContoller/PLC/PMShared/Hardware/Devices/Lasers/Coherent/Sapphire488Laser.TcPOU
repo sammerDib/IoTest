@@ -1,0 +1,788 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Sapphire488Laser" Id="{1b6d7450-4e40-4c5f-9193-3aaa5dd4ad37}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK Sapphire488Laser EXTENDS LaserBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : Sapphire488LaserConfig;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_coeAccess : CoeAccess;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initConfigSerialCom : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_suffix : STRING := Const.CR_LF;
+	{attribute 'OPC.UA.DA' := '0'}
+	_serialCom  : SerialCom(Prefix :='', Suffix := _suffix);
+	{attribute 'OPC.UA.DA' := '0'}
+	_refSerialCom : REFERENCE TO SerialCom(Prefix :='', Suffix := _suffix) := _serialCom;		 
+	{attribute 'OPC.UA.DA' := '0'}
+	_isReceived : BOOL;
+	
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_deliverMessages : INT;
+	
+	PowerMsg : STRING(255);
+	InterlockStatusMsg : STRING(255);
+	BasePlateTemperatureMsg : STRING(255);
+	ControllerTemperatureMsg : STRING(255);
+	DiodeSetTemperatureMsg : STRING(255);
+	MeasuredTemperatureMsg : STRING(255);
+	LaserHeadReachedDiodeCurrentLimitMsg : STRING(255);
+	IdMsg : STRING(255);
+	CustomMsg : STRING(255);
+	
+	{region 'Commands'}
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOn : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_powerOff : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_setPowerCmd : BOOL;
+	{attribute 'OPC.UA.DA' := '0'}
+	_customCmd : BOOL;	
+	{attribute 'OPC.UA.DA' := '0'}			  		   
+	_raiseProperties : BOOL;
+	
+	{endregion}			
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;	
+	 
+	{attribute 'OPC.UA.DA' := '0'}
+	_cmd : STRING;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_setpoint : LREAL := 0;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemScheduler : INT;
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemExecScheduler : INT;		
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemRaisedProperties : INT;			
+	{attribute 'OPC.UA.DA' := '0'}
+	_pulseGenerator : TON;	
+	{attribute 'OPC.UA.DA' := '0'}
+	_execPulseGenerator : TON;	
+			
+	{attribute 'OPC.UA.DA' := '0'}
+	fullMessage : STRING;
+	{attribute 'OPC.UA.DA' := '0'}
+	message : STRING;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_length : INT;
+	{attribute 'OPC.UA.DA' := '0'}	
+	_suffixLength : INT := LEN(_suffix);	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT InitConfigSerialCom THEN
+	ConfigureSerialCom();
+ELSIF THIS^.Status = TExecutionState.Ready THEN
+	IF _refSerialCom.ErrorReceiveId = COMERROR_NOERROR THEN
+		_refSerialCom(TxBuffer:= HardwareGlobalVariables.TxBufferLaser, 
+		 	      	  RxBuffer:= HardwareGlobalVariables.RxBufferLaser);
+	END_IF				  
+	
+	// Init device
+	IF NOT _initDevice THEN	
+		InitDevice(); 		
+	ELSE;
+		// Deliver messages
+		IF _refSerialCom.IsReceived THEN				 
+			fullMessage := _refSerialCom.LastReceivedString;
+			_length := LEN(fullMessage);
+			message := DELETE(fullMessage, _suffixLength, _length-_suffixLength+1);
+			
+			CASE _deliverMessages OF			
+				EFeedbackMsgSapphire488.PowerMsg :	
+					PowerMsg := message;		
+				EFeedbackMsgSapphire488.InterlockStatusMsg :
+					InterlockStatusMsg := message;
+				EFeedbackMsgSapphire488.BasePlateTemperatureMsg :
+					BasePlateTemperatureMsg := message;
+				EFeedbackMsgSapphire488.ControllerTemperatureMsg :
+					ControllerTemperatureMsg := message;
+				EFeedbackMsgSapphire488.DiodeSetTemperatureMsg :
+					DiodeSetTemperatureMsg := message;
+				EFeedbackMsgSapphire488.MeasuredTemperatureMsg :
+					MeasuredTemperatureMsg := message;
+				EFeedbackMsgSapphire488.LaserHeadReachedDiodeCurrentLimitMsg :
+					LaserHeadReachedDiodeCurrentLimitMsg := message;
+				EFeedbackMsgSapphire488.IdMsg :	
+					IdMsg := message;
+				EFeedbackMsgSapphire488.CustomMsg :
+					CustomMsg := message;
+			END_CASE		
+		END_IF								   							   	
+		
+		PowerOn(_powerOn);
+		PowerOff(_powerOff);	
+		SetPower(_setPowerCmd, _setpoint);
+		CustomCommand(_customCmd, _cmd);
+		RaisePropertiesChanged(_raiseProperties);
+		
+		IF (NOT _powerOn AND NOT _powerOff AND NOT _setPowerCmd  
+			AND NOT _customCmd AND NOT _raiseProperties) THEN
+			MessageScheduler();
+		END_IF
+	
+	END_IF
+END_IF	
+	]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{0d2596a8-7b7f-4860-9e21-e8b4ab5ebb69}" />
+    <Method Name="ConfigureSerialCom" Id="{5f2971b7-5cf9-47bf-a155-3c73b2e67abe}">
+      <Declaration><![CDATA[METHOD ConfigureSerialCom
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _coeAccess.CoeOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Start configuration com serial').ToString());
+END_IF;	
+
+_coeAccess.CoeOperation.Start();
+_coeAccess(SerialCommunication := _config.SerialCommunication);
+	
+IF _coeAccess.CoeOperation.Done THEN
+	_coeAccess.SetDone();	
+	
+	_Logger.Information(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());	
+	InitConfigSerialCom := TRUE;
+END_IF
+ 
+IF _coeAccess.CoeOperation.Error THEN	
+	_coeAccess.SetError(0);
+	
+	_Logger.Error(_message.Reset().
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} : ').
+							Append(' - Status : ').Append(TO_STRING(_coeAccess.Status)).ToString());
+	InitConfigSerialCom := TRUE;
+END_IF
+
+THIS^.Status := _coeAccess.Status;
+State := _coeAccess.Status;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CustomCommand" Id="{7e64e438-823c-472d-8a4f-2c03c9878109}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Custom command **)
+METHOD CustomCommand
+VAR_INPUT
+	Execute : BOOL;
+	Cmd : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - Custom command : ').
+								Append(Cmd).ToString());	
+	_deliverMessages := EFeedbackMsgSapphire488.CustomMsg;														
+	_serialCom.Send(Cmd);	
+	_customCmd := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{f327e8ed-5d6d-4d5c-ae8e-eb5164770457}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : Sapphire488LaserConfig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._laserConfig.Name := Config.Name;
+	SUPER^._laserConfig.DeviceID := Config.DeviceID;
+	SUPER^._laserConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._laserConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;	
+	THIS^.Family := DeviceFamily.Laser;
+		
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(Config.Name)).Append('}').ToString());																													
+END_IF	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetBasePlateTemperature" Id="{01af3136-7314-4fa0-a7d7-2f2bd51213ac}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetBasePlateTemperature 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?BT';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.BasePlateTemperatureMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetControllerTemperature" Id="{58f5886f-694a-48b1-b0e6-8bd1c2928280}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetControllerTemperature
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?PST';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.ControllerTemperatureMsg;
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiodeSetTemperature" Id="{ffb7c877-5a33-4e2f-9a0a-ba76d6513d51}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetDiodeSetTemperature 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?DST';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.DiodeSetTemperatureMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetIdentifier" Id="{2c646a24-b2d1-47b0-aa96-bf539598d99d}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetIdentifier
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?SV';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.IdMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetInterlockStatus" Id="{c581ed72-2540-4b2b-8880-4590bdf8a6bb}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the status of the Interlock **)
+METHOD PROTECTED GetInterlockStatus 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?STA';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.InterlockStatusMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMeasuredTemperature" Id="{b94b070d-4c93-49c2-a0cf-c5d640b165c1}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD GetMeasuredTemperature 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?DT';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.MeasuredTemperatureMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTimers" Id="{31c5ceb4-dbea-479c-b71f-e8b9133f5d45}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Returns the timers of the laser and PSU:
+		PSU Time=#######.#     Total time the system has been powered
+		Laser Enabled Time=#######.#     Total time the diodes have been powered
+		Laser OperationTime=#######.#    Total time the diodes have been powered >1 A  
+**)
+METHOD GetTimers : HoursStruct
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'TIMERS?';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - GetTimers').ToString());
+	_serialCom.Send(cmd);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitConfigSerialCom" Id="{4fe0c6d6-0a65-405b-8553-1f9f9045a6e0}">
+      <Declaration><![CDATA[PROPERTY InitConfigSerialCom : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8929ab3a-66d2-4d7f-b78f-c755c09f8a24}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitConfigSerialCom := _initConfigSerialCom;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{cc68e6c6-7caf-4573-9e6e-d63e573a5066}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_initConfigSerialCom := InitConfigSerialCom;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="InitDevice" Id="{6c49d82e-e1a8-48d9-ad3c-5dc801f9abf9}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemScheduler OF		
+			0:	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - InitDevice').ToString());	
+
+				_serialCom.Send('>=0'); // Echo off
+				_itemScheduler := 1;				
+		
+			1:  _serialCom.Send('E=1'); // Set echo off
+				_itemScheduler := 2;	
+			
+			2:  _serialCom.Send('T=1');  // Enable automatic servo regulation
+				_itemScheduler := 3;	
+    	
+			3:	_raiseProperties:= TRUE;	
+				_initDevice := TRUE;
+				_itemScheduler := 0;
+		END_CASE
+	ELSE
+	_pulseGenerator(IN := TRUE, PT := T#500MS);		
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LaserHeadReachedDiodeCurrentLimit" Id="{19b8cdbb-d8a9-4a22-ab0c-ab10aeac051b}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the temperature of the laser head in degrees centigrade **)
+METHOD LaserHeadReachedDiodeCurrentLimit 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?MCR';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.LaserHeadReachedDiodeCurrentLimitMsg;
+_serialCom.Send(cmd);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MessageScheduler" Id="{318fab93-b526-4999-816c-43d8686033b6}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD MessageScheduler
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _pulseGenerator.Q THEN
+	_pulseGenerator(IN := FALSE, PT := T#10MS);
+		
+	CASE _itemScheduler OF		
+		0:	ReadPower();
+			_itemScheduler := 1;				
+	
+		1:  GetBasePlateTemperature();
+			_itemScheduler := 2;	
+		
+		2:  GetControllerTemperature();
+			_itemScheduler := 3;		
+			
+		3:  GetDiodeSetTemperature();
+			_itemScheduler := 4;
+			
+		4:  GetMeasuredTemperature();
+			_itemScheduler := 5;
+			
+		5:  LaserHeadReachedDiodeCurrentLimit();
+			_itemScheduler := 0;	
+	END_CASE
+ELSE
+	_pulseGenerator(IN := TRUE, PT := T#500MS);		
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOff" Id="{44ab81af-7b5a-4400-9521-9722ed7b668f}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** Disables the laser, regardless of the interlock status **)
+METHOD PROTECTED PowerOff
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'L=0';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOff := TRUE;	
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - PowerOff').ToString());
+				_serialCom.Send(cmd);
+				_itemExecScheduler := 1;
+			
+			1:  GetInterlockStatus();
+				_itemExecScheduler := 2;
+				
+			2:  _powerOff := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerOn" Id="{814f196c-0050-4a6f-9a8c-873d13d29ad1}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(* Enables the laser subject to Interlock and Enable Switch status *)
+METHOD PROTECTED PowerOn
+VAR_INPUT
+	Execute : BOOL;
+END_VAR
+VAR
+	cmd : STRING := 'L=1';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_powerOn := TRUE;	
+
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - PowerOn').ToString());
+				_serialCom.Send(cmd);
+				_itemExecScheduler := 1;
+			
+			1:  GetInterlockStatus();
+				_itemExecScheduler := 2;
+				
+			2:  _powerOn := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaisePropertiesChanged" Id="{1ac4d013-b8b6-436a-a443-2a6f8f1db3a1}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+METHOD RaisePropertiesChanged
+VAR_INPUT
+	Execute : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN
+	_raiseProperties := TRUE;
+	
+	IF _pulseGenerator.Q THEN
+		_pulseGenerator(IN := FALSE, PT := T#10MS);	
+
+		CASE _itemRaisedProperties OF
+			0:  InterlockStatusMsg := ' ';
+				IdMsg := ' ';
+				CustomMsg := ' ';
+				
+				_itemRaisedProperties := 10;
+			
+			10:  GetIdentifier();
+				_itemRaisedProperties := 11;
+				
+			11:  GetInterlockStatus();
+				_itemRaisedProperties := 12;
+			
+			12:  _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - RaisePropertiesChanged').ToString());
+				_raiseProperties := FALSE;				
+				_itemRaisedProperties := 0;
+			
+		END_CASE
+	ELSE
+		_pulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadPower" Id="{b23b5f9f-66e0-4599-a78e-0774c9fc7296}" FolderPath="Commands\">
+      <Declaration><![CDATA[(** Returns the power of the laser **)
+METHOD PROTECTED ReadPower 
+VAR_INPUT
+END_VAR
+VAR
+	cmd : STRING := '?P';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_deliverMessages := EFeedbackMsgSapphire488.PowerMsg;	
+_serialCom.Send(cmd);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetPower" Id="{bdd8421a-a68e-48d4-8053-66a148fdd0db}" FolderPath="Commands\">
+      <Declaration><![CDATA[{attribute 'TcRpcEnable' := '1'}
+(** This sets the output power of the laser 
+For example, to set a power of 2800 mW, send the string POWER=2800, followed by striking the RETURN key
+**)
+METHOD PROTECTED SetPower 
+VAR_INPUT
+	Execute : BOOL;
+	Power : LREAL;
+END_VAR
+VAR
+	cmd : STRING := 'P=';
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Execute THEN	
+	_setPowerCmd := TRUE;	
+
+	_setpoint := Power;
+	
+	IF _execPulseGenerator.Q THEN
+		_execPulseGenerator(IN := FALSE, PT := T#10MS);
+			
+		CASE _itemExecScheduler OF
+			0: _logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - SetPower : ').Append(TO_STRING(_setpoint)).ToString());
+				_serialCom.Send(CONCAT(cmd, TO_STRING(_setpoint)));
+				_itemExecScheduler := 1;
+			
+			1:  ReadPower();
+				_itemExecScheduler := 2;
+				
+			2:  _setPowerCmd := FALSE;	
+				_itemExecScheduler := 0;		
+								
+		END_CASE
+	ELSE
+		_execPulseGenerator(IN := TRUE, PT := T#500MS);	
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Sapphire488Laser">
+      <LineId Id="1502" Count="9" />
+      <LineId Id="1624" Count="0" />
+      <LineId Id="1626" Count="0" />
+      <LineId Id="1513" Count="1" />
+      <LineId Id="1631" Count="0" />
+      <LineId Id="1638" Count="0" />
+      <LineId Id="1640" Count="0" />
+      <LineId Id="1639" Count="0" />
+      <LineId Id="1515" Count="1" />
+      <LineId Id="1519" Count="1" />
+      <LineId Id="1523" Count="0" />
+      <LineId Id="1526" Count="1" />
+      <LineId Id="1530" Count="1" />
+      <LineId Id="1648" Count="5" />
+      <LineId Id="1534" Count="1" />
+      <LineId Id="1538" Count="6" />
+      <LineId Id="1546" Count="0" />
+      <LineId Id="1548" Count="6" />
+      <LineId Id="1628" Count="1" />
+      <LineId Id="1555" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.ConfigureSerialCom">
+      <LineId Id="6" Count="8" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.CustomCommand">
+      <LineId Id="13" Count="3" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.FB_init">
+      <LineId Id="9" Count="6" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetBasePlateTemperature">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetControllerTemperature">
+      <LineId Id="45" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetDiodeSetTemperature">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetIdentifier">
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetInterlockStatus">
+      <LineId Id="45" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetMeasuredTemperature">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.GetTimers">
+      <LineId Id="30" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.InitConfigSerialCom.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.InitConfigSerialCom.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.InitDevice">
+      <LineId Id="6" Count="0" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="36" Count="6" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.LaserHeadReachedDiodeCurrentLimit">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.MessageScheduler">
+      <LineId Id="97" Count="3" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="101" Count="4" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="134" Count="5" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="106" Count="2" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.PowerOff">
+      <LineId Id="52" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="54" Count="9" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="64" Count="7" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.PowerOn">
+      <LineId Id="81" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="61" Count="3" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="66" Count="3" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.RaisePropertiesChanged">
+      <LineId Id="10" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="2" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="75" Count="2" />
+      <LineId Id="62" Count="3" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="67" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.ReadPower">
+      <LineId Id="73" Count="1" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+    <LineIds Name="Sapphire488Laser.SetPower">
+      <LineId Id="115" Count="1" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="118" Count="3" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="124" Count="3" />
+      <LineId Id="138" Count="2" />
+      <LineId Id="128" Count="7" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

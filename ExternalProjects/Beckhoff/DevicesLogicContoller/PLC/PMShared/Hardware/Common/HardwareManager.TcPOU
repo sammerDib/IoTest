@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="HardwareManager" Id="{ed1eb7f5-2388-478b-891a-ab4f555591e3}" SpecialFunc="None">
+    <Declaration><![CDATA[(* Initialise les devices *)
+FUNCTION_BLOCK HardwareManager
+VAR_INPUT			
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR	
+	{attribute 'OPC.UA.DA' := '0'}
+	{attribute 'OPC.UA.DA.StructuredType' := '0'}
+	ProcessModulesConfig : ProcessModulesConfig;	
+
+	{attribute 'OPC.UA.DA' := '0'}
+	{attribute 'OPC.UA.DA.StructuredType' := '0'}
+	CalibratePMsConfig : CalibratePMsConfig;
+	
+	{region "PMs" } 	
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}	 
+	Lightspeed : Lightspeed(Config := ProcessModulesConfig.LightspeedConfig, CalibrateConfig := CalibratePMsConfig.LsCalibrateConfig);
+
+	{attribute 'OPC.UA.DA' := '1'}
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}			
+	Psd : Psd(Config := ProcessModulesConfig.PsdConfig);
+		
+	{attribute 'OPC.UA.DA' := '1'}
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}	 
+	Nst : Nst(Config := ProcessModulesConfig.NstConfig);
+ 
+	{attribute 'OPC.UA.DA' := '1'}
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}	 
+	PhotoLum : PhotoLum(Config := ProcessModulesConfig.PhotoLumConfig);
+		   
+	{endregion}
+					  	
+	{attribute 'hide'}  
+	_initializedHardware : BOOL;
+	{attribute 'hide'}  
+	_initializedCalibrate : BOOL ; //:= TRUE;  TODO pourquoi la calibration de la NST pose problème ? 
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_xmlCalibrate : TXml;
+	{attribute 'OPC.UA.DA' := '0'}
+	_xmlHardware : TXml;
+	{attribute 'OPC.UA.DA' := '0'}
+	_logger : Logger;
+	{attribute 'OPC.UA.DA' := '0'}
+	_message : StringBuilder;
+		
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT _initializedCalibrate AND NOT _xmlCalibrate.DeserialisationOperation.Error THEN  
+	InitCalibrate();	
+END_IF	
+
+IF _initializedCalibrate AND NOT _initializedHardware AND NOT 
+	_xmlHardware.DeserialisationOperation.Error THEN
+	
+	InitHardware();
+END_IF
+
+IF  _initializedHardware AND _initializedCalibrate THEN
+	IF ProcessModulesConfig.LightspeedConfig.IsEnabled THEN
+		Lightspeed();	
+	END_IF
+
+	IF ProcessModulesConfig.PsdConfig.IsEnabled THEN
+		Psd();	
+	END_IF		
+	
+	IF ProcessModulesConfig.NstConfig.IsEnabled THEN
+		Nst();	
+	END_IF
+	
+	IF ProcessModulesConfig.PhotoLumConfig.IsEnabled THEN
+		PhotoLum();	
+	END_IF
+END_IF
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="CalibrateDeserialize" Id="{ed4d1625-f14d-4adf-9ddf-2ff25d88473c}">
+      <Implementation>
+        <ST><![CDATA[_xmlCalibrate(FilePath := GlobalConfig.AppConfig.CalibrateConfig.CalibratePath, 
+	 		  XPath := GlobalConfig.AppConfig.CalibrateConfig.CalibrateHeaderNodeXml,  
+	 		  AddHeaderNodeXml := ADR(CalibratePMsConfig), 
+	 		  SizeOfHeaderNodeXml := SIZEOF(CalibratePMsConfig));]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="HardwareDeserialize" Id="{22c988d8-5cfe-4101-8a36-15d886901392}">
+      <Implementation>
+        <ST><![CDATA[_xmlHardware(FilePath := GlobalConfig.AppConfig.LogConfig.LogFileConfigPath, 
+	 		 XPath := GlobalConfig.AppConfig.LogConfig.HeaderNodeXml, 
+	 		 AddHeaderNodeXml := ADR(ProcessModulesConfig), 
+	 		 SizeOfHeaderNodeXml := SIZEOF(ProcessModulesConfig));]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="InitCalibrate" Id="{a7eda3c5-c98e-4ce3-8fde-31673d528673}">
+      <Declaration><![CDATA[METHOD InitCalibrate : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF _xmlCalibrate.DeserialisationOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Loading calibrate configuration from ').
+						    		 	 Append(TO_STRING(GlobalConfig.AppConfig.CalibrateConfig.CalibratePath)).ToString());
+END_IF;	
+
+_xmlCalibrate.DeserialisationOperation.Start();
+CalibrateDeserialize();
+	
+IF _xmlCalibrate.DeserialisationOperation.Done THEN
+	_logger.Information('Calibrate configuration loading done');	
+	_xmlCalibrate.DeserialisationOperation.SetReady();		
+	
+	_initializedCalibrate := TRUE;
+END_IF
+ 
+IF _xmlCalibrate.DeserialisationOperation.Error THEN	
+	_logger.Error('Calibrate load initialization error '); 
+	_xmlCalibrate.SetError(_xmlCalibrate.DeserialisationOperation.ErrorId);
+	
+	_initializedCalibrate := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitHardware" Id="{4424e5ee-6b36-4882-aad1-846b130fc691}">
+      <Declaration><![CDATA[METHOD PRIVATE InitHardware : BOOL
+VAR_INPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF _xmlHardware.DeserialisationOperation.Ready THEN
+	_logger.Information(_message.Reset().Append('Loading hardware configuration from ').
+						    		 	 Append(TO_STRING(GlobalConfig.AppConfig.LogConfig.LogFileConfigPath)).ToString());
+END_IF;	
+
+_xmlHardware.DeserialisationOperation.Start();
+HardwareDeserialize();
+	
+IF _xmlHardware.DeserialisationOperation.Done THEN
+	_logger.Information('Hardware configuration loading done');	
+	_xmlHardware.DeserialisationOperation.SetReady();	
+	
+	// Load PMs
+	IF ProcessModulesConfig.LightspeedConfig.IsEnabled THEN
+		InitializeLightspeed();	
+	END_IF
+	
+	IF ProcessModulesConfig.PsdConfig.IsEnabled THEN
+		InitializePsd();	
+	END_IF
+	
+	IF ProcessModulesConfig.NstConfig.IsEnabled THEN
+		InitializeNst();	
+	END_IF
+	
+	IF ProcessModulesConfig.PhotoLumConfig.IsEnabled THEN
+		InitializePhotoLum();	
+	END_IF
+	
+	_initializedHardware := TRUE;
+END_IF
+ 
+IF _xmlHardware.DeserialisationOperation.Error THEN	
+	_logger.Error('Hardware load initialization error'); 
+	_xmlHardware.SetError(_xmlHardware.DeserialisationOperation.ErrorId);
+	
+	_initializedHardware := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitializeLightspeed" Id="{fa44c0d2-38dc-401a-8f50-bd9ed9c3ea9a}">
+      <Declaration><![CDATA[METHOD InitializeLightspeed 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Lightspeed.FB_init(FALSE, FALSE, Config := ProcessModulesConfig.LightspeedConfig, CalibrateConfig := CalibratePMsConfig.LsCalibrateConfig);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitializeNst" Id="{912766b4-2c2b-45f7-b159-e15aae0130ad}">
+      <Declaration><![CDATA[METHOD InitializeNst 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Nst.FB_init(FALSE, FALSE, Config := ProcessModulesConfig.NstConfig);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitializePhotoLum" Id="{c6be157a-b300-48e3-be58-d652e551a068}">
+      <Declaration><![CDATA[METHOD InitializePhotoLum 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PhotoLum.FB_init(FALSE, FALSE, Config := ProcessModulesConfig.PhotoLumConfig);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitializePsd" Id="{fd730ddf-3852-46c6-8999-809dd93cc4be}">
+      <Declaration><![CDATA[METHOD InitializePsd 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Psd.FB_init(FALSE, FALSE, Config := ProcessModulesConfig.PsdConfig);
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="HardwareManager">
+      <LineId Id="748" Count="1" />
+      <LineId Id="767" Count="0" />
+      <LineId Id="778" Count="1" />
+      <LineId Id="781" Count="1" />
+      <LineId Id="780" Count="0" />
+      <LineId Id="777" Count="0" />
+      <LineId Id="774" Count="0" />
+      <LineId Id="750" Count="1" />
+      <LineId Id="876" Count="0" />
+      <LineId Id="1019" Count="3" />
+      <LineId Id="757" Count="0" />
+      <LineId Id="824" Count="0" />
+      <LineId Id="826" Count="1" />
+      <LineId Id="825" Count="0" />
+      <LineId Id="1079" Count="0" />
+      <LineId Id="1081" Count="1" />
+      <LineId Id="1080" Count="0" />
+      <LineId Id="950" Count="0" />
+      <LineId Id="961" Count="0" />
+      <LineId Id="956" Count="0" />
+      <LineId Id="948" Count="0" />
+      <LineId Id="761" Count="4" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.CalibrateDeserialize">
+      <LineId Id="5" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.HardwareDeserialize">
+      <LineId Id="1" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.InitCalibrate">
+      <LineId Id="6" Count="6" />
+      <LineId Id="14" Count="4" />
+      <LineId Id="28" Count="5" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.InitHardware">
+      <LineId Id="163" Count="20" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="204" Count="1" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="212" Count="1" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="184" Count="5" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.InitializeLightspeed">
+      <LineId Id="12" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.InitializeNst">
+      <LineId Id="12" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.InitializePhotoLum">
+      <LineId Id="12" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="HardwareManager.InitializePsd">
+      <LineId Id="12" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

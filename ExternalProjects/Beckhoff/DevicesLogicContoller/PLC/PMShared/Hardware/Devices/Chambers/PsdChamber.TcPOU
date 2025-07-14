@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PsdChamber" Id="{5cb78e1f-1a67-4eed-b24c-c353ece2e6da}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+FUNCTION_BLOCK PsdChamber EXTENDS ChamberBase
+VAR_INPUT
+	IoChamberPsd : IoChamberPsd;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '0'}
+	_config : PsdChamberConfig;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_initDevice : BOOL;
+	
+	{attribute 'OPC.UA.DA' := '0'}
+	_itemInit : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Init device
+InitDevice(); ]]></ST>
+    </Implementation>
+    <Folder Name="Commands" Id="{446636a9-e1bf-41a2-beda-5f71ee3f8bbe}" />
+    <Method Name="FB_init" Id="{19c0411c-4163-4a09-896a-4fc7f328f179}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Config : PsdChamberConfig;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Config.IsEnabled THEN
+	_config := Config;
+	
+	SUPER^._chamberConfig.Name := Config.Name;
+	SUPER^._chamberConfig.DeviceID := Config.DeviceID;
+	SUPER^._chamberConfig.IsEnabled := Config.IsEnabled;
+	SUPER^._chamberConfig.LogLevel := Config.LogLevel;
+	
+	SUPER^.Name := Config.Name;
+	SUPER^.DeviceID := Config.DeviceID;
+	
+	THIS^.Family := DeviceFamily.Chamber;
+
+	THIS^.SetReady();
+	_Logger.Information(_message.Reset().Append('Init ').
+							Append('{').Append(TO_STRING(THIS^.Family)).Append('} - ').
+							Append('{').Append(TO_STRING(THIS^.Name)).Append('} - ').
+							Append('Status : ').Append(TO_STRING(THIS^.Status)).
+							ToString());										 
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitDevice" Id="{77f938ff-dece-4e7c-a91b-89fd1a1b8513}" FolderPath="Commands\">
+      <Declaration><![CDATA[METHOD InitDevice
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _initDevice THEN			
+	_logger.Information(_message.Reset().
+								Append(_config.Name).
+								Append(' - init device').ToString());		
+								
+	IF IoChamberPsd.OutputCdaPneumaticValve = FALSE THEN
+		_logger.Information(_message.Reset().Append('Start pneumatic valve').ToString());								
+		IoChamberPsd.OutputCdaPneumaticValve := TRUE;
+	END_IF
+	
+	_initDevice := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PsdChamber">
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.FB_init">
+      <LineId Id="40" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="45" Count="10" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="PsdChamber.InitDevice">
+      <LineId Id="42" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="66" Count="2" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
