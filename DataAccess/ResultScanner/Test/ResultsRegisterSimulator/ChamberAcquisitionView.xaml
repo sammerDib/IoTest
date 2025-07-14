@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="ResultsRegisterSimulator.ChamberAcquisitionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ResultsRegisterSimulator"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:sharedControls="clr-namespace:UnitySC.Shared.UI.Controls;assembly=UnitySC.Shared.UI"
+             d:DataContext="{d:DesignInstance local:ChamberAcquisitionVM}"             
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="180">
+    <Grid>
+        <ListBox Name="ListBoxAcqRes" ItemsSource="{Binding ListResTypes}" BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" Content="{Binding Label}" IsChecked="{Binding IsUsed}" Margin="5"></CheckBox>
+                        <xctk:IntegerUpDown Grid.Column="1" Value="{Binding IdxMax, UpdateSourceTrigger=LostFocus}"  Minimum="0" Maximum="5" Increment="1" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" ShowButtonSpinner="true" Height="20" Width="50" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
